@@ -1,0 +1,7 @@
+{"PROJNAME": "utils",
+"ADDFLAGS": "-ggdb3",
+"STD": "-std=c++17",
+"OPT": "-Og",
+"CXX": "g++",
+"TSTARGS": "",
+"WARN": "-Wall -Wextra -pedantic -Wcast-align=strict -Wcast-qual -Wlogical-op -Wredundant-decls -Wdouble-promotion -Wformat=2 -Wnull-dereference -Wimplicit-fallthrough -Wuninitialized -Wstrict-overflow=4 -Wold-style-cast -Wconversion -Wduplicated-branches -Wduplicated-cond -Wtrampolines -Wfloat-equal -Wundef -Wshadow -Wshadow=local -Wfree-nonheap-object -Wsign-conversion -Wno-multichar -Wstrict-null-sentinel -Wctor-dtor-privacy -Wsign-promo -Wmisleading-indentation -Wzero-as-null-pointer-constant -Wuseless-cast -Wsuggest-override -Weffc++ -Wno-error=effc++ -Werror"}

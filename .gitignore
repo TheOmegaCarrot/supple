@@ -1,0 +1,10 @@
+obj
+bin
+tst/obj
+tst/bin
+asm
+pre
+run
+run_tests
+doc
+tags

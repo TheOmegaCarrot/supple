@@ -19,16 +19,17 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
-		void for_each_pair(const Itr begin, const Itr end, BinaryFunc func)
-		{
-			Itr leader = begin;
-			++leader;
-			Itr follower = begin;
+	void for_each_pair(
+			const Itr begin, const Itr end, BinaryFunc func)
+	{
+		Itr leader = begin;
+		++leader;
+		Itr follower = begin;
 
-			for ( ; leader != end; ++leader, ++follower ) {
-				func(*leader, *follower);
-			}
+		for ( ; leader != end; ++leader, ++follower ) {
+			func(*leader, *follower);
 		}
+	}
 
 } // namespace ehanc
 

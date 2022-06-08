@@ -1,6 +1,8 @@
 #ifndef ALGORITHM_HPP
 #define ALGORITHM_HPP
 
+#include <iterator>
+
 namespace ehanc {
 
 	/* {{{ doc */
@@ -29,6 +31,65 @@ namespace ehanc {
 		for ( ; leader != end; ++leader, ++follower ) {
 			func(*leader, *follower);
 		}
+	}
+
+	/* {{{ doc */
+	/**
+	 * @brief Returns an iterator to the last element of the container.
+	 * In short, `++ehanc::last(container) == std::end(container)`
+	 *
+	 * @param container Container which supports at least forward iterators.
+	 *
+	 * @return Iterator to the last element of the container.
+	 */
+	/* }}} */
+	template<typename Iterable>
+	[[nodiscard]] auto last(Iterable container)
+			-> decltype(std::begin(container))
+	{
+		auto end = std::end(container);
+		auto leader = std::begin(container);
+		auto follower = leader;
+
+		if ( follower == end ) {
+			return follower;
+		}
+
+		while (++leader != end) {
+			++follower;
+		}
+
+		return follower;
+
+	}
+
+	/* {{{ doc */
+	/**
+	 * @brief Returns a const iterator to the last element of the container.
+	 * In short, `++ehanc::clast(container) == std::end(container)`
+	 *
+	 * @param container Container which supports at least forward iterators.
+	 *
+	 * @return Const iterator to the last element of the container.
+	 */
+	/* }}} */
+	template<typename Iterable>
+	[[nodiscard]] auto clast(Iterable container)
+			-> decltype(std::cbegin(container))
+	{
+		auto end = std::cend(container);
+		auto leader = std::cbegin(container);
+		auto follower = leader;
+
+		if ( follower == end ) {
+			return follower;
+		}
+
+		while (++leader != end) {
+			++follower;
+		}
+
+		return follower;
 	}
 
 } // namespace ehanc

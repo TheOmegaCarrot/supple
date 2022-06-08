@@ -4,5 +4,7 @@
 #include "utils/algorithm.hpp"
 
 bool test_for_each_pair();
+bool test_last();
+bool test_clast();
 
 #endif

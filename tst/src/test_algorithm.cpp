@@ -25,3 +25,33 @@ bool test_for_each_pair()
 			&&	ref  == reference_output.cend()
 			);
 }
+
+bool test_last()
+{
+	std::array<int, 5> test1;
+	std::iota(test1.begin(), test1.end(), 1);
+
+	std::array<int, 1> test2 = {3};
+	std::vector<int> test3;
+
+	return	(
+				*ehanc::last(test1) == 5
+			&&	*ehanc::last(test2) == 3
+			&&	ehanc::last(test3) == std::begin(test3)
+			);
+}
+
+bool test_clast()
+{
+	std::array<int, 5> test1;
+	std::iota(test1.begin(), test1.end(), 1);
+
+	std::array<int, 1> test2 = {3};
+	std::vector<int> test3;
+
+	return	(
+				*ehanc::clast(test1) == 5
+			&&	*ehanc::clast(test2) == 3
+			&&	ehanc::clast(test3) == std::cbegin(test3)
+			);
+}

@@ -3,6 +3,9 @@
 
 #include <string_view>
 
+// Make doxygen ignore this file
+/// @cond
+
 namespace ehanc {
 
 constexpr inline const std::string_view FG_BLACK   = "\033[1;30m";

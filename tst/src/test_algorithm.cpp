@@ -2,7 +2,16 @@
 #include <vector>
 #include <numeric>
 
+#include "test_utils.h"
+
 #include "test_algorithm.h"
+
+void test_algorithm()
+{
+	run_test("ehanc::for_each_pair", &test_for_each_pair);
+	run_test("ehanc::last", & test_last);
+	run_test("ehanc::clast", & test_clast);
+}
 
 bool test_for_each_pair()
 {

@@ -3,6 +3,8 @@
 
 #include "utils/algorithm.hpp"
 
+void test_algorithm();
+
 bool test_for_each_pair();
 bool test_last();
 bool test_clast();

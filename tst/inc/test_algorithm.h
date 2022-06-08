@@ -1,5 +1,5 @@
-#ifndef TEST_ALGORITHM_HPP_H
-#define TEST_ALGORITHM_HPP_H
+#ifndef TEST_ALGORITHM_H
+#define TEST_ALGORITHM_H
 
 #include "utils/algorithm.hpp"
 

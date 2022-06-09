@@ -6,6 +6,7 @@
 void test_algorithm();
 
 bool test_for_each_pair();
+bool test_for_each_both();
 bool test_last();
 bool test_clast();
 

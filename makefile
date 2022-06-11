@@ -72,7 +72,7 @@ $(EXE): obj/main.o
 	@$(CXX) -o $@ $^ $(CXXFLAGS)
 	@ln -sf $(EXE) ./run
 
-tst/bin/test: tst/bin tst/obj tst/obj/test_utils.o tst/obj/test_algorithm.o tst/obj/maintest.o obj/main.o
+tst/bin/test: tst/bin tst/obj tst/obj/test_utils.o tst/obj/test_etc.o tst/obj/test_algorithm.o tst/obj/maintest.o obj/main.o
 	@printf "\033[1;32mLinking\t\t tst/bin/test\033[1;0m\n"
 	@rm -f tst/obj/main.o
 	@$(CXX) -o $@ tst/obj/*.o $(CXXFLAGS)
@@ -95,10 +95,14 @@ tst/obj/test_utils.o: tst/src/test_utils.cpp inc/utils/term_colors.h tst/inc/tes
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
+tst/obj/test_etc.o: tst/src/test_etc.cpp tst/inc/test_etc.h inc/utils/etc.hpp tst/inc/test_utils.h
+	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
+	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
+
 tst/obj/test_algorithm.o: tst/src/test_algorithm.cpp tst/inc/test_algorithm.h inc/utils/algorithm.hpp tst/inc/test_utils.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.h tst/inc/test_algorithm.h inc/utils/algorithm.hpp
+tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.h tst/inc/test_algorithm.h inc/utils/algorithm.hpp tst/inc/test_etc.h inc/utils/etc.hpp
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)

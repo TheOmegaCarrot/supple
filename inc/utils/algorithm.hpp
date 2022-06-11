@@ -35,6 +35,38 @@ namespace ehanc {
 
 	/* {{{ doc */
 	/**
+	 * @brief Applies `func` to each adjacent pair of elements, up to `n` calls.
+	 *
+	 * Example: Range is: {1, 2, 3}
+	 *
+	 * Calls to `func` will be: `func(1, 2)`, `func(2, 3)`
+	 *
+	 * @param begin Iterator to the beginning of the range.
+	 *
+	 * @param end Iterator to the end of the range.
+	 *
+	 * @param n Maximum number of calls to make.
+	 *
+	 * @param func Binary function to apply to each adjacent pair.
+	 */
+	/* }}} */
+	template<typename Itr, typename BinaryFunc>
+	void for_each_pair_n(
+			const Itr begin, const Itr end, int n, BinaryFunc func)
+	{
+		int count{0};
+		Itr leader = begin;
+		++leader;
+		Itr follower = begin;
+
+		for ( ; ( count != n ) && ( leader != end ) ;
+				++n, ++leader, ++follower ) {
+			func(*leader, *follower);
+		}
+	}
+
+	/* {{{ doc */
+	/**
 	 * @brief Applies `func` to each corresponding pair of elements.
 	 * Iteration ceases when either range runs out of members.
 	 *

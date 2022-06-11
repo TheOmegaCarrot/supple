@@ -24,9 +24,9 @@ namespace ehanc {
 	void for_each_pair( const Itr begin, const Itr end,
 						BinaryFunc func)
 	{
-		Itr leader = begin;
+		Itr leader{begin};
 		++leader;
-		Itr follower = begin;
+		Itr follower{begin};
 
 		for ( ; leader != end; ++leader, ++follower ) {
 			func(*leader, *follower);
@@ -57,9 +57,9 @@ namespace ehanc {
 						int n, BinaryFunc func)
 	{
 		int count{0};
-		Itr leader = begin;
+		Itr leader{begin};
 		++leader;
-		Itr follower = begin;
+		Itr follower{begin};
 
 		for (	; count != n  &&  leader != end
 				; ++n, ++leader, ++follower )
@@ -157,9 +157,9 @@ namespace ehanc {
 	[[nodiscard]] auto last(Iterable container)
 			-> decltype(std::begin(container))
 	{
-		auto end = std::end(container);
-		auto leader = std::begin(container);
-		auto follower = leader;
+		auto end{std::end(container)};
+		auto leader{std::begin(container)};
+		auto follower{leader};
 
 		if ( follower == end ) {
 			return follower;
@@ -187,9 +187,9 @@ namespace ehanc {
 	[[nodiscard]] auto clast(Iterable container)
 			-> decltype(std::cbegin(container))
 	{
-		auto end = std::cend(container);
-		auto leader = std::cbegin(container);
-		auto follower = leader;
+		auto end{std::cend(container)};
+		auto leader{std::cbegin(container)};
+		auto follower{leader};
 
 		if ( follower == end ) {
 			return follower;

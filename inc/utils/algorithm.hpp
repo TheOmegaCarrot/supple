@@ -62,7 +62,7 @@ namespace ehanc {
 							Itr2 begin2, Itr2 end2,
 							BinaryFunc func)
 		{
-			for (	; (begin1 != end1 && begin2 != end2) 
+			for (	; (begin1 != end1 && begin2 != end2)
 					; ++begin1, ++begin2 ) {
 				func(*begin1, *begin2);
 			}

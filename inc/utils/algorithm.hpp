@@ -21,8 +21,8 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
-	void for_each_pair(
-			const Itr begin, const Itr end, BinaryFunc func)
+	void for_each_pair( const Itr begin, const Itr end,
+						BinaryFunc func)
 	{
 		Itr leader = begin;
 		++leader;
@@ -35,7 +35,9 @@ namespace ehanc {
 
 	/* {{{ doc */
 	/**
-	 * @brief Applies `func` to each adjacent pair of elements, up to `n` calls.
+	 * @brief Applies `func` to each adjacent pair of elements.
+	 * Iteration ceases when the range runs out of adjacent pairs,
+	 * or when `n` iterations have occurred; whichever comes first.
 	 *
 	 * Example: Range is: {1, 2, 3}
 	 *
@@ -51,16 +53,17 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
-	void for_each_pair_n(
-			const Itr begin, const Itr end, int n, BinaryFunc func)
+	void for_each_pair_n( const Itr begin, const Itr end,
+						int n, BinaryFunc func)
 	{
 		int count{0};
 		Itr leader = begin;
 		++leader;
 		Itr follower = begin;
 
-		for ( ; ( count != n ) && ( leader != end ) ;
-				++n, ++leader, ++follower ) {
+		for (	; count != n  &&  leader != end
+				; ++n, ++leader, ++follower )
+		{
 			func(*leader, *follower);
 		}
 	}
@@ -96,6 +99,46 @@ namespace ehanc {
 	{
 		for (	; (begin1 != end1 && begin2 != end2)
 				; ++begin1, ++begin2 ) {
+			func(*begin1, *begin2);
+		}
+	}
+
+	/* {{{ doc */
+	/**
+	 * @brief Applies `func` to each corresponding pair of elements.
+	 * Iteration ceases when either range runs out of members,
+	 * or when `n` iterations have occurred; whichever comes first.
+	 *
+	 * Example: Range 1 is: {1, 2, 3}, Range 2 is: {4, 5, 6, 7}
+	 *
+	 * Calls to `func` will be:
+	 *
+	 * * `func(1, 4)`
+	 * * `func(2, 5)`
+	 * * `func(3, 6)`
+	 *
+	 * @param begin1 Iterator to the beginning of range 1
+	 *
+	 * @param end1 Iterator to the end of range 1
+	 *
+	 * @param begin2 Iterator to the beginning of range 2
+	 *
+	 * @param end2 Iterator to the end of range 2
+	 *
+	 * @param n Maximum number of iterations.
+	 *
+	 * @param func Binary function to apply to each corresponding pair
+	 */
+	/* }}} */
+	template<typename Itr1, typename Itr2, typename BinaryFunc>
+	void for_each_both_n(	Itr1 begin1, Itr1 end1,
+							Itr2 begin2, Itr2 end2,
+							int n, BinaryFunc func)
+	{
+		for (	int count{0}
+				; (count != n && begin1 != end1 && begin2 != end2)
+				; ++count, ++begin1, ++begin2 )
+		{
 			func(*begin1, *begin2);
 		}
 	}

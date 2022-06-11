@@ -11,6 +11,7 @@ void test_algorithm()
 	run_test("ehanc::for_each_pair", &test_for_each_pair);
 	run_test("ehanc::for_each_pair_n", &test_for_each_pair_n);
 	run_test("ehanc::for_each_both", &test_for_each_both);
+	run_test("ehanc::for_each_both_n", &test_for_each_both_n);
 	run_test("ehanc::last", & test_last);
 	run_test("ehanc::clast", & test_clast);
 }
@@ -69,6 +70,30 @@ bool test_for_each_both()
 
 	ehanc::for_each_both(test_input_1.cbegin(), test_input_1.cend(),
 			test_input_2.cbegin(), test_input_2.cend(),
+			[&test_output](const auto& i, const auto& j){
+				test_output.push_back(i + j);
+			});
+
+	auto[test, ref] = std::mismatch(
+			test_output.cbegin(), test_output.cend(),
+			reference_output.cbegin(), reference_output.cend() );
+
+	return	(
+				test == test_output.cend()
+			&&	ref  == reference_output.cend()
+			);
+}
+
+bool test_for_each_both_n()
+{
+	std::array<int, 5> test_input_1;
+	std::iota(test_input_1.begin(), test_input_1.end(), 1);
+	std::array<int, 4> test_input_2 = {10, 20, 30, 40};
+	std::vector<int> test_output;
+	std::array<int, 2> reference_output = {11, 22};
+
+	ehanc::for_each_both_n(test_input_1.cbegin(), test_input_1.cend(),
+			test_input_2.cbegin(), test_input_2.cend(), 2,
 			[&test_output](const auto& i, const auto& j){
 				test_output.push_back(i + j);
 			});

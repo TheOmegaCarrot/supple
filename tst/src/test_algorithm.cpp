@@ -21,7 +21,7 @@ bool test_for_each_pair()
 	std::vector<int> test_input(6);
 	std::iota(test_input.begin(), test_input.end(), 1);
 	std::vector<int> test_output;
-	std::vector<int> reference_output = {3, 5, 7, 9, 11};
+	std::vector<int> reference_output{3, 5, 7, 9, 11};
 	
 	ehanc::for_each_pair(test_input.cbegin(), test_input.cend(),
 			[&test_output](const int i, const int j) {
@@ -43,7 +43,7 @@ bool test_for_each_pair_n()
 	std::vector<int> test_input(6);
 	std::iota(test_input.begin(), test_input.end(), 1);
 	std::vector<int> test_output;
-	std::vector<int> reference_output = {3, 5, 7, 9, 11};
+	std::vector<int> reference_output{3, 5, 7, 9, 11};
 	
 	ehanc::for_each_pair_n(test_input.cbegin(), test_input.cend(), 3,
 			[&test_output](const int i, const int j) {
@@ -64,9 +64,9 @@ bool test_for_each_both()
 {
 	std::array<int, 5> test_input_1;
 	std::iota(test_input_1.begin(), test_input_1.end(), 1);
-	std::array<int, 4> test_input_2 = {10, 20, 30, 40};
+	std::array<int, 4> test_input_2{10, 20, 30, 40};
 	std::vector<int> test_output;
-	std::array<int, 4> reference_output = {11, 22, 33, 44};
+	std::array<int, 4> reference_output{11, 22, 33, 44};
 
 	ehanc::for_each_both(test_input_1.cbegin(), test_input_1.cend(),
 			test_input_2.cbegin(), test_input_2.cend(),
@@ -88,9 +88,9 @@ bool test_for_each_both_n()
 {
 	std::array<int, 5> test_input_1;
 	std::iota(test_input_1.begin(), test_input_1.end(), 1);
-	std::array<int, 4> test_input_2 = {10, 20, 30, 40};
+	std::array<int, 4> test_input_2{10, 20, 30, 40};
 	std::vector<int> test_output;
-	std::array<int, 2> reference_output = {11, 22};
+	std::array<int, 2> reference_output{11, 22};
 
 	ehanc::for_each_both_n(test_input_1.cbegin(), test_input_1.cend(),
 			test_input_2.cbegin(), test_input_2.cend(), 2,
@@ -113,7 +113,7 @@ bool test_last()
 	std::array<int, 5> test1;
 	std::iota(test1.begin(), test1.end(), 1);
 
-	std::array<int, 1> test2 = {3};
+	std::array<int, 1> test2{3};
 	std::vector<int> test3;
 
 	return	(
@@ -128,7 +128,7 @@ bool test_clast()
 	std::array<int, 5> test1;
 	std::iota(test1.begin(), test1.end(), 1);
 
-	std::array<int, 1> test2 = {3};
+	std::array<int, 1> test2{3};
 	std::vector<int> test3;
 
 	return	(

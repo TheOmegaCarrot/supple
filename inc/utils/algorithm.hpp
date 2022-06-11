@@ -58,15 +58,15 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
-		void for_each_both( Itr1 begin1, Itr1 end1,
-							Itr2 begin2, Itr2 end2,
-							BinaryFunc func)
-		{
-			for (	; (begin1 != end1 && begin2 != end2)
-					; ++begin1, ++begin2 ) {
-				func(*begin1, *begin2);
-			}
+	void for_each_both( Itr1 begin1, Itr1 end1,
+						Itr2 begin2, Itr2 end2,
+						BinaryFunc func)
+	{
+		for (	; (begin1 != end1 && begin2 != end2)
+				; ++begin1, ++begin2 ) {
+			func(*begin1, *begin2);
 		}
+	}
 
 	/* {{{ doc */
 	/**

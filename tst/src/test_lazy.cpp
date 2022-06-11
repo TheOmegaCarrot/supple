@@ -1,13 +1,15 @@
-#include "test_etc.h"
+#include "test_lazy.h"
 
 #include "test_utils.h"
 
-void test_etc()
+bool test_lazy_impl();
+
+void test_lazy()
 {
-	run_test("ehanc::lazy", &test_lazy);
+	run_test("ehanc::lazy", &test_lazy_impl);
 }
 
-bool test_lazy()
+bool test_lazy_impl()
 {
 
 	std::vector<int> check;

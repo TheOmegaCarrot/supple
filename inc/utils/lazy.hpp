@@ -1,5 +1,5 @@
-#ifndef ETC_HPP
-#define ETC_HPP
+#ifndef LAZY_HPP
+#define LAZY_HPP
 
 #include <functional>
 #include <optional>

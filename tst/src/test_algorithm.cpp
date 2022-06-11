@@ -6,6 +6,13 @@
 
 #include "test_utils.h"
 
+bool test_for_each_pair();
+bool test_for_each_pair_n();
+bool test_for_each_both();
+bool test_for_each_both_n();
+bool test_last();
+bool test_clast();
+
 void test_algorithm()
 {
 	run_test("ehanc::for_each_pair", &test_for_each_pair);

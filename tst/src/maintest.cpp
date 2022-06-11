@@ -1,13 +1,13 @@
 #include "test_utils.h"
 
 #include "test_algorithm.h"
-#include "test_etc.h"
+#include "test_lazy.h"
 
 int main()
 {
 
 	test_algorithm();
-	test_etc();
+	test_lazy();
 
 	return 0;
 }

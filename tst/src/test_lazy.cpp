@@ -2,13 +2,6 @@
 
 #include "test_utils.h"
 
-bool test_lazy_impl();
-
-void test_lazy()
-{
-	run_test("ehanc::lazy", &test_lazy_impl);
-}
-
 bool test_lazy_impl()
 {
 
@@ -27,4 +20,9 @@ bool test_lazy_impl()
 			&&	check[1] == 2
 			&&	test == 5
 			);
+}
+
+void test_lazy()
+{
+	run_test("ehanc::lazy", &test_lazy_impl);
 }

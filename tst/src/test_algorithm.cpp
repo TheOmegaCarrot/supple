@@ -6,23 +6,6 @@
 
 #include "test_utils.h"
 
-bool test_for_each_pair();
-bool test_for_each_pair_n();
-bool test_for_each_both();
-bool test_for_each_both_n();
-bool test_last();
-bool test_clast();
-
-void test_algorithm()
-{
-	run_test("ehanc::for_each_pair", &test_for_each_pair);
-	run_test("ehanc::for_each_pair_n", &test_for_each_pair_n);
-	run_test("ehanc::for_each_both", &test_for_each_both);
-	run_test("ehanc::for_each_both_n", &test_for_each_both_n);
-	run_test("ehanc::last", & test_last);
-	run_test("ehanc::clast", & test_clast);
-}
-
 bool test_for_each_pair()
 {
 	std::vector<int> test_input(6);
@@ -56,6 +39,27 @@ bool test_for_each_pair_n()
 			[&test_output](const int i, const int j) {
 				test_output.push_back(i + j);
 			});
+
+	auto[test, ref] = std::mismatch(
+			test_output.cbegin(), test_output.cend(),
+			reference_output.cbegin(), reference_output.cend() );
+
+	return	(
+				test == test_output.cend()
+			&&	ref  == reference_output.cend()
+			);
+}
+
+bool test_for_each_all_n()
+{
+	std::array test1{4, 9, 16, 25};
+	std::array test2{2, 3, 4, 5};
+	std::vector<int> test_output;
+	std::vector reference_output{2, 3, 4, 5};
+
+	ehanc::for_each_all_n([&test_output](const int a, const int b) {
+				test_output.push_back(a / b);
+			}, 4, test1.cbegin(), test2.cbegin());
 
 	auto[test, ref] = std::mismatch(
 			test_output.cbegin(), test_output.cend(),
@@ -143,4 +147,15 @@ bool test_clast()
 			&&	*ehanc::clast(test2) == 3
 			&&	ehanc::clast(test3) == std::cbegin(test3)
 			);
+}
+
+void test_algorithm()
+{
+	run_test("ehanc::for_each_pair", &test_for_each_pair);
+	run_test("ehanc::for_each_pair_n", &test_for_each_pair_n);
+	run_test("ehanc::for_each_all_n", &test_for_each_all_n);
+	run_test("ehanc::for_each_both", &test_for_each_both);
+	run_test("ehanc::for_each_both_n", &test_for_each_both_n);
+	run_test("ehanc::last", & test_last);
+	run_test("ehanc::clast", & test_clast);
 }

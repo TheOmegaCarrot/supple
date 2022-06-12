@@ -2,6 +2,7 @@
 #define ALGORITHM_HPP
 
 #include <iterator>
+#include <functional>
 
 namespace ehanc {
 
@@ -144,6 +145,48 @@ namespace ehanc {
 				; ++count, ++begin1, ++begin2 )
 		{
 			func(*begin1, *begin2);
+		}
+	}
+
+	// WIP:
+	/* template<typename VarFunc, typename... Containers> */
+	/* constexpr void for_each_all(VarFunc& func, Containers&... containers) */
+	/* { */
+	/* 	std::vector<const_iterator> its; */
+	/* 	for (	(..., its.push_back(std::cbegin(containers))), bool check{false} */
+	/* 			; all_pass(its, [](const auto& it) { return it != }) */
+	/* 			; std::for_each(its.begin(), its.end() [](auto& it) {++it}) ) */
+	/* } */
+
+	/* {{{ doc */
+	/**
+	 * @brief Applies `func` to members of
+	 * all containers in parameter order.
+	 * Iteration ceases when after `n` iterations.
+	 * If `n` is greater than the size of the smallest container,
+	 * behavior is undefined.
+	 *
+	 * Example: Range1: {1, 2, 3}, Range2: {'a', 'b', 'c'}
+	 *
+	 * `func` must have accept `int, char` as parameters.
+	 *
+	 * @param func A function which accepts the types of all the containers
+	 * in parameter order.
+	 *
+	 * @param n Maximum number of iterations. Must not be greater
+	 * than the size of the smallest container.
+	 *
+	 * @param begins Iterators to containers to be iterated over.
+	 * Smallest distance from any to its corresponding end must not be less
+	 * than `n`, or behavior will be undefined.
+	 */
+	/* }}} */
+	template<typename VarFunc, typename... Begins>
+	constexpr void for_each_all_n(VarFunc&& func, int n, Begins... begins)
+	{
+		for ( int i{0} ; i != n ; ++i ) {
+			func((*begins)...);
+			((++begins),...);
 		}
 	}
 

@@ -186,7 +186,7 @@ namespace ehanc {
 	{
 		for ( int i{0} ; i != n ; ++i ) {
 			func(*begins...);
-			((++begins),...);
+			(++begins,...);
 		}
 	}
 

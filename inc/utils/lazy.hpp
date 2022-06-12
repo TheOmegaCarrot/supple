@@ -118,7 +118,7 @@ namespace ehanc {
 			 * by `m_func`, but only ever call `m_func` once.
 			 */
 			/* }}} */
-			/* explicit(false) */ constexpr operator RetType ()
+			[[nodiscard]] constexpr operator RetType ()
 				noexcept(noexcept(m_func()))
 			{
 				if (m_value) {

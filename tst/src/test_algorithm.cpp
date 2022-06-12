@@ -120,7 +120,7 @@ bool test_last()
 	std::array<int, 5> test1;
 	std::iota(test1.begin(), test1.end(), 1);
 
-	std::array<int, 1> test2{3};
+	std::array<int, 2> test2{2, 3};
 	std::vector<int> test3;
 
 	return	(
@@ -135,7 +135,7 @@ bool test_clast()
 	std::array<int, 5> test1;
 	std::iota(test1.begin(), test1.end(), 1);
 
-	std::array<int, 1> test2{3};
+	std::array<int, 2> test2{2, 3};
 	std::vector<int> test3;
 
 	return	(

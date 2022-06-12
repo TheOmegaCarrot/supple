@@ -21,8 +21,9 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
-	void for_each_pair( const Itr begin, const Itr end,
+	constexpr void for_each_pair( const Itr begin, const Itr end,
 						BinaryFunc func)
+	noexcept(noexcept(func(*begin, *begin)))
 	{
 		Itr leader{begin};
 		++leader;
@@ -53,8 +54,9 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
-	void for_each_pair_n( const Itr begin, const Itr end,
+	constexpr void for_each_pair_n( const Itr begin, const Itr end,
 						int n, BinaryFunc func)
+	noexcept(noexcept(func(*begin, *begin)))
 	{
 		int count{0};
 		Itr leader{begin};
@@ -93,9 +95,10 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
-	void for_each_both( Itr1 begin1, Itr1 end1,
+	constexpr void for_each_both( Itr1 begin1, Itr1 end1,
 						Itr2 begin2, Itr2 end2,
 						BinaryFunc func)
+	noexcept(noexcept(func(*begin1, *begin2)))
 	{
 		for (	; (begin1 != end1 && begin2 != end2)
 				; ++begin1, ++begin2 ) {
@@ -131,9 +134,10 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
-	void for_each_both_n(	Itr1 begin1, Itr1 end1,
+	constexpr void for_each_both_n(	Itr1 begin1, Itr1 end1,
 							Itr2 begin2, Itr2 end2,
 							int n, BinaryFunc func)
+	noexcept(noexcept(func(*begin1, *begin2)))
 	{
 		for (	int count{0}
 				; (count != n && begin1 != end1 && begin2 != end2)
@@ -154,7 +158,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Iterable>
-	[[nodiscard]] auto last(Iterable container)
+	[[nodiscard]] constexpr auto last(Iterable container) noexcept
 			-> decltype(std::begin(container))
 	{
 		auto end{std::end(container)};
@@ -184,7 +188,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Iterable>
-	[[nodiscard]] auto clast(Iterable container)
+	[[nodiscard]] constexpr auto clast(Iterable container) noexcept
 			-> decltype(std::cbegin(container))
 	{
 		auto end{std::cend(container)};

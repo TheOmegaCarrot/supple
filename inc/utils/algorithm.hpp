@@ -185,7 +185,7 @@ namespace ehanc {
 	constexpr void for_each_all_n(VarFunc&& func, int n, Begins... begins)
 	{
 		for ( int i{0} ; i != n ; ++i ) {
-			func((*begins)...);
+			func(*begins...);
 			((++begins),...);
 		}
 	}

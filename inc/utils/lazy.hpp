@@ -18,21 +18,30 @@ namespace ehanc {
 
 			lazy() = delete;
 
-			lazy(std::function<RetType ()> func)
+			constexpr lazy(std::function<RetType ()> func)
+				noexcept(noexcept(func()))
 				: m_func{func}, m_value{}
 			{  }
 
-			lazy(const lazy& src) = default;
+			constexpr lazy(const lazy& src)
+				noexcept(noexcept(src.func()))
+				= default;
 
-			lazy& operator= (const lazy& rhs) = default;
+			constexpr lazy& operator= (const lazy& rhs)
+				noexcept(noexcept(rhs.func()))
+				= default;
 
-			lazy(lazy&& src) = default;
+			constexpr lazy(lazy&& src)
+				noexcept(noexcept(src.func()))
+				= default;
 
-			lazy& operator= (lazy&& rhs) = default;
+			constexpr lazy& operator= (lazy&& rhs)
+				noexcept(noexcept(rhs.func()))
+				= default;
 
-			~lazy() = default;
+			~lazy() noexcept(noexcept(m_func())) = default;
 
-			operator RetType ()
+			constexpr operator RetType () noexcept(noexcept(m_func()))
 			{
 				if (m_value) {
 					return *m_value;

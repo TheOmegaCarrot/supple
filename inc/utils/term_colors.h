@@ -1,5 +1,5 @@
-#ifndef TERMCOLOR_H
-#define TERMCOLOR_H
+#ifndef EHANC_UTILS_TERMCOLORS_H
+#define EHANC_UTILS_TERMCOLORS_H
 
 #include <string_view>
 

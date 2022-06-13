@@ -1,5 +1,5 @@
-#ifndef LAZY_HPP
-#define LAZY_HPP
+#ifndef EHANC_UTILS_LAZY_HPP
+#define EHANC_UTILS_LAZY_HPP
 
 #include <functional>
 #include <optional>

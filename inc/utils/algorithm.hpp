@@ -1,5 +1,5 @@
-#ifndef ALGORITHM_HPP
-#define ALGORITHM_HPP
+#ifndef EHANC_UTILS_ALGORITHM_HPP
+#define EHANC_UTILS_ALGORITHM_HPP
 
 #include <iterator>
 #include <functional>

@@ -23,7 +23,7 @@ namespace ehanc {
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
 	constexpr void for_each_pair( const Itr begin, const Itr end,
-						BinaryFunc func)
+						BinaryFunc&& func)
 	noexcept(noexcept(func(*begin, *begin)))
 	{
 		Itr leader{begin};
@@ -56,7 +56,7 @@ namespace ehanc {
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
 	constexpr void for_each_pair_n( const Itr begin, const Itr end,
-						int n, BinaryFunc func)
+						const int n, BinaryFunc&& func)
 	noexcept(noexcept(func(*begin, *begin)))
 	{
 		int count{0};
@@ -65,7 +65,7 @@ namespace ehanc {
 		Itr follower{begin};
 
 		for (	; count != n  &&  leader != end
-				; ++n, ++leader, ++follower )
+				; ++count, ++leader, ++follower )
 		{
 			func(*leader, *follower);
 		}
@@ -96,9 +96,9 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
-	constexpr void for_each_both( Itr1 begin1, Itr1 end1,
-						Itr2 begin2, Itr2 end2,
-						BinaryFunc func)
+	constexpr void for_each_both( Itr1 begin1, const Itr1 end1,
+						Itr2 begin2, const Itr2 end2,
+						BinaryFunc&& func)
 	noexcept(noexcept(func(*begin1, *begin2)))
 	{
 		for (	; (begin1 != end1 && begin2 != end2)
@@ -135,9 +135,9 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
-	constexpr void for_each_both_n(	Itr1 begin1, Itr1 end1,
-							Itr2 begin2, Itr2 end2,
-							int n, BinaryFunc func)
+	constexpr void for_each_both_n(	Itr1 begin1, const Itr1 end1,
+							Itr2 begin2, const Itr2 end2,
+							const int n, BinaryFunc&& func)
 	noexcept(noexcept(func(*begin1, *begin2)))
 	{
 		for (	int count{0}
@@ -182,7 +182,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename VarFunc, typename... Begins>
-	constexpr void for_each_all_n(VarFunc&& func, int n, Begins... begins)
+	constexpr void for_each_all_n(VarFunc&& func, const int n, Begins... begins)
 	noexcept(noexcept(func(*begins...)))
 	{
 		for ( int i{0} ; i != n ; ++i ) {

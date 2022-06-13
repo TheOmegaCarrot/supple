@@ -37,7 +37,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename Predicate>
-	bool all_pass(Itr begin, Itr end, Predicate func)
+	bool all_pass(Itr begin, const Itr end, Predicate func)
 	{
 		bool check{true};
 		std::for_each(begin, end, [&func, &check](const auto& i) {
@@ -56,7 +56,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Container>
-	constexpr size_t min_size(Container cont) noexcept
+	constexpr size_t min_size(const Container& cont) noexcept
 	{
 		return cont.size();
 	}
@@ -74,8 +74,8 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Container, typename... Containers>
-	constexpr size_t min_size(Container& cont, Containers&... conts)
-	noexcept
+	constexpr size_t min_size(const Container& cont,
+			const Containers&... conts) noexcept
 	{
 		return std::min( min_size(cont) , min_size(conts...) );
 	}

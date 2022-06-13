@@ -30,10 +30,9 @@ bool test_for_each_pair()
 
 bool test_for_each_pair_n()
 {
-	std::vector<int> test_input(6);
-	std::iota(test_input.begin(), test_input.end(), 1);
+	std::vector<int> test_input{1, 2, 3, 4, 5, 6};
 	std::vector<int> test_output;
-	std::vector<int> reference_output{3, 5, 7, 9, 11};
+	std::vector<int> reference_output{3, 5, 7};
 	
 	ehanc::for_each_pair_n(test_input.cbegin(), test_input.cend(), 3,
 			[&test_output](const int i, const int j) {

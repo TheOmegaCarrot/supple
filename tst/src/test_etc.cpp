@@ -2,7 +2,7 @@
 
 #include "test_utils.h"
 
-bool test_all_pass()
+bool test_all_pass_cont()
 {
 	std::vector<int> yes{1, 2, 3, 4, 2, 3};
 	std::array no{1, 2, 4, 9, 2, 3};
@@ -11,6 +11,18 @@ bool test_all_pass()
 	return	(
 				ehanc::all_pass(yes, checker)
 			&&	! ehanc::all_pass(no, checker)
+			);
+}
+
+bool test_all_pass_itr()
+{
+	std::vector<int> yes{1, 2, 3, 4, 2, 3};
+	std::array no{1, 2, 4, 9, 2, 3};
+	auto checker = [](const int i) -> bool{ return i < 6; };
+
+	return	(
+				ehanc::all_pass(yes.cbegin(), yes.cend(), checker)
+			&&	! ehanc::all_pass(no.cbegin(), no.cend(), checker)
 			);
 }
 
@@ -27,6 +39,7 @@ bool test_min_size()
 
 void test_etc()
 {
-	run_test("ehanc::all_pass", &test_all_pass);
+	run_test("ehanc::all_pass (container)", &test_all_pass_cont);
+	run_test("ehanc::all_pass (iterators)", &test_all_pass_itr);
 	run_test("ehanc::min_size", &test_min_size);
 }

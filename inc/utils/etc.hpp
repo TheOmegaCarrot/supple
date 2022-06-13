@@ -22,7 +22,29 @@ namespace ehanc {
 					check = check && func(i);
 				});
 		return check;
-	} // TODO: Iterator version
+	}
+
+	/* {{{ doc */
+	/**
+	 * @brief Checks if all values in iterator range
+	 * pass some predicate `func`.
+	 *
+	 * @param begin Begin iterator of range to check.
+	 *
+	 * @param end End iterator of range to check.
+	 *
+	 * @param func Condition to check all values in cont against.
+	 */
+	/* }}} */
+	template<typename Itr, typename Predicate>
+	bool all_pass(Itr begin, Itr end, Predicate func)
+	{
+		bool check{true};
+		std::for_each(begin, end, [&func, &check](const auto& i) {
+					check = check && func(i);
+				});
+		return check;
+	}
 
 	/* {{{ doc */
 	/**

@@ -14,8 +14,19 @@ bool test_all_pass()
 			);
 }
 
+bool test_min_size()
+{
+	std::array<int,5> test1;
+	std::array<int,8> test2;
+	std::array<int,3> test3;
+	std::array<int,6> test4;
+
+	return ehanc::min_size(test1, test2, test3, test4) == 3;
+
+}
 
 void test_etc()
 {
 	run_test("ehanc::all_pass", &test_all_pass);
+	run_test("ehanc::min_size", &test_min_size);
 }

@@ -202,7 +202,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Iterable>
-	[[nodiscard]] constexpr auto last(Iterable& container) noexcept
+	[[nodiscard]] constexpr auto last(const Iterable& container) noexcept
 			-> decltype(std::begin(container))
 	{
 		auto end{std::end(container)};
@@ -232,7 +232,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Iterable>
-	[[nodiscard]] constexpr auto clast(Iterable& container) noexcept
+	[[nodiscard]] constexpr auto clast(const Iterable& container) noexcept
 			-> decltype(std::cbegin(container))
 	{
 		auto end{std::cend(container)};

@@ -24,7 +24,5 @@ int main()
 	std::cout << HEADER_COLOR << "Etc:" << ehanc::RESET << '\n';
 	test_etc();
 
-	std::cout << '\n' << '\n';
-
 	return 0;
 }

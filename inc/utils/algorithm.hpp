@@ -183,6 +183,7 @@ namespace ehanc {
 	/* }}} */
 	template<typename VarFunc, typename... Begins>
 	constexpr void for_each_all_n(VarFunc&& func, int n, Begins... begins)
+	noexcept(noexcept(func(*begins...)))
 	{
 		for ( int i{0} ; i != n ; ++i ) {
 			func(*begins...);

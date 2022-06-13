@@ -47,7 +47,7 @@ namespace ehanc {
 			 * needed.
 			 */
 			/* }}} */
-			std::optional<RetType> m_value{};
+			std::optional<RetType> m_value;
 
 		public:
 
@@ -64,9 +64,10 @@ namespace ehanc {
 			 * Enforce initialization with an appropriate callable.
 			 */
 			/* }}} */
-			constexpr lazy(std::function<RetType ()> func)
-				noexcept(noexcept(func()))
-				: m_func{func}, m_value{}
+			template<typename Func>
+			constexpr lazy(Func&& func)
+				noexcept
+				: m_func{std::forward<Func>(func)}, m_value{}
 			{  }
 
 			/* {{{ doc */
@@ -75,7 +76,7 @@ namespace ehanc {
 			 */
 			/* }}} */
 			constexpr lazy(const lazy& src)
-				noexcept(noexcept(src.func()))
+				noexcept
 				= default;
 
 			/* {{{ doc */
@@ -84,7 +85,7 @@ namespace ehanc {
 			 */
 			/* }}} */
 			constexpr lazy& operator= (const lazy& rhs)
-				noexcept(noexcept(rhs.func()))
+				noexcept
 				= default;
 
 			/* {{{ doc */
@@ -93,7 +94,7 @@ namespace ehanc {
 			 */
 			/* }}} */
 			constexpr lazy(lazy&& src)
-				noexcept(noexcept(src.func()))
+				noexcept
 				= default;
 
 			/* {{{ doc */
@@ -102,7 +103,7 @@ namespace ehanc {
 			 */
 			/* }}} */
 			constexpr lazy& operator= (lazy&& rhs)
-				noexcept(noexcept(rhs.func()))
+				noexcept
 				= default;
 
 			/* {{{ doc */
@@ -110,7 +111,7 @@ namespace ehanc {
 			 * Straightforward to destruct.
 			 */
 			/* }}} */
-			~lazy() noexcept(noexcept(m_func())) = default;
+			~lazy() noexcept = default;
 
 			/* {{{ doc */
 			/**

@@ -24,7 +24,7 @@ bool test_lazy_class()
 
 bool test_make_lazy()
 {
-	auto test = ehanc::make_lazy([](){return 5;});
+	auto test{ehanc::make_lazy([](){return 5;})};
 
 	return	(
 				test == 5

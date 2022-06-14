@@ -128,8 +128,7 @@ namespace ehanc {
 			 */
 			/* }}} */
 			[[nodiscard]] constexpr auto func() const
-				noexcept(noexcept(m_func()))
-				-> std::function<RetType()>&
+				noexcept -> std::function<RetType()>&
 			{
 				return m_func;
 			}

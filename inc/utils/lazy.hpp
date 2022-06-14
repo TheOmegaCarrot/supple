@@ -134,6 +134,12 @@ namespace ehanc {
 				return m_func;
 			}
 
+			[[nodiscard]] constexpr bool has_value() const
+				noexcept
+			{
+				return m_value != std::nullopt;
+			}
+
 			/* {{{ doc */
 			/**
 			 * @brief Allows direct read-only access to contained value.
@@ -142,8 +148,9 @@ namespace ehanc {
 			 * @return Const reference to contained value.
 			 */
 			/* }}} */
-			[[nodiscard]] constexpr const RetType& get() const
+			[[nodiscard]] constexpr auto get() const
 				noexcept(noexcept(m_func()))
+				-> const RetType&
 			{
 				if (m_value) {
 					return *m_value;

@@ -23,6 +23,23 @@ bool test_lazy_class()
 			);
 }
 
+bool test_lazy_has_value()
+{
+	auto test{ehanc::make_lazy([](){return 5;})};
+
+	bool before = test.has_value();
+
+	[[maybe_unused]] auto discarded{test.get()};
+
+	bool after = test.has_value();
+
+	return	(
+				!before
+			&&	after
+			);
+
+}
+
 bool test_make_lazy()
 {
 	auto test{ehanc::make_lazy([](){return 5;})};
@@ -36,5 +53,6 @@ bool test_make_lazy()
 void test_lazy()
 {
 	run_test("ehanc::lazy", &test_lazy_class);
+	run_test("ehanc::lazy::has_value", &test_lazy_has_value);
 	run_test("ehanc::make_lazy", &test_make_lazy);
 }

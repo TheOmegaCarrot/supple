@@ -7,9 +7,9 @@ bool test_lazy_class()
 
 	std::vector<int> check;
 
-	ehanc::lazy<int> test([&check]() -> int {
+	ehanc::lazy<int> test([&check, i{5}]() mutable -> int {
 				check.push_back(2);
-				return 5;
+				return i++;
 			});
 
 	check.push_back(1);
@@ -18,6 +18,7 @@ bool test_lazy_class()
 				test == 5
 			&&	check[0] == 1
 			&&	check[1] == 2
+			&&	test.func()() == 6
 			&&	test == 5
 			);
 }

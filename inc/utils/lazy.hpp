@@ -39,7 +39,7 @@ namespace ehanc {
 			 * a useful value.
 			 */
 			/* }}} */
-			std::function<RetType ()> m_func;
+			mutable std::function<RetType ()> m_func;
 
 			/* {{{ doc */
 			/**
@@ -47,7 +47,7 @@ namespace ehanc {
 			 * needed.
 			 */
 			/* }}} */
-			std::optional<RetType> m_value;
+			mutable std::optional<RetType> m_value;
 
 		public:
 
@@ -115,11 +115,34 @@ namespace ehanc {
 
 			/* {{{ doc */
 			/**
-			 * @brief Allow for implicit conversion to the value returned
-			 * by `m_func`, but only ever call `m_func` once.
+			 * @brief Type of contained value.
 			 */
 			/* }}} */
-			[[nodiscard]] constexpr operator RetType ()
+			using type = RetType;
+
+			/* {{{ doc */
+			/**
+			 * @brief Provides access to contained callable.
+			 *
+			 * @return Contained callable.
+			 */
+			/* }}} */
+			[[nodiscard]] constexpr auto func() const
+				noexcept(noexcept(m_func()))
+				-> std::function<RetType()>&
+			{
+				return m_func;
+			}
+
+			/* {{{ doc */
+			/**
+			 * @brief Allows direct read-only access to contained value.
+			 * If no value is contained, compute the value.
+			 *
+			 * @return Const reference to contained value.
+			 */
+			/* }}} */
+			[[nodiscard]] constexpr const RetType& get() const
 				noexcept(noexcept(m_func()))
 			{
 				if (m_value) {
@@ -128,6 +151,18 @@ namespace ehanc {
 					m_value = m_func();
 					return *m_value;
 				}
+			}
+
+			/* {{{ doc */
+			/**
+			 * @brief Allow for implicit conversion to the value returned
+			 * by `m_func`, but only ever call `m_func` once.
+			 */
+			/* }}} */
+			[[nodiscard]] constexpr operator RetType () const
+				noexcept(noexcept(m_func()))
+			{
+				return this->get();
 			}
 
 	};

@@ -28,9 +28,17 @@ struct loud
 
 	int operator()() const
 	{
+		std::cout << "EVAL" << '\n';
 		return m_val;
 	}
 };
+
+template<typename T>
+auto printer(const T& print)
+{
+	std::cout << print << '\n';
+	std::cout << print << '\n';
+}
 
 int main( [[maybe_unused]] const int argc,
 		[[maybe_unused]] const char *const *const argv )
@@ -55,6 +63,11 @@ int main( [[maybe_unused]] const int argc,
 
 	std::cout << test4 << '\n';
 	std::cout << test4 << '\n';
+
+	auto test5{ehanc::make_lazy([i{loud(14)}](){return i();})};
+
+	printer(test5);
+	printer(test5);
 
 	return 0;
 }

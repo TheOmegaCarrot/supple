@@ -137,10 +137,9 @@ namespace ehanc {
 		-> lazy<decltype(func())>
 	{
 		using RetType = decltype(func());
+		using FuncType = std::function<RetType()>;
 		return lazy<RetType>(
-				std::forward<std::function<RetType()>>(
-						std::function<RetType()>(func)
-					)
+					FuncType(std::forward<FuncType>(func))
 				);
 	}
 

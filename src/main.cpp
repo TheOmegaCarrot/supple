@@ -3,6 +3,8 @@
 
 #include "utils/all.h"
 
+/// @cond
+
 struct loud
 {
 

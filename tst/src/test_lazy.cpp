@@ -2,6 +2,8 @@
 
 #include "test_utils.h"
 
+#include <iostream>
+
 bool test_lazy_class()
 {
 
@@ -40,6 +42,22 @@ bool test_lazy_has_value()
 
 }
 
+bool test_is_lazy()
+{
+	ehanc::lazy<int> test{[](){return 5;}};
+	bool t1{ehanc::is_lazy_v<decltype(test)>};
+	bool f1{ehanc::is_lazy_v<int>};
+	bool t2{ehanc::is_lazy<decltype(test)>::value};
+	bool f2{ehanc::is_lazy<int>::value};
+
+	return	(
+				t1
+			&&	t2
+			&&	!f1
+			&&	!f2
+			);
+}
+
 bool test_make_lazy()
 {
 	auto test{ehanc::make_lazy([](){return 5;})};
@@ -54,5 +72,6 @@ void test_lazy()
 {
 	run_test("ehanc::lazy", &test_lazy_class);
 	run_test("ehanc::lazy::has_value", &test_lazy_has_value);
+	run_test("ehanc::is_lazy", &test_is_lazy);
 	run_test("ehanc::make_lazy", &test_make_lazy);
 }

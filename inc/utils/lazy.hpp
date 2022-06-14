@@ -186,6 +186,21 @@ namespace ehanc {
 				);
 	}
 
+	template<typename T>
+	struct is_lazy
+	{
+		constexpr static const bool value = false;
+	};
+
+	template<typename T>
+	struct is_lazy<lazy<T>>
+	{
+		constexpr static const bool value = true;
+	};
+
+	template<typename T>
+	constexpr inline const bool is_lazy_v = is_lazy<T>::value;
+
 } // namespace ehanc
 
 #endif

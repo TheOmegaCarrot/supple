@@ -71,5 +71,13 @@ int main( [[maybe_unused]] const int argc,
 	printer(test5);
 	printer(test5);
 
+	std::cout << std::boolalpha <<
+		ehanc::is_lazy_v<decltype(test5)> << '\n' <<
+		ehanc::is_lazy_v<int> << '\n';
+
+	std::cout << std::boolalpha <<
+		ehanc::is_lazy<decltype(test5)>::value << '\n' <<
+		ehanc::is_lazy<int>::value << '\n';
+
 	return 0;
 }

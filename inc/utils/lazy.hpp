@@ -132,6 +132,18 @@ namespace ehanc {
 
 	};
 
+	template<typename Func>
+	constexpr auto make_lazy(Func&& func) noexcept
+		-> lazy<decltype(func())>
+	{
+		using RetType = decltype(func());
+		return lazy<RetType>(
+				std::forward<std::function<RetType()>>(
+						std::function<RetType()>(func)
+					)
+				);
+	}
+
 } // namespace ehanc
 
 #endif

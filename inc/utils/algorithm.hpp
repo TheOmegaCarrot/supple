@@ -273,20 +273,19 @@ namespace ehanc {
 	[[nodiscard]] constexpr auto last(const Iterable& container) noexcept
 			-> decltype(std::begin(container))
 	{
+		auto begin{std::begin(container)};
 		auto end{std::end(container)};
-		auto leader{std::begin(container)};
-		auto follower{leader};
 
-		if ( follower == end ) {
-			return follower;
+		if ( begin == end ) {
+			return begin;
 		}
 
-		while (++leader != end) {
-			++follower;
+		size_t distance{forward_distance(begin, end) - 1};
+		for ( size_t i{0} ; i != distance ; ++i ) {
+			++begin;
 		}
 
-		return follower;
-
+		return begin;
 	}
 
 	/* {{{ doc */
@@ -303,19 +302,19 @@ namespace ehanc {
 	[[nodiscard]] constexpr auto clast(const Iterable& container) noexcept
 			-> decltype(std::cbegin(container))
 	{
-		auto end{std::cend(container)};
-		auto leader{std::cbegin(container)};
-		auto follower{leader};
+		auto cbegin{std::cbegin(container)};
+		auto cend{std::cend(container)};
 
-		if ( follower == end ) {
-			return follower;
+		if ( cbegin == cend ) {
+			return cbegin;
 		}
 
-		while (++leader != end) {
-			++follower;
+		size_t distance{forward_distance(cbegin, cend) - 1};
+		for ( size_t i{0} ; i != distance ; ++i ) {
+			++cbegin;
 		}
 
-		return follower;
+		return cbegin;
 	}
 
 } // namespace ehanc

@@ -9,17 +9,22 @@ namespace ehanc {
 	/**
 	 * @brief Checks if all values in `cont` pass some predicate `func`.
 	 *
+	 * @tparam Container Container type which provides iterators.
+	 *
+	 * @tparam Predicate Unary function which takes the type contained in
+	 * `cont` and returns a bool.
+	 *
 	 * @param cont Container providing values to check.
 	 *
-	 * @param func Condition to check all values in cont against.
+	 * @param pred Condition to check all values in `cont` against.
 	 */
 	/* }}} */
 	template<typename Container, typename Predicate>
-	bool all_pass(const Container& cont, Predicate func) {
+	bool all_pass(const Container& cont, Predicate pred) {
 		bool check{true};
 		std::for_each(cont.cbegin(), cont.cend(),
 				[&func, &check](const auto& i) {
-					check = check && func(i);
+					check = check && pred(i);
 				});
 		return check;
 	}
@@ -29,19 +34,24 @@ namespace ehanc {
 	 * @brief Checks if all values in iterator range
 	 * pass some predicate `func`.
 	 *
+	 * @tparam Itr Iterator type.
+	 *
+	 * @tparam Predicate Unary function which takes the type pointed to by
+	 * the iterators and returns a bool.
+	 *
 	 * @param begin Begin iterator of range to check.
 	 *
 	 * @param end End iterator of range to check.
 	 *
-	 * @param func Condition to check all values in cont against.
+	 * @param pred Condition to check all values in cont against.
 	 */
 	/* }}} */
 	template<typename Itr, typename Predicate>
-	bool all_pass(Itr begin, const Itr end, Predicate func)
+	bool all_pass(Itr begin, const Itr end, Predicate pred)
 	{
 		bool check{true};
 		std::for_each(begin, end, [&func, &check](const auto& i) {
-					check = check && func(i);
+					check = check && pred(i);
 				});
 		return check;
 	}
@@ -49,6 +59,9 @@ namespace ehanc {
 	/* {{{ doc */
 	/**
 	 * @brief Base case of recursive overload.
+	 *
+	 * @tparam Container Container which provides a `.size()`
+	 * member function.
 	 *
 	 * @param cont Container whose size to query.
 	 *
@@ -65,6 +78,14 @@ namespace ehanc {
 	/**
 	 * @brief Returns size of smallest container provided.
 	 * Calls size method internally.
+	 *
+	 * @tparam Container Container which provides a `.size()`
+	 * member function.
+	 *
+	 * @tparam Containers Sequence of container types which all provide
+	 * a `.size()` member function. Types may be mixed, so long as all
+	 * `.size()` member functions return comparable types which can be
+	 * passed to `std::min`.
 	 *
 	 * @param cont First container.
 	 *

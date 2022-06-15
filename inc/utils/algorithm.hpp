@@ -221,18 +221,18 @@ namespace ehanc {
 	}
 
 	template<typename VarFunc, typename... Containers>
+	constexpr void for_each_all(VarFunc&& func, Containers&... containers)
+	{
+		for_each_all_n(std::forward<VarFunc>(func),
+				min_size(containers...), std::begin(containers)...);
+	}
+
+	template<typename VarFunc, typename... Containers>
 	constexpr void for_each_all_c(VarFunc&& func,
 			const Containers&... containers)
 	{
 		for_each_all_n(std::forward<VarFunc>(func),
 				ehanc::min_size(containers...), std::cbegin(containers)...);
-	}
-
-	template<typename VarFunc, typename... Containers>
-	constexpr void for_each_all(VarFunc&& func, Containers&... containers)
-	{
-		for_each_all_n(std::forward<VarFunc>(func),
-				min_size(containers...), std::begin(containers)...);
 	}
 
 	/* {{{ doc */

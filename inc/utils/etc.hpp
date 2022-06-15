@@ -104,4 +104,13 @@ namespace ehanc {
 
 } // namespace ehanc
 
+namespace ehanc::literals
+{
+	[[nodiscard]] constexpr auto operator""_z(unsigned long long i)
+		noexcept -> size_t
+	{
+		return static_cast<size_t>(i);
+	}
+}
+
 #endif

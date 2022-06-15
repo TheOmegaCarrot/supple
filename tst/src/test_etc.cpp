@@ -37,9 +37,21 @@ bool test_min_size()
 
 }
 
+bool test_size_t_literals()
+{
+	using namespace ehanc::literals;
+	size_t i{500};
+	auto j{500_z};
+	return (
+				std::is_same_v<decltype(j), size_t>
+			&&	i == j
+		   );
+}
+
 void test_etc()
 {
 	run_test("ehanc::all_pass (container)", &test_all_pass_cont);
 	run_test("ehanc::all_pass (iterators)", &test_all_pass_itr);
 	run_test("ehanc::min_size", &test_min_size);
+	run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

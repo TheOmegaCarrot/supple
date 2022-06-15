@@ -23,7 +23,7 @@ namespace ehanc {
 	bool all_pass(const Container& cont, Predicate pred) {
 		bool check{true};
 		std::for_each(cont.cbegin(), cont.cend(),
-				[&func, &check](const auto& i) {
+				[&pred, &check](const auto& i) {
 					check = check && pred(i);
 				});
 		return check;
@@ -50,7 +50,7 @@ namespace ehanc {
 	bool all_pass(Itr begin, const Itr end, Predicate pred)
 	{
 		bool check{true};
-		std::for_each(begin, end, [&func, &check](const auto& i) {
+		std::for_each(begin, end, [&pred, &check](const auto& i) {
 					check = check && pred(i);
 				});
 		return check;

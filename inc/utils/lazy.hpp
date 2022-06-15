@@ -195,10 +195,7 @@ namespace ehanc {
 	constexpr auto make_lazy(Func&& func) noexcept
 		-> lazy<std::invoke_result_t<Func&&>>
 	{
-		using RetType = decltype(func());
-		return lazy<RetType>(
-					std::forward<Func>(func)
-				);
+		return lazy<decltype(func())>(std::forward<Func>(func));
 	}
 
 	// deduction guide thanks to /u/i_lack_chromosomes on reddit!

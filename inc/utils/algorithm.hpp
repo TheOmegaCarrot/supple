@@ -69,11 +69,11 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
-	constexpr void for_each_pair_n( const Itr begin, const Itr end,
-						const int n, BinaryFunc&& func)
+	constexpr void for_each_pair_n(const Itr begin, const Itr end,
+						const size_t n, BinaryFunc&& func)
 	noexcept(noexcept(func(*begin, *begin)))
 	{
-		int count{0};
+		size_t count{0};
 		Itr leader{begin};
 		++leader;
 		Itr follower{begin};
@@ -119,7 +119,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
-	constexpr void for_each_both( Itr1 begin1, const Itr1 end1,
+	constexpr void for_each_both(Itr1 begin1, const Itr1 end1,
 						Itr2 begin2, const Itr2 end2,
 						BinaryFunc&& func)
 	noexcept(noexcept(func(*begin1, *begin2)))
@@ -167,12 +167,12 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
-	constexpr void for_each_both_n(	Itr1 begin1, const Itr1 end1,
+	constexpr void for_each_both_n(Itr1 begin1, const Itr1 end1,
 							Itr2 begin2, const Itr2 end2,
-							const int n, BinaryFunc&& func)
-	noexcept(noexcept(func(*begin1, *begin2)))
+							const size_t n, BinaryFunc&& func)
+			noexcept(noexcept(func(*begin1, *begin2)))
 	{
-		for (	int count{0}
+		for (	size_t count{0}
 				; (count != n && begin1 != end1 && begin2 != end2)
 				; ++count, ++begin1, ++begin2 )
 		{
@@ -210,8 +210,9 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename VarFunc, typename... Begins>
-	constexpr void for_each_all_n(VarFunc&& func, const size_t n, Begins... begins)
-	noexcept(noexcept(func(*begins...)))
+	constexpr void for_each_all_n(VarFunc&& func,
+			const size_t n, Begins... begins)
+			noexcept(noexcept(func(*begins...)))
 	{
 		for ( size_t i{0} ; i != n ; ++i ) {
 			func(*begins...);
@@ -220,7 +221,8 @@ namespace ehanc {
 	}
 
 	template<typename VarFunc, typename... Containers>
-	constexpr void for_each_all_c(VarFunc&& func, const Containers&... containers)
+	constexpr void for_each_all_c(VarFunc&& func,
+			const Containers&... containers)
 	{
 		for_each_all_n(std::forward<VarFunc>(func),
 				ehanc::min_size(containers...), std::cbegin(containers)...);

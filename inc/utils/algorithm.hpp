@@ -14,6 +14,12 @@ namespace ehanc {
 	 *
 	 * Calls to `func` will be: `func(1, 2)`, `func(2, 3)`
 	 *
+	 * @tparam Itr Iterator type satisfying only a minimal interface.
+	 * Simply being incrementable and equality-comparable is sufficient.
+	 *
+	 * @tparam BinaryFunc Function which takes two arguments, and
+	 * for both must accept the type which the iterators point to.
+	 *
 	 * @param begin Iterator to the beginning of the range.
 	 *
 	 * @param end Iterator to the end of the range.
@@ -22,7 +28,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
-	constexpr void for_each_pair( const Itr begin, const Itr end,
+	constexpr void for_each_pair(const Itr begin, const Itr end,
 						BinaryFunc&& func)
 	noexcept(noexcept(func(*begin, *begin)))
 	{
@@ -44,6 +50,12 @@ namespace ehanc {
 	 * Example: Range is: {1, 2, 3}
 	 *
 	 * Calls to `func` will be: `func(1, 2)`, `func(2, 3)`
+	 *
+	 * @tparam Itr Iterator type satisfying only a minimal interface.
+	 * Simply being incrementable and equality-comparable is sufficient.
+	 *
+	 * @tparam BinaryFunc Function which takes two arguments, and
+	 * for both must accept the type which the iterators point to.
 	 *
 	 * @param begin Iterator to the beginning of the range.
 	 *
@@ -84,6 +96,15 @@ namespace ehanc {
 	 * * `func(2, 5)`
 	 * * `func(3, 6)`
 	 *
+	 * @tparam Itr1 Iterator type satisfying only a minimal interface.
+	 * Simply being incrementable and equality-comparable is sufficient.
+	 *
+	 * @tparam Itr2 Iterator type satisfying only a minimal interface.
+	 * Simply being incrementable and equality-comparable is sufficient.
+	 *
+	 * @tparam BinaryFunc Function which takes two arguments, and
+	 * for both must accept the type which the iterators point to.
+	 *
 	 * @param begin1 Iterator to the beginning of range 1
 	 *
 	 * @param end1 Iterator to the end of range 1
@@ -120,6 +141,15 @@ namespace ehanc {
 	 * * `func(1, 4)`
 	 * * `func(2, 5)`
 	 * * `func(3, 6)`
+	 *
+	 * @tparam Itr1 Iterator type satisfying only a minimal interface.
+	 * Simply being incrementable and equality-comparable is sufficient.
+	 *
+	 * @tparam Itr2 Iterator type satisfying only a minimal interface.
+	 * Simply being incrementable and equality-comparable is sufficient.
+	 *
+	 * @tparam BinaryFunc Function which takes two arguments, and
+	 * for both must accept the type which the iterators point to.
 	 *
 	 * @param begin1 Iterator to the beginning of range 1
 	 *
@@ -170,6 +200,12 @@ namespace ehanc {
 	 *
 	 * `func` must have accept `int, char` as parameters.
 	 *
+	 * @tparam VarFunc A function which acccepts the types of all the
+	 * contaners in parameter order.
+	 *
+	 * @tparam Begins Sequence of iterators satisfying only a minimal
+	 * inteface. Simply being incrementable is sufficient.
+	 *
 	 * @param func A function which accepts the types of all the containers
 	 * in parameter order.
 	 *
@@ -193,8 +229,40 @@ namespace ehanc {
 
 	/* {{{ doc */
 	/**
+	 * @brief Computes distance between two iterators.
+	 * It is assumed `begin` is before `end`, meaning that incrementing
+	 * `begin` will eventually yield an iterator equal to `end`; if this
+	 * is not the case, behavior is undefined.
+	 *
+	 * @tparam Itr Iterator type satisfying only a minimal interface.
+	 * Simply being incrementable and equality-comparable is sufficient.
+	 *
+	 * @param begin Beginning iterator.
+	 *
+	 * @param end End iterator.
+	 *
+	 * @return Distance between begin and end. Distance being defined as
+	 * the number of times `begin` must be incremented to equal `end`.
+	 */
+	/* }}} */
+	template<typename Itr>
+	[[nodiscard]] constexpr auto forward_distance(Itr begin, const Itr end)
+			noexcept -> size_t
+	{
+		size_t count{0};
+		while (begin != end) {
+			++begin;
+			++count;
+		}
+		return count;
+	}
+
+	/* {{{ doc */
+	/**
 	 * @brief Returns an iterator to the last element of the container.
 	 * In short, `++ehanc::last(container) == std::end(container)`
+	 *
+	 * @tparam Iterable Type which provides iterators.
 	 *
 	 * @param container Container which supports at least forward iterators.
 	 *

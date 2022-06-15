@@ -118,6 +118,12 @@ bool test_for_each_both_n()
 			);
 }
 
+bool test_forward_distance()
+{
+	std::array<int, 5> test{1, 2, 3, 4, 5};
+	return ehanc::forward_distance(test.cbegin(), test.cend()) == 5;
+}
+
 bool test_last()
 {
 	std::array<int, 5> test1;
@@ -155,6 +161,7 @@ void test_algorithm()
 	run_test("ehanc::for_each_all_n", &test_for_each_all_n);
 	run_test("ehanc::for_each_both", &test_for_each_both);
 	run_test("ehanc::for_each_both_n", &test_for_each_both_n);
+	run_test("ehanc::forward_distance", &test_forward_distance);
 	run_test("ehanc::last", & test_last);
 	run_test("ehanc::clast", & test_clast);
 }

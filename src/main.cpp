@@ -79,5 +79,10 @@ int main( [[maybe_unused]] const int argc,
 		ehanc::is_lazy<decltype(test5)>::value << '\n' <<
 		ehanc::is_lazy<int>::value << '\n';
 
+	ehanc::lazy deduced([i{loud(2)}](){return i();});
+
+	std::cout << deduced << '\n';
+	std::cout << deduced << '\n';
+
 	return 0;
 }

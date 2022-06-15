@@ -179,6 +179,10 @@ namespace ehanc {
 	 * an ehanc::lazy where explicit instantiation would be impossible
 	 * or cumbersome.
 	 *
+	 * @note Number of use cases reduced dramatically after addition of
+	 * deduction guide. Kept mostly for cases where using this
+	 * improves clarity.
+	 *
 	 * @tparam Func Callable type taking no arguments and returning non-void.
 	 *
 	 * @param func Callable taking no arguments and returning non-void.
@@ -196,6 +200,12 @@ namespace ehanc {
 					std::forward<Func>(func)
 				);
 	}
+
+	// deduction guide thanks to /u/i_lack_chromosomes on reddit!
+	// link to comment: https://www.reddit.com/r/cpp_questions/comments/vct7ct
+	template<typename Func>
+	lazy(Func) -> lazy<typename
+			decltype(std::function(std::declval<Func>()))::result_type>;
 
 	/* {{{ doc */
 	/**

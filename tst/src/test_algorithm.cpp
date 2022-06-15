@@ -49,16 +49,58 @@ bool test_for_each_pair_n()
 			);
 }
 
-bool test_for_each_all_n()
+bool test_for_each_all()
 {
 	std::array test1{4, 9, 16, 25};
 	std::array test2{2, 3, 4, 5};
 	std::vector<int> test_output;
 	std::vector reference_output{2, 3, 4, 5};
 
+	ehanc::for_each_all([&test_output](const int a, const int b) {
+				test_output.push_back(a / b);
+			}, test1, test2);
+
+	auto[test, ref] = std::mismatch(
+			test_output.cbegin(), test_output.cend(),
+			reference_output.cbegin(), reference_output.cend() );
+
+	return	(
+				test == test_output.cend()
+			&&	ref  == reference_output.cend()
+			);
+}
+
+bool test_for_each_all_c()
+{
+	const std::array test1{4, 9, 16, 25};
+	const std::array test2{2, 3, 4, 5};
+	std::vector<int> test_output;
+	std::vector reference_output{2, 3, 4, 5};
+
+	ehanc::for_each_all_c([&test_output](const int a, const int b) {
+				test_output.push_back(a / b);
+			}, test1, test2);
+
+	auto[test, ref] = std::mismatch(
+			test_output.cbegin(), test_output.cend(),
+			reference_output.cbegin(), reference_output.cend() );
+
+	return	(
+				test == test_output.cend()
+			&&	ref  == reference_output.cend()
+			);
+}
+
+bool test_for_each_all_n()
+{
+	std::array test1{4, 9, 16, 25};
+	std::array test2{2, 3, 4, 5};
+	std::vector<int> test_output;
+	std::vector reference_output{2, 3, 4};
+
 	ehanc::for_each_all_n([&test_output](const int a, const int b) {
 				test_output.push_back(a / b);
-			}, 4, test1.cbegin(), test2.cbegin());
+			}, 3, test1.cbegin(), test2.cbegin());
 
 	auto[test, ref] = std::mismatch(
 			test_output.cbegin(), test_output.cend(),
@@ -159,6 +201,8 @@ void test_algorithm()
 	run_test("ehanc::for_each_pair", &test_for_each_pair);
 	run_test("ehanc::for_each_pair_n", &test_for_each_pair_n);
 	run_test("ehanc::for_each_all_n", &test_for_each_all_n);
+	run_test("ehanc::for_each_all", &test_for_each_all);
+	run_test("ehanc::for_each_all_c", &test_for_each_all_c);
 	run_test("ehanc::for_each_both", &test_for_each_both);
 	run_test("ehanc::for_each_both_n", &test_for_each_both_n);
 	run_test("ehanc::forward_distance", &test_forward_distance);

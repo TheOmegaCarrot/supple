@@ -4,6 +4,8 @@
 #include <iterator>
 #include <functional>
 
+#include "utils/etc.hpp"
+
 namespace ehanc {
 
 	/* {{{ doc */
@@ -178,16 +180,6 @@ namespace ehanc {
 		}
 	}
 
-	// WIP:
-	/* template<typename VarFunc, typename... Containers> */
-	/* constexpr void for_each_all(VarFunc& func, Containers&... containers) */
-	/* { */
-	/* 	std::vector<const_iterator> its; */
-	/* 	for (	(..., its.push_back(std::cbegin(containers))), bool check{false} */
-	/* 			; all_pass(its, [](const auto& it) { return it != }) */
-	/* 			; std::for_each(its.begin(), its.end() [](auto& it) {++it}) ) */
-	/* } */
-
 	/* {{{ doc */
 	/**
 	 * @brief Applies `func` to members of
@@ -218,13 +210,27 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename VarFunc, typename... Begins>
-	constexpr void for_each_all_n(VarFunc&& func, const int n, Begins... begins)
+	constexpr void for_each_all_n(VarFunc&& func, const size_t n, Begins... begins)
 	noexcept(noexcept(func(*begins...)))
 	{
-		for ( int i{0} ; i != n ; ++i ) {
+		for ( size_t i{0} ; i != n ; ++i ) {
 			func(*begins...);
 			(++begins,...);
 		}
+	}
+
+	template<typename VarFunc, typename... Containers>
+	constexpr void for_each_all_c(VarFunc&& func, const Containers&... containers)
+	{
+		for_each_all_n(std::forward<VarFunc>(func),
+				ehanc::min_size(containers...), std::cbegin(containers)...);
+	}
+
+	template<typename VarFunc, typename... Containers>
+	constexpr void for_each_all(VarFunc&& func, Containers&... containers)
+	{
+		for_each_all_n(std::forward<VarFunc>(func),
+				min_size(containers...), std::begin(containers)...);
 	}
 
 	/* {{{ doc */

@@ -232,7 +232,7 @@ namespace ehanc {
 			const Containers&... containers)
 	{
 		for_each_all_n(std::forward<VarFunc>(func),
-				ehanc::min_size(containers...), std::cbegin(containers)...);
+				min_size(containers...), std::cbegin(containers)...);
 	}
 
 	/* {{{ doc */

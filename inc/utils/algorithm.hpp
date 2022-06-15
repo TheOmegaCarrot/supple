@@ -302,19 +302,7 @@ namespace ehanc {
 	[[nodiscard]] constexpr auto clast(const Iterable& container) noexcept
 			-> decltype(std::cbegin(container))
 	{
-		auto cbegin{std::cbegin(container)};
-		auto cend{std::cend(container)};
-
-		if ( cbegin == cend ) {
-			return cbegin;
-		}
-
-		size_t distance{forward_distance(cbegin, cend) - 1};
-		for ( size_t i{0} ; i != distance ; ++i ) {
-			++cbegin;
-		}
-
-		return cbegin;
+		return static_cast<decltype(std::cbegin(container))>(last(container));
 	}
 
 } // namespace ehanc

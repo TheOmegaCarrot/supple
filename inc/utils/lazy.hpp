@@ -12,7 +12,7 @@ namespace ehanc {
 	 * this class will seamlessly and implicitly convert to the result
 	 * of calling the callable, but only call the callable a single time.
 	 *
-	 * @tparam RetType Return type of `m_func`. A `lazy` is implicitly
+	 * @tparam RetType Return type of `m_func`. An `ehanc::lazy` is implicitly
 	 * convertible to the object of type `RetType` returned by `m_func`.
 	 *
 	 * @code
@@ -136,7 +136,7 @@ namespace ehanc {
 			[[nodiscard]] constexpr bool has_value() const
 				noexcept
 			{
-				return m_value != std::nullopt;
+				return m_value.has_value();
 			}
 
 			/* {{{ doc */
@@ -151,21 +151,21 @@ namespace ehanc {
 				noexcept(noexcept(m_func()))
 				-> const RetType&
 			{
-				if (m_value) {
-					return *m_value;
-				} else {
+				if (!m_value.has_value()) {
 					m_value = m_func();
-					return *m_value;
 				}
+				return *m_value;
 			}
 
 			/* {{{ doc */
 			/**
 			 * @brief Allow for implicit conversion to the value returned
 			 * by `m_func`, but only ever call `m_func` once.
+			 *
+			 * @return Const reference to contained value.
 			 */
 			/* }}} */
-			[[nodiscard]] constexpr operator RetType () const
+			[[nodiscard]] constexpr operator const RetType& () const
 				noexcept(noexcept(m_func()))
 			{
 				return this->get();
@@ -173,31 +173,55 @@ namespace ehanc {
 
 	};
 
+	/* {{{ doc */
+	/**
+	 * @brief Helper function to deduce types for constructing
+	 * an ehanc::lazy where explicit instantiation would be impossible
+	 * or cumbersome.
+	 *
+	 * @tparam Func Callable type taking no arguments and returning non-void.
+	 *
+	 * @param func Callable taking no arguments and returning non-void.
+	 *
+	 * @return `ehanc::lazy` object containing an object of the
+	 * return type of `func`.
+	 */
+	/* }}} */
 	template<typename Func>
 	constexpr auto make_lazy(Func&& func) noexcept
-		-> lazy<decltype(func())>
+		-> lazy<std::invoke_result_t<Func&&>>
 	{
 		using RetType = decltype(func());
-		using FuncType = std::function<RetType()>;
 		return lazy<RetType>(
-					FuncType(
-						std::forward<Func>(func)
-					)
+					std::forward<Func>(func)
 				);
 	}
 
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to determine if a type is an ehanc::lazy.
+	 */
+	/* }}} */
 	template<typename T>
-	struct is_lazy
-	{
-		constexpr static const bool value = false;
-	};
+	struct is_lazy : std::false_type
+	{ };
 
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to determine if a type is an ehanc::lazy.
+	 * Specialization for true case.
+	 */
+	/* }}} */
 	template<typename T>
-	struct is_lazy<lazy<T>>
-	{
-		constexpr static const bool value = true;
-	};
+	struct is_lazy<lazy<T>> : std::true_type
+	{ };
 
+	/* {{{ doc */
+	/**
+	 * @brief Helper variable template to make using the `is_lazy`
+	 * metafunction less verbose.
+	 */
+	/* }}} */
 	template<typename T>
 	constexpr inline const bool is_lazy_v = is_lazy<T>::value;
 

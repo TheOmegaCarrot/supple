@@ -6,5 +6,5 @@ asm
 pre
 run
 run_tests
-doc
+doc/html
 tags

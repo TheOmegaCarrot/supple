@@ -209,11 +209,16 @@ namespace ehanc {
 	/* {{{ doc */
 	/**
 	 * @brief Metafunction to determine if a type is an ehanc::lazy.
+	 *
+	 * @code
+	 * // all below assertions pass
+	 * static_assert(ehanc::is_lazy<ehanc::lazy<int>>)
+	 * static_assert(not ehanc::is_lazy<int>)
+	 * @endcode
 	 */
 	/* }}} */
 	template<typename T>
-	struct is_lazy : std::false_type
-	{ };
+	struct is_lazy : std::false_type {};
 
 	/* {{{ doc */
 	/**
@@ -222,17 +227,55 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename T>
-	struct is_lazy<lazy<T>> : std::true_type
-	{ };
+	struct is_lazy<lazy<T>> : std::true_type {};
 
 	/* {{{ doc */
 	/**
 	 * @brief Helper variable template to make using the `is_lazy`
-	 * metafunction less verbose.
+	 * metafunction less verbose and cumbersome.
 	 */
 	/* }}} */
 	template<typename T>
 	constexpr inline const bool is_lazy_v = is_lazy<T>::value;
+
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to determine if a type is an ehanc::lazy of
+	 * a particular type; if L is an ehanc::lazy containing a T,
+	 * value is true, else value is false.
+	 *
+	 * @code
+	 * // all below assertions pass
+	 * static_assert(ehanc::is_lazy_of_v<int, ehanc::lazy<int>)
+	 * static_assert(not ehanc::is_lazy_of_v<int, ehanc::lazy<double>)
+	 * static_assert(not ehanc::is_lazy_of_v<int, double)
+	 * @endcode
+	 *
+	 * @tparam T Type to query if is contained by an ehanc::lazy.
+	 *
+	 * @tparam L Possible ehanc::lazy, possibly containing T.
+	 */
+	/* }}} */
+	template<typename T, typename L>
+	struct is_lazy_of : std::false_type {};
+
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to determine if a type is a lazy of
+	 * a particular type. Specialization for true case.
+	 */
+	/* }}} */
+	template<typename T>
+	struct is_lazy_of<T, lazy<T>> : std::true_type {};
+
+	/* {{{ doc */
+	/**
+	 * @brief Helper variable template to make using the `is_lazy_of`
+	 * metafunction less verbose and cumbersome.
+	 */
+	/* }}} */
+	template<typename T, typename L>
+	constexpr inline const bool is_lazy_of_v = is_lazy_of<T, L>::value;
 
 } // namespace ehanc
 

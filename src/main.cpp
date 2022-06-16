@@ -84,5 +84,13 @@ int main( [[maybe_unused]] const int argc,
 	std::cout << deduced << '\n';
 	std::cout << deduced << '\n';
 
+	std::cout << '\n' << '\n';
+
+	std::cout << std::boolalpha
+		<< ehanc::is_lazy_of<int, decltype(test5)>::value << '\n'
+		<< ehanc::is_lazy_of<double, decltype(test5)>::value << '\n'
+		<< ehanc::is_lazy_of_v<int, decltype(test5)> << '\n'
+		<< ehanc::is_lazy_of_v<double, decltype(test5)> << '\n';
+
 	return 0;
 }

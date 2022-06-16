@@ -58,6 +58,20 @@ bool test_is_lazy()
 			);
 }
 
+bool test_is_lazy_of()
+{
+	ehanc::lazy<int> test{[](){return 5;}};
+
+	return	(
+				ehanc::is_lazy_of<int, decltype(test)>::value
+			&&	!ehanc::is_lazy_of<double, decltype(test)>::value
+			&&	!ehanc::is_lazy_of<double, int>::value
+			&&	ehanc::is_lazy_of_v<int, decltype(test)>
+			&&	!ehanc::is_lazy_of_v<double, decltype(test)>
+			&&	!ehanc::is_lazy_of_v<double, int>
+		   );
+}
+
 bool test_make_lazy()
 {
 	auto test{ehanc::make_lazy([](){return 5;})};
@@ -73,5 +87,6 @@ void test_lazy()
 	run_test("ehanc::lazy", &test_lazy_class);
 	run_test("ehanc::lazy::has_value", &test_lazy_has_value);
 	run_test("ehanc::is_lazy", &test_is_lazy);
+	run_test("ehanc::is_lazy_of", &test_is_lazy_of);
 	run_test("ehanc::make_lazy", &test_make_lazy);
 }

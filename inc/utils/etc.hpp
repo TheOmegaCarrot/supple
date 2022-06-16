@@ -102,6 +102,25 @@ namespace ehanc {
 		return std::min( min_size(cont) , min_size(conts...) );
 	}
 
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to determine the type resulting from
+	 * addition of the two parameter types.
+	 */
+	/* }}} */
+	template<typename T, typename U>
+	struct sum_type {
+		using type = decltype(std::declval<T>() + std::declval<U>());
+	};
+
+	/* {{{ doc */
+	/**
+	 * @brief Helper variable template to make using the `sum_type`
+	 * metafunction less verbose and cumbersome.
+	 */
+	/* }}} */
+	template<typename T, typename U>
+	using sum_type_t = typename sum_type<T, U>::type;
 
 } // namespace ehanc
 

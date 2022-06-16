@@ -1,6 +1,7 @@
 #include "test_etc.h"
 
 #include "test_utils.h"
+#include "utils/lazy.hpp"
 
 bool test_all_pass_cont()
 {
@@ -37,6 +38,21 @@ bool test_min_size()
 
 }
 
+bool test_sum_type()
+{
+	return	(
+				std::is_same_v<ehanc::sum_type_t<int, int>, int>
+			&&	std::is_same_v<ehanc::sum_type_t<short, short>, int>
+			&&	std::is_same_v<ehanc::sum_type_t<double, double>, double>
+			&&	std::is_same_v<ehanc::sum_type_t<double, int>, double>
+			&&	std::is_same_v<ehanc::sum_type_t<double, float>, double>
+			&&	std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>
+			&&	not std::is_same_v<ehanc::sum_type_t<int, short>, short>
+			&&	not std::is_same_v<ehanc::sum_type_t<double, int>, int>
+			&&	not std::is_same_v<ehanc::sum_type_t<char, int>, char>
+			);
+}
+
 bool test_size_t_literals()
 {
 	using namespace ehanc::literals::size_t_literal;
@@ -54,5 +70,6 @@ void test_etc()
 	run_test("ehanc::all_pass (container)", &test_all_pass_cont);
 	run_test("ehanc::all_pass (iterators)", &test_all_pass_itr);
 	run_test("ehanc::min_size", &test_min_size);
+	run_test("ehanc::sum_type", &test_sum_type);
 	run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

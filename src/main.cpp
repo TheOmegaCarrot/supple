@@ -92,5 +92,15 @@ int main( [[maybe_unused]] const int argc,
 		<< ehanc::is_lazy_of_v<int, decltype(test5)> << '\n'
 		<< ehanc::is_lazy_of_v<double, decltype(test5)> << '\n';
 
+	std::cout << '\n' << '\n';
+
+	std::cout << std::boolalpha
+		<< std::is_same_v<typename ehanc::lazy_inner_type<decltype(test5)>::type, int> << '\n'
+		<< std::is_same_v<typename ehanc::lazy_inner_type<decltype(test5)>::type, double> << '\n'
+		<< std::is_same_v<typename ehanc::lazy_inner_type<int>::type, int> << '\n'
+		<< std::is_same_v<ehanc::lazy_inner_type_t<decltype(test5)>, int> << '\n'
+		<< std::is_same_v<ehanc::lazy_inner_type_t<decltype(test5)>, double> << '\n'
+		<< std::is_same_v<ehanc::lazy_inner_type_t<int>, int> << '\n';
+
 	return 0;
 }

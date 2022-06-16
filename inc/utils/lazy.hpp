@@ -277,6 +277,39 @@ namespace ehanc {
 	template<typename T, typename L>
 	constexpr inline const bool is_lazy_of_v = is_lazy_of<T, L>::value;
 
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to retrieve the inner type of an ehanc::lazy;
+	 * Identity if parameter is not an ehanc::lazy.
+	 */
+	/* }}} */
+	template<typename T>
+	struct lazy_inner_type {
+		using type = T;
+	};
+
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to retrieve the inner type of an ehanc::lazy;
+	 * Identity if parameter is not an ehanc::lazy.
+	 * Specialization for case where type is an ehanc::lazy.
+	 */
+	/* }}} */
+	template<typename T>
+	struct lazy_inner_type<lazy<T>> {
+		using type = T;
+	};
+
+	/* {{{ doc */
+	/**
+	 * @brief Helper variable template to make using the `lazy_inner_type`
+	 * metafunction less verbose and cumbersome.
+	 */
+	/* }}} */
+	template<typename T>
+	using lazy_inner_type_t = typename lazy_inner_type<T>::type;
+
+
 } // namespace ehanc
 
 #endif

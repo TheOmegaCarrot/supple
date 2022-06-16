@@ -1,6 +1,7 @@
 #ifndef EHANC_UTILS_ETC_HPP
 #define EHANC_UTILS_ETC_HPP
 
+#include <cstddef>
 #include <algorithm>
 
 namespace ehanc {

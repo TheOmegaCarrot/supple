@@ -1,6 +1,8 @@
 #ifndef EHANC_UTILS_ALGORITHM_HPP
 #define EHANC_UTILS_ALGORITHM_HPP
 
+#include <cstddef>
+#include <utility>
 #include <iterator>
 #include <functional>
 

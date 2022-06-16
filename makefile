@@ -65,7 +65,7 @@ tst/obj:
 clean:
 	@printf "\n\t\033[1;32mCLEAN\033[1;0m\n"
 	@rm -f obj/* bin/* tst/obj/* tst/bin/*
-	@rm -rf asm pre doc
+	@rm -rf asm pre doc/html
 
 $(EXE): obj/main.o
 	@printf "\033[1;32mLinking\t\t $(EXE)\033[1;0m\n"

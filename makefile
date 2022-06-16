@@ -9,7 +9,7 @@ TSTARGS=
 EXE=bin/$(PROJNAME)
 
 .PHONY: default
-default: exe test
+default: tags exe test
 
 .PHONY: exe
 exe: bin obj $(EXE)
@@ -78,16 +78,16 @@ tst/bin/test: tst/bin tst/obj tst/obj/test_lazy.o tst/obj/test_utils.o tst/obj/t
 	@$(CXX) -o $@ tst/obj/*.o $(CXXFLAGS)
 	@ln -sf tst/bin/test ./run_tests
 
-obj/main.o: src/main.cpp src/main.cpp
+obj/main.o: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc $(CXXFLAGS)
 	@ln -sf ../../obj/main.o tst/obj/main.o
 
-asm/main.s: src/main.cpp src/main.cpp
+asm/main.s: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mGenerating\t $@\033[1;0m\n"
 	@$(CXX) -S -o $@ $< -Iinc $(CXXFLAGS)
 
-pre/main.ii: src/main.cpp src/main.cpp
+pre/main.ii: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mPreprocessing\t $@\033[1;0m\n"
 	@$(CXX) -E -o $@ $< -Iinc $(CXXFLAGS)
 
@@ -99,14 +99,14 @@ tst/obj/test_utils.o: tst/src/test_utils.cpp inc/utils/term_colors.h tst/inc/tes
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/test_etc.o: tst/src/test_etc.cpp tst/inc/test_etc.h inc/utils/etc.hpp tst/inc/test_utils.h
+tst/obj/test_etc.o: tst/src/test_etc.cpp tst/inc/test_etc.h inc/utils/etc.hpp tst/inc/test_utils.h inc/utils/lazy.hpp
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/test_algorithm.o: tst/src/test_algorithm.cpp tst/inc/test_algorithm.h inc/utils/algorithm.hpp tst/inc/test_utils.h
+tst/obj/test_algorithm.o: tst/src/test_algorithm.cpp tst/inc/test_algorithm.h inc/utils/algorithm.hpp inc/utils/etc.hpp tst/inc/test_utils.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.h inc/utils/term_colors.h tst/inc/test_algorithm.h inc/utils/algorithm.hpp tst/inc/test_lazy.h inc/utils/lazy.hpp
+tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.h inc/utils/term_colors.h tst/inc/test_algorithm.h inc/utils/algorithm.hpp inc/utils/etc.hpp tst/inc/test_lazy.h inc/utils/lazy.hpp tst/inc/test_etc.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)

@@ -107,18 +107,24 @@ namespace ehanc {
 
 namespace ehanc::literals
 {
-	/* {{{ doc */
-	/**
-	 * @brief Makes it possible to declare a `std::size_t` literal.
-	 *
-	 * @param i Integer literal to be used as a `std::size_t`
-	 */
-	/* }}} */
-	[[nodiscard]] constexpr auto operator""_z(unsigned long long i)
-		noexcept -> std::size_t
-	{
-		return static_cast<std::size_t>(i);
-	}
-}
+
+	inline namespace size_t_literal {
+
+		/* {{{ doc */
+		/**
+		 * @brief Makes it possible to declare a `std::size_t` literal.
+		 *
+		 * @param i Integer literal to be used as a `std::size_t`
+		 */
+		/* }}} */
+		[[nodiscard]] constexpr auto operator""_z(unsigned long long i)
+			noexcept -> std::size_t
+			{
+				return static_cast<std::size_t>(i);
+			}
+
+	} // namespace ehanc::literals::size_t_literal
+
+} // namespace ehanc::literals
 
 #endif

@@ -39,7 +39,8 @@ bool test_min_size()
 
 bool test_size_t_literals()
 {
-	using namespace ehanc::literals;
+	using namespace ehanc::literals::size_t_literal;
+	/* using namespace ehanc::literals; */ // also works
 	std::size_t i{500};
 	auto j{500_z};
 	return (

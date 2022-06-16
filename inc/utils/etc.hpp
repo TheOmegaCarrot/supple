@@ -124,8 +124,7 @@ namespace ehanc {
 
 } // namespace ehanc
 
-namespace ehanc::literals
-{
+namespace ehanc::literals {
 
 	inline namespace size_t_literal {
 

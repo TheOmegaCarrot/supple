@@ -40,10 +40,10 @@ bool test_min_size()
 bool test_size_t_literals()
 {
 	using namespace ehanc::literals;
-	size_t i{500};
+	std::size_t i{500};
 	auto j{500_z};
 	return (
-				std::is_same_v<decltype(j), size_t>
+				std::is_same_v<decltype(j), std::size_t>
 			&&	i == j
 		   );
 }

@@ -70,10 +70,10 @@ namespace ehanc {
 	/* }}} */
 	template<typename Itr, typename BinaryFunc>
 	constexpr void for_each_pair_n(const Itr begin, const Itr end,
-						const size_t n, BinaryFunc&& func)
+						const std::size_t n, BinaryFunc&& func)
 	noexcept(noexcept(func(*begin, *begin)))
 	{
-		size_t count{0};
+		std::size_t count{0};
 		Itr leader{begin};
 		++leader;
 		Itr follower{begin};
@@ -169,10 +169,10 @@ namespace ehanc {
 	template<typename Itr1, typename Itr2, typename BinaryFunc>
 	constexpr void for_each_both_n(Itr1 begin1, const Itr1 end1,
 							Itr2 begin2, const Itr2 end2,
-							const size_t n, BinaryFunc&& func)
+							const std::size_t n, BinaryFunc&& func)
 			noexcept(noexcept(func(*begin1, *begin2)))
 	{
-		for (	size_t count{0}
+		for (	std::size_t count{0}
 				; (count != n && begin1 != end1 && begin2 != end2)
 				; ++count, ++begin1, ++begin2 )
 		{
@@ -211,15 +211,34 @@ namespace ehanc {
 	/* }}} */
 	template<typename VarFunc, typename... Begins>
 	constexpr void for_each_all_n(VarFunc&& func,
-			const size_t n, Begins... begins)
+			const std::size_t n, Begins... begins)
 			noexcept(noexcept(func(*begins...)))
 	{
-		for ( size_t i{0} ; i != n ; ++i ) {
+		for ( std::size_t i{0} ; i != n ; ++i ) {
 			func(*begins...);
 			(++begins,...);
 		}
 	}
 
+	/* {{{ doc */
+	/**
+	 * @brief Applies `func` to members of all container in
+	 * parameter order. Iteration ceases upon reaching the end of
+	 * any container.
+	 *
+	 * @tparam VarFunc A function which acccepts the types of all the
+	 * contaners in parameter order.
+	 *
+	 * @tparam Containers Sequence of containers which provide
+	 * iterators capable of incrementing and dereferencing.
+	 *
+	 * @param func A function which accepts the types of all the containers
+	 * in parameter order.
+	 *
+	 * @param containers Parameter pack of containers to be
+	 * iterated over.
+	 */
+	/* }}} */
 	template<typename VarFunc, typename... Containers>
 	constexpr void for_each_all(VarFunc&& func, Containers&... containers)
 	{
@@ -227,6 +246,25 @@ namespace ehanc {
 				min_size(containers...), std::begin(containers)...);
 	}
 
+	/* {{{ doc */
+	/**
+	 * @brief Applies `func` to members of all container in
+	 * parameter order. Iteration ceases upon reaching the end of
+	 * any container. Ensures the containers are not modified.
+	 *
+	 * @tparam VarFunc A function which acccepts the types of all the
+	 * contaners in parameter order.
+	 *
+	 * @tparam Containers Sequence of containers which provide
+	 * iterators capable of incrementing and dereferencing.
+	 *
+	 * @param func A function which accepts the types of all the containers
+	 * in parameter order.
+	 *
+	 * @param containers Parameter pack of const containers to be
+	 * iterated over.
+	 */
+	/* }}} */
 	template<typename VarFunc, typename... Containers>
 	constexpr void for_each_all_c(VarFunc&& func,
 			const Containers&... containers)
@@ -255,9 +293,9 @@ namespace ehanc {
 	/* }}} */
 	template<typename Itr>
 	[[nodiscard]] constexpr auto forward_distance(Itr begin, const Itr end)
-			noexcept -> size_t
+			noexcept -> std::size_t
 	{
-		size_t count{0};
+		std::size_t count{0};
 		while (begin != end) {
 			++begin;
 			++count;
@@ -288,8 +326,8 @@ namespace ehanc {
 			return begin;
 		}
 
-		size_t distance{forward_distance(begin, end) - 1};
-		for ( size_t i{0} ; i != distance ; ++i ) {
+		std::size_t distance{forward_distance(begin, end) - 1};
+		for ( std::size_t i{0} ; i != distance ; ++i ) {
 			++begin;
 		}
 

@@ -69,7 +69,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Container>
-	constexpr size_t min_size(const Container& cont) noexcept
+	constexpr std::size_t min_size(const Container& cont) noexcept
 	{
 		return cont.size();
 	}
@@ -95,7 +95,7 @@ namespace ehanc {
 	 */
 	/* }}} */
 	template<typename Container, typename... Containers>
-	constexpr size_t min_size(const Container& cont,
+	constexpr std::size_t min_size(const Container& cont,
 			const Containers&... conts) noexcept
 	{
 		return std::min( min_size(cont) , min_size(conts...) );
@@ -106,10 +106,17 @@ namespace ehanc {
 
 namespace ehanc::literals
 {
+	/* {{{ doc */
+	/**
+	 * @brief Makes it possible to declare a `std::size_t` literal.
+	 *
+	 * @param i Integer literal to be used as a `std::size_t`
+	 */
+	/* }}} */
 	[[nodiscard]] constexpr auto operator""_z(unsigned long long i)
-		noexcept -> size_t
+		noexcept -> std::size_t
 	{
-		return static_cast<size_t>(i);
+		return static_cast<std::size_t>(i);
 	}
 }
 

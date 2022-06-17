@@ -16,13 +16,11 @@ bool test_lazy_class()
 
 	check.push_back(1);
 
-	return	(
-				test == 5
-			&&	check[0] == 1
-			&&	check[1] == 2
-			&&	test.func()() == 6
-			&&	test == 5
-			);
+	return	test == 5
+		&&	check[0] == 1
+		&&	check[1] == 2
+		&&	test.func()() == 6
+		&&	test == 5;
 }
 
 bool test_lazy_has_value()
@@ -35,10 +33,8 @@ bool test_lazy_has_value()
 
 	bool after = test.has_value();
 
-	return	(
-				!before
-			&&	after
-			);
+	return	!before
+		&&	after;
 
 }
 
@@ -143,10 +139,8 @@ bool test_make_lazy()
 {
 	auto test{ehanc::make_lazy([](){return 5;})};
 
-	return	(
-				test == 5
-			&&	test == 5
-			);
+	return	test == 5
+		&&	test == 5;
 }
 
 void test_lazy()

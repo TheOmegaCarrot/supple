@@ -9,10 +9,8 @@ bool test_all_pass_cont()
 	std::array no{1, 2, 4, 9, 2, 3};
 	auto checker = [](const int i) -> bool{ return i < 6; };
 
-	return	(
-				ehanc::all_pass(yes, checker)
-			&&	! ehanc::all_pass(no, checker)
-			);
+	return	ehanc::all_pass(yes, checker)
+		&&	not ehanc::all_pass(no, checker);
 }
 
 bool test_all_pass_itr()
@@ -21,10 +19,8 @@ bool test_all_pass_itr()
 	std::array no{1, 2, 4, 9, 2, 3};
 	auto checker = [](const int i) -> bool{ return i < 6; };
 
-	return	(
-				ehanc::all_pass(yes.cbegin(), yes.cend(), checker)
-			&&	! ehanc::all_pass(no.cbegin(), no.cend(), checker)
-			);
+	return	ehanc::all_pass(yes.cbegin(), yes.cend(), checker)
+		&&	not ehanc::all_pass(no.cbegin(), no.cend(), checker);
 }
 
 bool test_min_size()
@@ -40,17 +36,15 @@ bool test_min_size()
 
 bool test_sum_type()
 {
-	return	(
-				std::is_same_v<ehanc::sum_type_t<int, int>, int>
-			&&	std::is_same_v<ehanc::sum_type_t<short, short>, int>
-			&&	std::is_same_v<ehanc::sum_type_t<double, double>, double>
-			&&	std::is_same_v<ehanc::sum_type_t<double, int>, double>
-			&&	std::is_same_v<ehanc::sum_type_t<double, float>, double>
-			&&	std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>
-			&&	not std::is_same_v<ehanc::sum_type_t<int, short>, short>
-			&&	not std::is_same_v<ehanc::sum_type_t<double, int>, int>
-			&&	not std::is_same_v<ehanc::sum_type_t<char, int>, char>
-			);
+	return	std::is_same_v<ehanc::sum_type_t<int, int>, int>
+		&&	std::is_same_v<ehanc::sum_type_t<short, short>, int>
+		&&	std::is_same_v<ehanc::sum_type_t<double, double>, double>
+		&&	std::is_same_v<ehanc::sum_type_t<double, int>, double>
+		&&	std::is_same_v<ehanc::sum_type_t<double, float>, double>
+		&&	std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>
+		&&	not std::is_same_v<ehanc::sum_type_t<int, short>, short>
+		&&	not std::is_same_v<ehanc::sum_type_t<double, int>, int>
+		&&	not std::is_same_v<ehanc::sum_type_t<char, int>, char>;
 }
 
 bool test_size_t_literals()
@@ -59,10 +53,9 @@ bool test_size_t_literals()
 	/* using namespace ehanc::literals; */ // also works
 	std::size_t i{500};
 	auto j{500_z};
-	return (
-				std::is_same_v<decltype(j), std::size_t>
-			&&	i == j
-		   );
+
+	return	std::is_same_v<decltype(j), std::size_t>
+		&&	i == j;
 }
 
 void test_etc()

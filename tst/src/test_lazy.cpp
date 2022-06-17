@@ -44,18 +44,18 @@ bool test_lazy_has_value()
 
 bool test_is_lazy()
 {
-	ehanc::lazy<int> test{[](){return 5;}};
-	bool t1{ehanc::is_lazy_v<decltype(test)>};
-	bool f1{ehanc::is_lazy_v<int>};
-	bool t2{ehanc::is_lazy<decltype(test)>::value};
-	bool f2{ehanc::is_lazy<int>::value};
-
-	return	(
-				t1
-			&&	t2
-			&&	!f1
-			&&	!f2
-			);
+	return	ehanc::is_lazy_v<ehanc::lazy<int>>
+		&& ehanc::is_lazy_v<const ehanc::lazy<int>>
+		&& ehanc::is_lazy_v<volatile ehanc::lazy<int>>
+		&& ehanc::is_lazy_v<const volatile ehanc::lazy<int>>
+		&& ehanc::is_lazy_v<ehanc::lazy<int>&>
+		&& ehanc::is_lazy_v<const ehanc::lazy<int>&>
+		&& ehanc::is_lazy_v<volatile ehanc::lazy<int>&>
+		&& ehanc::is_lazy_v<const volatile ehanc::lazy<int>&>
+		&& ehanc::is_lazy_v<ehanc::lazy<int>&&>
+		&& ehanc::is_lazy_v<const ehanc::lazy<int>&&>
+		&& ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>
+		&& ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>;
 }
 
 bool test_is_lazy_of()

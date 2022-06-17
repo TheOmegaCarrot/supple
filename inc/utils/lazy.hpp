@@ -206,37 +206,33 @@ namespace ehanc {
 	lazy(Func) -> lazy<typename
 			decltype(std::function(std::declval<Func>()))::result_type>;
 
-	/* {{{ doc */
-	/**
-	 * @brief Metafunction to determine if a type is an ehanc::lazy.
-	 *
-	 * @code
-	 * // all below assertions pass
-	 * static_assert(ehanc::is_lazy<ehanc::lazy<int>>)
-	 * static_assert(not ehanc::is_lazy<int>)
-	 * @endcode
-	 */
-	/* }}} */
-	template<typename T>
-	struct is_lazy : std::false_type {};
+	namespace impl {
 
-	/* {{{ doc */
-	/**
-	 * @brief Metafunction to determine if a type is an ehanc::lazy.
-	 * Specialization for true case.
-	 */
-	/* }}} */
-	template<typename T>
-	struct is_lazy<lazy<T>> : std::true_type {};
+		/* {{{ doc */
+		/**
+		 * @brief Partial implementation of a metafunction to determine
+		 * if a type is an ehanc::lazy.
+		 */
+		/* }}} */
+		template<typename T>
+			struct is_lazy_impl : std::false_type {};
 
-	/* {{{ doc */
-	/**
-	 * @brief Helper variable template to make using the `is_lazy`
-	 * metafunction less verbose and cumbersome.
-	 */
-	/* }}} */
-	template<typename T>
-	constexpr inline const bool is_lazy_v = is_lazy<T>::value;
+		/* {{{ doc */
+		/**
+		 * @brief Partial implementation of metafunction to determine
+		 * if a type is an ehanc::lazy. Specialization for true case.
+		 */
+		/* }}} */
+		template<typename T>
+			struct is_lazy_impl<lazy<T>> : std::true_type {};
+
+	}
+
+	template<typename T, typename D = std::decay_t<T>>
+	struct is_lazy : impl::is_lazy_impl<D> {};
+
+	template<typename T, typename D = std::decay_t<T>>
+	constexpr inline const bool is_lazy_v = is_lazy<D>::value;
 
 	/* {{{ doc */
 	/**

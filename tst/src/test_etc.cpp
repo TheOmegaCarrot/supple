@@ -69,6 +69,19 @@ bool test_comparison_metafunctions()
 		;
 }
 
+bool test_bool_op_metafunctions()
+{
+	return	ehanc::bool_and_v<true, true>
+		&&	not ehanc::bool_and_v<true, false>
+		&&	not ehanc::bool_and_v<false, true>
+		&&	not ehanc::bool_and_v<false, false>
+		&&	ehanc::bool_or_v<true, true>
+		&&	ehanc::bool_or_v<true, false>
+		&&	ehanc::bool_or_v<false, true>
+		&&	not ehanc::bool_or_v<false, false>
+		;
+}
+
 bool test_size_t_literals()
 {
 	using namespace ehanc::literals::size_t_literal;
@@ -88,5 +101,6 @@ void test_etc()
 	run_test("ehanc::min_size", &test_min_size);
 	run_test("ehanc::sum_type", &test_sum_type);
 	run_test("comparison metafunctions", &test_comparison_metafunctions);
+	run_test("boolean ops metafunctions", &test_bool_op_metafunctions);
 	run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

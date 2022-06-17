@@ -122,47 +122,64 @@ namespace ehanc {
 	template<typename T, typename U>
 	using sum_type_t = typename sum_type<T, U>::type;
 
-	template<auto T, auto U,
+	template<auto X, auto Y,
 		typename B =
-			std::conditional_t<T == U, std::true_type, std::false_type>>
+			std::conditional_t<X == Y, std::true_type, std::false_type>>
 	struct equal : B {};
 
-	template<auto T, auto U>
-	constexpr inline const bool equal_v = equal<T, U>::value;
+	template<auto X, auto Y>
+	constexpr inline const bool equal_v = equal<X, Y>::value;
 
-	template<auto T, auto U,
+	template<auto X, auto Y,
 		typename B =
-			std::conditional_t<T < U, std::true_type, std::false_type>>
+			std::conditional_t<X < Y, std::true_type, std::false_type>>
 	struct less_than : B {};
 
-	template<auto T, auto U>
-	constexpr inline const bool less_than_v = less_than<T, U>::value;
+	template<auto X, auto Y>
+	constexpr inline const bool less_than_v = less_than<X, Y>::value;
 
-	template<auto T, auto U,
+	template<auto X, auto Y,
 		typename B =
-			std::conditional_t<T <= U, std::true_type, std::false_type>>
+			std::conditional_t<X <= Y, std::true_type, std::false_type>>
 	struct less_eq : B {};
 
-	template<auto T, auto U>
-	constexpr inline const bool less_eq_v = less_eq<T, U>::value;
+	template<auto X, auto Y>
+	constexpr inline const bool less_eq_v = less_eq<X, Y>::value;
 
-	template<auto T, auto U,
+	template<auto X, auto Y,
 		typename B =
-			std::conditional_t<not less_eq_v<T,U>,
+			std::conditional_t<not less_eq_v<X,Y>,
 				std::true_type, std::false_type>>
 	struct greater_than : B {};
 
-	template<auto T, auto U>
-	constexpr inline const bool greater_than_v = greater_than<T, U>::value;
+	template<auto X, auto Y>
+	constexpr inline const bool greater_than_v = greater_than<X, Y>::value;
 
-	template<auto T, auto U,
+	template<auto X, auto Y,
 		typename B =
-			std::conditional_t<not less_than_v<T,U>,
+			std::conditional_t<not less_than_v<X,Y>,
 				std::true_type, std::false_type>>
 	struct greater_eq : B {};
 
-	template<auto T, auto U>
-	constexpr inline const bool greater_eq_v = greater_eq<T, U>::value;
+	template<auto X, auto Y>
+	constexpr inline const bool greater_eq_v = greater_eq<X, Y>::value;
+
+	template<bool X, bool Y,
+		typename B =
+			std::conditional_t<X && Y,std::true_type, std::false_type>>
+	struct bool_and : B {};
+
+	template<bool X, bool Y>
+	constexpr inline const bool bool_and_v = bool_and<X, Y>::value;
+
+	template<bool X, bool Y,
+		typename B =
+			std::conditional_t<X || Y,std::true_type, std::false_type>>
+	struct bool_or : B {};
+
+	template<bool X, bool Y>
+	constexpr inline const bool bool_or_v = bool_or<X, Y>::value;
+
 
 } // namespace ehanc
 

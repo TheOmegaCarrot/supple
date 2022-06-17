@@ -135,7 +135,8 @@ bool test_lazy_inner_type()
 		&&	not std::is_same_v<char,
 		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>
 		&&	not std::is_same_v<char,
-		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>>;
+		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>>
+		&&	std::is_same_v<int, ehanc::lazy_inner_type_t<int>>;
 }
 
 bool test_make_lazy()

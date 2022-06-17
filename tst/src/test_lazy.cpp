@@ -60,16 +60,30 @@ bool test_is_lazy()
 
 bool test_is_lazy_of()
 {
-	ehanc::lazy<int> test{[](){return 5;}};
-
-	return	(
-				ehanc::is_lazy_of<int, decltype(test)>::value
-			&&	!ehanc::is_lazy_of<double, decltype(test)>::value
-			&&	!ehanc::is_lazy_of<double, int>::value
-			&&	ehanc::is_lazy_of_v<int, decltype(test)>
-			&&	!ehanc::is_lazy_of_v<double, decltype(test)>
-			&&	!ehanc::is_lazy_of_v<double, int>
-		   );
+	return	ehanc::is_lazy_of_v<int, ehanc::lazy<int>>
+		&&	ehanc::is_lazy_of_v<int, const ehanc::lazy<int>>
+		&&	ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>>
+		&&	ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>>
+		&&	ehanc::is_lazy_of_v<int, ehanc::lazy<int>&>
+		&&	ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&>
+		&&	ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&>
+		&&	ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&>
+		&&	ehanc::is_lazy_of_v<int, ehanc::lazy<int>&&>
+		&&	ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&&>
+		&&	ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&&>
+		&&	ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, ehanc::lazy<int>>
+		&&	not ehanc::is_lazy_of_v<char, const ehanc::lazy<int>>
+		&&	not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>>
+		&&	not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>>
+		&&	not ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>;
 }
 
 bool test_lazy_inner_type()

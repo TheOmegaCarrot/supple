@@ -20,7 +20,8 @@ bool test_lazy_class()
 		&&	check[0] == 1
 		&&	check[1] == 2
 		&&	test.func()() == 6
-		&&	test == 5;
+		&&	test == 5
+		;
 }
 
 bool test_lazy_has_value()
@@ -34,7 +35,8 @@ bool test_lazy_has_value()
 	bool after = test.has_value();
 
 	return	not before
-		&&	after;
+		&&	after
+		;
 
 }
 
@@ -43,7 +45,8 @@ bool test_make_lazy()
 	auto test{ehanc::make_lazy([](){return 5;})};
 
 	return	test == 5
-		&&	test == 5;
+		&&	test == 5
+		;
 }
 
 bool test_is_lazy()
@@ -60,7 +63,8 @@ bool test_is_lazy()
 		&& ehanc::is_lazy_v<const ehanc::lazy<int>&&>
 		&& ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>
 		&& ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>
-		&& not ehanc::is_lazy_v<int>;
+		&& not ehanc::is_lazy_v<int>
+		;
 }
 
 bool test_is_lazy_of()
@@ -90,7 +94,8 @@ bool test_is_lazy_of()
 		&&	not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>
 		&&	not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>
 		&&	not ehanc::is_lazy_of_v<int, int>
-		&&	not ehanc::is_lazy_of_v<int, char>;
+		&&	not ehanc::is_lazy_of_v<int, char>
+		;
 }
 
 bool test_lazy_inner_type()
@@ -143,7 +148,8 @@ bool test_lazy_inner_type()
 		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>
 		&&	not std::is_same_v<char,
 		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>>
-		&&	std::is_same_v<int, ehanc::lazy_inner_type_t<int>>;
+		&&	std::is_same_v<int, ehanc::lazy_inner_type_t<int>>
+		;
 }
 
 void test_lazy()

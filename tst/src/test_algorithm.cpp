@@ -23,7 +23,8 @@ bool test_for_each_pair()
 			reference_output.cbegin(), reference_output.cend() );
 
 	return	test == test_output.cend()
-		&&	ref  == reference_output.cend();
+		&&	ref  == reference_output.cend()
+		;
 }
 
 bool test_for_each_pair_n()
@@ -42,7 +43,8 @@ bool test_for_each_pair_n()
 			reference_output.cbegin(), reference_output.cend() );
 
 	return test == test_output.cend()
-		&&	ref  == reference_output.cend();
+		&&	ref  == reference_output.cend()
+		;
 }
 
 bool test_for_each_all()
@@ -61,7 +63,8 @@ bool test_for_each_all()
 			reference_output.cbegin(), reference_output.cend() );
 
 	return	test == test_output.cend()
-		&&	ref  == reference_output.cend();
+		&&	ref  == reference_output.cend()
+		;
 }
 
 bool test_for_each_all_c()
@@ -80,7 +83,8 @@ bool test_for_each_all_c()
 			reference_output.cbegin(), reference_output.cend() );
 
 	return	test == test_output.cend()
-		&&	ref  == reference_output.cend();
+		&&	ref  == reference_output.cend()
+		;
 }
 
 bool test_for_each_all_n()
@@ -99,7 +103,8 @@ bool test_for_each_all_n()
 			reference_output.cbegin(), reference_output.cend() );
 
 	return	test == test_output.cend()
-		&&	ref  == reference_output.cend();
+		&&	ref  == reference_output.cend()
+		;
 }
 
 bool test_for_each_both()
@@ -121,7 +126,8 @@ bool test_for_each_both()
 			reference_output.cbegin(), reference_output.cend() );
 
 	return	test == test_output.cend()
-		&&	ref  == reference_output.cend();
+		&&	ref  == reference_output.cend()
+		;
 }
 
 bool test_for_each_both_n()
@@ -143,7 +149,8 @@ bool test_for_each_both_n()
 			reference_output.cbegin(), reference_output.cend() );
 
 	return	test == test_output.cend()
-		&&	ref  == reference_output.cend();
+		&&	ref  == reference_output.cend()
+		;
 }
 
 bool test_forward_distance()
@@ -162,7 +169,8 @@ bool test_last()
 
 	return	*ehanc::last(test1) == 5
 		&&	*ehanc::last(test2) == 3
-		&&	ehanc::last(test3)  == std::begin(test3);
+		&&	ehanc::last(test3)  == std::begin(test3)
+		;
 }
 
 bool test_clast()
@@ -175,7 +183,8 @@ bool test_clast()
 
 	return	*ehanc::clast(test1) == 5
 		&&	*ehanc::clast(test2) == 3
-		&&	ehanc::clast(test3)  == std::cbegin(test3);
+		&&	ehanc::clast(test3)  == std::cbegin(test3)
+		;
 }
 
 void test_algorithm()

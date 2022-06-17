@@ -78,5 +78,6 @@ void test_etc()
 	run_test("ehanc::all_pass (iterators)", &test_all_pass_itr);
 	run_test("ehanc::min_size", &test_min_size);
 	run_test("ehanc::sum_type", &test_sum_type);
+	run_test("ehanc::are_same_size", &test_are_same_size);
 	run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

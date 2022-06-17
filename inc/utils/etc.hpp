@@ -122,28 +122,47 @@ namespace ehanc {
 	template<typename T, typename U>
 	using sum_type_t = typename sum_type<T, U>::type;
 
-	/* {{{ doc */
-	/**
-	 * @brief Metafunction to determine if two types have the
-	 * same size on the stack. Third template parameter must
-	 * be defaulted for intended behavior.
-	 *
-	 */
-	/* }}} */
-	template<typename T, typename U,
-		typename B = std::conditional_t<sizeof(T) == sizeof(U),
-			std::true_type, std::false_type>>
-	struct are_same_size : B {};
+	template<auto T, auto U,
+		typename B =
+			std::conditional_t<T == U, std::true_type, std::false_type>>
+	struct equal : B {};
 
-	/* {{{ doc */
-	/**
-	 * @brief Helper variable template to make using the `are_same_size`
-	 * metafunction less verbose and cumbersome.
-	 */
-	/* }}} */
-	template<typename T, typename U>
-	constexpr inline const bool are_same_size_v
-		= are_same_size<T, U>::value;
+	template<auto T, auto U>
+	constexpr inline const bool equal_v = equal<T, U>::value;
+
+	template<auto T, auto U,
+		typename B =
+			std::conditional_t<T < U, std::true_type, std::false_type>>
+	struct less_than : B {};
+
+	template<auto T, auto U>
+	constexpr inline const bool less_than_v = less_than<T, U>::value;
+
+	template<auto T, auto U,
+		typename B =
+			std::conditional_t<T <= U, std::true_type, std::false_type>>
+	struct less_eq : B {};
+
+	template<auto T, auto U>
+	constexpr inline const bool less_eq_v = less_eq<T, U>::value;
+
+	template<auto T, auto U,
+		typename B =
+			std::conditional_t<not less_eq_v<T,U>,
+				std::true_type, std::false_type>>
+	struct greater_than : B {};
+
+	template<auto T, auto U>
+	constexpr inline const bool greater_than_v = greater_than<T, U>::value;
+
+	template<auto T, auto U,
+		typename B =
+			std::conditional_t<not less_than_v<T,U>,
+				std::true_type, std::false_type>>
+	struct greater_eq : B {};
+
+	template<auto T, auto U>
+	constexpr inline const bool greater_eq_v = greater_eq<T, U>::value;
 
 } // namespace ehanc
 

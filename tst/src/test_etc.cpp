@@ -50,13 +50,22 @@ bool test_sum_type()
 		;
 }
 
-bool test_are_same_size()
+bool test_comparison_metafunctions()
 {
-	return	ehanc::are_same_size_v<int, int>
-		&&	ehanc::are_same_size_v<int, unsigned>
-		&&	ehanc::are_same_size_v<char, bool>
-		&&	ehanc::are_same_size_v<int*, long*>
-		&&	not ehanc::are_same_size_v<long, short>
+	return	ehanc::equal_v<5, 5>
+		&&	not ehanc::equal_v<1, 8>
+		&&	ehanc::less_than_v<1, 8>
+		&&	not ehanc::less_than_v<8, 8>
+		&&	not ehanc::less_than_v<9, 8>
+		&&	not ehanc::greater_than_v<1, 8>
+		&&	not ehanc::greater_than_v<8, 8>
+		&&	ehanc::greater_than_v<9, 8>
+		&&	ehanc::less_eq_v<1, 8>
+		&&	ehanc::less_eq_v<8, 8>
+		&&	not ehanc::less_eq_v<9, 8>
+		&&	not ehanc::greater_eq_v<1, 8>
+		&&	ehanc::greater_eq_v<8, 8>
+		&&	ehanc::greater_eq_v<9, 8>
 		;
 }
 
@@ -78,6 +87,6 @@ void test_etc()
 	run_test("ehanc::all_pass (iterators)", &test_all_pass_itr);
 	run_test("ehanc::min_size", &test_min_size);
 	run_test("ehanc::sum_type", &test_sum_type);
-	run_test("ehanc::are_same_size", &test_are_same_size);
+	run_test("comparison metafunctions", &test_comparison_metafunctions);
 	run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

@@ -122,6 +122,29 @@ namespace ehanc {
 	template<typename T, typename U>
 	using sum_type_t = typename sum_type<T, U>::type;
 
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to determine if two types have the
+	 * same size on the stack. Third template parameter must
+	 * be defaulted for intended behavior.
+	 *
+	 */
+	/* }}} */
+	template<typename T, typename U,
+		typename B = std::conditional_t<sizeof(T) == sizeof(U),
+			std::true_type, std::false_type>>
+	struct are_same_size : B {};
+
+	/* {{{ doc */
+	/**
+	 * @brief Helper variable template to make using the `are_same_size`
+	 * metafunction less verbose and cumbersome.
+	 */
+	/* }}} */
+	template<typename T, typename U>
+	constexpr inline const bool are_same_size_v
+		= are_same_size<T, U>::value;
+
 } // namespace ehanc
 
 namespace ehanc::literals {

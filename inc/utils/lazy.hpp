@@ -319,7 +319,7 @@ namespace ehanc {
 
 	/* {{{ doc */
 	/**
-	 * @brief Helper variable template to make using the `lazy_inner_type`
+	 * @brief Helper alias template to make using the `lazy_inner_type`
 	 * metafunction less verbose and cumbersome.
 	 */
 	/* }}} */

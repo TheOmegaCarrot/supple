@@ -88,22 +88,54 @@ bool test_is_lazy_of()
 
 bool test_lazy_inner_type()
 {
-	ehanc::lazy<int> test{[](){return 5;}};
-
-	return	(
-				std::is_same_v<
-				typename ehanc::lazy_inner_type<decltype(test)>::type, int>
-			&&	not std::is_same_v<
-				typename ehanc::lazy_inner_type<decltype(test)>::type, double>
-			&&	std::is_same_v<
-				typename ehanc::lazy_inner_type<int>::type, int>
-			&&	std::is_same_v<
-				ehanc::lazy_inner_type_t<decltype(test)>, int>
-			&&	not std::is_same_v<
-				ehanc::lazy_inner_type_t<decltype(test)>, double>
-			&&	std::is_same_v<
-				ehanc::lazy_inner_type_t<int>, int>
-			);
+	return	std::is_same_v<int,
+			ehanc::lazy_inner_type_t<ehanc::lazy<int>>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<const ehanc::lazy<int>>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<ehanc::lazy<int>&>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>
+		&&	std::is_same_v<int,
+		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<ehanc::lazy<int>>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<const ehanc::lazy<int>>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<ehanc::lazy<int>&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>
+		&&	not std::is_same_v<char,
+		ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>>;
 }
 
 bool test_make_lazy()

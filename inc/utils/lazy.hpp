@@ -281,28 +281,35 @@ namespace ehanc {
 	template<typename T, typename L>
 	constexpr inline const bool is_lazy_of_v = is_lazy_of<T, L>::value;
 
-	/* {{{ doc */
-	/**
-	 * @brief Metafunction to retrieve the inner type of an ehanc::lazy;
-	 * Identity if parameter is not an ehanc::lazy.
-	 */
-	/* }}} */
-	template<typename T>
-	struct lazy_inner_type {
-		using type = T;
-	};
+	namespace impl {
+		/* {{{ doc */
+		/**
+		 * @brief Partial implementation of a metafunction to
+		 * retrieve the inner type of an ehanc::lazy;
+		 * Identity if parameter is not an ehanc::lazy.
+		 */
+		/* }}} */
+		template<typename T>
+		struct lazy_inner_type_impl {
+			using type = T;
+		};
 
-	/* {{{ doc */
-	/**
-	 * @brief Metafunction to retrieve the inner type of an ehanc::lazy;
-	 * Identity if parameter is not an ehanc::lazy.
-	 * Specialization for case where type is an ehanc::lazy.
-	 */
-	/* }}} */
+		/* {{{ doc */
+		/**
+		 * @brief Partial implementation of a metafunction to
+		 * retrieve the inner type of an ehanc::lazy;
+		 * Identity if parameter is not an ehanc::lazy.
+		 * Specialization for case where type is an ehanc::lazy.
+		 */
+		/* }}} */
+		template<typename T>
+		struct lazy_inner_type_impl<lazy<T>> {
+			using type = T;
+		};
+	}
+
 	template<typename T>
-	struct lazy_inner_type<lazy<T>> {
-		using type = T;
-	};
+	struct lazy_inner_type : impl::lazy_inner_type_impl<std::decay_t<T>> {};
 
 	/* {{{ doc */
 	/**

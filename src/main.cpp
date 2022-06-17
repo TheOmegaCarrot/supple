@@ -102,21 +102,82 @@ int main( [[maybe_unused]] const int argc,
 	/* 	<< std::is_same_v<ehanc::lazy_inner_type_t<decltype(test5)>, double> << '\n' */
 	/* 	<< std::is_same_v<ehanc::lazy_inner_type_t<int>, int> << '\n'; */
 
+	/* std::cout << std::boolalpha */
+	/* 	<< ehanc::is_lazy_v<ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_v<const ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_v<volatile ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_v<const volatile ehanc::lazy<int>> << '\n' */
+
+	/* 	<< ehanc::is_lazy_v<ehanc::lazy<int>&> << '\n' */
+	/* 	<< ehanc::is_lazy_v<const ehanc::lazy<int>&> << '\n' */
+	/* 	<< ehanc::is_lazy_v<volatile ehanc::lazy<int>&> << '\n' */
+	/* 	<< ehanc::is_lazy_v<const volatile ehanc::lazy<int>&> << '\n' */
+
+	/* 	<< ehanc::is_lazy_v<ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_v<const ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_v<volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	; */
+
+	/* std::cout << std::boolalpha */
+	/* 	<< 't' << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, const ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, ehanc::lazy<int>&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	<< 'f' << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, const ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	<< ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&> << '\n' */
+	/* 	; */
+
 	std::cout << std::boolalpha
-		<< ehanc::is_lazy_v<ehanc::lazy<int>> << '\n'
-		<< ehanc::is_lazy_v<const ehanc::lazy<int>> << '\n'
-		<< ehanc::is_lazy_v<volatile ehanc::lazy<int>> << '\n'
-		<< ehanc::is_lazy_v<const volatile ehanc::lazy<int>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<const ehanc::lazy<int>>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>> << '\n'
 
-		<< ehanc::is_lazy_v<ehanc::lazy<int>&> << '\n'
-		<< ehanc::is_lazy_v<const ehanc::lazy<int>&> << '\n'
-		<< ehanc::is_lazy_v<volatile ehanc::lazy<int>&> << '\n'
-		<< ehanc::is_lazy_v<const volatile ehanc::lazy<int>&> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>&>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&>> << '\n'
 
-		<< ehanc::is_lazy_v<ehanc::lazy<int>&&> << '\n'
-		<< ehanc::is_lazy_v<const ehanc::lazy<int>&&> << '\n'
-		<< ehanc::is_lazy_v<volatile ehanc::lazy<int>&&> << '\n'
-		<< ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>> << '\n'
+		<< std::is_same_v<int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>> << '\n'
+
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<const ehanc::lazy<int>>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>> << '\n'
+
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>&>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&>> << '\n'
+
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>> << '\n'
+		<< not std::is_same_v<char, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>> << '\n'
 		;
 
 	return 0;

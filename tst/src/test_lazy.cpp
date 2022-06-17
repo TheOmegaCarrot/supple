@@ -38,6 +38,14 @@ bool test_lazy_has_value()
 
 }
 
+bool test_make_lazy()
+{
+	auto test{ehanc::make_lazy([](){return 5;})};
+
+	return	test == 5
+		&&	test == 5;
+}
+
 bool test_is_lazy()
 {
 	return	ehanc::is_lazy_v<ehanc::lazy<int>>
@@ -138,20 +146,12 @@ bool test_lazy_inner_type()
 		&&	std::is_same_v<int, ehanc::lazy_inner_type_t<int>>;
 }
 
-bool test_make_lazy()
-{
-	auto test{ehanc::make_lazy([](){return 5;})};
-
-	return	test == 5
-		&&	test == 5;
-}
-
 void test_lazy()
 {
 	run_test("ehanc::lazy", &test_lazy_class);
 	run_test("ehanc::lazy::has_value", &test_lazy_has_value);
+	run_test("ehanc::make_lazy", &test_make_lazy);
 	run_test("ehanc::is_lazy", &test_is_lazy);
 	run_test("ehanc::is_lazy_of", &test_is_lazy_of);
 	run_test("ehanc::lazy_inner_type", &test_lazy_inner_type);
-	run_test("ehanc::make_lazy", &test_make_lazy);
 }

@@ -286,7 +286,7 @@ namespace ehanc {
 		/**
 		 * @brief Partial implementation of a metafunction to
 		 * retrieve the inner type of an ehanc::lazy;
-		 * Identity if parameter is not an ehanc::lazy.
+		 * identity if parameter is not an ehanc::lazy.
 		 */
 		/* }}} */
 		template<typename T>
@@ -298,7 +298,7 @@ namespace ehanc {
 		/**
 		 * @brief Partial implementation of a metafunction to
 		 * retrieve the inner type of an ehanc::lazy;
-		 * Identity if parameter is not an ehanc::lazy.
+		 * identity if parameter is not an ehanc::lazy.
 		 * Specialization for case where type is an ehanc::lazy.
 		 */
 		/* }}} */
@@ -308,6 +308,12 @@ namespace ehanc {
 		};
 	}
 
+	/* {{{ doc */
+	/**
+	 * @brief Metafunction to retrieve the inner type of an ehanc::lazy;
+	 * identity if parameter is not an ehanc::lazy.
+	 */
+	/* }}} */
 	template<typename T>
 	struct lazy_inner_type : impl::lazy_inner_type_impl<std::decay_t<T>> {};
 

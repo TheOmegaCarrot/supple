@@ -10,7 +10,8 @@ bool test_all_pass_cont()
 	auto checker = [](const int i) -> bool{ return i < 6; };
 
 	return	ehanc::all_pass(yes, checker)
-		&&	not ehanc::all_pass(no, checker);
+		&&	not ehanc::all_pass(no, checker)
+		;
 }
 
 bool test_all_pass_itr()
@@ -20,7 +21,8 @@ bool test_all_pass_itr()
 	auto checker = [](const int i) -> bool{ return i < 6; };
 
 	return	ehanc::all_pass(yes.cbegin(), yes.cend(), checker)
-		&&	not ehanc::all_pass(no.cbegin(), no.cend(), checker);
+		&&	not ehanc::all_pass(no.cbegin(), no.cend(), checker)
+		;
 }
 
 bool test_min_size()
@@ -44,7 +46,18 @@ bool test_sum_type()
 		&&	std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>
 		&&	not std::is_same_v<ehanc::sum_type_t<int, short>, short>
 		&&	not std::is_same_v<ehanc::sum_type_t<double, int>, int>
-		&&	not std::is_same_v<ehanc::sum_type_t<char, int>, char>;
+		&&	not std::is_same_v<ehanc::sum_type_t<char, int>, char>
+		;
+}
+
+bool test_are_same_size()
+{
+	return	ehanc::are_same_size_v<int, int>
+		&&	ehanc::are_same_size_v<int, unsigned>
+		&&	ehanc::are_same_size_v<char, bool>
+		&&	ehanc::are_same_size_v<int*, long*>
+		&&	not ehanc::are_same_size_v<long, short>
+		;
 }
 
 bool test_size_t_literals()
@@ -55,7 +68,8 @@ bool test_size_t_literals()
 	auto j{500_z};
 
 	return	std::is_same_v<decltype(j), std::size_t>
-		&&	i == j;
+		&&	i == j
+		;
 }
 
 void test_etc()

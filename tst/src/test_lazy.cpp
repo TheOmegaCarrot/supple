@@ -33,7 +33,7 @@ bool test_lazy_has_value()
 
 	bool after = test.has_value();
 
-	return	!before
+	return	not before
 		&&	after;
 
 }
@@ -51,7 +51,8 @@ bool test_is_lazy()
 		&& ehanc::is_lazy_v<ehanc::lazy<int>&&>
 		&& ehanc::is_lazy_v<const ehanc::lazy<int>&&>
 		&& ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>
-		&& ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>;
+		&& ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>
+		&& not ehanc::is_lazy_v<int>;
 }
 
 bool test_is_lazy_of()
@@ -79,7 +80,9 @@ bool test_is_lazy_of()
 		&&	not ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>
 		&&	not ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>
 		&&	not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>
-		&&	not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>;
+		&&	not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>
+		&&	not ehanc::is_lazy_of_v<int, int>
+		&&	not ehanc::is_lazy_of_v<int, char>;
 }
 
 bool test_lazy_inner_type()

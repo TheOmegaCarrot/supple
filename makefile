@@ -1,7 +1,7 @@
 PROJNAME=utils
 STD=-std=c++17
 OPT=-Og
-WARN=-Wall -Wextra -pedantic -Wcast-align=strict -Wcast-qual -Wlogical-op -Wredundant-decls -Wdouble-promotion -Wformat=2 -Wnull-dereference -Wimplicit-fallthrough -Wuninitialized -Wstrict-overflow=4 -Wold-style-cast -Wconversion -Wduplicated-branches -Wduplicated-cond -Wtrampolines -Wfloat-equal -Wundef -Wshadow -Wshadow=local -Wfree-nonheap-object -Wsign-conversion -Wno-multichar -Wstrict-null-sentinel -Wctor-dtor-privacy -Wsign-promo -Wmisleading-indentation -Wzero-as-null-pointer-constant -Wuseless-cast -Wsuggest-override -Weffc++ -Wno-error=effc++ -Werror
+WARN=-Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wredundant-decls -Wconversion -Wnon-virtual-dtor -Wunused -Wdouble-promotion -Wformat=2 -Wnull-dereference -Wimplicit-fallthrough -Wuninitialized -Wstrict-overflow=4 -Wold-style-cast -Wfloat-equal -Wundef -Wshadow -Wfree-nonheap-object -Wsign-conversion -Wno-multichar -Woverloaded-virtual -Wctor-dtor-privacy -Wsign-promo -Wmisleading-indentation -Wzero-as-null-pointer-constant -Wsuggest-override -Weffc++ -Wno-error=effc++ -Werror
 CXX=g++
 ADDFLAGS=-ggdb3
 CXXFLAGS=$(STD) $(OPT) $(ADDFLAGS) $(WARN)

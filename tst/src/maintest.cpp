@@ -1,7 +1,8 @@
 #include <iostream>
 
-#include "test_utils.h"
+#include "test_utils.hpp"
 #include "utils/term_colors.h"
+
 #include "test_algorithm.h"
 #include "test_lazy.h"
 #include "test_etc.h"

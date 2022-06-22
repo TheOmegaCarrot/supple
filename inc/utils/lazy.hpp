@@ -74,21 +74,21 @@ namespace ehanc {
 
 			/* {{{ doc */
 			/**
-			 * Straightforward to copy.
+			 * Weird to copy
 			 */
 			/* }}} */
 			constexpr lazy(const lazy& src)
 				noexcept
-				= default;
+				= delete;
 
 			/* {{{ doc */
 			/**
-			 * Straightforward to copy.
+			 * Weird to copy.
 			 */
 			/* }}} */
 			constexpr lazy& operator= (const lazy& rhs)
 				noexcept
-				= default;
+				= delete;
 
 			/* {{{ doc */
 			/**

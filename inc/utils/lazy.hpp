@@ -30,7 +30,9 @@ namespace ehanc {
  * @endcode
  */
 /* }}} */
-template <typename RetType> class lazy {
+template <typename RetType>
+class lazy
+{
 private:
   /* {{{ doc */
   /**
@@ -63,36 +65,37 @@ public:
    */
   /* }}} */
   template <typename Func>
-  constexpr lazy(Func &&func) noexcept
-      : m_func{std::forward<Func>(func)}, m_value{} {}
+  constexpr lazy(Func&& func) noexcept
+      : m_func{std::forward<Func>(func)}, m_value{}
+  {}
 
   /* {{{ doc */
   /**
    * Weird to copy
    */
   /* }}} */
-  constexpr lazy(const lazy &src) noexcept = delete;
+  constexpr lazy(const lazy& src) noexcept = delete;
 
   /* {{{ doc */
   /**
    * Weird to copy.
    */
   /* }}} */
-  constexpr lazy &operator=(const lazy &rhs) noexcept = delete;
+  constexpr lazy& operator=(const lazy& rhs) noexcept = delete;
 
   /* {{{ doc */
   /**
    * Straightforward to move.
    */
   /* }}} */
-  constexpr lazy(lazy &&src) noexcept = default;
+  constexpr lazy(lazy&& src) noexcept = default;
 
   /* {{{ doc */
   /**
    * Straightforward to move.
    */
   /* }}} */
-  constexpr lazy &operator=(lazy &&rhs) noexcept = default;
+  constexpr lazy& operator=(lazy&& rhs) noexcept = default;
 
   /* {{{ doc */
   /**
@@ -116,11 +119,13 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto func() const noexcept
-      -> std::function<RetType()> & {
+      -> std::function<RetType()>&
+  {
     return m_func;
   }
 
-  [[nodiscard]] constexpr bool has_value() const noexcept {
+  [[nodiscard]] constexpr bool has_value() const noexcept
+  {
     return m_value.has_value();
   }
 
@@ -133,8 +138,9 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto get() const noexcept(noexcept(m_func()))
-      -> const RetType & {
-    if (!m_value.has_value()) {
+      -> const RetType&
+  {
+    if ( !m_value.has_value() ) {
       m_value = m_func();
     }
     return *m_value;
@@ -148,8 +154,9 @@ public:
    * @return Const reference to contained value.
    */
   /* }}} */
-  [[nodiscard]] constexpr operator const RetType &() const
-      noexcept(noexcept(m_func())) {
+  [[nodiscard]] constexpr operator const RetType&() const
+      noexcept(noexcept(m_func()))
+  {
     return this->get();
   }
 };
@@ -173,8 +180,9 @@ public:
  */
 /* }}} */
 template <typename Func>
-constexpr auto make_lazy(Func &&func) noexcept
-    -> lazy<std::invoke_result_t<Func &&>> {
+constexpr auto make_lazy(Func&& func) noexcept
+    -> lazy<std::invoke_result_t<Func&&>>
+{
   return lazy<decltype(func())>(std::forward<Func>(func));
 }
 
@@ -191,7 +199,8 @@ namespace impl {
  * if a type is an ehanc::lazy.
  */
 /* }}} */
-template <typename T> struct is_lazy_impl : std::false_type {};
+template <typename T>
+struct is_lazy_impl : std::false_type {};
 
 /* {{{ doc */
 /**
@@ -199,7 +208,8 @@ template <typename T> struct is_lazy_impl : std::false_type {};
  * if a type is an ehanc::lazy. Specialization for true case.
  */
 /* }}} */
-template <typename T> struct is_lazy_impl<lazy<T>> : std::true_type {};
+template <typename T>
+struct is_lazy_impl<lazy<T>> : std::true_type {};
 } // namespace impl
 
 /* {{{ doc */
@@ -207,7 +217,8 @@ template <typename T> struct is_lazy_impl<lazy<T>> : std::true_type {};
  * @brief Metafunction to determine if a type is an ehanc::lazy.
  */
 /* }}} */
-template <typename T> struct is_lazy : impl::is_lazy_impl<std::decay_t<T>> {};
+template <typename T>
+struct is_lazy : impl::is_lazy_impl<std::decay_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -215,7 +226,8 @@ template <typename T> struct is_lazy : impl::is_lazy_impl<std::decay_t<T>> {};
  * less verbose and cumbersome.
  */
 /* }}} */
-template <typename T> constexpr inline const bool is_lazy_v = is_lazy<T>::value;
+template <typename T>
+constexpr inline const bool is_lazy_v = is_lazy<T>::value;
 
 namespace impl {
 /* {{{ doc */
@@ -224,7 +236,8 @@ namespace impl {
  * if the second parameter if an ehanc::lazy of the first parameter.
  */
 /* }}} */
-template <typename T, typename L> struct is_lazy_of_impl : std::false_type {};
+template <typename T, typename L>
+struct is_lazy_of_impl : std::false_type {};
 
 /* {{{ doc */
 /**
@@ -233,7 +246,8 @@ template <typename T, typename L> struct is_lazy_of_impl : std::false_type {};
  * Specialization for true case.
  */
 /* }}} */
-template <typename T> struct is_lazy_of_impl<T, lazy<T>> : std::true_type {};
+template <typename T>
+struct is_lazy_of_impl<T, lazy<T>> : std::true_type {};
 } // namespace impl
 
 /* {{{ doc */
@@ -261,7 +275,10 @@ namespace impl {
  * identity if parameter is not an ehanc::lazy.
  */
 /* }}} */
-template <typename T> struct lazy_inner_type_impl { using type = T; };
+template <typename T>
+struct lazy_inner_type_impl {
+  using type = T;
+};
 
 /* {{{ doc */
 /**
@@ -271,7 +288,10 @@ template <typename T> struct lazy_inner_type_impl { using type = T; };
  * Specialization for case where type is an ehanc::lazy.
  */
 /* }}} */
-template <typename T> struct lazy_inner_type_impl<lazy<T>> { using type = T; };
+template <typename T>
+struct lazy_inner_type_impl<lazy<T>> {
+  using type = T;
+};
 } // namespace impl
 
 /* {{{ doc */

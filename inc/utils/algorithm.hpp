@@ -34,12 +34,13 @@ namespace ehanc {
 template <typename Itr, typename BinaryFunc>
 constexpr void
 for_each_pair(const Itr begin, const Itr end,
-              BinaryFunc &&func) noexcept(noexcept(func(*begin, *begin))) {
+              BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+{
   Itr leader{begin};
   ++leader;
   Itr follower{begin};
 
-  for (; leader != end; ++leader, ++follower) {
+  for ( ; leader != end; ++leader, ++follower ) {
     func(*leader, *follower);
   }
 }
@@ -72,13 +73,14 @@ for_each_pair(const Itr begin, const Itr end,
 template <typename Itr, typename BinaryFunc>
 constexpr void
 for_each_pair_n(const Itr begin, const Itr end, const std::size_t n,
-                BinaryFunc &&func) noexcept(noexcept(func(*begin, *begin))) {
+                BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+{
   std::size_t count{0};
   Itr leader{begin};
   ++leader;
   Itr follower{begin};
 
-  for (; count != n && leader != end; ++count, ++leader, ++follower) {
+  for ( ; count != n && leader != end; ++count, ++leader, ++follower ) {
     func(*leader, *follower);
   }
 }
@@ -119,8 +121,9 @@ for_each_pair_n(const Itr begin, const Itr end, const std::size_t n,
 template <typename Itr1, typename Itr2, typename BinaryFunc>
 constexpr void
 for_each_both(Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
-              BinaryFunc &&func) noexcept(noexcept(func(*begin1, *begin2))) {
-  for (; (begin1 != end1 && begin2 != end2); ++begin1, ++begin2) {
+              BinaryFunc&& func) noexcept(noexcept(func(*begin1, *begin2)))
+{
+  for ( ; (begin1 != end1 && begin2 != end2); ++begin1, ++begin2 ) {
     func(*begin1, *begin2);
   }
 }
@@ -162,12 +165,14 @@ for_each_both(Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
  */
 /* }}} */
 template <typename Itr1, typename Itr2, typename BinaryFunc>
-constexpr void
-for_each_both_n(Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
-                const std::size_t n,
-                BinaryFunc &&func) noexcept(noexcept(func(*begin1, *begin2))) {
-  for (std::size_t count{0}; (count != n && begin1 != end1 && begin2 != end2);
-       ++count, ++begin1, ++begin2) {
+constexpr void for_each_both_n(
+    Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
+    const std::size_t n,
+    BinaryFunc&& func) noexcept(noexcept(func(*begin1, *begin2)))
+{
+  for ( std::size_t count{0};
+        (count != n && begin1 != end1 && begin2 != end2);
+        ++count, ++begin1, ++begin2 ) {
     func(*begin1, *begin2);
   }
 }
@@ -203,9 +208,10 @@ for_each_both_n(Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
 /* }}} */
 template <typename VarFunc, typename... Begins>
 constexpr void
-for_each_all_n(VarFunc &&func, const std::size_t n,
-               Begins... begins) noexcept(noexcept(func(*begins...))) {
-  for (std::size_t i{0}; i != n; ++i) {
+for_each_all_n(VarFunc&& func, const std::size_t n,
+               Begins... begins) noexcept(noexcept(func(*begins...)))
+{
+  for ( std::size_t i{0}; i != n; ++i ) {
     func(*begins...);
     (++begins, ...);
   }
@@ -231,7 +237,8 @@ for_each_all_n(VarFunc &&func, const std::size_t n,
  */
 /* }}} */
 template <typename VarFunc, typename... Containers>
-constexpr void for_each_all(VarFunc &&func, Containers &...containers) {
+constexpr void for_each_all(VarFunc&& func, Containers&... containers)
+{
   for_each_all_n(std::forward<VarFunc>(func), min_size(containers...),
                  std::begin(containers)...);
 }
@@ -256,7 +263,9 @@ constexpr void for_each_all(VarFunc &&func, Containers &...containers) {
  */
 /* }}} */
 template <typename VarFunc, typename... Containers>
-constexpr void for_each_all_c(VarFunc &&func, const Containers &...containers) {
+constexpr void for_each_all_c(VarFunc&& func,
+                              const Containers&... containers)
+{
   for_each_all_n(std::forward<VarFunc>(func), min_size(containers...),
                  std::cbegin(containers)...);
 }
@@ -280,10 +289,12 @@ constexpr void for_each_all_c(VarFunc &&func, const Containers &...containers) {
  */
 /* }}} */
 template <typename Itr>
-[[nodiscard]] constexpr auto forward_distance(Itr begin, const Itr end) noexcept
-    -> std::size_t {
+[[nodiscard]] constexpr auto forward_distance(Itr begin,
+                                              const Itr end) noexcept
+    -> std::size_t
+{
   std::size_t count{0};
-  while (begin != end) {
+  while ( begin != end ) {
     ++begin;
     ++count;
   }
@@ -303,17 +314,18 @@ template <typename Itr>
  */
 /* }}} */
 template <typename Iterable>
-[[nodiscard]] constexpr auto last(const Iterable &container) noexcept
-    -> decltype(std::begin(container)) {
+[[nodiscard]] constexpr auto last(const Iterable& container) noexcept
+    -> decltype(std::begin(container))
+{
   auto begin{std::begin(container)};
   auto end{std::end(container)};
 
-  if (begin == end) {
+  if ( begin == end ) {
     return begin;
   }
 
   std::size_t distance{forward_distance(begin, end) - 1};
-  for (std::size_t i{0}; i != distance; ++i) {
+  for ( std::size_t i{0}; i != distance; ++i ) {
     ++begin;
   }
 
@@ -331,8 +343,9 @@ template <typename Iterable>
  */
 /* }}} */
 template <typename Iterable>
-[[nodiscard]] constexpr auto clast(const Iterable &container) noexcept
-    -> decltype(std::cbegin(container)) {
+[[nodiscard]] constexpr auto clast(const Iterable& container) noexcept
+    -> decltype(std::cbegin(container))
+{
   return static_cast<decltype(std::cbegin(container))>(last(container));
 }
 

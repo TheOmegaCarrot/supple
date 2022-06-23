@@ -15,7 +15,8 @@ static const int TEST_OUTPUT_WIDTH = 60;
 
 namespace ehanc {
 
-class test {
+class test
+{
 private:
   int case_index{};
   bool m_pass{true};
@@ -26,9 +27,10 @@ public:
   test() = default;
 
   template <typename T>
-  inline void add_case(const T &result, const T &expected) {
+  inline void add_case(const T& result, const T& expected)
+  {
     ++case_index;
-    if (result != expected) {
+    if ( result != expected ) {
       m_pass = false;
       std::stringstream detail;
 
@@ -41,22 +43,28 @@ public:
     }
   }
 
-  inline bool pass() { return m_pass; }
+  inline bool pass()
+  {
+    return m_pass;
+  }
 
 }; // class test
 
 inline void run_test(const std::string_view name,
-                     std::function<test()> test_func) {
+                     std::function<test()> test_func)
+{
   test result = test_func();
 
-  if (result.pass()) {
-    std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH) << std::setfill('.')
-              << name << FG_GREEN << "PASS" << RESET << '\n';
+  if ( result.pass() ) {
+    std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH)
+              << std::setfill('.') << name << FG_GREEN << "PASS" << RESET
+              << '\n';
   } else {
-    std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH) << std::setfill('.')
-              << name << FG_RED << "FAIL" << RESET << '\n';
+    std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH)
+              << std::setfill('.') << name << FG_RED << "FAIL" << RESET
+              << '\n';
 
-    for (const auto &[index, details] : result.cases) {
+    for ( const auto& [index, details] : result.cases ) {
       std::cout << FG_RED << "Case " << index << RESET << '\n';
       std::cout << details << '\n';
     }

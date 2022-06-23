@@ -9,7 +9,8 @@
 
 constexpr static const std::string_view HEADER_COLOR = ehanc::FG_RED;
 
-int main() {
+int main()
+{
 
   std::cout << HEADER_COLOR << "Algorithm:" << ehanc::RESET << '\n';
   test_algorithm();

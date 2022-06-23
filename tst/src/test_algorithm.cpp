@@ -4,7 +4,8 @@
 
 #include "test_algorithm.h"
 
-ehanc::test test_for_each_pair() {
+ehanc::test test_for_each_pair()
+{
   ehanc::test result;
   std::vector<int> test_input(6);
   std::iota(test_input.begin(), test_input.end(), 1);
@@ -26,7 +27,8 @@ ehanc::test test_for_each_pair() {
   return result;
 }
 
-ehanc::test test_for_each_pair_n() {
+ehanc::test test_for_each_pair_n()
+{
   ehanc::test result;
   std::vector<int> test_input{1, 2, 3, 4, 5, 6};
   std::vector<int> test_output;
@@ -47,7 +49,8 @@ ehanc::test test_for_each_pair_n() {
   return result;
 }
 
-ehanc::test test_for_each_all() {
+ehanc::test test_for_each_all()
+{
   ehanc::test result;
   std::array test1{4, 9, 16, 25};
   std::array test2{2, 3, 4, 5};
@@ -70,7 +73,8 @@ ehanc::test test_for_each_all() {
   return result;
 }
 
-ehanc::test test_for_each_all_c() {
+ehanc::test test_for_each_all_c()
+{
   ehanc::test result;
   const std::array test1{4, 9, 16, 25};
   const std::array test2{2, 3, 4, 5};
@@ -93,7 +97,8 @@ ehanc::test test_for_each_all_c() {
   return result;
 }
 
-ehanc::test test_for_each_all_n() {
+ehanc::test test_for_each_all_n()
+{
   ehanc::test result;
   std::array test1{4, 9, 16, 25};
   std::array test2{2, 3, 4, 5};
@@ -116,7 +121,8 @@ ehanc::test test_for_each_all_n() {
   return result;
 }
 
-ehanc::test test_for_each_both() {
+ehanc::test test_for_each_both()
+{
   ehanc::test result;
   std::array<int, 5> test_input_1;
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
@@ -126,7 +132,7 @@ ehanc::test test_for_each_both() {
 
   ehanc::for_each_both(test_input_1.cbegin(), test_input_1.cend(),
                        test_input_2.cbegin(), test_input_2.cend(),
-                       [&test_output](const auto &i, const auto &j) {
+                       [&test_output](const auto& i, const auto& j) {
                          test_output.push_back(i + j);
                        });
 
@@ -140,7 +146,8 @@ ehanc::test test_for_each_both() {
   return result;
 }
 
-ehanc::test test_for_each_both_n() {
+ehanc::test test_for_each_both_n()
+{
   ehanc::test result;
   std::array<int, 5> test_input_1;
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
@@ -150,7 +157,7 @@ ehanc::test test_for_each_both_n() {
 
   ehanc::for_each_both_n(test_input_1.cbegin(), test_input_1.cend(),
                          test_input_2.cbegin(), test_input_2.cend(), 2,
-                         [&test_output](const auto &i, const auto &j) {
+                         [&test_output](const auto& i, const auto& j) {
                            test_output.push_back(i + j);
                          });
 
@@ -164,7 +171,8 @@ ehanc::test test_for_each_both_n() {
   return result;
 }
 
-ehanc::test test_forward_distance() {
+ehanc::test test_forward_distance()
+{
   ehanc::test result;
   std::array<int, 5> test{1, 2, 3, 4, 5};
 
@@ -174,7 +182,8 @@ ehanc::test test_forward_distance() {
   return result;
 }
 
-ehanc::test test_last() {
+ehanc::test test_last()
+{
   ehanc::test result;
   std::array<int, 5> test1;
   std::iota(test1.begin(), test1.end(), 1);
@@ -189,7 +198,8 @@ ehanc::test test_last() {
   return result;
 }
 
-ehanc::test test_clast() {
+ehanc::test test_clast()
+{
   ehanc::test result;
   std::array<int, 5> test1;
   std::iota(test1.begin(), test1.end(), 1);
@@ -204,7 +214,8 @@ ehanc::test test_clast() {
   return result;
 }
 
-void test_algorithm() {
+void test_algorithm()
+{
   ehanc::run_test("ehanc::for_each_pair", &test_for_each_pair);
   ehanc::run_test("ehanc::for_each_pair_n", &test_for_each_pair_n);
   ehanc::run_test("ehanc::for_each_all_n", &test_for_each_all_n);

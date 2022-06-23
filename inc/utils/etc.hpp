@@ -21,10 +21,12 @@ namespace ehanc {
  */
 /* }}} */
 template <typename Container, typename Predicate>
-bool all_pass(const Container &cont, Predicate pred) {
+bool all_pass(const Container& cont, Predicate pred)
+{
   bool check{true};
-  std::for_each(cont.cbegin(), cont.cend(),
-                [&pred, &check](const auto &i) { check = check && pred(i); });
+  std::for_each(
+      cont.cbegin(), cont.cend(),
+      [&pred, &check](const auto& i) { check = check && pred(i); });
   return check;
 }
 
@@ -46,10 +48,12 @@ bool all_pass(const Container &cont, Predicate pred) {
  */
 /* }}} */
 template <typename Itr, typename Predicate>
-bool all_pass(Itr begin, const Itr end, Predicate pred) {
+bool all_pass(Itr begin, const Itr end, Predicate pred)
+{
   bool check{true};
-  std::for_each(begin, end,
-                [&pred, &check](const auto &i) { check = check && pred(i); });
+  std::for_each(begin, end, [&pred, &check](const auto& i) {
+    check = check && pred(i);
+  });
   return check;
 }
 
@@ -66,7 +70,8 @@ bool all_pass(Itr begin, const Itr end, Predicate pred) {
  */
 /* }}} */
 template <typename Container>
-constexpr std::size_t min_size(const Container &cont) noexcept {
+constexpr std::size_t min_size(const Container& cont) noexcept
+{
   return cont.size();
 }
 
@@ -91,8 +96,9 @@ constexpr std::size_t min_size(const Container &cont) noexcept {
  */
 /* }}} */
 template <typename Container, typename... Containers>
-constexpr std::size_t min_size(const Container &cont,
-                               const Containers &...conts) noexcept {
+constexpr std::size_t min_size(const Container& cont,
+                               const Containers&... conts) noexcept
+{
   return std::min(min_size(cont), min_size(conts...));
 }
 
@@ -102,7 +108,8 @@ constexpr std::size_t min_size(const Container &cont,
  * addition of the two parameter types.
  */
 /* }}} */
-template <typename T, typename U> struct sum_type {
+template <typename T, typename U>
+struct sum_type {
   using type = decltype(std::declval<T>() + std::declval<U>());
 };
 
@@ -125,7 +132,8 @@ constexpr inline const bool equal_v = equal<X, Y>::value;
 
 template <auto X, auto Y,
           typename B = std::conditional_t<
-              X<Y, std::true_type, std::false_type>> struct less_than : B {};
+              X<Y, std::true_type, std::false_type>> struct less_than : B {
+};
 
 template <auto X, auto Y>
 constexpr inline const bool less_than_v = less_than<X, Y>::value;
@@ -139,16 +147,16 @@ template <auto X, auto Y>
 constexpr inline const bool less_eq_v = less_eq<X, Y>::value;
 
 template <auto X, auto Y,
-          typename B = std::conditional_t<not less_eq_v<X, Y>, std::true_type,
-                                          std::false_type>>
+          typename B = std::conditional_t<not less_eq_v<X, Y>,
+                                          std::true_type, std::false_type>>
 struct greater_than : B {};
 
 template <auto X, auto Y>
 constexpr inline const bool greater_than_v = greater_than<X, Y>::value;
 
 template <auto X, auto Y,
-          typename B = std::conditional_t<not less_than_v<X, Y>, std::true_type,
-                                          std::false_type>>
+          typename B = std::conditional_t<not less_than_v<X, Y>,
+                                          std::true_type, std::false_type>>
 struct greater_eq : B {};
 
 template <auto X, auto Y>
@@ -184,7 +192,8 @@ inline namespace size_t_literal {
  */
 /* }}} */
 [[nodiscard]] constexpr auto operator""_z(unsigned long long i) noexcept
-    -> std::size_t {
+    -> std::size_t
+{
   return static_cast<std::size_t>(i);
 }
 

@@ -11,25 +11,36 @@ struct loud {
 
   loud() = delete;
 
-  loud(int val) : m_val{val} {}
+  loud(int val) : m_val{val}
+  {}
 
-  loud(const loud &src) : m_val{src.m_val} { std::cout << "COPY" << '\n'; }
+  loud(const loud& src) : m_val{src.m_val}
+  {
+    std::cout << "COPY" << '\n';
+  }
 
-  loud(loud &&src) : m_val{src.m_val} { std::cout << "MOVE" << '\n'; }
+  loud(loud&& src) : m_val{src.m_val}
+  {
+    std::cout << "MOVE" << '\n';
+  }
 
-  int operator()() const {
+  int operator()() const
+  {
     std::cout << "EVAL" << '\n';
     return m_val;
   }
 };
 
-template <typename T> auto printer(const T &print) {
+template <typename T>
+auto printer(const T& print)
+{
   std::cout << print << '\n';
   std::cout << print << '\n';
 }
 
 int main([[maybe_unused]] const int argc,
-         [[maybe_unused]] const char *const *const argv) {
+         [[maybe_unused]] const char* const* const argv)
+{
 
   ehanc::lazy<int> test([i{loud(7)}]() { return i(); });
 

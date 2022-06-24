@@ -22,12 +22,13 @@ private:
   bool m_pass{true};
 
 public:
-  std::vector<std::tuple<int, std::string>> cases{};
+  std::vector<std::string> cases{};
 
   test() = default;
 
   template <typename T>
-  inline void add_case(const T& result, const T& expected)
+  inline void add_case(const T& result, const T& expected,
+                       const std::string_view message = "")
   {
     ++case_index;
     if ( result != expected ) {
@@ -35,11 +36,12 @@ public:
       std::stringstream detail;
 
       detail << std::boolalpha << std::left << std::setw(10) << FG_RED
-             << "\n\tExpected:\n"
+             << "Case " << case_index << '\t' << message
+             << "\n\n\tExpected:\n"
              << RESET << '\t' << expected << FG_RED << "\n\n\tGot:\n"
              << RESET << '\t' << result << '\n';
 
-      cases.push_back(std::make_tuple(case_index, detail.str()));
+      cases.push_back(detail.str());
     }
   }
 
@@ -64,8 +66,7 @@ inline void run_test(const std::string_view name,
               << std::setfill('.') << name << FG_RED << "FAIL" << RESET
               << '\n';
 
-    for ( const auto& [index, details] : result.cases ) {
-      std::cout << FG_RED << "Case " << index << RESET << '\n';
+    for ( const auto& details : result.cases ) {
       std::cout << details << '\n';
     }
   }

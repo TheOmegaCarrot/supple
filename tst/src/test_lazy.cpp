@@ -15,11 +15,12 @@ ehanc::test test_lazy_class()
 
   check.push_back(1);
 
-  result.add_case(test.get(), 5);
-  result.add_case(check[0], 1);
-  result.add_case(check[1], 2);
-  result.add_case(test.func()(), 6);
-  result.add_case(test.get(), 5);
+  result.add_case(test.get(), 5, "Incorrect evaluation");
+  result.add_case(check[0], 1, "Likely early evaluation");
+  result.add_case(check[1], 2, "Likely early evaluation");
+  result.add_case(test.func()(), 6,
+                  "Stateful functions not able to be so");
+  result.add_case(test.get(), 5, "Value changed");
 
   return result;
 }
@@ -30,14 +31,12 @@ ehanc::test test_lazy_has_value()
 
   auto test{ehanc::make_lazy([]() { return 5; })};
 
-  bool before = test.has_value();
+  result.add_case(test.has_value(), false,
+                  "Should not have value before use");
 
   [[maybe_unused]] auto discarded{test.get()};
 
-  bool after = test.has_value();
-
-  result.add_case(before, false);
-  result.add_case(after, true);
+  result.add_case(test.has_value(), true, "Should have value after use");
 
   return result;
 }
@@ -48,8 +47,8 @@ ehanc::test test_make_lazy()
 
   auto test{ehanc::make_lazy([]() { return 5; })};
 
-  result.add_case(test.get(), 5);
-  result.add_case(test.get(), 5);
+  result.add_case(test.get(), 5, "Incorrect evaluation");
+  result.add_case(test.get(), 5, "Incorrect evaluation");
 
   return result;
 }

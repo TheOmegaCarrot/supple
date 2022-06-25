@@ -119,7 +119,7 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto func() const noexcept
-      -> std::function<RetType()>&
+      -> std::add_lvalue_reference_t<std::function<RetType()>>
   {
     return m_func;
   }
@@ -138,7 +138,7 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto get() const noexcept(noexcept(m_func()))
-      -> const RetType&
+      -> std::add_lvalue_reference_t<const RetType>
   {
     if ( !m_value.has_value() ) {
       m_value = m_func();

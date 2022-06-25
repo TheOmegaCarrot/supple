@@ -6,7 +6,7 @@
 
 ehanc::test test_for_each_pair()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::vector<int> test_input(6);
   std::iota(test_input.begin(), test_input.end(), 1);
   std::vector<int> test_output;
@@ -21,15 +21,15 @@ ehanc::test test_for_each_pair()
       std::mismatch(test_output.cbegin(), test_output.cend(),
                     reference_output.cbegin(), reference_output.cend());
 
-  result.add_case(test == test_output.cend(), true);
-  result.add_case(ref == reference_output.cend(), true);
+  results.add_case(test == test_output.cend(), true);
+  results.add_case(ref == reference_output.cend(), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_for_each_pair_n()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::vector<int> test_input{1, 2, 3, 4, 5, 6};
   std::vector<int> test_output;
   std::vector<int> reference_output{3, 5, 7};
@@ -43,15 +43,15 @@ ehanc::test test_for_each_pair_n()
       std::mismatch(test_output.cbegin(), test_output.cend(),
                     reference_output.cbegin(), reference_output.cend());
 
-  result.add_case(test == test_output.cend(), true);
-  result.add_case(ref == reference_output.cend(), true);
+  results.add_case(test == test_output.cend(), true);
+  results.add_case(ref == reference_output.cend(), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_for_each_all()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::array test1{4, 9, 16, 25};
   std::array test2{2, 3, 4, 5};
   std::vector<int> test_output;
@@ -67,15 +67,15 @@ ehanc::test test_for_each_all()
       std::mismatch(test_output.cbegin(), test_output.cend(),
                     reference_output.cbegin(), reference_output.cend());
 
-  result.add_case(test == test_output.cend(), true);
-  result.add_case(ref == reference_output.cend(), true);
+  results.add_case(test == test_output.cend(), true);
+  results.add_case(ref == reference_output.cend(), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_for_each_all_c()
 {
-  ehanc::test result;
+  ehanc::test results;
   const std::array test1{4, 9, 16, 25};
   const std::array test2{2, 3, 4, 5};
   std::vector<int> test_output;
@@ -91,15 +91,15 @@ ehanc::test test_for_each_all_c()
       std::mismatch(test_output.cbegin(), test_output.cend(),
                     reference_output.cbegin(), reference_output.cend());
 
-  result.add_case(test == test_output.cend(), true);
-  result.add_case(ref == reference_output.cend(), true);
+  results.add_case(test == test_output.cend(), true);
+  results.add_case(ref == reference_output.cend(), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_for_each_all_n()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::array test1{4, 9, 16, 25};
   std::array test2{2, 3, 4, 5};
   std::vector<int> test_output;
@@ -115,15 +115,15 @@ ehanc::test test_for_each_all_n()
       std::mismatch(test_output.cbegin(), test_output.cend(),
                     reference_output.cbegin(), reference_output.cend());
 
-  result.add_case(test == test_output.cend(), true);
-  result.add_case(ref == reference_output.cend(), true);
+  results.add_case(test == test_output.cend(), true);
+  results.add_case(ref == reference_output.cend(), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_for_each_both()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::array<int, 5> test_input_1;
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2{10, 20, 30, 40};
@@ -140,15 +140,15 @@ ehanc::test test_for_each_both()
       std::mismatch(test_output.cbegin(), test_output.cend(),
                     reference_output.cbegin(), reference_output.cend());
 
-  result.add_case(test == test_output.cend(), true);
-  result.add_case(ref == reference_output.cend(), true);
+  results.add_case(test == test_output.cend(), true);
+  results.add_case(ref == reference_output.cend(), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_for_each_both_n()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::array<int, 5> test_input_1;
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2{10, 20, 30, 40};
@@ -165,53 +165,53 @@ ehanc::test test_for_each_both_n()
       std::mismatch(test_output.cbegin(), test_output.cend(),
                     reference_output.cbegin(), reference_output.cend());
 
-  result.add_case(test == test_output.cend(), true);
-  result.add_case(ref == reference_output.cend(), true);
+  results.add_case(test == test_output.cend(), true);
+  results.add_case(ref == reference_output.cend(), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_forward_distance()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::array<int, 5> test{1, 2, 3, 4, 5};
 
-  result.add_case(ehanc::forward_distance(test.cbegin(), test.cend()),
-                  size_t{5});
+  results.add_case(ehanc::forward_distance(test.cbegin(), test.cend()),
+                   size_t{5});
 
-  return result;
+  return results;
 }
 
 ehanc::test test_last()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::array<int, 5> test1;
   std::iota(test1.begin(), test1.end(), 1);
 
   std::array<int, 2> test2{2, 3};
   std::vector<int> test3;
 
-  result.add_case(*ehanc::last(test1), 5);
-  result.add_case(*ehanc::last(test2), 3);
-  result.add_case(ehanc::last(test3) == std::begin(test3), true);
+  results.add_case(*ehanc::last(test1), 5);
+  results.add_case(*ehanc::last(test2), 3);
+  results.add_case(ehanc::last(test3) == std::begin(test3), true);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_clast()
 {
-  ehanc::test result;
+  ehanc::test results;
   std::array<int, 5> test1;
   std::iota(test1.begin(), test1.end(), 1);
 
   std::array<int, 2> test2{2, 3};
   std::vector<int> test3;
 
-  result.add_case(*ehanc::clast(test1), 5);
-  result.add_case(*ehanc::clast(test2), 3);
-  result.add_case(ehanc::clast(test3) == std::cbegin(test3), true);
+  results.add_case(*ehanc::clast(test1), 5);
+  results.add_case(*ehanc::clast(test2), 3);
+  results.add_case(ehanc::clast(test3) == std::cbegin(test3), true);
 
-  return result;
+  return results;
 }
 
 void test_algorithm()

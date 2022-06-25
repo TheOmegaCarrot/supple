@@ -104,6 +104,24 @@ constexpr std::size_t min_size(const Container& cont,
 
 /* {{{ doc */
 /**
+ * @brief Explicitly makes a copy of the parameter. Inspired by C++23's
+ * `auto()` and `auto{}` syntax.
+ *
+ * @param t Value to be copied.
+ *
+ * @return Copy of `t`.
+ */
+/* }}} */
+template <typename T>
+[[maybe_unused]] constexpr T
+explicit_copy(const T& t) noexcept(noexcept(T(std::declval<T>())))
+{
+  T tmp = t;
+  return tmp;
+}
+
+/* {{{ doc */
+/**
  * @brief Metafunction to determine the type resulting from
  * addition of the two parameter types.
  */

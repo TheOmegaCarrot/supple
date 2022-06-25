@@ -4,7 +4,7 @@
 
 ehanc::test test_lazy_class()
 {
-  ehanc::test result;
+  ehanc::test results;
 
   std::vector<int> check;
 
@@ -15,215 +15,217 @@ ehanc::test test_lazy_class()
 
   check.push_back(1);
 
-  result.add_case(test.get(), 5, "Incorrect evaluation");
-  result.add_case(check[0], 1, "Likely early evaluation");
-  result.add_case(check[1], 2, "Likely early evaluation");
-  result.add_case(test.func()(), 6,
-                  "Stateful functions not able to be so");
-  result.add_case(test.get(), 5, "Value changed");
+  results.add_case(test.get(), 5, "Incorrect evaluation");
+  results.add_case(check[0], 1, "Likely early evaluation");
+  results.add_case(check[1], 2, "Likely early evaluation");
+  results.add_case(test.func()(), 6,
+                   "Stateful functions not able to be so");
+  results.add_case(test.get(), 5, "Value changed");
 
-  return result;
+  return results;
 }
 
 ehanc::test test_lazy_has_value()
 {
-  ehanc::test result;
+  ehanc::test results;
 
   auto test{ehanc::make_lazy([]() { return 5; })};
 
-  result.add_case(test.has_value(), false,
-                  "Should not have value before use");
+  results.add_case(test.has_value(), false,
+                   "Should not have value before use");
 
   [[maybe_unused]] auto discarded{test.get()};
 
-  result.add_case(test.has_value(), true, "Should have value after use");
+  results.add_case(test.has_value(), true, "Should have value after use");
 
-  return result;
+  return results;
 }
 
 ehanc::test test_make_lazy()
 {
-  ehanc::test result;
+  ehanc::test results;
 
   auto test{ehanc::make_lazy([]() { return 5; })};
 
-  result.add_case(test.get(), 5, "Incorrect evaluation");
-  result.add_case(test.get(), 5, "Incorrect evaluation");
+  results.add_case(test.get(), 5, "Incorrect evaluation");
+  results.add_case(test.get(), 5, "Incorrect evaluation");
 
-  return result;
+  return results;
 }
 
 ehanc::test test_is_lazy()
 {
-  ehanc::test result;
+  ehanc::test results;
 
-  result.add_case(ehanc::is_lazy_v<ehanc::lazy<int>>, true);
-  result.add_case(ehanc::is_lazy_v<const ehanc::lazy<int>>, true);
-  result.add_case(ehanc::is_lazy_v<volatile ehanc::lazy<int>>, true);
-  result.add_case(ehanc::is_lazy_v<const volatile ehanc::lazy<int>>, true);
-  result.add_case(ehanc::is_lazy_v<ehanc::lazy<int>&>, true);
-  result.add_case(ehanc::is_lazy_v<const ehanc::lazy<int>&>, true);
-  result.add_case(ehanc::is_lazy_v<volatile ehanc::lazy<int>&>, true);
-  result.add_case(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&>,
-                  true);
-  result.add_case(ehanc::is_lazy_v<ehanc::lazy<int>&&>, true);
-  result.add_case(ehanc::is_lazy_v<const ehanc::lazy<int>&&>, true);
-  result.add_case(ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>, true);
-  result.add_case(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>,
-                  true);
-  result.add_case(ehanc::is_lazy_v<int>, false);
+  results.add_case(ehanc::is_lazy_v<ehanc::lazy<int>>, true);
+  results.add_case(ehanc::is_lazy_v<const ehanc::lazy<int>>, true);
+  results.add_case(ehanc::is_lazy_v<volatile ehanc::lazy<int>>, true);
+  results.add_case(ehanc::is_lazy_v<const volatile ehanc::lazy<int>>,
+                   true);
+  results.add_case(ehanc::is_lazy_v<ehanc::lazy<int>&>, true);
+  results.add_case(ehanc::is_lazy_v<const ehanc::lazy<int>&>, true);
+  results.add_case(ehanc::is_lazy_v<volatile ehanc::lazy<int>&>, true);
+  results.add_case(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&>,
+                   true);
+  results.add_case(ehanc::is_lazy_v<ehanc::lazy<int>&&>, true);
+  results.add_case(ehanc::is_lazy_v<const ehanc::lazy<int>&&>, true);
+  results.add_case(ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>, true);
+  results.add_case(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>,
+                   true);
+  results.add_case(ehanc::is_lazy_v<int>, false);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_is_lazy_of()
 {
-  ehanc::test result;
+  ehanc::test results;
 
-  result.add_case(ehanc::is_lazy_of_v<int, ehanc::lazy<int>>, true);
-  result.add_case(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>>, true);
-  result.add_case(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>>,
-                  true);
-  result.add_case(
+  results.add_case(ehanc::is_lazy_of_v<int, ehanc::lazy<int>>, true);
+  results.add_case(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>>, true);
+  results.add_case(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>>,
+                   true);
+  results.add_case(
       ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>>, true);
-  result.add_case(ehanc::is_lazy_of_v<int, ehanc::lazy<int>&>, true);
-  result.add_case(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&>, true);
-  result.add_case(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&>,
-                  true);
-  result.add_case(
+  results.add_case(ehanc::is_lazy_of_v<int, ehanc::lazy<int>&>, true);
+  results.add_case(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&>,
+                   true);
+  results.add_case(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&>,
+                   true);
+  results.add_case(
       ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&>, true);
-  result.add_case(ehanc::is_lazy_of_v<int, ehanc::lazy<int>&&>, true);
-  result.add_case(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&&>,
-                  true);
-  result.add_case(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&&>,
-                  true);
-  result.add_case(
+  results.add_case(ehanc::is_lazy_of_v<int, ehanc::lazy<int>&&>, true);
+  results.add_case(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&&>,
+                   true);
+  results.add_case(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&&>,
+                   true);
+  results.add_case(
       ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&&>, true);
-  result.add_case(ehanc::is_lazy_of_v<char, ehanc::lazy<int>>, false);
-  result.add_case(ehanc::is_lazy_of_v<char, const ehanc::lazy<int>>,
-                  false);
-  result.add_case(ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>>,
-                  false);
-  result.add_case(
+  results.add_case(ehanc::is_lazy_of_v<char, ehanc::lazy<int>>, false);
+  results.add_case(ehanc::is_lazy_of_v<char, const ehanc::lazy<int>>,
+                   false);
+  results.add_case(ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>>,
+                   false);
+  results.add_case(
       ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>>, false);
-  result.add_case(ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>, false);
-  result.add_case(ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>,
-                  false);
-  result.add_case(ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>,
-                  false);
-  result.add_case(
+  results.add_case(ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>, false);
+  results.add_case(ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>,
+                   false);
+  results.add_case(ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>,
+                   false);
+  results.add_case(
       ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>, false);
-  result.add_case(ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>, false);
-  result.add_case(ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>,
-                  false);
-  result.add_case(ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>,
-                  false);
-  result.add_case(
+  results.add_case(ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>, false);
+  results.add_case(ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>,
+                   false);
+  results.add_case(ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>,
+                   false);
+  results.add_case(
       ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>, false);
-  result.add_case(ehanc::is_lazy_of_v<int, int>, false);
-  result.add_case(ehanc::is_lazy_of_v<int, char>, false);
+  results.add_case(ehanc::is_lazy_of_v<int, int>, false);
+  results.add_case(ehanc::is_lazy_of_v<int, char>, false);
 
-  return result;
+  return results;
 }
 
 ehanc::test test_lazy_inner_type()
 {
-  ehanc::test result;
+  ehanc::test results;
 
-  result.add_case(
+  results.add_case(
       std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int,
                      ehanc::lazy_inner_type_t<const ehanc::lazy<int>>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int,
                      ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<
           int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int,
                      ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int,
                      ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<
           int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int,
                      ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<
           int, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<int, ehanc::lazy_inner_type_t<
                               const volatile ehanc::lazy<int>&&>>,
       true);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char,
                      ehanc::lazy_inner_type_t<const ehanc::lazy<int>>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char,
                      ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<
           char, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>&>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char,
                      ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char,
                      ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char, ehanc::lazy_inner_type_t<
                                const volatile ehanc::lazy<int>&>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char,
                      ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<
           char, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>,
       false);
-  result.add_case(
+  results.add_case(
       std::is_same_v<char, ehanc::lazy_inner_type_t<
                                const volatile ehanc::lazy<int>&&>>,
       false);
-  result.add_case(std::is_same_v<int, ehanc::lazy_inner_type_t<int>>,
-                  true);
+  results.add_case(std::is_same_v<int, ehanc::lazy_inner_type_t<int>>,
+                   true);
 
-  return result;
+  return results;
 }
 
 void test_lazy()

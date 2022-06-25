@@ -46,9 +46,8 @@ ehanc::test test_min_size()
   std::array<int, 3> test3;
   std::array<int, 6> test4;
 
-  using namespace ehanc::literals::size_t_literal;
-
-  results.add_case(ehanc::min_size(test1, test2, test3, test4), 3_z);
+  results.add_case(ehanc::min_size(test1, test2, test3, test4),
+                   std::size_t{3});
 
   return results;
 }

@@ -196,9 +196,7 @@ struct bool_or : B {};
 template <bool X, bool Y>
 constexpr inline const bool bool_or_v = bool_or<X, Y>::value;
 
-} // namespace ehanc
-
-namespace ehanc::literals {
+namespace literals {
 
 inline namespace size_t_literal {
 
@@ -217,6 +215,8 @@ inline namespace size_t_literal {
 
 } // namespace size_t_literal
 
-} // namespace ehanc::literals
+} // namespace literals
+
+} // namespace ehanc
 
 #endif

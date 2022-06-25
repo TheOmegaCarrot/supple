@@ -23,7 +23,7 @@ test: tst/bin/test
 .PHONY: tags
 tags:
 	@printf "\033[1;32mGenerating ctags\033[1;0m\n"
-	@ctags -R . >/dev/null 2>&1
+	@ctags -R src inc tst >/dev/null 2>&1
 
 .PHONY: doc
 doc:

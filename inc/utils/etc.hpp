@@ -113,7 +113,7 @@ constexpr std::size_t min_size(const Container& cont,
  */
 /* }}} */
 template <typename T>
-[[maybe_unused]] constexpr T
+[[nodiscard]] constexpr T
 explicit_copy(const T& t) noexcept(noexcept(T(std::declval<T>())))
 {
   T tmp = t;

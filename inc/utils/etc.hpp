@@ -126,9 +126,9 @@ explicit_copy(const T& t) noexcept(noexcept(T(std::declval<T>())))
  * addition of the two parameter types.
  */
 /* }}} */
-template <typename T, typename U>
+template <typename... Ts>
 struct sum_type {
-  using type = decltype(std::declval<T>() + std::declval<U>());
+  using type = decltype((... + std::declval<Ts>()));
 };
 
 /* {{{ doc */
@@ -137,8 +137,8 @@ struct sum_type {
  * metafunction less verbose and cumbersome.
  */
 /* }}} */
-template <typename T, typename U>
-using sum_type_t = typename sum_type<T, U>::type;
+template <typename... Ts>
+using sum_type_t = typename sum_type<Ts...>::type;
 
 template <auto X, auto Y,
           typename B =

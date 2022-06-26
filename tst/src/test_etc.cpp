@@ -104,6 +104,10 @@ ehanc::test test_sum_type()
                    false, "double + int == int");
   results.add_case(std::is_same_v<ehanc::sum_type_t<char, int>, char>,
                    false, "char + int == char");
+  results.add_case(
+      std::is_same_v<ehanc::sum_type_t<short, short, short, short, int>,
+                     int>,
+      true, "short + short + short + short + int == int");
 
   return results;
 }

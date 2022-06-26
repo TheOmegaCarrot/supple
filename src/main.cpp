@@ -11,15 +11,18 @@ struct loud {
 
   loud() = delete;
 
-  loud(int val) : m_val{val}
+  loud(int val)
+      : m_val{val}
   {}
 
-  loud(const loud& src) : m_val{src.m_val}
+  loud(const loud& src)
+      : m_val{src.m_val}
   {
     std::cout << "COPY" << '\n';
   }
 
-  loud(loud&& src) : m_val{src.m_val}
+  loud(loud&& src)
+      : m_val{src.m_val}
   {
     std::cout << "MOVE" << '\n';
   }

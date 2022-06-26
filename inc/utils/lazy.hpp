@@ -66,7 +66,8 @@ public:
   /* }}} */
   template <typename Func>
   constexpr explicit lazy(Func&& func) noexcept
-      : m_func{std::forward<Func>(func)}, m_value{}
+      : m_func{std::forward<Func>(func)}
+      , m_value{}
   {}
 
   /* {{{ doc */

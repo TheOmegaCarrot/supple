@@ -180,21 +180,19 @@ struct greater_eq : B {};
 template <auto X, auto Y>
 constexpr inline const bool greater_eq_v = greater_eq<X, Y>::value;
 
-template <bool X, bool Y,
-          typename B =
-              std::conditional_t<X && Y, std::true_type, std::false_type>>
-struct bool_and : B {};
+template <bool... Xs>
+struct bool_and
+    : std::conditional_t<(... && Xs), std::true_type, std::false_type> {};
 
-template <bool X, bool Y>
-constexpr inline const bool bool_and_v = bool_and<X, Y>::value;
+template <bool... Xs>
+constexpr inline const bool bool_and_v = bool_and<Xs...>::value;
 
-template <bool X, bool Y,
-          typename B =
-              std::conditional_t<X || Y, std::true_type, std::false_type>>
-struct bool_or : B {};
+template <bool... Xs>
+struct bool_or
+    : std::conditional_t<(... || Xs), std::true_type, std::false_type> {};
 
-template <bool X, bool Y>
-constexpr inline const bool bool_or_v = bool_or<X, Y>::value;
+template <bool... Xs>
+constexpr inline const bool bool_or_v = bool_or<Xs...>::value;
 
 namespace literals {
 

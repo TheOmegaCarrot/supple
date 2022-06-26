@@ -149,6 +149,10 @@ ehanc::test test_bool_op_metafunctions()
                    "bool_and_v<false, true>");
   results.add_case(ehanc::bool_and_v<false, false>, false,
                    "bool_and_v<false, false>");
+  results.add_case(ehanc::bool_and_v<true, true, true, true>, true,
+                   "bool_and_v<true, true, true, true>");
+  results.add_case(ehanc::bool_and_v<true, false, true, true>, false,
+                   "bool_and_v<true, false, true, true>");
   results.add_case(ehanc::bool_or_v<true, true>, true,
                    "bool_or_v<true, true>");
   results.add_case(ehanc::bool_or_v<true, false>, true,
@@ -157,6 +161,10 @@ ehanc::test test_bool_op_metafunctions()
                    "bool_or_v<false, true>");
   results.add_case(ehanc::bool_or_v<false, false>, false,
                    "bool_or_v<false, false>");
+  results.add_case(ehanc::bool_or_v<false, false, false, false>, false,
+                   "bool_or_v<false, false, false, false>");
+  results.add_case(ehanc::bool_or_v<false, true, false, false>, true,
+                   "bool_or_v<false, true, false, false>");
 
   return results;
 }

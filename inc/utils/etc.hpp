@@ -123,7 +123,7 @@ explicit_copy(const T& t) noexcept(noexcept(T(std::declval<T>())))
 /* {{{ doc */
 /**
  * @brief Metafunction to determine the type resulting from
- * addition of the two parameter types.
+ * addition of the parameter types.
  */
 /* }}} */
 template <typename... Ts>
@@ -140,42 +140,38 @@ struct sum_type {
 template <typename... Ts>
 using sum_type_t = typename sum_type<Ts...>::type;
 
-template <auto X, auto Y,
-          typename B =
-              std::conditional_t<X == Y, std::true_type, std::false_type>>
-struct equal : B {};
+template <auto X, auto Y>
+struct equal
+    : std::conditional_t<X == Y, std::true_type, std::false_type> {};
 
 template <auto X, auto Y>
 constexpr inline const bool equal_v = equal<X, Y>::value;
 
-template <auto X, auto Y,
-          typename B = std::conditional_t<
-              X<Y, std::true_type, std::false_type>> struct less_than : B {
-};
+template <auto X, auto Y>
+    struct less_than : std::conditional_t
+                       < X<Y, std::true_type, std::false_type> {};
 
 template <auto X, auto Y>
 constexpr inline const bool less_than_v = less_than<X, Y>::value;
 
-template <auto X, auto Y,
-          typename B =
-              std::conditional_t<X <= Y, std::true_type, std::false_type>>
-struct less_eq : B {};
+template <auto X, auto Y>
+struct less_eq
+    : std::conditional_t<X <= Y, std::true_type, std::false_type> {};
 
 template <auto X, auto Y>
 constexpr inline const bool less_eq_v = less_eq<X, Y>::value;
 
-template <auto X, auto Y,
-          typename B = std::conditional_t<not less_eq_v<X, Y>,
-                                          std::true_type, std::false_type>>
-struct greater_than : B {};
+template <auto X, auto Y>
+struct greater_than : std::conditional_t<not less_eq_v<X, Y>,
+                                         std::true_type, std::false_type> {
+};
 
 template <auto X, auto Y>
 constexpr inline const bool greater_than_v = greater_than<X, Y>::value;
 
-template <auto X, auto Y,
-          typename B = std::conditional_t<not less_than_v<X, Y>,
-                                          std::true_type, std::false_type>>
-struct greater_eq : B {};
+template <auto X, auto Y>
+struct greater_eq : std::conditional_t<not less_than_v<X, Y>,
+                                       std::true_type, std::false_type> {};
 
 template <auto X, auto Y>
 constexpr inline const bool greater_eq_v = greater_eq<X, Y>::value;

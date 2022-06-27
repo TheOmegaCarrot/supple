@@ -169,6 +169,115 @@ ehanc::test test_bool_op_metafunctions()
   return results;
 }
 
+ehanc::test test_type_identity()
+{
+  ehanc::test results;
+
+  results.add_case(std::is_same_v<ehanc::type_identity_t<char>, int>,
+                   false, "char : int");
+  results.add_case(std::is_same_v<ehanc::type_identity_t<int>, char>,
+                   false, "int : char");
+  results.add_case(std::is_same_v<ehanc::type_identity_t<int>, int>, true,
+                   "int : int");
+
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const int>, const int>, true,
+      "const int : const int");
+  results.add_case(std::is_same_v<ehanc::type_identity_t<const int>, int>,
+                   false, "const int: int");
+  results.add_case(std::is_same_v<ehanc::type_identity_t<int>, const int>,
+                   false, "int : const int");
+
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<volatile int>, volatile int>,
+      true, "volatile int : volatile int");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<volatile int>, int>, false,
+      "volatile int: int");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int>, volatile int>, false,
+      "int : volatile int");
+
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const volatile int>,
+                     const volatile int>,
+      true, "const volatile int : const volatile int");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const volatile int>, int>,
+      false, "const volatile int: int");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int>, const volatile int>,
+      false, "int : const volatile int");
+
+  results.add_case(std::is_same_v<ehanc::type_identity_t<int&>, int>,
+                   false, "int& : int");
+  results.add_case(std::is_same_v<ehanc::type_identity_t<int>, int&>,
+                   false, "int : int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const int&>, const int&>, true,
+      "const int& : const int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const int&>, int&>, false,
+      "const int&: int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int&>, const int&>, false,
+      "int& : const int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<volatile int&>, volatile int&>,
+      true, "volatile int& : volatile int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<volatile int&>, int&>, false,
+      "volatile int&: int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int&>, volatile int&>, false,
+      "int& : volatile int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const volatile int&>,
+                     const volatile int&>,
+      true, "const volatile int& : const volatile int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const volatile int&>, int&>,
+      false, "const volatile int&: int&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int&>, const volatile int&>,
+      false, "int& : const volatile int&");
+
+  results.add_case(std::is_same_v<ehanc::type_identity_t<int&&>, int>,
+                   false, "int&& : int");
+  results.add_case(std::is_same_v<ehanc::type_identity_t<int>, int&&>,
+                   false, "int : int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const int&&>, const int&&>,
+      true, "const int&& : const int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const int&&>, int&&>, false,
+      "const int&&: int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int&&>, const int&&>, false,
+      "int&& : const int&&");
+  results.add_case(std::is_same_v<ehanc::type_identity_t<volatile int&&>,
+                                  volatile int&&>,
+                   true, "volatile int&& : volatile int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<volatile int&&>, int&&>, false,
+      "volatile int&&: int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int&&>, volatile int&&>, false,
+      "int&& : volatile int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const volatile int&&>,
+                     const volatile int&&>,
+      true, "const volatile int&& : const volatile int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<const volatile int&&>, int&&>,
+      false, "const volatile int&&: int&&");
+  results.add_case(
+      std::is_same_v<ehanc::type_identity_t<int&&>, const volatile int&&>,
+      false, "int&& : const volatile int&&");
+
+  return results;
+}
+
 ehanc::test test_size_t_literals()
 {
   ehanc::test results;
@@ -196,5 +305,6 @@ void test_etc()
                   &test_comparison_metafunctions);
   ehanc::run_test("boolean ops metafunctions",
                   &test_bool_op_metafunctions);
+  ehanc::run_test("type_identity", &test_type_identity);
   ehanc::run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

@@ -140,6 +140,8 @@ struct sum_type {
 template <typename... Ts>
 using sum_type_t = typename sum_type<Ts...>::type;
 
+// conditional metafunctions
+
 template <auto X, auto Y>
 struct equal
     : std::conditional_t<X == Y, std::true_type, std::false_type> {};
@@ -176,6 +178,10 @@ struct greater_eq : std::conditional_t<not less_than_v<X, Y>,
 template <auto X, auto Y>
 constexpr inline const bool greater_eq_v = greater_eq<X, Y>::value;
 
+// end conditional metafunctions
+
+// boolean operation metafunctions
+
 template <bool... Xs>
 struct bool_and
     : std::conditional_t<(... && Xs), std::true_type, std::false_type> {};
@@ -189,6 +195,27 @@ struct bool_or
 
 template <bool... Xs>
 constexpr inline const bool bool_or_v = bool_or<Xs...>::value;
+
+// end boolean operation metafunctions
+
+/* {{{ doc */
+/**
+ * @brief Identity metafunction. This version is unneeded if using >=C++20
+ */
+/* }}} */
+template <typename T>
+struct type_identity {
+  using type = T;
+};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `type_identity`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T>
+using type_identity_t = typename type_identity<T>::type;
 
 namespace literals {
 

@@ -11,7 +11,8 @@
 
 #include "utils/term_colors.h"
 
-static const int TEST_OUTPUT_WIDTH = 60;
+constexpr inline const int TEST_OUTPUT_WIDTH         = 60;
+constexpr inline const std::string_view HEADER_COLOR = ehanc::FG_RED;
 
 namespace ehanc {
 
@@ -74,6 +75,14 @@ inline void run_test(const std::string_view name,
       std::cout << details << '\n';
     }
   }
+}
+
+inline void test_section(const std::string_view section_name,
+                         const std::function<void()>& section_func)
+{
+  std::cout << HEADER_COLOR << section_name << ':' << RESET << '\n';
+  section_func();
+  std::cout << '\n' << '\n';
 }
 
 } // namespace ehanc

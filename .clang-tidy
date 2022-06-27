@@ -1,5 +1,5 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,clang-analyzer-*,clang-diagnostic-*,cppcoreguidelines-*,readability-*,performance-*,portability-*,bugprone-*,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,clang-analyzer-*,clang-diagnostic-*,cppcoreguidelines-*,readability-*,performance-*,portability-*,bugprone-*,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-readability-avoid-const-params-in-decls,-readability-redundant-member-init'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false

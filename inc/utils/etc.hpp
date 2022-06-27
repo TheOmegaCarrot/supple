@@ -116,8 +116,7 @@ template <typename T>
 [[nodiscard]] constexpr T
 explicit_copy(const T& t) noexcept(noexcept(T(std::declval<T>())))
 {
-  T tmp = t;
-  return tmp;
+  return t;
 }
 
 /* {{{ doc */

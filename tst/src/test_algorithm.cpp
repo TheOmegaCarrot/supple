@@ -124,7 +124,7 @@ ehanc::test test_for_each_all_n()
 ehanc::test test_for_each_both()
 {
   ehanc::test results;
-  std::array<int, 5> test_input_1;
+  std::array<int, 5> test_input_1{};
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2{10, 20, 30, 40};
   std::vector<int> test_output;
@@ -149,7 +149,7 @@ ehanc::test test_for_each_both()
 ehanc::test test_for_each_both_n()
 {
   ehanc::test results;
-  std::array<int, 5> test_input_1;
+  std::array<int, 5> test_input_1{};
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2{10, 20, 30, 40};
   std::vector<int> test_output;
@@ -185,7 +185,7 @@ ehanc::test test_forward_distance()
 ehanc::test test_last()
 {
   ehanc::test results;
-  std::array<int, 5> test1;
+  std::array<int, 5> test1{};
   std::iota(test1.begin(), test1.end(), 1);
 
   std::array<int, 2> test2{2, 3};
@@ -201,7 +201,7 @@ ehanc::test test_last()
 ehanc::test test_clast()
 {
   ehanc::test results;
-  std::array<int, 5> test1;
+  std::array<int, 5> test1{};
   std::iota(test1.begin(), test1.end(), 1);
 
   std::array<int, 2> test2{2, 3};

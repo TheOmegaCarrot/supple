@@ -41,10 +41,10 @@ ehanc::test test_all_pass_itr()
 ehanc::test test_min_size()
 {
   ehanc::test results;
-  std::array<int, 5> test1;
-  std::array<int, 8> test2;
-  std::array<int, 3> test3;
-  std::array<int, 6> test4;
+  std::array<int, 5> test1{};
+  std::array<int, 8> test2{};
+  std::array<int, 3> test3{};
+  std::array<int, 6> test4{};
 
   results.add_case(ehanc::min_size(test1, test2, test3, test4),
                    std::size_t{3});
@@ -53,15 +53,21 @@ ehanc::test test_min_size()
 }
 
 struct copy_counter {
-  copy_counter() = default;
+  copy_counter()               = default;
+  ~copy_counter()              = default;
+  copy_counter(copy_counter&&) = default;
+  copy_counter& operator=(const copy_counter&) = default;
+  copy_counter& operator=(copy_counter&&) = default;
 
-  static int copy_count; // NOLINT
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+  static int copy_count;
   copy_counter([[maybe_unused]] const copy_counter& src)
   {
     ++copy_count;
   }
 };
-int copy_counter::copy_count{0}; // NOLINT
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+int copy_counter::copy_count{0};
 
 ehanc::test test_explicit_copy()
 {
@@ -74,6 +80,21 @@ ehanc::test test_explicit_copy()
   [[maybe_unused]] copy_counter test2 = ehanc::explicit_copy(test);
 
   results.add_case(copy_counter::copy_count, 1,
+                   "Incorrect number of copies");
+
+  [[maybe_unused]] copy_counter test3 = ehanc::explicit_copy(test);
+
+  results.add_case(copy_counter::copy_count, 2,
+                   "Incorrect number of copies");
+
+  [[maybe_unused]] copy_counter test4 = ehanc::explicit_copy(test);
+
+  results.add_case(copy_counter::copy_count, 3,
+                   "Incorrect number of copies");
+
+  [[maybe_unused]] copy_counter test5 = ehanc::explicit_copy(test);
+
+  results.add_case(copy_counter::copy_count, 4,
                    "Incorrect number of copies");
 
   return results;

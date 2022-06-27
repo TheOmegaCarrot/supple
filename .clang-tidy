@@ -1,7 +1,7 @@
 ---
 Checks:          'clang-diagnostic-*,clang-analyzer-*,clang-analyzer-*,clang-diagnostic-*,cppcoreguidelines-*,readability-*,performance-*,portability-*,bugprone-*,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers'
 WarningsAsErrors: ''
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 User:            ethan

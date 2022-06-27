@@ -65,6 +65,7 @@ public:
    */
   /* }}} */
   template <typename Func>
+  // NOLINTNEXTLINE(bugprone-forwarding-reference-overload)
   constexpr explicit lazy(Func&& func) noexcept
       : m_func{std::forward<Func>(func)}
       , m_value{}

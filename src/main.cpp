@@ -11,6 +11,8 @@ struct loud {
 
   loud() = delete;
 
+  ~loud() = default;
+
   loud(int val)
       : m_val{val}
   {}
@@ -21,11 +23,15 @@ struct loud {
     std::cout << "COPY" << '\n';
   }
 
-  loud(loud&& src)
+  loud& operator=(const loud&) = default;
+
+  loud(loud&& src) noexcept
       : m_val{src.m_val}
   {
     std::cout << "MOVE" << '\n';
   }
+
+  loud& operator=(loud&&) noexcept = default;
 
   int operator()() const
   {

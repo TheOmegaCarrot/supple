@@ -18,34 +18,38 @@ namespace ehanc {
 class test
 {
 private:
-  int case_index{};
+  int m_case_index{};
   bool m_pass{true};
+  std::vector<std::string> m_cases{};
 
 public:
-  std::vector<std::string> cases{};
-
   test() = default;
 
   template <typename T>
   inline void add_case(const T& result, const T& expected,
                        const std::string_view message = "")
   {
-    ++case_index;
+    ++m_case_index;
     if ( result != expected ) {
       m_pass = false;
       std::stringstream detail;
 
       detail << std::boolalpha << std::left << std::setw(10) << FG_RED
-             << "Case " << case_index << '\t' << message
+             << "Case " << m_case_index << '\t' << message
              << "\n\n\tExpected:\n"
              << RESET << '\t' << expected << FG_RED << "\n\n\tGot:\n"
              << RESET << '\t' << result << '\n';
 
-      cases.push_back(detail.str());
+      m_cases.push_back(detail.str());
     }
   }
 
-  inline bool pass()
+  inline const std::vector<std::string>& cases()
+  {
+    return m_cases;
+  }
+
+  inline bool pass() const
   {
     return m_pass;
   }
@@ -53,7 +57,7 @@ public:
 }; // class test
 
 inline void run_test(const std::string_view name,
-                     std::function<test()> test_func)
+                     const std::function<test()>& test_func)
 {
   test result = test_func();
 
@@ -66,7 +70,7 @@ inline void run_test(const std::string_view name,
               << std::setfill('.') << name << FG_RED << "FAIL" << RESET
               << '\n';
 
-    for ( const auto& details : result.cases ) {
+    for ( const auto& details : result.cases() ) {
       std::cout << details << '\n';
     }
   }

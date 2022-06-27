@@ -55,13 +55,13 @@ ehanc::test test_min_size()
 struct copy_counter {
   copy_counter() = default;
 
-  static int copy_count;
+  static int copy_count; // NOLINT
   copy_counter([[maybe_unused]] const copy_counter& src)
   {
     ++copy_count;
   }
 };
-int copy_counter::copy_count{0};
+int copy_counter::copy_count{0}; // NOLINT
 
 ehanc::test test_explicit_copy()
 {

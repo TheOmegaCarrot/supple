@@ -111,9 +111,10 @@ public:
    * @brief Must be constructed with a value.
    */
   /* }}} */
-  constexpr sequence_iterator(value_type t) noexcept(
-      noexcept(value_type(t)))
-      : m_val{std::move(t)}
+  template <typename T,
+            typename = std::enable_if<(not std::is_same_v<T, value_type>)>>
+  constexpr sequence_iterator(T t) noexcept(noexcept(T(t)))
+      : m_val{std::forward<T>(t)}
   {}
 
   sequence_iterator(const sequence_iterator&) = default;
@@ -223,6 +224,9 @@ public:
     return m_val < rhs.m_val;
   }
 };
+
+template <typename T>
+sequence_iterator(T) -> sequence_iterator<std::decay_t<T>>;
 
 /* {{{ doc */
 /**

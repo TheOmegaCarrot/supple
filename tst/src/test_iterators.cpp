@@ -48,9 +48,37 @@ ehanc::test test_clast()
   return results;
 }
 
+ehanc::test test_sequence_iterator()
+{
+  ehanc::test results;
+
+  ehanc::sequence_iterator begin{0};
+  ehanc::sequence_iterator end{10};
+
+  std::for_each(begin, end, [&results, j{0}](const int i) mutable {
+    results.add_case(i, j++);
+  });
+
+  return results;
+}
+
+ehanc::test test_sequence()
+{
+  ehanc::test results;
+
+  int j{0};
+  for ( int i : ehanc::sequence(0, 10) ) {
+    results.add_case(i, j++);
+  }
+
+  return results;
+}
+
 void test_iterators()
 {
   ehanc::run_test("ehanc::forward_distance", &test_forward_distance);
   ehanc::run_test("ehanc::last", &test_last);
   ehanc::run_test("ehanc::clast", &test_clast);
+  ehanc::run_test("ehanc::sequence_iterator", &test_sequence_iterator);
+  ehanc::run_test("ehanc::sequence", &test_sequence);
 }

@@ -112,8 +112,9 @@ public:
    */
   /* }}} */
   template <typename T,
-            typename = std::enable_if<(not std::is_same_v<T, value_type>)>>
-  constexpr sequence_iterator(T t) noexcept(noexcept(T(t)))
+            typename = std::enable_if<not std::is_same_v<T, value_type>>>
+  constexpr sequence_iterator(T t) noexcept(
+      noexcept(T(t)) && noexcept(T(std::move(t))))
       : m_val{std::forward<T>(t)}
   {}
 
@@ -262,9 +263,11 @@ public:
    * iterators which will provide the range `[begin, end)`.
    */
   /* }}} */
-  sequence(value_type begin, value_type end)
-      : m_begin(std::move(begin))
-      , m_end(std::move(end))
+  template <typename T,
+            typename = std::enable_if<not std::is_same_v<T, value_type>>>
+  sequence(T&& begin, T&& end)
+      : m_begin(std::forward<T>(begin))
+      , m_end(std::forward<T>(end))
   {}
 
   ~sequence() = default;
@@ -319,6 +322,9 @@ public:
     return this->end();
   }
 };
+
+template <typename T>
+sequence(T, T) -> sequence<T>;
 
 } // namespace ehanc
 

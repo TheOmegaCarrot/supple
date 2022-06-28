@@ -117,11 +117,17 @@ public:
       : m_val{std::forward<T>(t)}
   {}
 
+  ~sequence_iterator() = default;
+
   sequence_iterator(const sequence_iterator&) = default;
-  sequence_iterator(sequence_iterator&&)      = default;
-  ~sequence_iterator()                        = default;
+
+  sequence_iterator(sequence_iterator&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
+
   sequence_iterator& operator=(const sequence_iterator&) = default;
-  sequence_iterator& operator=(sequence_iterator&&) = default;
+
+  sequence_iterator& operator=(sequence_iterator&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
 
   /* {{{ doc */
   /**
@@ -261,11 +267,17 @@ public:
       , m_end(std::move(end))
   {}
 
+  ~sequence() = default;
+
   sequence(const sequence&) = default;
-  sequence(sequence&&)      = default;
-  ~sequence()               = default;
+
+  sequence(sequence&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
+
   sequence& operator=(const sequence&) = default;
-  sequence& operator=(sequence&&) = default;
+
+  sequence& operator=(sequence&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
 
   /* {{{ doc */
   /**

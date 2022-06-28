@@ -72,7 +72,7 @@ $(EXE): obj/main.o
 	@$(CXX) -o $@ $^ $(CXXFLAGS)
 	@ln -sf $(EXE) ./run
 
-tst/bin/test: tst/bin tst/obj tst/obj/test_lazy.o tst/obj/test_etc.o tst/obj/test_algorithm.o tst/obj/maintest.o obj/main.o
+tst/bin/test: tst/bin tst/obj tst/obj/test_lazy.o tst/obj/test_iterators.o tst/obj/test_etc.o tst/obj/test_algorithm.o tst/obj/maintest.o obj/main.o
 	@printf "\033[1;32mLinking\t\t tst/bin/test\033[1;0m\n"
 	@rm -f tst/obj/main.o
 	@$(CXX) -o $@ tst/obj/*.o $(CXXFLAGS)
@@ -95,6 +95,10 @@ tst/obj/test_lazy.o: tst/src/test_lazy.cpp tst/inc/test_lazy.h tst/inc/test_util
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
+tst/obj/test_iterators.o: tst/src/test_iterators.cpp tst/inc/test_iterators.h inc/utils/iterators.hpp tst/inc/test_utils.hpp inc/utils/term_colors.h
+	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
+	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
+
 tst/obj/test_etc.o: tst/src/test_etc.cpp tst/inc/test_etc.h tst/inc/test_utils.hpp inc/utils/term_colors.h inc/utils/etc.hpp inc/utils/lazy.hpp
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
@@ -103,6 +107,6 @@ tst/obj/test_algorithm.o: tst/src/test_algorithm.cpp tst/inc/test_algorithm.h ts
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.hpp inc/utils/term_colors.h tst/inc/test_algorithm.h tst/inc/test_utils.hpp inc/utils/algorithm.hpp inc/utils/etc.hpp tst/inc/test_etc.h tst/inc/test_lazy.h inc/utils/lazy.hpp
+tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.hpp inc/utils/term_colors.h tst/inc/test_algorithm.h tst/inc/test_utils.hpp inc/utils/algorithm.hpp inc/utils/etc.hpp tst/inc/test_etc.h tst/inc/test_iterators.h inc/utils/iterators.hpp tst/inc/test_lazy.h inc/utils/lazy.hpp
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)

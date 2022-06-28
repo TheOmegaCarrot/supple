@@ -5,12 +5,15 @@
 
 #include "test_algorithm.h"
 #include "test_etc.h"
+#include "test_iterators.h"
 #include "test_lazy.h"
 
 int main()
 {
 
   ehanc::test_section("Algorithm", &test_algorithm);
+
+  ehanc::test_section("Iterators", &test_iterators);
 
   ehanc::test_section("Lazy", &test_lazy);
 

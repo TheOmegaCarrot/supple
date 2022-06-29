@@ -200,17 +200,17 @@ struct peel_first<First, Pack...> {
 template <typename... Pack>
 using peel_first_t = typename peel_first<Pack...>::type;
 
-template <typename T, typename P, typename... Pack>
+template <typename T, typename... Pack>
 struct is_pack_uniform
-    : std::conditional_t<std::is_same_v<T, P>, is_pack_uniform<P, Pack...>,
-                         std::false_type> {};
+    : std::conditional_t<std::is_same_v<T, peel_first_t<Pack...>>,
+                         is_pack_uniform<Pack...>, std::false_type> {};
 
-template <typename T, typename P>
-struct is_pack_uniform<T, P> : std::is_same<T, P> {};
+template <typename T>
+struct is_pack_uniform<T> : std::true_type {};
 
-template <typename T, typename P, typename... Pack>
+template <typename T, typename... Pack>
 constexpr inline const bool is_pack_uniform_v =
-    is_pack_uniform<T, P, Pack...>::value;
+    is_pack_uniform<T, Pack...>::value;
 
 template <typename T, typename... Pack>
 struct pack_size

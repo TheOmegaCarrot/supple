@@ -298,9 +298,7 @@ ehanc::test test_is_pack_uniform()
                    false);
   results.add_case(ehanc::is_pack_uniform_v<int, int>, true);
   results.add_case(ehanc::is_pack_uniform_v<int, char>, false);
-
-  // I want this to work!!!
-  /* results.add_case(ehanc::is_pack_uniform_v<int>, true); */
+  results.add_case(ehanc::is_pack_uniform_v<int>, true);
 
   return results;
 }

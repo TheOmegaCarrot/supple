@@ -222,25 +222,13 @@ using peel_first_t = typename peel_first<Pack...>::type;
 /**
  * @brief Metafunction to determine if all types in a pack
  * are the same type.
- *
- * @bug Does not support size 0 packs.
  */
 /* }}} */
-template <typename T, typename... Pack>
+template <typename... Pack>
 struct is_pack_uniform
-    : std::conditional_t<(std::is_same_v<T, Pack> && ...), std::true_type,
-                         std::false_type> {};
-
-/* {{{ doc */
-/**
- * @brief Metafunction to determine if all types in a pack
- * are the same type. Base case of one argument.
- *
- * @bug Does not support size 0 packs.
- */
-/* }}} */
-template <typename T>
-struct is_pack_uniform<T> : std::true_type {};
+    : std::conditional_t<
+          (std::is_same_v<peel_first_t<Pack...>, Pack> && ...),
+          std::true_type, std::false_type> {};
 
 /* {{{ doc */
 /**
@@ -248,9 +236,9 @@ struct is_pack_uniform<T> : std::true_type {};
  * metafunction less verbose and cumbersome.
  */
 /* }}} */
-template <typename T, typename... Pack>
+template <typename... Pack>
 constexpr inline const bool is_pack_uniform_v =
-    is_pack_uniform<T, Pack...>::value;
+    is_pack_uniform<Pack...>::value;
 
 /* {{{ doc */
 /**

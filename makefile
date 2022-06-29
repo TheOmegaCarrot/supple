@@ -78,16 +78,16 @@ tst/bin/test: tst/bin tst/obj tst/obj/test_lazy.o tst/obj/test_iterators.o tst/o
 	@$(CXX) -o $@ tst/obj/*.o $(CXXFLAGS)
 	@ln -sf tst/bin/test ./run_tests
 
-obj/main.o: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
+obj/main.o: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc $(CXXFLAGS)
 	@ln -sf ../../obj/main.o tst/obj/main.o
 
-asm/main.s: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
+asm/main.s: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mGenerating\t $@\033[1;0m\n"
 	@$(CXX) -S -o $@ $< -Iinc $(CXXFLAGS)
 
-pre/main.ii: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
+pre/main.ii: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mPreprocessing\t $@\033[1;0m\n"
 	@$(CXX) -E -o $@ $< -Iinc $(CXXFLAGS)
 

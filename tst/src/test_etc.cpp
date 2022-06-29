@@ -344,6 +344,21 @@ ehanc::test test_is_pack_uniform()
   return results;
 }
 
+ehanc::test test_pack_size()
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::pack_size_v<int>, std::size_t{1});
+  results.add_case(ehanc::pack_size_v<int, char>, std::size_t{2});
+  results.add_case(ehanc::pack_size_v<int, bool, float>, std::size_t{3});
+  results.add_case(ehanc::pack_size_v<int, double, long, short>,
+                   std::size_t{4});
+  results.add_case(ehanc::pack_size_v<int, char, bool, int, int>,
+                   std::size_t{5});
+
+  return results;
+}
+
 ehanc::test test_size_t_literals()
 {
   ehanc::test results;
@@ -374,5 +389,6 @@ void test_etc()
   ehanc::run_test("type_identity", &test_type_identity);
   ehanc::run_test("is_type_in_pack", &test_is_type_in_pack);
   ehanc::run_test("is_pack_uniform", &test_is_pack_uniform);
+  ehanc::run_test("pack_size", &test_pack_size);
   ehanc::run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

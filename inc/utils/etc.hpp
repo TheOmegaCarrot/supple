@@ -257,6 +257,18 @@ template <typename T, typename P, typename... Pack>
 constexpr inline const bool is_pack_uniform_v =
     is_pack_uniform<T, P, Pack...>::value;
 
+template <typename T, typename... Pack>
+struct pack_size
+    : std::integral_constant<std::size_t, pack_size<Pack...>::value + 1> {
+};
+
+template <typename T>
+struct pack_size<T> : std::integral_constant<std::size_t, 1> {};
+
+template <typename T, typename... Pack>
+constexpr inline const std::size_t pack_size_v =
+    pack_size<T, Pack...>::value;
+
 namespace literals {
 
 inline namespace size_t_literal {

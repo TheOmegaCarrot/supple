@@ -317,6 +317,33 @@ ehanc::test test_is_type_in_pack()
   return results;
 }
 
+ehanc::test test_is_pack_uniform()
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_pack_uniform_v<int, int, int, int, int>,
+                   true);
+  results.add_case(ehanc::is_pack_uniform_v<int, char, int, int, int>,
+                   false);
+  results.add_case(ehanc::is_pack_uniform_v<int, int, int, int, char>,
+                   false);
+  results.add_case(ehanc::is_pack_uniform_v<int, int, int, char, int, int>,
+                   false);
+  results.add_case(ehanc::is_pack_uniform_v<int, bool, bool, bool, bool>,
+                   false);
+  results.add_case(ehanc::is_pack_uniform_v<bool, bool, int, bool, bool>,
+                   false);
+  results.add_case(ehanc::is_pack_uniform_v<bool, bool, bool, bool, int>,
+                   false);
+  results.add_case(ehanc::is_pack_uniform_v<int, int>, true);
+  results.add_case(ehanc::is_pack_uniform_v<int, char>, false);
+
+  // I want this to work!!!
+  /* results.add_case(ehanc::is_pack_uniform_v<int>, true); */
+
+  return results;
+}
+
 ehanc::test test_size_t_literals()
 {
   ehanc::test results;
@@ -346,5 +373,6 @@ void test_etc()
                   &test_bool_op_metafunctions);
   ehanc::run_test("type_identity", &test_type_identity);
   ehanc::run_test("is_type_in_pack", &test_is_type_in_pack);
+  ehanc::run_test("is_pack_uniform", &test_is_pack_uniform);
   ehanc::run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

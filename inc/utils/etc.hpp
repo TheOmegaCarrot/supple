@@ -245,6 +245,18 @@ template <typename T, typename P, typename... Pack>
 constexpr inline const bool is_type_in_pack_v =
     is_type_in_pack<T, P, Pack...>::value;
 
+template <typename T, typename P, typename... Pack>
+struct is_pack_uniform
+    : std::conditional_t<std::is_same_v<T, P>, is_pack_uniform<P, Pack...>,
+                         std::false_type> {};
+
+template <typename T, typename P>
+struct is_pack_uniform<T, P> : std::is_same<T, P> {};
+
+template <typename T, typename P, typename... Pack>
+constexpr inline const bool is_pack_uniform_v =
+    is_pack_uniform<T, P, Pack...>::value;
+
 namespace literals {
 
 inline namespace size_t_literal {

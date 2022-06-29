@@ -132,7 +132,7 @@ struct sum_type {
 
 /* {{{ doc */
 /**
- * @brief Helper variable template to make using the `sum_type`
+ * @brief Helper alias template to make using the `sum_type`
  * metafunction less verbose and cumbersome.
  */
 /* }}} */
@@ -151,7 +151,7 @@ struct type_identity {
 
 /* {{{ doc */
 /**
- * @brief Helper variable template to make using the `type_identity`
+ * @brief Helper alias template to make using the `type_identity`
  * metafunction less verbose and cumbersome.
  */
 /* }}} */
@@ -187,39 +187,92 @@ template <typename T, typename P, typename... Pack>
 constexpr inline const bool is_type_in_pack_v =
     is_type_in_pack<T, P, Pack...>::value;
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to return first type of a pack. Empty pack
+ * considered `void`. Zero argument case.
+ */
+/* }}} */
 template <typename... Pack>
 struct peel_first {
   using type = void;
 };
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to return first type of a pack. Empty pack
+ * considered `void`. Specialization for non-zero length argument.
+ */
+/* }}} */
 template <typename First, typename... Pack>
 struct peel_first<First, Pack...> {
   using type = First;
 };
 
+/* {{{ doc */
+/**
+ * @brief Helper alias template to make using the `peel_first`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename... Pack>
 using peel_first_t = typename peel_first<Pack...>::type;
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if all types in a pack
+ * are the same type.
+ */
+/* }}} */
 template <typename T, typename... Pack>
 struct is_pack_uniform
     : std::conditional_t<std::is_same_v<T, peel_first_t<Pack...>>,
                          is_pack_uniform<Pack...>, std::false_type> {};
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if all types in a pack
+ * are the same type. Base case of one argument.
+ */
+/* }}} */
 template <typename T>
 struct is_pack_uniform<T> : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_pack_uniform`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename... Pack>
 constexpr inline const bool is_pack_uniform_v =
     is_pack_uniform<T, Pack...>::value;
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to get the size of a pack.
+ */
+/* }}} */
 template <typename T, typename... Pack>
 struct pack_size
     : std::integral_constant<std::size_t, pack_size<Pack...>::value + 1> {
 };
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to get the size of a pack. Specialization for base
+ * case.
+ */
+/* }}} */
 template <typename T>
 struct pack_size<T> : std::integral_constant<std::size_t, 1> {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `pack_size`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename... Pack>
 constexpr inline const std::size_t pack_size_v =
     pack_size<T, Pack...>::value;

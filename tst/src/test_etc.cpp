@@ -133,63 +133,6 @@ ehanc::test test_sum_type()
   return results;
 }
 
-ehanc::test test_comparison_metafunctions()
-{
-  ehanc::test results;
-
-  results.add_case(ehanc::equal_v<5, 5>, true, "equal_v<5, 5>");
-  results.add_case(ehanc::equal_v<1, 8>, false, "equal_v<1, 8>");
-  results.add_case(ehanc::less_than_v<1, 8>, true, "less_than_v<1, 8>");
-  results.add_case(ehanc::less_than_v<8, 8>, false, "less_than_v<8, 8>");
-  results.add_case(ehanc::less_than_v<9, 8>, false, "less_than_v<9, 8>");
-  results.add_case(ehanc::greater_than_v<1, 8>, false,
-                   "greater_than_v<1, 8>");
-  results.add_case(ehanc::greater_than_v<8, 8>, false,
-                   "greater_than_v<8, 8>");
-  results.add_case(ehanc::greater_than_v<9, 8>, true,
-                   "greater_than_v<9, 8>");
-  results.add_case(ehanc::less_eq_v<1, 8>, true, "less_eq_v<1, 8>");
-  results.add_case(ehanc::less_eq_v<8, 8>, true, "less_eq_v<8, 8>");
-  results.add_case(ehanc::less_eq_v<9, 8>, false, "less_eq_v<9, 8>");
-  results.add_case(ehanc::greater_eq_v<1, 8>, false, "greater_eq_v<1, 8>");
-  results.add_case(ehanc::greater_eq_v<8, 8>, true, "greater_eq_v<8, 8>");
-  results.add_case(ehanc::greater_eq_v<9, 8>, true, "greater_eq_v<9, 8>");
-
-  return results;
-}
-
-ehanc::test test_bool_op_metafunctions()
-{
-  ehanc::test results;
-
-  results.add_case(ehanc::bool_and_v<true, true>, true,
-                   "bool_and_v<true, true>");
-  results.add_case(ehanc::bool_and_v<true, false>, false,
-                   "bool_and_v<true, false>");
-  results.add_case(ehanc::bool_and_v<false, true>, false,
-                   "bool_and_v<false, true>");
-  results.add_case(ehanc::bool_and_v<false, false>, false,
-                   "bool_and_v<false, false>");
-  results.add_case(ehanc::bool_and_v<true, true, true, true>, true,
-                   "bool_and_v<true, true, true, true>");
-  results.add_case(ehanc::bool_and_v<true, false, true, true>, false,
-                   "bool_and_v<true, false, true, true>");
-  results.add_case(ehanc::bool_or_v<true, true>, true,
-                   "bool_or_v<true, true>");
-  results.add_case(ehanc::bool_or_v<true, false>, true,
-                   "bool_or_v<true, false>");
-  results.add_case(ehanc::bool_or_v<false, true>, true,
-                   "bool_or_v<false, true>");
-  results.add_case(ehanc::bool_or_v<false, false>, false,
-                   "bool_or_v<false, false>");
-  results.add_case(ehanc::bool_or_v<false, false, false, false>, false,
-                   "bool_or_v<false, false, false, false>");
-  results.add_case(ehanc::bool_or_v<false, true, false, false>, true,
-                   "bool_or_v<false, true, false, false>");
-
-  return results;
-}
-
 ehanc::test test_type_identity()
 {
   ehanc::test results;
@@ -382,10 +325,6 @@ void test_etc()
   ehanc::run_test("ehanc::min_size", &test_min_size);
   ehanc::run_test("ehanc::explicit_copy", &test_explicit_copy);
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
-  ehanc::run_test("comparison metafunctions",
-                  &test_comparison_metafunctions);
-  ehanc::run_test("boolean ops metafunctions",
-                  &test_bool_op_metafunctions);
   ehanc::run_test("type_identity", &test_type_identity);
   ehanc::run_test("is_type_in_pack", &test_is_type_in_pack);
   ehanc::run_test("is_pack_uniform", &test_is_pack_uniform);

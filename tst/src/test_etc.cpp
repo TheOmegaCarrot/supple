@@ -299,6 +299,24 @@ ehanc::test test_type_identity()
   return results;
 }
 
+ehanc::test test_is_type_in_pack()
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_type_in_pack_v<int, char, bool, int>, true);
+  results.add_case(ehanc::is_type_in_pack_v<int, int, bool, int>, true);
+  results.add_case(
+      ehanc::is_type_in_pack_v<int, char, bool, ehanc::lazy<int>>, false);
+  results.add_case(ehanc::is_type_in_pack_v<int, char, bool, char, char,
+                                            char, float, double>,
+                   false);
+  results.add_case(ehanc::is_type_in_pack_v<int, int, int, int>, true);
+  results.add_case(ehanc::is_type_in_pack_v<int, int>, true);
+  results.add_case(ehanc::is_type_in_pack_v<int, char>, false);
+
+  return results;
+}
+
 ehanc::test test_size_t_literals()
 {
   ehanc::test results;
@@ -327,5 +345,6 @@ void test_etc()
   ehanc::run_test("boolean ops metafunctions",
                   &test_bool_op_metafunctions);
   ehanc::run_test("type_identity", &test_type_identity);
+  ehanc::run_test("is_type_in_pack", &test_is_type_in_pack);
   ehanc::run_test("ehanc::operator\"\"_z", &test_size_t_literals);
 }

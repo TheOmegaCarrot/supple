@@ -216,6 +216,35 @@ struct type_identity {
 template <typename T>
 using type_identity_t = typename type_identity<T>::type;
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if type T is present in pack (P +
+ * Pack).
+ */
+/* }}} */
+template <typename T, typename P, typename... Pack>
+struct is_type_in_pack
+    : std::conditional_t<std::is_same_v<T, P>, std::true_type,
+                         is_type_in_pack<T, Pack...>> {};
+
+/* {{{ doc */
+/**
+ * @brief Specialization for base case.
+ */
+/* }}} */
+template <typename T, typename P>
+struct is_type_in_pack<T, P> : std::is_same<T, P> {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_type_in_pack`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T, typename P, typename... Pack>
+constexpr inline const bool is_type_in_pack_v =
+    is_type_in_pack<T, P, Pack...>::value;
+
 namespace literals {
 
 inline namespace size_t_literal {

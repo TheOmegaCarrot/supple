@@ -52,11 +52,18 @@ ehanc::test test_sequence_iterator()
 {
   ehanc::test results;
 
-  ehanc::sequence_iterator begin{0};
-  ehanc::sequence_iterator end{10};
+  ehanc::sequence_iterator begin(0);
+  ehanc::sequence_iterator end(10);
 
   std::for_each(begin, end, [&results, j{0}](const int i) mutable {
     results.add_case(i, j++);
+  });
+
+  ehanc::sequence_iterator begin2(10, ehanc::decrement<int>);
+  ehanc::sequence_iterator end2(0);
+
+  std::for_each(begin2, end2, [&results, j{10}](const int i) mutable {
+    results.add_case(i, j--);
   });
 
   return results;
@@ -66,10 +73,10 @@ ehanc::test test_sequence()
 {
   ehanc::test results;
 
-  int j{0};
-  for ( int i : ehanc::sequence(0, 10) ) {
-    results.add_case(i, j++);
-  }
+  /* int j{0}; */
+  /* for ( int i : ehanc::sequence(0, 10) ) { */
+  /*   results.add_case(i, j++); */
+  /* } */
 
   return results;
 }

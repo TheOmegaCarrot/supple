@@ -2,6 +2,7 @@
 #define EHANC_UTILS_ITERATORS_HPP
 
 #include <cstddef>
+#include <functional>
 #include <iterator>
 #include <utility>
 
@@ -86,6 +87,18 @@ template <typename Iterable>
   return static_cast<decltype(std::cbegin(container))>(last(container));
 }
 
+template <typename T>
+constexpr void increment(T& t)
+{
+  ++t;
+}
+
+template <typename T>
+constexpr void decrement(T& t)
+{
+  --t;
+}
+
 /* {{{ doc */
 /**
  * @brief Iterator class to wrap around iteration over a sequence of
@@ -97,6 +110,7 @@ class sequence_iterator
 {
 private:
   value_type m_val;
+  std::function<void(value_type&)> m_inc;
 
 public:
   /* {{{ doc */
@@ -111,11 +125,14 @@ public:
    * @brief Must be constructed with a value.
    */
   /* }}} */
-  template <typename T,
-            typename = std::enable_if<not std::is_same_v<T, value_type>>>
-  constexpr sequence_iterator(T t) noexcept(
-      noexcept(T(t)) && noexcept(T(std::move(t))))
+  template <typename T, typename Incr = std::function<void(value_type&)>>
+  constexpr sequence_iterator(
+      T t,
+      Incr func = ::ehanc::increment<
+          value_type>) noexcept(noexcept(T(t)) && noexcept(T(std::
+                                                                 move(t))))
       : m_val{std::forward<T>(t)}
+      , m_inc{std::forward<Incr>(func)}
   {}
 
   ~sequence_iterator() = default;
@@ -138,9 +155,10 @@ public:
    * @return Reference to self after incrementing.
    */
   /* }}} */
-  constexpr sequence_iterator& operator++() noexcept(noexcept(++m_val))
+  constexpr sequence_iterator&
+  operator++() noexcept(noexcept(m_inc(m_val)))
   {
-    ++m_val;
+    m_inc(m_val);
     return *this;
   }
 
@@ -155,36 +173,7 @@ public:
   constexpr sequence_iterator operator++(int) noexcept(noexcept(++m_val))
   {
     sequence_iterator tmp{*this};
-    this->operator++();
-    return tmp;
-  }
-
-  /* {{{ doc */
-  /**
-   * @brief Pre-decrement operator. Increments iterator to provide previous
-   * value.
-   *
-   * @return Reference to self after decrementing.
-   */
-  /* }}} */
-  constexpr sequence_iterator& operator--() noexcept(noexcept(--m_val))
-  {
-    --m_val;
-    return *this;
-  }
-
-  /* {{{ doc */
-  /**
-   * @brief Post-decrement operator. Increments iterator to provide
-   * previous value.
-   *
-   * @return Copy of self from before decrementing.
-   */
-  /* }}} */
-  constexpr sequence_iterator operator--(int) noexcept(noexcept(--m_val))
-  {
-    sequence_iterator tmp{*this};
-    this->operator--();
+    m_inc(m_val);
     return tmp;
   }
 
@@ -232,6 +221,9 @@ public:
   }
 };
 
+template <typename T, typename F>
+sequence_iterator(T, F) -> sequence_iterator<std::decay_t<T>>;
+
 template <typename T>
 sequence_iterator(T) -> sequence_iterator<std::decay_t<T>>;
 
@@ -248,6 +240,7 @@ class sequence
 private:
   value_type m_begin;
   value_type m_end;
+  std::function<void(value_type&)> m_inc;
 
 public:
   /* {{{ doc */
@@ -263,11 +256,11 @@ public:
    * iterators which will provide the range `[begin, end)`.
    */
   /* }}} */
-  template <typename T,
-            typename = std::enable_if<not std::is_same_v<T, value_type>>>
-  sequence(T&& begin, T&& end)
+  template <typename T, typename Incr = std::function<void(value_type)>>
+  sequence(T&& begin, T&& end, Incr func = ::ehanc::increment<value_type>)
       : m_begin(std::forward<T>(begin))
       , m_end(std::forward<T>(end))
+      , m_inc{std::forward<Incr>(func)}
   {}
 
   ~sequence() = default;
@@ -323,8 +316,11 @@ public:
   }
 };
 
+template <typename T, typename F>
+sequence(T, T, F) -> sequence<std::decay_t<T>>;
+
 template <typename T>
-sequence(T, T) -> sequence<T>;
+sequence(T, T) -> sequence<std::decay_t<T>>;
 
 } // namespace ehanc
 

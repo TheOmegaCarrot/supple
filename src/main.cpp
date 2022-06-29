@@ -81,9 +81,9 @@ int main([[maybe_unused]] const int argc,
   /* std::cout << deduced << '\n'; */
   /* std::cout << deduced << '\n'; */
 
-  for ( int i : ehanc::sequence(0, 10) ) {
-    std::cout << i << '\n';
-  }
+  /* for ( int i : ehanc::sequence(0, 10) ) { */
+  /*   std::cout << i << '\n'; */
+  /* } */
 
   return 0;
 }

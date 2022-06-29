@@ -260,6 +260,24 @@ ehanc::test test_is_type_in_pack()
   return results;
 }
 
+ehanc::test test_peel_first()
+{
+  ehanc::test results;
+
+  results.add_case(
+      std::is_same_v<ehanc::peel_first_t<int, char, char, char>, int>,
+      true);
+  results.add_case(
+      std::is_same_v<ehanc::peel_first_t<int, int, int, int>, int>, true);
+  results.add_case(
+      std::is_same_v<ehanc::peel_first_t<int, char, int, int>, int>, true);
+  results.add_case(
+      std::is_same_v<ehanc::peel_first_t<char, int, int, int>, char>,
+      true);
+
+  return results;
+}
+
 ehanc::test test_is_pack_uniform()
 {
   ehanc::test results;
@@ -327,6 +345,7 @@ void test_etc()
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
   ehanc::run_test("type_identity", &test_type_identity);
   ehanc::run_test("is_type_in_pack", &test_is_type_in_pack);
+  ehanc::run_test("peel_first", &test_peel_first);
   ehanc::run_test("is_pack_uniform", &test_is_pack_uniform);
   ehanc::run_test("pack_size", &test_pack_size);
   ehanc::run_test("ehanc::operator\"\"_z", &test_size_t_literals);

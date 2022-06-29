@@ -183,7 +183,7 @@ public:
 /* }}} */
 template <typename Func>
 constexpr auto make_lazy(Func&& func) noexcept
-    -> lazy<std::invoke_result_t<Func&&>>
+    -> lazy<std::invoke_result_t<Func>>
 {
   return lazy<decltype(func())>(std::forward<Func>(func));
 }

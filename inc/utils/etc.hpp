@@ -169,6 +169,9 @@ struct is_type_in_pack
     : std::conditional_t<(std::is_same_v<T, Pack> || ...), std::true_type,
                          std::false_type> {};
 
+template <typename T>
+struct is_type_in_pack<T> : std::false_type {};
+
 /* {{{ doc */
 /**
  * @brief Helper variable template to make using the `is_type_in_pack`
@@ -218,8 +221,8 @@ using peel_first_t = typename peel_first<Pack...>::type;
 /* }}} */
 template <typename T, typename... Pack>
 struct is_pack_uniform
-    : std::conditional_t<std::is_same_v<T, peel_first_t<Pack...>>,
-                         is_pack_uniform<Pack...>, std::false_type> {};
+    : std::conditional_t<(std::is_same_v<T, Pack> && ...), std::true_type,
+                         std::false_type> {};
 
 /* {{{ doc */
 /**

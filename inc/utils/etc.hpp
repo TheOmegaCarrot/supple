@@ -160,8 +160,7 @@ using type_identity_t = typename type_identity<T>::type;
 
 /* {{{ doc */
 /**
- * @brief Metafunction to determine if type T is present in pack (P +
- * Pack).
+ * @brief Metafunction to determine if type T is present in pack.
  */
 /* }}} */
 template <typename T, typename... Pack>
@@ -169,6 +168,12 @@ struct is_type_in_pack
     : std::conditional_t<(std::is_same_v<T, Pack> || ...), std::true_type,
                          std::false_type> {};
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if type T is present in pack.
+ * Specialization for size 0 pack.
+ */
+/* }}} */
 template <typename T>
 struct is_type_in_pack<T> : std::false_type {};
 
@@ -217,6 +222,8 @@ using peel_first_t = typename peel_first<Pack...>::type;
 /**
  * @brief Metafunction to determine if all types in a pack
  * are the same type.
+ *
+ * @bug Does not support size 0 packs.
  */
 /* }}} */
 template <typename T, typename... Pack>
@@ -228,6 +235,8 @@ struct is_pack_uniform
 /**
  * @brief Metafunction to determine if all types in a pack
  * are the same type. Base case of one argument.
+ *
+ * @bug Does not support size 0 packs.
  */
 /* }}} */
 template <typename T>

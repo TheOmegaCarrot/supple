@@ -64,8 +64,8 @@ public:
    * Enforce initialization with an appropriate callable.
    */
   /* }}} */
-  template <typename Func, typename = std::enable_if<not std::is_same_v<
-                               std::invoke_result_t<Func>, RetType>>>
+  template <typename Func>
+  // NOLINTNEXTLINE(bugprone-forwarding-reference-overload)
   constexpr explicit lazy(Func&& func) noexcept
       : m_func{std::forward<Func>(func)}
       , m_value{}
@@ -183,7 +183,7 @@ public:
 /* }}} */
 template <typename Func>
 constexpr auto make_lazy(Func&& func) noexcept
-    -> lazy<std::invoke_result_t<Func>>
+    -> lazy<std::invoke_result_t<Func&&>>
 {
   return lazy<decltype(func())>(std::forward<Func>(func));
 }

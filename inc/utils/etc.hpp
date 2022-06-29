@@ -164,18 +164,10 @@ using type_identity_t = typename type_identity<T>::type;
  * Pack).
  */
 /* }}} */
-template <typename T, typename P, typename... Pack>
+template <typename T, typename... Pack>
 struct is_type_in_pack
-    : std::conditional_t<std::is_same_v<T, P>, std::true_type,
-                         is_type_in_pack<T, Pack...>> {};
-
-/* {{{ doc */
-/**
- * @brief Specialization for base case.
- */
-/* }}} */
-template <typename T, typename P>
-struct is_type_in_pack<T, P> : std::is_same<T, P> {};
+    : std::conditional_t<(std::is_same_v<T, Pack> || ...), std::true_type,
+                         std::false_type> {};
 
 /* {{{ doc */
 /**
@@ -183,9 +175,9 @@ struct is_type_in_pack<T, P> : std::is_same<T, P> {};
  * metafunction less verbose and cumbersome.
  */
 /* }}} */
-template <typename T, typename P, typename... Pack>
+template <typename T, typename... Pack>
 constexpr inline const bool is_type_in_pack_v =
-    is_type_in_pack<T, P, Pack...>::value;
+    is_type_in_pack<T, Pack...>::value;
 
 /* {{{ doc */
 /**

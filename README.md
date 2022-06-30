@@ -16,7 +16,7 @@ I've made things just as a learning exercise.
 
 ---
 
-# How do I use it?
+# How do I use this?
 
 Just copy `./inc/utils` to somewhere the compiler is
 looking for includes (`-Isomewhere`) and just include what you need.

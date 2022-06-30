@@ -240,24 +240,34 @@ template <typename... Pack>
 constexpr inline const bool is_pack_uniform_v =
     is_pack_uniform<Pack...>::value;
 
-/* {{{ doc */
-/**
- * @brief Metafunction to get the size of a pack.
- */
-/* }}} */
-template <typename T, typename... Pack>
-struct pack_size
-    : std::integral_constant<std::size_t, pack_size<Pack...>::value + 1> {
-};
+namespace impl {
 
 /* {{{ doc */
 /**
- * @brief Metafunction to get the size of a pack. Specialization for base
- * case.
+ * @brief Incomplete implementation of a metafunction to get the size of a
+ * pack.
+ */
+/* }}} */
+template <typename T, typename... Pack>
+struct pack_size_impl
+    : std::integral_constant<std::size_t,
+                             pack_size_impl<Pack...>::value + 1> {};
+
+/* {{{ doc */
+/**
+ * @brief Incomplete implementation of a metafunction to get the size of a
+ * pack. Specialization for base case.
  */
 /* }}} */
 template <typename T>
-struct pack_size<T> : std::integral_constant<std::size_t, 1> {};
+struct pack_size_impl<T> : std::integral_constant<std::size_t, 1> {};
+
+} // namespace impl
+
+template <typename... Pack>
+struct pack_size
+    : std::integral_constant<
+          std::size_t, impl::pack_size_impl<void, Pack...>::value - 1> {};
 
 /* {{{ doc */
 /**
@@ -265,9 +275,8 @@ struct pack_size<T> : std::integral_constant<std::size_t, 1> {};
  * metafunction less verbose and cumbersome.
  */
 /* }}} */
-template <typename T, typename... Pack>
-constexpr inline const std::size_t pack_size_v =
-    pack_size<T, Pack...>::value;
+template <typename... Pack>
+constexpr inline const std::size_t pack_size_v = pack_size<Pack...>::value;
 
 namespace literals {
 

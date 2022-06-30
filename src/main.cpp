@@ -31,9 +31,8 @@ int main([[maybe_unused]] const int argc,
 
   std::cout << std::boolalpha
             << std::is_same_v<decltype(peeler()), void> << '\n'
-            << uniform()
-            << '\n'
-            /* << sizer() << '\n' */
+            << uniform() << '\n'
+            << sizer() << '\n'
             << '\n';
 
   return 0;

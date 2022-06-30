@@ -7,9 +7,34 @@
 
 void lazy_demo();
 
+template <typename... Ts>
+auto peeler(Ts... ts)
+{
+  return ehanc::peel_first_t<Ts...>();
+}
+
+template <typename... Ts>
+bool uniform(Ts... ts)
+{
+  return ehanc::is_pack_uniform_v<Ts...>;
+}
+
+template <typename... Ts>
+std::size_t sizer(Ts... ts)
+{
+  return ehanc::pack_size_v<Ts...>;
+}
+
 int main([[maybe_unused]] const int argc,
          [[maybe_unused]] const char* const* const argv)
 {
+
+  std::cout << std::boolalpha
+            << std::is_same_v<decltype(peeler()), void> << '\n'
+            << uniform()
+            << '\n'
+            /* << sizer() << '\n' */
+            << '\n';
 
   return 0;
 }

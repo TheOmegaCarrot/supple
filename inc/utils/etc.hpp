@@ -221,7 +221,7 @@ using peel_first_t = typename peel_first<Pack...>::type;
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
- * are the same type.
+ * are the same type. Empty pack considered uniform.
  */
 /* }}} */
 template <typename... Pack>

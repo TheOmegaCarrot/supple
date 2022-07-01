@@ -4,7 +4,7 @@
 
 #include "test_algorithm.h"
 
-ehanc::test test_for_each_pair()
+ehanc::test test_for_each_adjacent()
 {
   ehanc::test results;
   std::vector<int> test_input(6);
@@ -12,10 +12,10 @@ ehanc::test test_for_each_pair()
   std::vector<int> test_output;
   std::vector<int> reference_output{3, 5, 7, 9, 11};
 
-  ehanc::for_each_pair(test_input.cbegin(), test_input.cend(),
-                       [&test_output](const int i, const int j) {
-                         test_output.push_back(i + j);
-                       });
+  ehanc::for_each_adjacent(test_input.cbegin(), test_input.cend(),
+                           [&test_output](const int i, const int j) {
+                             test_output.push_back(i + j);
+                           });
 
   auto [test, ref] =
       std::mismatch(test_output.cbegin(), test_output.cend(),
@@ -27,17 +27,17 @@ ehanc::test test_for_each_pair()
   return results;
 }
 
-ehanc::test test_for_each_pair_n()
+ehanc::test test_for_each_adjacent_n()
 {
   ehanc::test results;
   std::vector<int> test_input{1, 2, 3, 4, 5, 6};
   std::vector<int> test_output;
   std::vector<int> reference_output{3, 5, 7};
 
-  ehanc::for_each_pair_n(test_input.cbegin(), test_input.cend(), 3,
-                         [&test_output](const int i, const int j) {
-                           test_output.push_back(i + j);
-                         });
+  ehanc::for_each_adjacent_n(test_input.cbegin(), test_input.cend(), 3,
+                             [&test_output](const int i, const int j) {
+                               test_output.push_back(i + j);
+                             });
 
   auto [test, ref] =
       std::mismatch(test_output.cbegin(), test_output.cend(),
@@ -173,8 +173,8 @@ ehanc::test test_for_each_both_n()
 
 void test_algorithm()
 {
-  ehanc::run_test("ehanc::for_each_pair", &test_for_each_pair);
-  ehanc::run_test("ehanc::for_each_pair_n", &test_for_each_pair_n);
+  ehanc::run_test("ehanc::for_each_adjacent", &test_for_each_adjacent);
+  ehanc::run_test("ehanc::for_each_adjacent_n", &test_for_each_adjacent_n);
   ehanc::run_test("ehanc::for_each_all_n", &test_for_each_all_n);
   ehanc::run_test("ehanc::for_each_all", &test_for_each_all);
   ehanc::run_test("ehanc::for_each_all_c", &test_for_each_all_c);

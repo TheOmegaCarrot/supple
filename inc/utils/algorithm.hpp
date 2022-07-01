@@ -32,9 +32,9 @@ namespace ehanc {
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>
-constexpr void
-for_each_pair(const Itr begin, const Itr end,
-              BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+constexpr void for_each_adjacent(
+    const Itr begin, const Itr end,
+    BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {
   Itr leader{begin};
   ++leader;
@@ -43,6 +43,15 @@ for_each_pair(const Itr begin, const Itr end,
   for ( ; leader != end; ++leader, ++follower ) {
     func(*leader, *follower);
   }
+}
+
+template <typename Itr, typename BinaryFunc>
+constexpr void
+for_each_pair(Itr&& begin, Itr&& end,
+              BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+{
+  for_each_adjacent(std::forward<Itr>(begin), std::forward<Itr>(end),
+                    std::forward<BinaryFunc>(func));
 }
 
 /* {{{ doc */
@@ -71,9 +80,9 @@ for_each_pair(const Itr begin, const Itr end,
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>
-constexpr void
-for_each_pair_n(const Itr begin, const Itr end, const std::size_t n,
-                BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+constexpr void for_each_adjacent_n(
+    const Itr begin, const Itr end, const std::size_t n,
+    BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {
   std::size_t count{0};
   Itr leader{begin};
@@ -83,6 +92,15 @@ for_each_pair_n(const Itr begin, const Itr end, const std::size_t n,
   for ( ; count != n && leader != end; ++count, ++leader, ++follower ) {
     func(*leader, *follower);
   }
+}
+
+template <typename Itr, typename BinaryFunc>
+constexpr void
+for_each_pair_n(Itr&& begin, Itr&& end, const std::size_t n,
+                BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+{
+  for_each_adjacent_n(std::forward<Itr>(begin), std::forward<Itr>(end), n,
+                      std::forward<BinaryFunc>(func));
 }
 
 /* {{{ doc */

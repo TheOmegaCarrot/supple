@@ -53,7 +53,7 @@ constexpr void for_each_adjacent(
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>
-[[deprecated]] constexpr void
+[[deprecated("Use for_each_adjacent")]] constexpr void
 for_each_pair(Itr&& begin, Itr&& end,
               BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {
@@ -109,7 +109,7 @@ constexpr void for_each_adjacent_n(
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>
-[[deprecated]] constexpr void
+[[deprecated("Use for_each_adjacent_n")]] constexpr void
 for_each_pair_n(Itr&& begin, Itr&& end, const std::size_t n,
                 BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {

@@ -341,10 +341,11 @@ void test_etc()
   ehanc::run_test("ehanc::min_size", &test_min_size);
   ehanc::run_test("ehanc::explicit_copy", &test_explicit_copy);
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
-  ehanc::run_test("type_identity", &test_type_identity);
-  ehanc::run_test("is_type_in_pack", &test_is_type_in_pack);
-  ehanc::run_test("peel_first", &test_peel_first);
-  ehanc::run_test("is_pack_uniform", &test_is_pack_uniform);
-  ehanc::run_test("pack_size", &test_pack_size);
-  ehanc::run_test("ehanc::operator\"\"_z", &test_size_t_literals);
+  ehanc::run_test("ehanc::type_identity", &test_type_identity);
+  ehanc::run_test("ehanc::is_type_in_pack", &test_is_type_in_pack);
+  ehanc::run_test("ehanc::peel_first", &test_peel_first);
+  ehanc::run_test("ehanc::is_pack_uniform", &test_is_pack_uniform);
+  ehanc::run_test("ehanc::pack_size", &test_pack_size);
+  ehanc::run_test("ehanc::literals::size_t_literal::operator\"\"_z",
+                  &test_size_t_literals);
 }

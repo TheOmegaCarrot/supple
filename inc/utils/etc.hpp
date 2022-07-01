@@ -189,7 +189,7 @@ constexpr inline const bool is_type_in_pack_v =
 
 /* {{{ doc */
 /**
- * @brief Metafunction to return first type of a pack. Empty pack
+ * @brief Metafunction to return first type in a pack. Empty pack
  * considered `void`. Zero argument case.
  */
 /* }}} */
@@ -200,7 +200,7 @@ struct peel_first {
 
 /* {{{ doc */
 /**
- * @brief Metafunction to return first type of a pack. Empty pack
+ * @brief Metafunction to return first type in a pack. Empty pack
  * considered `void`. Specialization for non-zero length argument.
  */
 /* }}} */
@@ -217,6 +217,48 @@ struct peel_first<First, Pack...> {
 /* }}} */
 template <typename... Pack>
 using peel_first_t = typename peel_first<Pack...>::type;
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to return last type in a pack. Empty pack considered
+ * `void`. Zero argument case.
+ */
+/* }}} */
+template <typename... Pack>
+struct peel_last {
+  using type = void;
+};
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to return last type in a pack. Empty pack considered
+ * `void`. Specialization for >1 argument.
+ */
+/* }}} */
+template <typename First, typename... Pack>
+struct peel_last<First, Pack...> {
+  using type = typename peel_last<Pack...>::type;
+};
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to return last type in a pack. Empty pack considered
+ * `void`. Specialization for base case.
+ */
+/* }}} */
+template <typename Last>
+struct peel_last<Last> {
+  using type = Last;
+};
+
+/* {{{ doc */
+/**
+ * @brief Helper alias template to make using the `peel_last`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename... Pack>
+using peel_last_t = typename peel_last<Pack...>::type;
 
 /* {{{ doc */
 /**

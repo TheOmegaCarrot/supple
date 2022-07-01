@@ -142,7 +142,7 @@ public:
   [[nodiscard]] constexpr auto get() const noexcept(noexcept(m_func()))
       -> std::add_lvalue_reference_t<const RetType>
   {
-    if ( !m_value.has_value() ) {
+    if ( not m_value.has_value() ) {
       m_value = m_func();
     }
     return *m_value;

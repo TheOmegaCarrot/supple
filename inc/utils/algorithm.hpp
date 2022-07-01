@@ -49,7 +49,7 @@ constexpr void for_each_adjacent(
 /**
  * @brief Forwarding function alias for for_each_adjacent following rename.
  *
- * @deprecated
+ * @deprecated Renamed to `for_each_adjacent`.
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>
@@ -105,7 +105,7 @@ constexpr void for_each_adjacent_n(
 /**
  * @brief Forwarding function alias for for_each_adjacent following rename.
  *
- * @deprecated
+ * @deprecated Renamed to `for_each_adjacent_n`.
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>

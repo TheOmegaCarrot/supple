@@ -8,19 +8,19 @@
 void lazy_demo();
 
 template <typename... Ts>
-auto peeler(Ts... ts)
+auto peeler(Ts...)
 {
   return ehanc::peel_first_t<Ts...>();
 }
 
 template <typename... Ts>
-bool uniform(Ts... ts)
+bool uniform(Ts...)
 {
   return ehanc::is_pack_uniform_v<Ts...>;
 }
 
 template <typename... Ts>
-std::size_t sizer(Ts... ts)
+std::size_t sizer(Ts...)
 {
   return ehanc::pack_size_v<Ts...>;
 }

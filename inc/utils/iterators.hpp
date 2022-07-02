@@ -257,7 +257,7 @@ public:
    * iterators which will provide the range `[begin, end)`.
    */
   /* }}} */
-  template <typename T, typename Incr = std::function<void(value_type)>>
+  template <typename T, typename Incr = std::function<void(value_type&)>>
   sequence(T&& begin, T&& end, Incr func = ::ehanc::increment<value_type>)
       : m_begin(std::forward<T>(begin))
       , m_end(std::forward<T>(end))

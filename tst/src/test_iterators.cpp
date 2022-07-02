@@ -73,10 +73,10 @@ ehanc::test test_sequence()
 {
   ehanc::test results;
 
-  /* int j{0}; */
-  /* for ( int i : ehanc::sequence(0, 10) ) { */
-  /*   results.add_case(i, j++); */
-  /* } */
+  int j{0};
+  for ( int i : ehanc::sequence(0, 10) ) {
+    results.add_case(i, j++);
+  }
 
   return results;
 }

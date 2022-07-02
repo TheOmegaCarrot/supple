@@ -34,6 +34,7 @@ template <typename RetType>
 class lazy
 {
 private:
+
   /* {{{ doc */
   /**
    * The callable which takes no arguments and returns
@@ -51,6 +52,7 @@ private:
   mutable std::optional<RetType> m_value;
 
 public:
+
   /* {{{ doc */
   /**
    * Default constructor deleted to prevent

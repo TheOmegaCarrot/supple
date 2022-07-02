@@ -119,10 +119,12 @@ template <typename value_type>
 class sequence_iterator
 {
 private:
+
   value_type m_val;
   std::function<void(value_type&)> m_inc;
 
 public:
+
   /* {{{ doc */
   /**
    * @brief Must be constructed with a value.
@@ -248,11 +250,13 @@ template <typename value_type>
 class sequence
 {
 private:
+
   value_type m_begin;
   value_type m_end;
   std::function<void(value_type&)> m_inc;
 
 public:
+
   /* {{{ doc */
   /**
    * @brief Must be constructed with values.

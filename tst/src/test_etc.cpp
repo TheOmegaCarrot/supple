@@ -53,19 +53,21 @@ ehanc::test test_min_size()
 }
 
 struct copy_counter {
-  copy_counter()               = default;
-  ~copy_counter()              = default;
-  copy_counter(copy_counter&&) = default;
+  copy_counter()                               = default;
+  ~copy_counter()                              = default;
+  copy_counter(copy_counter&&)                 = default;
   copy_counter& operator=(const copy_counter&) = default;
-  copy_counter& operator=(copy_counter&&) = default;
+  copy_counter& operator=(copy_counter&&)      = default;
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int copy_count;
+
   copy_counter([[maybe_unused]] const copy_counter& src)
   {
     ++copy_count;
   }
 };
+
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 int copy_counter::copy_count{0};
 

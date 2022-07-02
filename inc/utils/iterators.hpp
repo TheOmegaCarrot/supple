@@ -128,10 +128,10 @@ public:
   template <typename T, typename Incr = std::function<void(value_type&)>>
   constexpr sequence_iterator(
       T init,
-      Incr func = ::ehanc::increment<
-          value_type>) noexcept(noexcept(T(init)) && noexcept(T(std::
-                                                                    move(
-                                                                        init))))
+      // clang-format off
+      Incr func = ::ehanc::increment<value_type>)
+      noexcept(noexcept(T(init)) && noexcept(T(std::move(init))))
+      // clang-format on
       : m_val{std::forward<T>(init)}
       , m_inc{std::forward<Incr>(func)}
   {}

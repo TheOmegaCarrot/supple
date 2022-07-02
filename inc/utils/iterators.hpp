@@ -87,12 +87,22 @@ template <typename Iterable>
   return static_cast<decltype(std::cbegin(container))>(last(container));
 }
 
+/* {{{ doc */
+/**
+ * @brief Simple wrapper around increment operator. Modifies in-place.
+ */
+/* }}} */
 template <typename T>
 constexpr void increment(T& t)
 {
   ++t;
 }
 
+/* {{{ doc */
+/**
+ * @brief Simple wrapper around decrement operator. Modifies in-place.
+ */
+/* }}} */
 template <typename T>
 constexpr void decrement(T& t)
 {

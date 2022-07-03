@@ -19,13 +19,11 @@ namespace ehanc {
 class test
 {
 private:
-
   int m_case_index{};
   bool m_pass{true};
   std::vector<std::string> m_cases{};
 
 public:
-
   test() = default;
 
   template <typename T>
@@ -41,7 +39,8 @@ public:
              << "Case " << m_case_index << '\t' << message
              << "\n\n\tExpected:\n"
              << RESET << '\t' << expected << FG_RED << "\n\n\tGot:\n"
-             << RESET << '\t' << result << '\n';
+             << RESET << '\t' << result << '\n'
+             << '\n';
 
       m_cases.push_back(detail.str());
     } else {
@@ -73,10 +72,11 @@ inline void run_test(const std::string_view name,
   } else {
     std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH)
               << std::setfill('.') << name << FG_RED << "FAIL" << RESET
+              << '\n'
               << '\n';
 
     for ( const auto& details : result.cases() ) {
-      std::cout << details << '\n';
+      std::cout << details;
     }
   }
 }

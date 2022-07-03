@@ -115,9 +115,13 @@ constexpr void decrement(T& t)
  * values. Only stores current value.
  */
 /* }}} */
-template <typename value_type>
+template <typename T>
 class sequence_iterator
 {
+public:
+
+  using value_type = T;
+
 private:
 
   value_type m_val;
@@ -137,13 +141,13 @@ public:
    * @brief Must be constructed with a value.
    */
   /* }}} */
-  template <typename T, typename Incr = std::function<void(value_type&)>>
-  constexpr sequence_iterator(T init,
+  template <typename U, typename Incr = std::function<void(value_type&)>>
+  constexpr sequence_iterator(U init,
                               Incr func = ::ehanc::increment<value_type>)
       // clang-format off
-      noexcept(noexcept(T(init)) && noexcept(T(std::move(init))))
+      noexcept(noexcept(U(init)) && noexcept(U(std::move(init))))
       // clang-format on
-      : m_val{std::forward<T>(init)}
+      : m_val{std::forward<U>(init)}
       , m_inc{std::forward<Incr>(func)}
   {}
 
@@ -185,7 +189,7 @@ public:
   constexpr sequence_iterator operator++(int) noexcept(noexcept(++m_val))
   {
     sequence_iterator tmp{*this};
-    m_inc(m_val);
+    this->operator++();
     return tmp;
   }
 
@@ -246,9 +250,13 @@ sequence_iterator(T) -> sequence_iterator<std::decay_t<T>>;
  * container would be typical. (Range-for, etc)
  */
 /* }}} */
-template <typename value_type>
+template <typename T>
 class sequence
 {
+public:
+
+  using value_type = T;
+
 private:
 
   value_type m_begin;
@@ -270,10 +278,10 @@ public:
    * iterators which will provide the range `[begin, end)`.
    */
   /* }}} */
-  template <typename T, typename Incr = std::function<void(value_type&)>>
-  sequence(T&& begin, T&& end, Incr func = ::ehanc::increment<value_type>)
-      : m_begin(std::forward<T>(begin))
-      , m_end(std::forward<T>(end))
+  template <typename U, typename Incr = std::function<void(value_type&)>>
+  sequence(U&& begin, U&& end, Incr func = ::ehanc::increment<value_type>)
+      : m_begin(std::forward<U>(begin))
+      , m_end(std::forward<U>(end))
       , m_inc{std::forward<Incr>(func)}
   {}
 
@@ -335,6 +343,124 @@ sequence(T, T, F) -> sequence<std::decay_t<T>>;
 
 template <typename T>
 sequence(T, T) -> sequence<std::decay_t<T>>;
+
+template <typename T>
+class generative_iterator
+{
+public:
+
+  using value_type = T;
+
+private:
+
+  std::function<value_type()> m_gen;
+  value_type m_val;
+  std::size_t m_count;
+  std::size_t m_sentinel;
+
+public:
+
+  /* {{{ doc */
+  /**
+   * @brief Must be constructed with a value.
+   */
+  /* }}} */
+  generative_iterator() = delete;
+
+  /* {{{ doc */
+  /**
+   * @brief Must be constructed with a value.
+   */
+  /* }}} */
+  constexpr generative_iterator(std::function<value_type()> func)
+      : m_gen{std::move(func)}
+      , m_val{m_gen()}
+      , m_count{0}
+      , m_sentinel{0}
+  {}
+
+  constexpr generative_iterator(std::size_t sentinel)
+      : m_gen{}
+      , m_val{}
+      , m_count{0}
+      , m_sentinel{sentinel}
+  {}
+
+  constexpr generative_iterator(int sentinel)
+      : m_gen{}
+      , m_val{}
+      , m_count{}
+      , m_sentinel{static_cast<std::size_t>(sentinel)}
+  {}
+
+  constexpr generative_iterator(const generative_iterator&,
+                                std::size_t sentinel)
+      : m_gen{}
+      , m_val{}
+      , m_count{0}
+      , m_sentinel{sentinel}
+  {}
+
+  constexpr generative_iterator(const generative_iterator&, int sentinel)
+      : m_gen{}
+      , m_val{}
+      , m_count{}
+      , m_sentinel{static_cast<std::size_t>(sentinel)}
+  {}
+
+  ~generative_iterator() = default;
+
+  generative_iterator(const generative_iterator&) = default;
+
+  generative_iterator(generative_iterator&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
+
+  generative_iterator& operator=(const generative_iterator&) = default;
+
+  generative_iterator& operator=(generative_iterator&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
+
+  constexpr generative_iterator& operator++() noexcept(noexcept(m_gen()))
+  {
+    m_val = m_gen();
+    ++m_count;
+    return *this;
+  }
+
+  constexpr generative_iterator operator++(int) noexcept(noexcept(m_gen()))
+  {
+    generative_iterator tmp{*this};
+    this->operator++();
+    return tmp;
+  }
+
+  constexpr const value_type& operator*() noexcept
+  {
+    return m_val;
+  }
+
+  constexpr bool operator==(const generative_iterator& rhs)
+  {
+    return m_count == rhs.m_sentinel;
+  }
+
+  constexpr bool operator!=(const generative_iterator& rhs)
+  {
+    return m_count != rhs.m_sentinel;
+  }
+
+  constexpr bool operator<(const generative_iterator& rhs)
+  {
+    return m_count < rhs.m_sentinel;
+  }
+};
+
+template <typename F>
+generative_iterator(F) -> generative_iterator<std::invoke_result_t<F>>;
+
+template <typename G, typename S>
+generative_iterator(G, S)
+    -> generative_iterator<decltype(*std::declval<G>())>;
 
 } // namespace ehanc
 

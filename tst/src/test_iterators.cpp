@@ -88,6 +88,27 @@ ehanc::test test_sequence()
   return results;
 }
 
+ehanc::test test_generative_iterator()
+{
+  ehanc::test results;
+
+  ehanc::generative_iterator begin([j{0}]() mutable { return j++; });
+  ehanc::generative_iterator<decltype(begin)::value_type> end(10);
+
+  std::for_each(begin, end, [&results, j{0}](const int i) mutable {
+    results.add_case(i, j++);
+  });
+
+  ehanc::generative_iterator begin2([j{10}]() mutable { return j--; });
+  ehanc::generative_iterator end2(begin2, 0);
+
+  std::for_each(begin2, end2, [&results, j{10}](const int i) mutable {
+    results.add_case(i, j--);
+  });
+
+  return results;
+}
+
 void test_iterators()
 {
   ehanc::run_test("ehanc::forward_distance", &test_forward_distance);
@@ -95,4 +116,5 @@ void test_iterators()
   ehanc::run_test("ehanc::clast", &test_clast);
   ehanc::run_test("ehanc::sequence_iterator", &test_sequence_iterator);
   ehanc::run_test("ehanc::sequence", &test_sequence);
+  ehanc::run_test("ehanc::generative_iterator", &test_generative_iterator);
 }

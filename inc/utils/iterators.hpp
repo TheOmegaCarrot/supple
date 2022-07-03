@@ -372,8 +372,10 @@ public:
    * @brief Must be constructed with a value.
    */
   /* }}} */
-  constexpr generative_iterator(std::function<value_type()> func)
-      : m_gen{std::move(func)}
+  template <typename Func = std::function<value_type()>,
+            typename      = std::void_t<decltype(std::declval<Func>()())>>
+  constexpr generative_iterator(Func&& func)
+      : m_gen(std::forward<Func>(func))
       , m_val{m_gen()}
       , m_count{0}
       , m_sentinel{0}

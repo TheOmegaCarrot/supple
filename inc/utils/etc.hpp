@@ -21,7 +21,8 @@ namespace ehanc {
  */
 /* }}} */
 template <typename Container, typename Predicate>
-bool all_pass(const Container& cont, Predicate pred)
+bool all_pass(const Container& cont,
+              Predicate pred) noexcept(noexcept(pred(*std::cbegin(cont))))
 {
   bool check{true};
   std::for_each(
@@ -48,7 +49,8 @@ bool all_pass(const Container& cont, Predicate pred)
  */
 /* }}} */
 template <typename Itr, typename Predicate>
-bool all_pass(Itr begin, const Itr end, Predicate pred)
+bool all_pass(Itr begin, const Itr end,
+              Predicate pred) noexcept(noexcept(pred(*begin)))
 {
   bool check{true};
   std::for_each(begin, end, [&pred, &check](const auto& i) {
@@ -283,11 +285,10 @@ constexpr inline const bool is_pack_uniform_v =
     is_pack_uniform<Pack...>::value;
 
 namespace impl {
-
 /* {{{ doc */
 /**
- * @brief Incomplete implementation of a metafunction to get the size of a
- * pack.
+ * @brief Incomplete implementation of a metafunction to get the size of
+ * a pack.
  */
 /* }}} */
 template <typename T, typename... Pack>
@@ -297,8 +298,8 @@ struct pack_size_impl
 
 /* {{{ doc */
 /**
- * @brief Incomplete implementation of a metafunction to get the size of a
- * pack. Specialization for base case.
+ * @brief Incomplete implementation of a metafunction to get the size of
+ * a pack. Specialization for base case.
  */
 /* }}} */
 template <typename T>
@@ -321,7 +322,6 @@ template <typename... Pack>
 constexpr inline const std::size_t pack_size_v = pack_size<Pack...>::value;
 
 namespace literals {
-
 inline namespace size_t_literal {
 
 /* {{{ doc */

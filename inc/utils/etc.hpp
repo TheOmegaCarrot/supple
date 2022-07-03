@@ -101,7 +101,7 @@ template <typename Container, typename... Containers>
 constexpr std::size_t min_size(const Container& cont,
                                const Containers&... conts) noexcept
 {
-  return std::min(min_size(cont), min_size(conts...));
+  return std::min(::ehanc::min_size(cont), ::ehanc::min_size(conts...));
 }
 
 /* {{{ doc */
@@ -139,7 +139,7 @@ struct sum_type {
  */
 /* }}} */
 template <typename... Ts>
-using sum_type_t = typename sum_type<Ts...>::type;
+using sum_type_t = typename ::ehanc::sum_type<Ts...>::type;
 
 /* {{{ doc */
 /**
@@ -158,7 +158,7 @@ struct type_identity {
  */
 /* }}} */
 template <typename T>
-using type_identity_t = typename type_identity<T>::type;
+using type_identity_t = typename ::ehanc::type_identity<T>::type;
 
 /* {{{ doc */
 /**
@@ -187,7 +187,7 @@ struct is_type_in_pack<T> : std::false_type {};
 /* }}} */
 template <typename T, typename... Pack>
 constexpr inline const bool is_type_in_pack_v =
-    is_type_in_pack<T, Pack...>::value;
+    ::ehanc::is_type_in_pack<T, Pack...>::value;
 
 /* {{{ doc */
 /**
@@ -218,7 +218,7 @@ struct peel_first<First, Pack...> {
  */
 /* }}} */
 template <typename... Pack>
-using peel_first_t = typename peel_first<Pack...>::type;
+using peel_first_t = typename ::ehanc::peel_first<Pack...>::type;
 
 /* {{{ doc */
 /**
@@ -239,7 +239,7 @@ struct peel_last {
 /* }}} */
 template <typename First, typename... Pack>
 struct peel_last<First, Pack...> {
-  using type = typename peel_last<Pack...>::type;
+  using type = typename ::ehanc::peel_last<Pack...>::type;
 };
 
 /* {{{ doc */
@@ -260,7 +260,7 @@ struct peel_last<Last> {
  */
 /* }}} */
 template <typename... Pack>
-using peel_last_t = typename peel_last<Pack...>::type;
+using peel_last_t = typename ::ehanc::peel_last<Pack...>::type;
 
 /* {{{ doc */
 /**
@@ -271,7 +271,7 @@ using peel_last_t = typename peel_last<Pack...>::type;
 template <typename... Pack>
 struct is_pack_uniform
     : std::conditional_t<
-          (std::is_same_v<peel_first_t<Pack...>, Pack> && ...),
+          (std::is_same_v<::ehanc::peel_first_t<Pack...>, Pack> && ...),
           std::true_type, std::false_type> {};
 
 /* {{{ doc */
@@ -282,7 +282,7 @@ struct is_pack_uniform
 /* }}} */
 template <typename... Pack>
 constexpr inline const bool is_pack_uniform_v =
-    is_pack_uniform<Pack...>::value;
+    ::ehanc::is_pack_uniform<Pack...>::value;
 
 namespace impl {
 /* {{{ doc */
@@ -293,8 +293,9 @@ namespace impl {
 /* }}} */
 template <typename T, typename... Pack>
 struct pack_size_impl
-    : std::integral_constant<std::size_t,
-                             pack_size_impl<Pack...>::value + 1> {};
+    : std::integral_constant<
+          std::size_t, ::ehanc::impl::pack_size_impl<Pack...>::value + 1> {
+};
 
 /* {{{ doc */
 /**
@@ -310,7 +311,8 @@ struct pack_size_impl<T> : std::integral_constant<std::size_t, 1> {};
 template <typename... Pack>
 struct pack_size
     : std::integral_constant<
-          std::size_t, impl::pack_size_impl<void, Pack...>::value - 1> {};
+          std::size_t,
+          ::ehanc::impl::pack_size_impl<void, Pack...>::value - 1> {};
 
 /* {{{ doc */
 /**
@@ -319,7 +321,8 @@ struct pack_size
  */
 /* }}} */
 template <typename... Pack>
-constexpr inline const std::size_t pack_size_v = pack_size<Pack...>::value;
+constexpr inline const std::size_t pack_size_v =
+    ::ehanc::pack_size<Pack...>::value;
 
 namespace literals {
 inline namespace size_t_literal {

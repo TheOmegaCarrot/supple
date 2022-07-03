@@ -57,8 +57,9 @@ template <typename Itr, typename BinaryFunc>
 for_each_pair(Itr&& begin, Itr&& end,
               BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {
-  for_each_adjacent(std::forward<Itr>(begin), std::forward<Itr>(end),
-                    std::forward<BinaryFunc>(func));
+  ::ehanc::for_each_adjacent(std::forward<Itr>(begin),
+                             std::forward<Itr>(end),
+                             std::forward<BinaryFunc>(func));
 }
 
 /* {{{ doc */
@@ -113,8 +114,9 @@ template <typename Itr, typename BinaryFunc>
 for_each_pair_n(Itr&& begin, Itr&& end, const std::size_t n,
                 BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {
-  for_each_adjacent_n(std::forward<Itr>(begin), std::forward<Itr>(end), n,
-                      std::forward<BinaryFunc>(func));
+  ::ehanc::for_each_adjacent_n(std::forward<Itr>(begin),
+                               std::forward<Itr>(end), n,
+                               std::forward<BinaryFunc>(func));
 }
 
 /* {{{ doc */
@@ -271,8 +273,9 @@ for_each_all_n(VarFunc&& func, const std::size_t n,
 template <typename VarFunc, typename... Containers>
 constexpr void for_each_all(VarFunc&& func, Containers&... containers)
 {
-  for_each_all_n(std::forward<VarFunc>(func), min_size(containers...),
-                 std::begin(containers)...);
+  ::ehanc::for_each_all_n(std::forward<VarFunc>(func),
+                          min_size(containers...),
+                          std::begin(containers)...);
 }
 
 /* {{{ doc */
@@ -301,8 +304,9 @@ for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
                             min_size(containers...),
                             std::cbegin(containers)...)))
 {
-  for_each_all_n(std::forward<VarFunc>(func), min_size(containers...),
-                 std::cbegin(containers)...);
+  ::ehanc::for_each_all_n(std::forward<VarFunc>(func),
+                          min_size(containers...),
+                          std::cbegin(containers)...);
 }
 
 } // namespace ehanc

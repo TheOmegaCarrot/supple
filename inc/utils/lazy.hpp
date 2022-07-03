@@ -222,7 +222,7 @@ struct is_lazy_impl<lazy<T>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_lazy : impl::is_lazy_impl<std::decay_t<T>> {};
+struct is_lazy : ::ehanc::impl::is_lazy_impl<std::decay_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -231,7 +231,7 @@ struct is_lazy : impl::is_lazy_impl<std::decay_t<T>> {};
  */
 /* }}} */
 template <typename T>
-constexpr inline const bool is_lazy_v = is_lazy<T>::value;
+constexpr inline const bool is_lazy_v = ::ehanc::is_lazy<T>::value;
 
 namespace impl {
 /* {{{ doc */
@@ -260,7 +260,7 @@ struct is_lazy_of_impl<T, lazy<T>> : std::true_type {};
  */
 /* }}} */
 template <typename T, typename L>
-struct is_lazy_of : impl::is_lazy_of_impl<T, std::decay_t<L>> {};
+struct is_lazy_of : ::ehanc::impl::is_lazy_of_impl<T, std::decay_t<L>> {};
 
 /* {{{ doc */
 /**
@@ -269,7 +269,8 @@ struct is_lazy_of : impl::is_lazy_of_impl<T, std::decay_t<L>> {};
  */
 /* }}} */
 template <typename T, typename L>
-constexpr inline const bool is_lazy_of_v = is_lazy_of<T, L>::value;
+constexpr inline const bool is_lazy_of_v =
+    ::ehanc::is_lazy_of<T, L>::value;
 
 namespace impl {
 /* {{{ doc */
@@ -305,7 +306,8 @@ struct lazy_inner_type_impl<lazy<T>> {
  */
 /* }}} */
 template <typename T>
-struct lazy_inner_type : impl::lazy_inner_type_impl<std::decay_t<T>> {};
+struct lazy_inner_type
+    : ::ehanc::impl::lazy_inner_type_impl<std::decay_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -314,7 +316,7 @@ struct lazy_inner_type : impl::lazy_inner_type_impl<std::decay_t<T>> {};
  */
 /* }}} */
 template <typename T>
-using lazy_inner_type_t = typename lazy_inner_type<T>::type;
+using lazy_inner_type_t = typename ::ehanc::lazy_inner_type<T>::type;
 
 } // namespace ehanc
 

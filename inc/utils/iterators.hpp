@@ -62,7 +62,7 @@ template <typename Iterable>
     return begin;
   }
 
-  std::size_t distance{forward_distance(begin, end) - 1};
+  std::size_t distance{::ehanc::forward_distance(begin, end) - 1};
   for ( std::size_t i{0}; i != distance; ++i ) {
     ++begin;
   }

@@ -235,7 +235,7 @@ public:
   {
     return m_val < rhs.m_val;
   }
-};
+}; // class sequence_iterator
 
 template <typename T, typename F>
 sequence_iterator(T, F) -> sequence_iterator<std::decay_t<T>>;
@@ -277,13 +277,20 @@ public:
   /**
    * @brief Specify range over which to iterate. Will provide sequence
    * iterators which will provide the range `[begin, end)`.
+   *
+   * @param begin Beginning value.
+   *
+   * @param end End value.
+   *
+   * @param func Increment function.
    */
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
-  sequence(U&& begin, U&& end, Incr func = ::ehanc::increment<value_type>)
+  sequence(U&& begin, U&& end,
+           Incr&& func = ::ehanc::increment<value_type>)
       : m_begin(std::forward<U>(begin))
       , m_end(std::forward<U>(end))
-      , m_inc{std::forward<Incr>(func)}
+      , m_inc(std::forward<Incr>(func))
   {}
 
   ~sequence() = default;
@@ -305,7 +312,7 @@ public:
   /* }}} */
   constexpr auto begin() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
-    return sequence_iterator(m_begin);
+    return sequence_iterator(m_begin, m_inc);
   }
 
   /* {{{ doc */
@@ -326,7 +333,7 @@ public:
   /* }}} */
   constexpr auto end() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
-    return sequence_iterator(m_end);
+    return sequence_iterator(m_end, m_inc);
   }
 
   /* {{{ doc */
@@ -338,7 +345,7 @@ public:
   {
     return this->end();
   }
-};
+}; // class sequence
 
 template <typename T, typename F>
 sequence(T, T, F) -> sequence<std::decay_t<T>>;
@@ -584,7 +591,7 @@ public:
   {
     return m_count < rhs.m_sentinel;
   }
-};
+}; // class generative_iterator
 
 template <typename F>
 generative_iterator(F) -> generative_iterator<std::invoke_result_t<F>>;
@@ -592,6 +599,85 @@ generative_iterator(F) -> generative_iterator<std::invoke_result_t<F>>;
 template <typename G, typename S>
 generative_iterator(G, S)
     -> generative_iterator<decltype(*std::declval<G>())>;
+
+template <typename T>
+class generative_sequence
+{
+public:
+
+  using value_type = T;
+
+private:
+
+  std::function<value_type()> m_gen;
+  std::size_t m_max;
+
+public:
+
+  /* {{{ doc */
+  /**
+   * @brief Must be constructed with values.
+   */
+  /* }}} */
+  generative_sequence() = delete;
+
+  /* {{{ doc */
+  /**
+   * @brief Specify a maximum number of iterations and
+   * a generating function.
+   *
+   * @param max Maximum number of iterations
+   *
+   * @param func Generating function.
+   */
+  /* }}} */
+  template <typename I, typename Func = std::function<value_type()>,
+            typename = std::enable_if_t<std::is_integral_v<I>>,
+            typename = std::void_t<decltype(std::declval<Func>()())>>
+  generative_sequence(const I max, Func&& func)
+      : m_gen(std::forward<Func>(func))
+      , m_max(static_cast<std::size_t>(max))
+  {}
+
+  ~generative_sequence() = default;
+
+  generative_sequence(const generative_sequence&) = default;
+
+  generative_sequence(generative_sequence&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
+
+  generative_sequence& operator=(const generative_sequence&) = default;
+
+  generative_sequence& operator=(generative_sequence&&) noexcept(noexcept(
+      value_type(std::move(std::declval<value_type>())))) = default;
+
+  constexpr auto begin() noexcept
+      -> ::ehanc::generative_iterator<value_type>
+  {
+    return generative_iterator(m_gen);
+  }
+
+  constexpr auto cbegin() noexcept
+      -> ::ehanc::generative_iterator<value_type>
+  {
+    return this->begin();
+  }
+
+  constexpr auto end() noexcept -> ::ehanc::generative_iterator<value_type>
+  {
+    return generative_iterator<value_type>(m_max);
+  }
+
+  constexpr auto cend() noexcept
+      -> ::ehanc::generative_iterator<value_type>
+  {
+    return this->end();
+  }
+
+}; // class generative_sequence
+
+template <typename T, typename F>
+generative_sequence(T, F) -> generative_sequence<std::invoke_result_t<F>>;
 
 } // namespace ehanc
 

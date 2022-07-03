@@ -85,6 +85,11 @@ ehanc::test test_sequence()
     results.add_case(i, j++);
   }
 
+  j = 10;
+  for ( int i : ehanc::sequence(10, 0, ehanc::decrement<int>) ) {
+    results.add_case(i, j--);
+  }
+
   return results;
 }
 
@@ -109,6 +114,19 @@ ehanc::test test_generative_iterator()
   return results;
 }
 
+ehanc::test test_generative_sequence()
+{
+  ehanc::test results;
+
+  int k{0};
+  for ( int i :
+        ehanc::generative_sequence(5, [j{0}]() mutable { return j++; }) ) {
+    results.add_case(i, k++);
+  }
+
+  return results;
+}
+
 void test_iterators()
 {
   ehanc::run_test("ehanc::forward_distance", &test_forward_distance);
@@ -117,4 +135,5 @@ void test_iterators()
   ehanc::run_test("ehanc::sequence_iterator", &test_sequence_iterator);
   ehanc::run_test("ehanc::sequence", &test_sequence);
   ehanc::run_test("ehanc::generative_iterator", &test_generative_iterator);
+  ehanc::run_test("ehanc::generative_sequence", &test_generative_sequence);
 }

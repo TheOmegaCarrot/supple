@@ -44,6 +44,8 @@ public:
              << RESET << '\t' << result << '\n';
 
       m_cases.push_back(detail.str());
+    } else {
+      m_cases.push_back("");
     }
   }
 

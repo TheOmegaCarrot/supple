@@ -432,7 +432,7 @@ public:
    */
   /* }}} */
   template <typename Func = std::function<value_type()>,
-            typename      = std::void_t<decltype(std::declval<Func>()())>>
+            typename      = std::enable_if_t<std::is_invocable_v<Func>>>
   constexpr generative_iterator(Func&& func)
       : m_gen(std::forward<Func>(func))
       , m_val{m_gen()}
@@ -633,7 +633,7 @@ public:
   /* }}} */
   template <typename I, typename Func = std::function<value_type()>,
             typename = std::enable_if_t<std::is_integral_v<I>>,
-            typename = std::void_t<decltype(std::declval<Func>()())>>
+            typename = std::enable_if_t<std::is_invocable_v<Func>>>
   generative_sequence(const I max, Func&& func)
       : m_gen(std::forward<Func>(func))
       , m_max(static_cast<std::size_t>(max))

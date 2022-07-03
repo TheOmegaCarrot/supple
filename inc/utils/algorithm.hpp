@@ -271,10 +271,14 @@ for_each_all_n(VarFunc&& func, const std::size_t n,
  */
 /* }}} */
 template <typename VarFunc, typename... Containers>
-constexpr void for_each_all(VarFunc&& func, Containers&... containers)
+constexpr void
+for_each_all(VarFunc&& func, Containers&... containers) noexcept(
+    noexcept(::ehanc::for_each_all_n(std::forward<VarFunc>(func),
+                                     ::ehanc::min_size(containers...),
+                                     std::begin(containers)...)))
 {
   ::ehanc::for_each_all_n(std::forward<VarFunc>(func),
-                          min_size(containers...),
+                          ::ehanc::min_size(containers...),
                           std::begin(containers)...);
 }
 
@@ -301,11 +305,11 @@ template <typename VarFunc, typename... Containers>
 constexpr void
 for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
     noexcept(for_each_all_n(std::forward<VarFunc>(func),
-                            min_size(containers...),
+                            ::ehanc::min_size(containers...),
                             std::cbegin(containers)...)))
 {
   ::ehanc::for_each_all_n(std::forward<VarFunc>(func),
-                          min_size(containers...),
+                          ::ehanc::min_size(containers...),
                           std::cbegin(containers)...);
 }
 

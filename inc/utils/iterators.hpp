@@ -145,7 +145,9 @@ public:
   constexpr sequence_iterator(U init,
                               Incr func = ::ehanc::increment<value_type>)
       // clang-format off
-      noexcept(noexcept(U(init)) && noexcept(U(std::move(init))))
+    noexcept(std::conjunction_v<
+              std::is_nothrow_constructible<T>,
+              std::is_nothrow_move_constructible<T>>)
       // clang-format on
       : m_val{std::forward<U>(init)}
       , m_inc{std::forward<Incr>(func)}
@@ -155,13 +157,13 @@ public:
 
   sequence_iterator(const sequence_iterator&) = default;
 
-  sequence_iterator(sequence_iterator&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  sequence_iterator(sequence_iterator&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   sequence_iterator& operator=(const sequence_iterator&) = default;
 
-  sequence_iterator& operator=(sequence_iterator&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  sequence_iterator& operator=(sequence_iterator&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   /* {{{ doc */
   /**
@@ -297,13 +299,13 @@ public:
 
   sequence(const sequence&) = default;
 
-  sequence(sequence&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  sequence(sequence&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   sequence& operator=(const sequence&) = default;
 
-  sequence& operator=(sequence&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  sequence& operator=(sequence&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   /* {{{ doc */
   /**
@@ -509,13 +511,13 @@ public:
 
   generative_iterator(const generative_iterator&) = default;
 
-  generative_iterator(generative_iterator&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  generative_iterator(generative_iterator&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   generative_iterator& operator=(const generative_iterator&) = default;
 
-  generative_iterator& operator=(generative_iterator&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  generative_iterator& operator=(generative_iterator&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   /* {{{ doc */
   /**
@@ -643,13 +645,13 @@ public:
 
   generative_sequence(const generative_sequence&) = default;
 
-  generative_sequence(generative_sequence&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  generative_sequence(generative_sequence&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   generative_sequence& operator=(const generative_sequence&) = default;
 
-  generative_sequence& operator=(generative_sequence&&) noexcept(noexcept(
-      value_type(std::move(std::declval<value_type>())))) = default;
+  generative_sequence& operator=(generative_sequence&&) noexcept(
+      std::is_nothrow_move_constructible_v<value_type>) = default;
 
   constexpr auto begin() noexcept
       -> ::ehanc::generative_iterator<value_type>

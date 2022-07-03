@@ -116,7 +116,7 @@ constexpr std::size_t min_size(const Container& cont,
 /* }}} */
 template <typename T>
 [[nodiscard]] constexpr T
-explicit_copy(const T& t) noexcept(noexcept(T(t)))
+explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>)
 {
   return t;
 }

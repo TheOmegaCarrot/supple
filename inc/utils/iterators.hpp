@@ -442,68 +442,20 @@ public:
       , m_sentinel{0}
   {}
 
-  /* {{{ doc */
-  /**
-   * @brief Constructor for creating a sentinel iterator.
-   * This overload requires explicit template parameter.
-   *
-   * @param sentinel Maximum number of iterations.
-   */
-  /* }}} */
-  explicit constexpr generative_iterator(std::size_t sentinel)
+  template <typename I, typename = std::enable_if_t<std::is_integral_v<I>>>
+  explicit constexpr generative_iterator(const I sentinel)
       : m_gen{}
       , m_val{}
       , m_count{0}
-      , m_sentinel{sentinel}
-  {}
-
-  /* {{{ doc */
-  /**
-   * @brief Constructor for creating a sentinel iterator.
-   * This overload requires explicit template parameter.
-   *
-   * @param sentinel Maximum number of iterations.
-   */
-  /* }}} */
-  explicit constexpr generative_iterator(int sentinel)
-      : m_gen{}
-      , m_val{}
-      , m_count{}
       , m_sentinel{static_cast<std::size_t>(sentinel)}
   {}
 
-  /* {{{ doc */
-  /**
-   * @brief Constructor for creating a sentinel iterator.
-   *
-   * @param dummy Generative iterator used for deducing the type.
-   *
-   * @param sentinel Maximum number of iterations.
-   */
-  /* }}} */
+  template <typename I, typename = std::enable_if_t<std::is_integral_v<I>>>
   explicit constexpr generative_iterator(
-      [[maybe_unused]] const generative_iterator& dummy,
-      std::size_t sentinel)
+      [[maybe_unused]] const generative_iterator& dummy, const I sentinel)
       : m_gen{}
       , m_val{}
       , m_count{0}
-      , m_sentinel{sentinel}
-  {}
-
-  /* {{{ doc */
-  /**
-   * @brief Constructor for creating a sentinel iterator.
-   *
-   * @param dummy Generative iterator used for deducing the type.
-   *
-   * @param sentinel Maximum number of iterations.
-   */
-  /* }}} */
-  explicit constexpr generative_iterator(
-      [[maybe_unused]] const generative_iterator& dummy, int sentinel)
-      : m_gen{}
-      , m_val{}
-      , m_count{}
       , m_sentinel{static_cast<std::size_t>(sentinel)}
   {}
 

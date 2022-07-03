@@ -19,12 +19,14 @@ namespace ehanc {
 class test
 {
 private:
+
   int m_case_index{};
   bool m_pass{true};
   std::vector<std::string> m_cases{};
 
 public:
-  test() = default;
+
+  explicit test() = default;
 
   template <typename T>
   inline void add_case(const T& result, const T& expected,

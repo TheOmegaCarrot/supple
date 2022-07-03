@@ -142,8 +142,8 @@ public:
    */
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
-  constexpr sequence_iterator(U init,
-                              Incr func = ::ehanc::increment<value_type>)
+  explicit constexpr sequence_iterator(
+      U init, Incr func = ::ehanc::increment<value_type>)
       // clang-format off
     noexcept(std::conjunction_v<
               std::is_nothrow_constructible<T>,
@@ -288,8 +288,8 @@ public:
    */
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
-  sequence(U&& begin, U&& end,
-           Incr&& func = ::ehanc::increment<value_type>)
+  explicit sequence(U&& begin, U&& end,
+                    Incr&& func = ::ehanc::increment<value_type>)
       : m_begin(std::forward<U>(begin))
       , m_end(std::forward<U>(end))
       , m_inc(std::forward<Incr>(func))
@@ -435,7 +435,7 @@ public:
   /* }}} */
   template <typename Func = std::function<value_type()>,
             typename      = std::enable_if_t<std::is_invocable_v<Func>>>
-  constexpr generative_iterator(Func&& func)
+  explicit constexpr generative_iterator(Func&& func)
       : m_gen(std::forward<Func>(func))
       , m_val{m_gen()}
       , m_count{0}
@@ -450,7 +450,7 @@ public:
    * @param sentinel Maximum number of iterations.
    */
   /* }}} */
-  constexpr generative_iterator(std::size_t sentinel)
+  explicit constexpr generative_iterator(std::size_t sentinel)
       : m_gen{}
       , m_val{}
       , m_count{0}
@@ -465,7 +465,7 @@ public:
    * @param sentinel Maximum number of iterations.
    */
   /* }}} */
-  constexpr generative_iterator(int sentinel)
+  explicit constexpr generative_iterator(int sentinel)
       : m_gen{}
       , m_val{}
       , m_count{}
@@ -481,7 +481,7 @@ public:
    * @param sentinel Maximum number of iterations.
    */
   /* }}} */
-  constexpr generative_iterator(
+  explicit constexpr generative_iterator(
       [[maybe_unused]] const generative_iterator& dummy,
       std::size_t sentinel)
       : m_gen{}
@@ -499,7 +499,7 @@ public:
    * @param sentinel Maximum number of iterations.
    */
   /* }}} */
-  constexpr generative_iterator(
+  explicit constexpr generative_iterator(
       [[maybe_unused]] const generative_iterator& dummy, int sentinel)
       : m_gen{}
       , m_val{}
@@ -636,7 +636,7 @@ public:
   template <typename I, typename Func = std::function<value_type()>,
             typename = std::enable_if_t<std::is_integral_v<I>>,
             typename = std::enable_if_t<std::is_invocable_v<Func>>>
-  generative_sequence(const I max, Func&& func)
+  explicit generative_sequence(const I max, Func&& func)
       : m_gen(std::forward<Func>(func))
       , m_max(static_cast<std::size_t>(max))
   {}

@@ -66,6 +66,13 @@ ehanc::test test_sequence_iterator()
     results.add_case(i, j--);
   });
 
+  ehanc::sequence_iterator begin3(0, [j{0}](int& i) mutable { i = ++j; });
+  ehanc::sequence_iterator end3(10);
+
+  std::for_each(begin3, end3, [&results, j{0}](const int i) mutable {
+    results.add_case(i, j++);
+  });
+
   return results;
 }
 

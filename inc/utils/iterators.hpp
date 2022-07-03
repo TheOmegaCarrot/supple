@@ -112,7 +112,7 @@ constexpr void decrement(T& t)
 /* {{{ doc */
 /**
  * @brief Iterator class to wrap around iteration over a sequence of
- * values. Only stores current value.
+ * values. Only stores the current value.
  */
 /* }}} */
 template <typename T>
@@ -218,7 +218,7 @@ public:
 
   /* {{{ doc */
   /**
-   * @brief Non-equality comparison operator.
+   * @brief Inequality comparison operator.
    */
   /* }}} */
   constexpr bool operator!=(const sequence_iterator& rhs)
@@ -247,7 +247,8 @@ sequence_iterator(T) -> sequence_iterator<std::decay_t<T>>;
 /**
  * @brief Class which provides sequence iterators to allow for easy
  * iteration over a sequence of integers `[begin, end)` in contexts where a
- * container would be typical. (Range-for, etc)
+ * container would be typical (Range-for, etc). May be used safely as a
+ * prvalue.
  */
 /* }}} */
 template <typename T>
@@ -302,7 +303,7 @@ public:
    * @brief Provide begin sequence iterator.
    */
   /* }}} */
-  constexpr sequence_iterator<value_type> begin() noexcept
+  constexpr auto begin() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
     return sequence_iterator(m_begin);
   }
@@ -312,7 +313,8 @@ public:
    * @brief Provide cbegin for compatibility.
    */
   /* }}} */
-  constexpr sequence_iterator<value_type> cbegin() noexcept
+  constexpr auto cbegin() noexcept
+      -> ::ehanc::sequence_iterator<value_type>
   {
     return this->begin();
   }
@@ -322,7 +324,7 @@ public:
    * @brief Provide end sequence iterator.
    */
   /* }}} */
-  constexpr sequence_iterator<value_type> end() noexcept
+  constexpr auto end() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
     return sequence_iterator(m_end);
   }
@@ -332,7 +334,7 @@ public:
    * @brief Provide cbegin for compatibility.
    */
   /* }}} */
-  constexpr sequence_iterator<value_type> cend() noexcept
+  constexpr auto cend() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
     return this->end();
   }
@@ -344,6 +346,30 @@ sequence(T, T, F) -> sequence<std::decay_t<T>>;
 template <typename T>
 sequence(T, T) -> sequence<std::decay_t<T>>;
 
+/* {{{ doc */
+/**
+ * @brief Iterator class to wrap around iteration over the repeated
+ * application of an argumentless stateful function. Only stores the
+ * current value. Useful if you want to iterate over a generated sequence,
+ * but have no need to store the entire sequence. The two below functions
+ * should achieve the same results.
+ *
+ * @code
+ *
+ * void container() {
+ *    std::array<int, MAXIMUM> arr;
+ *    std::generate(arr.begin(), arr.end(), generator);
+ *    std::for_each(arr.begin(), arr.end(), some_func);
+ * }
+ *
+ * void generative() {
+ *    std::for_each(ehanc::generative_iterator(generator),
+ *    ehanc::generative_iterator(MAXIMUM), some_func);
+ * }
+ *
+ * @endcode
+ */
+/* }}} */
 template <typename T>
 class generative_iterator
 {
@@ -353,23 +379,49 @@ public:
 
 private:
 
+  /* {{{ doc */
+  /**
+   * @brief Function which is used to generate the sequence of values.
+   */
+  /* }}} */
   std::function<value_type()> m_gen;
+
+  /* {{{ doc */
+  /**
+   * @brief Current value in the sequence.
+   */
+  /* }}} */
   value_type m_val;
+
+  /* {{{ doc */
+  /**
+   * @brief Current "index" of the generated sequence.
+   */
+  /* }}} */
   std::size_t m_count;
+
+  /* {{{ doc */
+  /**
+   * @brief For use in sentinel-type generative_iterator. Maximum number
+   * of iterations allowed.
+   */
+  /* }}} */
   std::size_t m_sentinel;
 
 public:
 
   /* {{{ doc */
   /**
-   * @brief Must be constructed with a value.
+   * @brief Must be constructed with a function.
    */
   /* }}} */
   generative_iterator() = delete;
 
   /* {{{ doc */
   /**
-   * @brief Must be constructed with a value.
+   * @brief Must be constructed with a function.
+   *
+   * @param func Function to be used to generate a sequence.
    */
   /* }}} */
   template <typename Func = std::function<value_type()>,
@@ -381,6 +433,14 @@ public:
       , m_sentinel{0}
   {}
 
+  /* {{{ doc */
+  /**
+   * @brief Constructor for creating a sentinel iterator.
+   * This overload requires explicit template parameter.
+   *
+   * @param sentinel Maximum number of iterations.
+   */
+  /* }}} */
   constexpr generative_iterator(std::size_t sentinel)
       : m_gen{}
       , m_val{}
@@ -388,6 +448,14 @@ public:
       , m_sentinel{sentinel}
   {}
 
+  /* {{{ doc */
+  /**
+   * @brief Constructor for creating a sentinel iterator.
+   * This overload requires explicit template parameter.
+   *
+   * @param sentinel Maximum number of iterations.
+   */
+  /* }}} */
   constexpr generative_iterator(int sentinel)
       : m_gen{}
       , m_val{}
@@ -395,15 +463,35 @@ public:
       , m_sentinel{static_cast<std::size_t>(sentinel)}
   {}
 
-  constexpr generative_iterator(const generative_iterator&,
-                                std::size_t sentinel)
+  /* {{{ doc */
+  /**
+   * @brief Constructor for creating a sentinel iterator.
+   *
+   * @param dummy Generative iterator used for deducing the type.
+   *
+   * @param sentinel Maximum number of iterations.
+   */
+  /* }}} */
+  constexpr generative_iterator(
+      [[maybe_unused]] const generative_iterator& dummy,
+      std::size_t sentinel)
       : m_gen{}
       , m_val{}
       , m_count{0}
       , m_sentinel{sentinel}
   {}
 
-  constexpr generative_iterator(const generative_iterator&, int sentinel)
+  /* {{{ doc */
+  /**
+   * @brief Constructor for creating a sentinel iterator.
+   *
+   * @param dummy Generative iterator used for deducing the type.
+   *
+   * @param sentinel Maximum number of iterations.
+   */
+  /* }}} */
+  constexpr generative_iterator(
+      [[maybe_unused]] const generative_iterator& dummy, int sentinel)
       : m_gen{}
       , m_val{}
       , m_count{}
@@ -422,6 +510,14 @@ public:
   generative_iterator& operator=(generative_iterator&&) noexcept(noexcept(
       value_type(std::move(std::declval<value_type>())))) = default;
 
+  /* {{{ doc */
+  /**
+   * @brief Pre-increment operator. Increments iterator to provide next
+   * value.
+   *
+   * @return Reference to self after incrementing.
+   */
+  /* }}} */
   constexpr generative_iterator& operator++() noexcept(noexcept(m_gen()))
   {
     m_val = m_gen();
@@ -429,6 +525,14 @@ public:
     return *this;
   }
 
+  /* {{{ doc */
+  /**
+   * @brief Post-increment operator. Increments iterator to provide next
+   * value.
+   *
+   * @return Copy of self from before incrementing.
+   */
+  /* }}} */
   constexpr generative_iterator operator++(int) noexcept(noexcept(m_gen()))
   {
     generative_iterator tmp{*this};
@@ -436,21 +540,46 @@ public:
     return tmp;
   }
 
+  /* {{{ doc */
+  /**
+   * @brief Dereference operator. Provides read-only access to contained
+   * value.
+   *
+   * @return Const reference to contained value.
+   */
+  /* }}} */
   constexpr const value_type& operator*() noexcept
   {
     return m_val;
   }
 
+  /* {{{ doc */
+  /**
+   * @brief Equality comparison operator. Compares current number
+   * of iterations against rhs's sentinel value.
+   */
+  /* }}} */
   constexpr bool operator==(const generative_iterator& rhs)
   {
     return m_count == rhs.m_sentinel;
   }
 
+  /* {{{ doc */
+  /**
+   * @brief Inequality comparison operator. Compares current number
+   * of iterations against rhs's sentinel value.
+   */
+  /* }}} */
   constexpr bool operator!=(const generative_iterator& rhs)
   {
     return m_count != rhs.m_sentinel;
   }
 
+  /* {{{ doc */
+  /**
+   * @brief Less-than comparison operator.
+   */
+  /* }}} */
   constexpr bool operator<(const generative_iterator& rhs)
   {
     return m_count < rhs.m_sentinel;

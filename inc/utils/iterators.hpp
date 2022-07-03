@@ -312,7 +312,7 @@ public:
   /* }}} */
   constexpr auto begin() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
-    return sequence_iterator(m_begin, m_inc);
+    return ::ehanc::sequence_iterator(m_begin, m_inc);
   }
 
   /* {{{ doc */
@@ -333,7 +333,7 @@ public:
   /* }}} */
   constexpr auto end() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
-    return sequence_iterator(m_end, m_inc);
+    return ::ehanc::sequence_iterator(m_end, m_inc);
   }
 
   /* {{{ doc */
@@ -654,7 +654,7 @@ public:
   constexpr auto begin() noexcept
       -> ::ehanc::generative_iterator<value_type>
   {
-    return generative_iterator(m_gen);
+    return ::ehanc::generative_iterator(m_gen);
   }
 
   constexpr auto cbegin() noexcept
@@ -665,7 +665,7 @@ public:
 
   constexpr auto end() noexcept -> ::ehanc::generative_iterator<value_type>
   {
-    return generative_iterator<value_type>(m_max);
+    return ::ehanc::generative_iterator<value_type>(m_max);
   }
 
   constexpr auto cend() noexcept

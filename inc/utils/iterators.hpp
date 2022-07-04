@@ -515,7 +515,9 @@ public:
    * @return Copy of self from before incrementing.
    */
   /* }}} */
-  constexpr generative_iterator operator++(int) noexcept(noexcept(m_gen()))
+  constexpr generative_iterator operator++(int) noexcept(
+      noexcept(m_gen())
+      && std::is_nothrow_copy_constructible_v<decltype(*this)>)
   {
     generative_iterator tmp{*this};
     this->operator++();

@@ -145,25 +145,28 @@ public:
   explicit constexpr sequence_iterator(
       U init, Incr func = ::ehanc::increment<value_type>)
       // clang-format off
-    noexcept(std::conjunction_v<
-              std::is_nothrow_constructible<T>,
-              std::is_nothrow_move_constructible<T>>)
+      noexcept(std::conjunction_v<
+               std::is_nothrow_constructible<T>,
+               std::is_nothrow_move_constructible<T>>)
       // clang-format on
       : m_val{std::forward<U>(init)}
       , m_inc{std::forward<Incr>(func)}
   {}
 
-  ~sequence_iterator() = default;
+  ~sequence_iterator() noexcept(
+      std::is_nothrow_destructible_v<value_type>) = default;
 
-  sequence_iterator(const sequence_iterator&) = default;
+  sequence_iterator(const sequence_iterator&) noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) = default;
 
   sequence_iterator(sequence_iterator&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  sequence_iterator& operator=(const sequence_iterator&) = default;
+  sequence_iterator& operator=(const sequence_iterator&) noexcept(
+      std::is_nothrow_copy_assignable_v<value_type>) = default;
 
   sequence_iterator& operator=(sequence_iterator&&) noexcept(
-      std::is_nothrow_move_constructible_v<value_type>) = default;
+      std::is_nothrow_move_assignable_v<value_type>) = default;
 
   /* {{{ doc */
   /**
@@ -213,7 +216,7 @@ public:
    * @brief Equality comparison operator.
    */
   /* }}} */
-  constexpr bool operator==(const sequence_iterator& rhs)
+  constexpr bool operator==(const sequence_iterator& rhs) noexcept
   {
     return m_val == rhs.m_val;
   }
@@ -223,7 +226,7 @@ public:
    * @brief Inequality comparison operator.
    */
   /* }}} */
-  constexpr bool operator!=(const sequence_iterator& rhs)
+  constexpr bool operator!=(const sequence_iterator& rhs) noexcept
   {
     return m_val != rhs.m_val;
   }
@@ -233,7 +236,7 @@ public:
    * @brief Less-than comparison operator.
    */
   /* }}} */
-  constexpr bool operator<(const sequence_iterator& rhs)
+  constexpr bool operator<(const sequence_iterator& rhs) noexcept
   {
     return m_val < rhs.m_val;
   }
@@ -290,22 +293,30 @@ public:
   template <typename U, typename Incr = std::function<void(value_type&)>>
   explicit sequence(U&& begin, U&& end,
                     Incr&& func = ::ehanc::increment<value_type>)
+      // clang-format off
+                    noexcept(std::conjunction_v<
+                             std::is_nothrow_constructible<T>,
+                             std::is_nothrow_move_constructible<T>>)
+      // clang-format on
       : m_begin(std::forward<U>(begin))
       , m_end(std::forward<U>(end))
       , m_inc(std::forward<Incr>(func))
   {}
 
-  ~sequence() = default;
+  ~sequence() noexcept(std::is_nothrow_destructible_v<value_type>) =
+      default;
 
-  sequence(const sequence&) = default;
+  sequence(const sequence&) noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) = default;
 
   sequence(sequence&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  sequence& operator=(const sequence&) = default;
+  sequence& operator=(const sequence&) noexcept(
+      std::is_nothrow_move_assignable_v<value_type>) = default;
 
   sequence& operator=(sequence&&) noexcept(
-      std::is_nothrow_move_constructible_v<value_type>) = default;
+      std::is_nothrow_move_assignable_v<value_type>) = default;
 
   /* {{{ doc */
   /**
@@ -433,9 +444,12 @@ public:
    * @param func Function to be used to generate a sequence.
    */
   /* }}} */
-  template <typename Func = std::function<value_type()>,
-            typename      = std::enable_if_t<std::is_invocable_v<Func>>>
-  explicit constexpr generative_iterator(Func&& func)
+  template <typename Func,
+            typename = std::enable_if_t<std::is_invocable_v<Func>>>
+  explicit constexpr generative_iterator(Func&& func) noexcept(
+      std::conjunction_v<std::is_nothrow_copy_constructible<Func>,
+                         std::is_nothrow_move_constructible<Func>,
+                         std::is_nothrow_constructible<value_type>>)
       : m_gen(std::forward<Func>(func))
       , m_val{m_gen()}
       , m_count{0}
@@ -443,7 +457,8 @@ public:
   {}
 
   template <typename I, typename = std::enable_if_t<std::is_integral_v<I>>>
-  explicit constexpr generative_iterator(const I sentinel)
+  explicit constexpr generative_iterator(const I sentinel) noexcept(
+      std::is_nothrow_default_constructible_v<value_type>)
       : m_gen{}
       , m_val{}
       , m_count{0}
@@ -453,23 +468,29 @@ public:
   template <typename I, typename = std::enable_if_t<std::is_integral_v<I>>>
   explicit constexpr generative_iterator(
       [[maybe_unused]] const generative_iterator& dummy, const I sentinel)
+      //clang-format off
+      noexcept(std::is_nothrow_default_constructible_v<value_type>)
+      //clang-format on
       : m_gen{}
       , m_val{}
       , m_count{0}
       , m_sentinel{static_cast<std::size_t>(sentinel)}
   {}
 
-  ~generative_iterator() = default;
+  ~generative_iterator() noexcept(
+      std::is_nothrow_destructible_v<value_type>) = default;
 
-  generative_iterator(const generative_iterator&) = default;
+  generative_iterator(const generative_iterator&) noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) = default;
 
   generative_iterator(generative_iterator&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  generative_iterator& operator=(const generative_iterator&) = default;
+  generative_iterator& operator=(const generative_iterator&) noexcept(
+      std::is_nothrow_copy_assignable_v<value_type>) = default;
 
   generative_iterator& operator=(generative_iterator&&) noexcept(
-      std::is_nothrow_move_constructible_v<value_type>) = default;
+      std::is_nothrow_move_assignable_v<value_type>) = default;
 
   /* {{{ doc */
   /**
@@ -520,7 +541,7 @@ public:
    * of iterations against rhs's sentinel value.
    */
   /* }}} */
-  constexpr bool operator==(const generative_iterator& rhs)
+  constexpr bool operator==(const generative_iterator& rhs) noexcept
   {
     return m_count == rhs.m_sentinel;
   }
@@ -531,7 +552,7 @@ public:
    * of iterations against rhs's sentinel value.
    */
   /* }}} */
-  constexpr bool operator!=(const generative_iterator& rhs)
+  constexpr bool operator!=(const generative_iterator& rhs) noexcept
   {
     return m_count != rhs.m_sentinel;
   }
@@ -541,7 +562,7 @@ public:
    * @brief Less-than comparison operator.
    */
   /* }}} */
-  constexpr bool operator<(const generative_iterator& rhs)
+  constexpr bool operator<(const generative_iterator& rhs) noexcept
   {
     return m_count < rhs.m_sentinel;
   }
@@ -589,21 +610,29 @@ public:
             typename = std::enable_if_t<std::is_integral_v<I>>,
             typename = std::enable_if_t<std::is_invocable_v<Func>>>
   explicit generative_sequence(const I max, Func&& func)
+      // clang-format off
+      noexcept(std::conjunction_v<
+               std::is_nothrow_constructible<T>,
+               std::is_nothrow_move_constructible<T>>)
+      // clang-format on
       : m_gen(std::forward<Func>(func))
       , m_max(static_cast<std::size_t>(max))
   {}
 
-  ~generative_sequence() = default;
+  ~generative_sequence() noexcept(
+      std::is_nothrow_destructible_v<value_type>) = default;
 
-  generative_sequence(const generative_sequence&) = default;
+  generative_sequence(const generative_sequence&) noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) = default;
 
   generative_sequence(generative_sequence&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  generative_sequence& operator=(const generative_sequence&) = default;
+  generative_sequence& operator=(const generative_sequence&) noexcept(
+      std::is_nothrow_copy_assignable_v<value_type>) = default;
 
   generative_sequence& operator=(generative_sequence&&) noexcept(
-      std::is_nothrow_move_constructible_v<value_type>) = default;
+      std::is_nothrow_move_assignable_v<value_type>) = default;
 
   constexpr auto begin() noexcept
       -> ::ehanc::generative_iterator<value_type>

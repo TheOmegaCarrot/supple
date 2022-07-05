@@ -316,7 +316,7 @@ public:
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
   auto operator=(const sequence&) noexcept(
-      std::is_nothrow_move_assignable_v<value_type>)
+      std::is_nothrow_copy_assignable_v<value_type>)
       -> sequence& = default;
 
   auto operator=(sequence&&) noexcept(

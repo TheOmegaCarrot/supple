@@ -46,7 +46,7 @@ public:
 
       m_cases.push_back(detail.str());
     } else {
-      m_cases.emplace_back("");
+      m_cases.emplace_back();
     }
   }
 

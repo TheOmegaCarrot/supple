@@ -4,7 +4,7 @@
 
 #include "test_algorithm.h"
 
-ehanc::test test_for_each_adjacent()
+auto test_for_each_adjacent() -> ehanc::test
 {
   ehanc::test results;
   std::vector<int> test_input(6);
@@ -27,7 +27,7 @@ ehanc::test test_for_each_adjacent()
   return results;
 }
 
-ehanc::test test_for_each_adjacent_n()
+auto test_for_each_adjacent_n() -> ehanc::test
 {
   ehanc::test results;
   std::vector<int> test_input{1, 2, 3, 4, 5, 6};
@@ -49,7 +49,7 @@ ehanc::test test_for_each_adjacent_n()
   return results;
 }
 
-ehanc::test test_for_each_all()
+auto test_for_each_all() -> ehanc::test
 {
   ehanc::test results;
   std::array test1{4, 9, 16, 25};
@@ -73,7 +73,7 @@ ehanc::test test_for_each_all()
   return results;
 }
 
-ehanc::test test_for_each_all_c()
+auto test_for_each_all_c() -> ehanc::test
 {
   ehanc::test results;
   const std::array test1{4, 9, 16, 25};
@@ -97,7 +97,7 @@ ehanc::test test_for_each_all_c()
   return results;
 }
 
-ehanc::test test_for_each_all_n()
+auto test_for_each_all_n() -> ehanc::test
 {
   ehanc::test results;
   std::array test1{4, 9, 16, 25};
@@ -121,7 +121,7 @@ ehanc::test test_for_each_all_n()
   return results;
 }
 
-ehanc::test test_for_each_both()
+auto test_for_each_both() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test_input_1{};
@@ -146,7 +146,7 @@ ehanc::test test_for_each_both()
   return results;
 }
 
-ehanc::test test_for_each_both_n()
+auto test_for_each_both_n() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test_input_1{};

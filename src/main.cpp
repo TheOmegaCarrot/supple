@@ -14,19 +14,19 @@ auto peeler(Ts...)
 }
 
 template <typename... Ts>
-bool uniform(Ts...)
+auto uniform(Ts...) -> bool
 {
   return ehanc::is_pack_uniform_v<Ts...>;
 }
 
 template <typename... Ts>
-std::size_t sizer(Ts...)
+auto sizer(Ts...) -> std::size_t
 {
   return ehanc::pack_size_v<Ts...>;
 }
 
-int main([[maybe_unused]] const int argc,
-         [[maybe_unused]] const char* const* const argv)
+auto main([[maybe_unused]] const int argc,
+         [[maybe_unused]] const char* const* const argv) -> int
 {
 
   std::cout << std::boolalpha
@@ -56,7 +56,7 @@ struct loud {
     std::cout << "COPY" << '\n';
   }
 
-  loud& operator=(const loud&) = default;
+  auto operator=(const loud&) -> loud& = default;
 
   loud(loud&& src) noexcept
       : m_val{src.m_val}
@@ -64,9 +64,9 @@ struct loud {
     std::cout << "MOVE" << '\n';
   }
 
-  loud& operator=(loud&&) noexcept = default;
+  auto operator=(loud&&) noexcept -> loud& = default;
 
-  int operator()() const
+  auto operator()() const -> int
   {
     std::cout << "EVAL" << '\n';
     return m_val;

@@ -8,7 +8,7 @@
 #include "utils/etc.hpp"
 #include "utils/lazy.hpp"
 
-ehanc::test test_all_pass_cont()
+auto test_all_pass_cont() -> ehanc::test
 {
   ehanc::test results;
   std::vector<int> yes{1, 2, 3, 4, 2, 3};
@@ -23,7 +23,7 @@ ehanc::test test_all_pass_cont()
   return results;
 }
 
-ehanc::test test_all_pass_itr()
+auto test_all_pass_itr() -> ehanc::test
 {
   ehanc::test results;
   std::vector<int> yes{1, 2, 3, 4, 2, 3};
@@ -38,7 +38,7 @@ ehanc::test test_all_pass_itr()
   return results;
 }
 
-ehanc::test test_min_size()
+auto test_min_size() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1{};
@@ -56,8 +56,8 @@ struct copy_counter {
   copy_counter()                               = default;
   ~copy_counter()                              = default;
   copy_counter(copy_counter&&)                 = default;
-  copy_counter& operator=(const copy_counter&) = default;
-  copy_counter& operator=(copy_counter&&)      = default;
+  auto operator=(const copy_counter&) -> copy_counter& = default;
+  auto operator=(copy_counter&&) -> copy_counter&      = default;
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int copy_count;
@@ -71,7 +71,7 @@ struct copy_counter {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 int copy_counter::copy_count{0};
 
-ehanc::test test_explicit_copy()
+auto test_explicit_copy() -> ehanc::test
 {
   ehanc::test results;
   copy_counter test;
@@ -102,7 +102,7 @@ ehanc::test test_explicit_copy()
   return results;
 }
 
-ehanc::test test_size_t_literals()
+auto test_size_t_literals() -> ehanc::test
 {
   ehanc::test results;
 

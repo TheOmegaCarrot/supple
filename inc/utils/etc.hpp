@@ -22,8 +22,8 @@ namespace ehanc {
  */
 /* }}} */
 template <typename Container, typename Predicate>
-bool all_pass(const Container& cont,
-              Predicate pred) noexcept(noexcept(pred(*std::cbegin(cont))))
+auto all_pass(const Container& cont,
+              Predicate pred) noexcept(noexcept(pred(*std::cbegin(cont)))) -> bool
 {
   bool check{true};
   std::for_each(
@@ -50,8 +50,8 @@ bool all_pass(const Container& cont,
  */
 /* }}} */
 template <typename Itr, typename Predicate>
-bool all_pass(Itr begin, const Itr end,
-              Predicate pred) noexcept(noexcept(pred(*begin)))
+auto all_pass(Itr begin, const Itr end,
+              Predicate pred) noexcept(noexcept(pred(*begin))) -> bool
 {
   bool check{true};
   std::for_each(begin, end, [&pred, &check](const auto& i) {
@@ -73,7 +73,7 @@ bool all_pass(Itr begin, const Itr end,
  */
 /* }}} */
 template <typename Container>
-constexpr std::size_t min_size(const Container& cont) noexcept
+constexpr auto min_size(const Container& cont) noexcept -> std::size_t
 {
   return cont.size();
 }
@@ -99,8 +99,8 @@ constexpr std::size_t min_size(const Container& cont) noexcept
  */
 /* }}} */
 template <typename Container, typename... Containers>
-constexpr std::size_t min_size(const Container& cont,
-                               const Containers&... conts) noexcept
+constexpr auto min_size(const Container& cont,
+                               const Containers&... conts) noexcept -> std::size_t
 {
   return std::min(::ehanc::min_size(cont), ::ehanc::min_size(conts...));
 }
@@ -116,8 +116,8 @@ constexpr std::size_t min_size(const Container& cont,
  */
 /* }}} */
 template <typename T>
-[[nodiscard]] constexpr T
-explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>)
+[[nodiscard]] constexpr auto
+explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 {
   return t;
 }

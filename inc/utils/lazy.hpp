@@ -49,7 +49,7 @@ private:
    * needed.
    */
   /* }}} */
-  mutable std::optional<RetType> m_value;
+  mutable std::optional<RetType> m_value{};
 
 public:
 
@@ -70,7 +70,6 @@ public:
   // NOLINTNEXTLINE(bugprone-forwarding-reference-overload)
   explicit constexpr lazy(Func&& func) noexcept
       : m_func{std::forward<Func>(func)}
-      , m_value{}
   {}
 
   /* {{{ doc */
@@ -85,7 +84,7 @@ public:
    * Weird to copy.
    */
   /* }}} */
-  constexpr lazy& operator=(const lazy& rhs) noexcept = delete;
+  constexpr auto operator=(const lazy& rhs) noexcept -> lazy& = delete;
 
   /* {{{ doc */
   /**
@@ -99,7 +98,7 @@ public:
    * Straightforward to move.
    */
   /* }}} */
-  constexpr lazy& operator=(lazy&& rhs) noexcept = default;
+  constexpr auto operator=(lazy&& rhs) noexcept -> lazy& = default;
 
   /* {{{ doc */
   /**
@@ -128,7 +127,7 @@ public:
     return m_func;
   }
 
-  [[nodiscard]] constexpr bool has_value() const noexcept
+  [[nodiscard]] constexpr auto has_value() const noexcept -> bool
   {
     return m_value.has_value();
   }

@@ -5,7 +5,7 @@
 #include <numeric>
 #include <vector>
 
-ehanc::test test_forward_distance()
+auto test_forward_distance() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test{1, 2, 3, 4, 5};
@@ -16,7 +16,7 @@ ehanc::test test_forward_distance()
   return results;
 }
 
-ehanc::test test_last()
+auto test_last() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1{};
@@ -32,7 +32,7 @@ ehanc::test test_last()
   return results;
 }
 
-ehanc::test test_clast()
+auto test_clast() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1{};
@@ -48,7 +48,7 @@ ehanc::test test_clast()
   return results;
 }
 
-ehanc::test test_sequence_iterator()
+auto test_sequence_iterator() -> ehanc::test
 {
   ehanc::test results;
 
@@ -76,7 +76,7 @@ ehanc::test test_sequence_iterator()
   return results;
 }
 
-ehanc::test test_sequence()
+auto test_sequence() -> ehanc::test
 {
   ehanc::test results;
 
@@ -93,7 +93,7 @@ ehanc::test test_sequence()
   return results;
 }
 
-ehanc::test test_generative_iterator()
+auto test_generative_iterator() -> ehanc::test
 {
   ehanc::test results;
 
@@ -114,7 +114,7 @@ ehanc::test test_generative_iterator()
   return results;
 }
 
-ehanc::test test_generative_sequence()
+auto test_generative_sequence() -> ehanc::test
 {
   ehanc::test results;
 

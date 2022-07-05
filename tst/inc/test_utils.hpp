@@ -46,16 +46,16 @@ public:
 
       m_cases.push_back(detail.str());
     } else {
-      m_cases.push_back("");
+      m_cases.emplace_back("");
     }
   }
 
-  inline const std::vector<std::string>& cases()
+  inline auto cases() -> const std::vector<std::string>&
   {
     return m_cases;
   }
 
-  inline bool pass() const
+  [[nodiscard]] inline auto pass() const -> bool
   {
     return m_pass;
   }

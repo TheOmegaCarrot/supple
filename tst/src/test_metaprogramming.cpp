@@ -3,7 +3,7 @@
 
 #include "utils/lazy.hpp"
 
-ehanc::test test_sum_type()
+auto test_sum_type() -> ehanc::test
 {
   ehanc::test results;
 
@@ -59,7 +59,7 @@ static_assert(std::is_same_v<
                   ehanc::sum_type_t<short, short, short, short, int>, int>,
               "short + short + short + short + int == int");
 
-ehanc::test test_type_identity()
+auto test_type_identity() -> ehanc::test
 {
   ehanc::test results;
 
@@ -168,7 +168,7 @@ ehanc::test test_type_identity()
   return results;
 }
 
-ehanc::test test_is_type_in_pack()
+auto test_is_type_in_pack() -> ehanc::test
 {
   ehanc::test results;
 
@@ -196,7 +196,7 @@ static_assert(ehanc::is_type_in_pack_v<int, int, int, int>);
 static_assert(ehanc::is_type_in_pack_v<int, int>);
 static_assert(not ehanc::is_type_in_pack_v<int, char>);
 
-ehanc::test test_peel_first()
+auto test_peel_first() -> ehanc::test
 {
   ehanc::test results;
 
@@ -223,7 +223,7 @@ static_assert(
 static_assert(
     std::is_same_v<ehanc::peel_first_t<char, int, int, int>, char>);
 
-ehanc::test test_peel_last()
+auto test_peel_last() -> ehanc::test
 {
   ehanc::test results;
 
@@ -248,7 +248,7 @@ static_assert(
 static_assert(
     std::is_same_v<ehanc::peel_last_t<int, int, int, char>, char>);
 
-ehanc::test test_is_pack_uniform()
+auto test_is_pack_uniform() -> ehanc::test
 {
   ehanc::test results;
 
@@ -284,7 +284,7 @@ static_assert(ehanc::is_pack_uniform_v<int, int>);
 static_assert(not ehanc::is_pack_uniform_v<int, char>);
 static_assert(ehanc::is_pack_uniform_v<int>);
 
-ehanc::test test_pack_size()
+auto test_pack_size() -> ehanc::test
 {
   ehanc::test results;
 

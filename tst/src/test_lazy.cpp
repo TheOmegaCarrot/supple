@@ -77,6 +77,20 @@ ehanc::test test_is_lazy()
   return results;
 }
 
+static_assert(ehanc::is_lazy_v<ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_v<const ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_v<volatile ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_v<const volatile ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_v<ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_v<const ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_v<volatile ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_v<ehanc::lazy<int>&&>);
+static_assert(ehanc::is_lazy_v<const ehanc::lazy<int>&&>);
+static_assert(ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>);
+static_assert(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_v<int>);
+
 ehanc::test test_is_lazy_of()
 {
   ehanc::test results;
@@ -127,6 +141,36 @@ ehanc::test test_is_lazy_of()
 
   return results;
 }
+
+static_assert(ehanc::is_lazy_of_v<int, ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>>);
+static_assert(ehanc::is_lazy_of_v<int, ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&>);
+static_assert(ehanc::is_lazy_of_v<int, ehanc::lazy<int>&&>);
+static_assert(ehanc::is_lazy_of_v<int, const ehanc::lazy<int>&&>);
+static_assert(ehanc::is_lazy_of_v<int, volatile ehanc::lazy<int>&&>);
+static_assert(ehanc::is_lazy_of_v<int, const volatile ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_of_v<char, ehanc::lazy<int>>);
+static_assert(not ehanc::is_lazy_of_v<char, const ehanc::lazy<int>>);
+static_assert(not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>>);
+static_assert(
+    not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>>);
+static_assert(not ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>);
+static_assert(
+    not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_of_v<char, ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_of_v<char, const ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_of_v<char, volatile ehanc::lazy<int>&&>);
+static_assert(
+    not ehanc::is_lazy_of_v<char, const volatile ehanc::lazy<int>&&>);
+static_assert(not ehanc::is_lazy_of_v<int, int>);
+static_assert(not ehanc::is_lazy_of_v<int, char>);
 
 ehanc::test test_lazy_inner_type()
 {
@@ -227,6 +271,63 @@ ehanc::test test_lazy_inner_type()
 
   return results;
 }
+
+static_assert(
+    std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>>>);
+static_assert(
+    std::is_same_v<int, ehanc::lazy_inner_type_t<const ehanc::lazy<int>>>);
+static_assert(std::is_same_v<
+              int, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>>);
+static_assert(
+    std::is_same_v<
+        int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>>);
+static_assert(
+    std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>&>>);
+static_assert(std::is_same_v<
+              int, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>>);
+static_assert(std::is_same_v<
+              int, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>>);
+static_assert(
+    std::is_same_v<
+        int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&>>);
+static_assert(
+    std::is_same_v<int, ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>>);
+static_assert(std::is_same_v<
+              int, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>>);
+static_assert(std::is_same_v<
+              int, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>);
+static_assert(
+    std::is_same_v<
+        int, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&&>>);
+static_assert(
+    not std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>>>);
+static_assert(not std::is_same_v<
+              char, ehanc::lazy_inner_type_t<const ehanc::lazy<int>>>);
+static_assert(not std::is_same_v<
+              char, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>>>);
+static_assert(
+    not std::is_same_v<
+        char, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>>>);
+static_assert(
+    not std::is_same_v<char, ehanc::lazy_inner_type_t<ehanc::lazy<int>&>>);
+static_assert(not std::is_same_v<
+              char, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&>>);
+static_assert(not std::is_same_v<
+              char, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&>>);
+static_assert(
+    not std::is_same_v<
+        char, ehanc::lazy_inner_type_t<const volatile ehanc::lazy<int>&>>);
+static_assert(not std::is_same_v<
+              char, ehanc::lazy_inner_type_t<ehanc::lazy<int>&&>>);
+static_assert(not std::is_same_v<
+              char, ehanc::lazy_inner_type_t<const ehanc::lazy<int>&&>>);
+static_assert(
+    not std::is_same_v<
+        char, ehanc::lazy_inner_type_t<volatile ehanc::lazy<int>&&>>);
+static_assert(
+    not std::is_same_v<char, ehanc::lazy_inner_type_t<
+                                 const volatile ehanc::lazy<int>&&>>);
+static_assert(std::is_same_v<int, ehanc::lazy_inner_type_t<int>>);
 
 void test_lazy()
 {

@@ -23,11 +23,11 @@ ehanc::test test_sum_type()
       std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>, true,
       "ehanc::lazy<int> + int == int");
   results.add_case(std::is_same_v<ehanc::sum_type_t<int, short>, short>,
-                   false, "int + short == short");
+                   false, "int + short == int");
   results.add_case(std::is_same_v<ehanc::sum_type_t<double, int>, int>,
-                   false, "double + int == int");
+                   false, "double + int == double");
   results.add_case(std::is_same_v<ehanc::sum_type_t<char, int>, char>,
-                   false, "char + int == char");
+                   false, "char + int == int");
   results.add_case(
       std::is_same_v<ehanc::sum_type_t<short, short, short, short, int>,
                      int>,
@@ -35,6 +35,29 @@ ehanc::test test_sum_type()
 
   return results;
 }
+
+static_assert(std::is_same_v<ehanc::sum_type_t<int, int>, int>,
+              "int + int == int");
+static_assert(std::is_same_v<ehanc::sum_type_t<short, short>, int>,
+              "short + short == int");
+static_assert(std::is_same_v<ehanc::sum_type_t<double, double>, double>,
+              "double + double == double");
+static_assert(std::is_same_v<ehanc::sum_type_t<double, int>, double>,
+              "double + int == double");
+static_assert(std::is_same_v<ehanc::sum_type_t<double, float>, double>,
+              "double + float == double");
+static_assert(
+    std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>,
+    "ehanc::lazy<int> + int == int");
+static_assert(std::is_same_v<ehanc::sum_type_t<int, short>, int>,
+              "int + short == int");
+static_assert(std::is_same_v<ehanc::sum_type_t<double, int>, double>,
+              "double + int == double");
+static_assert(std::is_same_v<ehanc::sum_type_t<char, int>, int>,
+              "char + int == int");
+static_assert(std::is_same_v<
+                  ehanc::sum_type_t<short, short, short, short, int>, int>,
+              "short + short + short + short + int == int");
 
 ehanc::test test_type_identity()
 {
@@ -163,6 +186,16 @@ ehanc::test test_is_type_in_pack()
   return results;
 }
 
+static_assert(ehanc::is_type_in_pack_v<int, char, bool, int>);
+static_assert(ehanc::is_type_in_pack_v<int, int, bool, int>);
+static_assert(
+    not ehanc::is_type_in_pack_v<int, char, bool, ehanc::lazy<int>>);
+static_assert(not ehanc::is_type_in_pack_v<int, char, bool, char, char,
+                                           char, float, double>);
+static_assert(ehanc::is_type_in_pack_v<int, int, int, int>);
+static_assert(ehanc::is_type_in_pack_v<int, int>);
+static_assert(not ehanc::is_type_in_pack_v<int, char>);
+
 ehanc::test test_peel_first()
 {
   ehanc::test results;
@@ -181,6 +214,15 @@ ehanc::test test_peel_first()
   return results;
 }
 
+static_assert(
+    std::is_same_v<ehanc::peel_first_t<int, char, char, char>, int>);
+static_assert(
+    std::is_same_v<ehanc::peel_first_t<int, int, int, int>, int>);
+static_assert(
+    std::is_same_v<ehanc::peel_first_t<int, char, int, int>, int>);
+static_assert(
+    std::is_same_v<ehanc::peel_first_t<char, int, int, int>, char>);
+
 ehanc::test test_peel_last()
 {
   ehanc::test results;
@@ -197,6 +239,14 @@ ehanc::test test_peel_last()
 
   return results;
 }
+
+static_assert(
+    std::is_same_v<ehanc::peel_last_t<char, char, char, int>, int>);
+static_assert(std::is_same_v<ehanc::peel_last_t<int, int, int, int>, int>);
+static_assert(
+    std::is_same_v<ehanc::peel_last_t<int, char, int, int>, int>);
+static_assert(
+    std::is_same_v<ehanc::peel_last_t<int, int, int, char>, char>);
 
 ehanc::test test_is_pack_uniform()
 {
@@ -223,6 +273,17 @@ ehanc::test test_is_pack_uniform()
   return results;
 }
 
+static_assert(ehanc::is_pack_uniform_v<int, int, int, int, int>);
+static_assert(not ehanc::is_pack_uniform_v<int, char, int, int, int>);
+static_assert(not ehanc::is_pack_uniform_v<int, int, int, int, char>);
+static_assert(not ehanc::is_pack_uniform_v<int, int, int, char, int, int>);
+static_assert(not ehanc::is_pack_uniform_v<int, bool, bool, bool, bool>);
+static_assert(not ehanc::is_pack_uniform_v<bool, bool, int, bool, bool>);
+static_assert(not ehanc::is_pack_uniform_v<bool, bool, bool, bool, int>);
+static_assert(ehanc::is_pack_uniform_v<int, int>);
+static_assert(not ehanc::is_pack_uniform_v<int, char>);
+static_assert(ehanc::is_pack_uniform_v<int>);
+
 ehanc::test test_pack_size()
 {
   ehanc::test results;
@@ -237,6 +298,12 @@ ehanc::test test_pack_size()
 
   return results;
 }
+
+static_assert(ehanc::pack_size_v<int> == 1);
+static_assert(ehanc::pack_size_v<int, char> == 2);
+static_assert(ehanc::pack_size_v<int, bool, float> == 3);
+static_assert(ehanc::pack_size_v<int, double, long, short> == 4);
+static_assert(ehanc::pack_size_v<int, char, bool, int, int> == 5);
 
 void test_metaprogramming()
 {

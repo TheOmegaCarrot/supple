@@ -26,7 +26,7 @@ auto sizer(Ts...) -> std::size_t
 }
 
 auto main([[maybe_unused]] const int argc,
-         [[maybe_unused]] const char* const* const argv) -> int
+          [[maybe_unused]] const char* const* const argv) -> int
 {
 
   std::cout << std::boolalpha
@@ -34,6 +34,8 @@ auto main([[maybe_unused]] const int argc,
             << uniform() << '\n'
             << sizer() << '\n'
             << '\n';
+
+  lazy_demo();
 
   return 0;
 }
@@ -46,7 +48,7 @@ struct loud {
 
   ~loud() = default;
 
-  loud(int val)
+  explicit loud(int val)
       : m_val{val}
   {}
 

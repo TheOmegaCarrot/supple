@@ -53,9 +53,9 @@ auto test_min_size() -> ehanc::test
 }
 
 struct copy_counter {
-  copy_counter()                               = default;
-  ~copy_counter()                              = default;
-  copy_counter(copy_counter&&)                 = default;
+  copy_counter()                                       = default;
+  ~copy_counter()                                      = default;
+  copy_counter(copy_counter&&)                         = default;
   auto operator=(const copy_counter&) -> copy_counter& = default;
   auto operator=(copy_counter&&) -> copy_counter&      = default;
 

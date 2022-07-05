@@ -23,7 +23,8 @@ namespace ehanc {
 /* }}} */
 template <typename Container, typename Predicate>
 auto all_pass(const Container& cont,
-              Predicate pred) noexcept(noexcept(pred(*std::cbegin(cont)))) -> bool
+              Predicate pred) noexcept(noexcept(pred(*std::cbegin(cont))))
+    -> bool
 {
   bool check{true};
   std::for_each(
@@ -100,7 +101,7 @@ constexpr auto min_size(const Container& cont) noexcept -> std::size_t
 /* }}} */
 template <typename Container, typename... Containers>
 constexpr auto min_size(const Container& cont,
-                               const Containers&... conts) noexcept -> std::size_t
+                        const Containers&... conts) noexcept -> std::size_t
 {
   return std::min(::ehanc::min_size(cont), ::ehanc::min_size(conts...));
 }

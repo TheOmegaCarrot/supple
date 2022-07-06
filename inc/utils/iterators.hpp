@@ -116,7 +116,7 @@ constexpr void decrement(T& t)
  */
 /* }}} */
 template <typename T>
-class sequence_iterator
+class sequence_iterator final
 {
 public:
 
@@ -263,7 +263,7 @@ sequence_iterator(T) -> sequence_iterator<std::decay_t<T>>;
  */
 /* }}} */
 template <typename T>
-class sequence
+class sequence final
 {
 public:
 
@@ -402,7 +402,7 @@ sequence(T, T) -> sequence<std::decay_t<T>>;
  */
 /* }}} */
 template <typename T>
-class generative_iterator
+class generative_iterator final
 {
 public:
 
@@ -590,7 +590,7 @@ generative_iterator(G, S)
     -> generative_iterator<decltype(*std::declval<G>())>;
 
 template <typename T>
-class generative_sequence
+class generative_sequence final
 {
 public:
 

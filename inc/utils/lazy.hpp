@@ -33,7 +33,7 @@ namespace ehanc {
  */
 /* }}} */
 template <typename RetType>
-class lazy
+class lazy final
 {
 private:
 

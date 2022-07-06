@@ -317,6 +317,7 @@ auto test_is_iterable() -> ehanc::test
   results.add_case(ehanc::is_iterable_v<std::vector<int>>, true);
   results.add_case(ehanc::is_iterable_v<std::list<int>>, true);
   results.add_case(ehanc::is_iterable_v<std::array<int, 5>>, true);
+  // NOLINTNEXTLINE(*-avoid-c-arrays)
   results.add_case(ehanc::is_iterable_v<int[5]>, true);
   results.add_case(ehanc::is_iterable_v<int>, false);
   results.add_case(ehanc::is_iterable_v<char>, false);
@@ -328,6 +329,7 @@ auto test_is_iterable() -> ehanc::test
 static_assert(ehanc::is_iterable_v<std::vector<int>>);
 static_assert(ehanc::is_iterable_v<std::list<int>>);
 static_assert(ehanc::is_iterable_v<std::array<int, 5>>);
+// NOLINTNEXTLINE(*-avoid-c-arrays)
 static_assert(ehanc::is_iterable_v<int[5]>);
 static_assert(not ehanc::is_iterable_v<int>);
 static_assert(not ehanc::is_iterable_v<char>);

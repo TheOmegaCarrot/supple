@@ -156,14 +156,17 @@ public:
   ~sequence_iterator() noexcept(
       std::is_nothrow_destructible_v<value_type>) = default;
 
-  sequence_iterator(const sequence_iterator&) noexcept(
-      std::is_nothrow_copy_constructible_v<value_type>) = default;
+  // the noexcept freaks out older gcc versions
+  sequence_iterator(const sequence_iterator&) /* noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) */
+      = default;
 
   sequence_iterator(sequence_iterator&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  auto operator=(const sequence_iterator&) noexcept(
-      std::is_nothrow_copy_assignable_v<value_type>)
+  // the noexcept freaks out older gcc versions
+  auto operator=(const sequence_iterator&) /* noexcept(
+      std::is_nothrow_copy_assignable_v<value_type>) */
       -> sequence_iterator& = default;
 
   auto operator=(sequence_iterator&&) noexcept(
@@ -309,14 +312,17 @@ public:
   ~sequence() noexcept(std::is_nothrow_destructible_v<value_type>) =
       default;
 
-  sequence(const sequence&) noexcept(
-      std::is_nothrow_copy_constructible_v<value_type>) = default;
+  // the noexcept freaks out older gcc versions
+  sequence(const sequence&) /* noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) */
+      = default;
 
   sequence(sequence&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  auto operator=(const sequence&) noexcept(
-      std::is_nothrow_copy_assignable_v<value_type>)
+  // the noexcept freaks out older gcc versions
+  auto operator=(const sequence&) /* noexcept(
+      std::is_nothrow_copy_assignable_v<value_type>) */
       -> sequence& = default;
 
   auto operator=(sequence&&) noexcept(
@@ -478,8 +484,10 @@ public:
   ~generative_iterator() noexcept(
       std::is_nothrow_destructible_v<value_type>) = default;
 
-  generative_iterator(const generative_iterator&) noexcept(
-      std::is_nothrow_copy_constructible_v<value_type>) = default;
+  // the noexcept freaks out older gcc versions
+  generative_iterator(const generative_iterator&) /* noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) */
+      = default;
 
   generative_iterator(generative_iterator&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
@@ -628,14 +636,17 @@ public:
   ~generative_sequence() noexcept(
       std::is_nothrow_destructible_v<value_type>) = default;
 
-  generative_sequence(const generative_sequence&) noexcept(
-      std::is_nothrow_copy_constructible_v<value_type>) = default;
+  // the noexcept freaks out older gcc versions
+  generative_sequence(const generative_sequence&) /* noexcept(
+      std::is_nothrow_copy_constructible_v<value_type>) */
+      = default;
 
   generative_sequence(generative_sequence&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  auto operator=(const generative_sequence&) noexcept(
-      std::is_nothrow_copy_assignable_v<value_type>)
+  // the noexcept freaks out older gcc versions
+  auto operator=(const generative_sequence&) /* noexcept(
+      std::is_nothrow_copy_assignable_v<value_type>) */
       -> generative_sequence& = default;
 
   auto operator=(generative_sequence&&) noexcept(

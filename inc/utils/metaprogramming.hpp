@@ -1,6 +1,7 @@
 #ifndef EHANC_UTILS_METAPROGRAMMING_HPP
 #define EHANC_UTILS_METAPROGRAMMING_HPP
 
+#include <iterator>
 #include <type_traits>
 
 namespace ehanc {
@@ -198,6 +199,17 @@ struct pack_size
 template <typename... Pack>
 constexpr inline const std::size_t pack_size_v =
     ::ehanc::pack_size<Pack...>::value;
+
+template <typename T, typename = void>
+struct is_iterable : std::false_type {};
+
+template <typename T>
+struct is_iterable<T,
+                   std::void_t<decltype(std::begin(std::declval<T&>()))>>
+    : std::true_type {};
+
+template <typename T>
+constexpr inline const bool is_iterable_v = ::ehanc::is_iterable<T>::value;
 
 } // namespace ehanc
 

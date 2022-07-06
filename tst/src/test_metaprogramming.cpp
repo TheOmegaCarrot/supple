@@ -1,3 +1,8 @@
+#include <array>
+#include <list>
+#include <type_traits>
+#include <vector>
+
 #include "test_metaprogramming.h"
 #include "test_utils.hpp"
 
@@ -305,6 +310,29 @@ static_assert(ehanc::pack_size_v<int, bool, float> == 3);
 static_assert(ehanc::pack_size_v<int, double, long, short> == 4);
 static_assert(ehanc::pack_size_v<int, char, bool, int, int> == 5);
 
+auto test_is_iterable() -> ehanc::test
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_iterable_v<std::vector<int>>, true);
+  results.add_case(ehanc::is_iterable_v<std::list<int>>, true);
+  results.add_case(ehanc::is_iterable_v<std::array<int, 5>>, true);
+  results.add_case(ehanc::is_iterable_v<int[5]>, true);
+  results.add_case(ehanc::is_iterable_v<int>, false);
+  results.add_case(ehanc::is_iterable_v<char>, false);
+  results.add_case(ehanc::is_iterable_v<bool>, false);
+
+  return results;
+}
+
+static_assert(ehanc::is_iterable_v<std::vector<int>>);
+static_assert(ehanc::is_iterable_v<std::list<int>>);
+static_assert(ehanc::is_iterable_v<std::array<int, 5>>);
+static_assert(ehanc::is_iterable_v<int[5]>);
+static_assert(not ehanc::is_iterable_v<int>);
+static_assert(not ehanc::is_iterable_v<char>);
+static_assert(not ehanc::is_iterable_v<bool>);
+
 void test_metaprogramming()
 {
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
@@ -314,4 +342,5 @@ void test_metaprogramming()
   ehanc::run_test("ehanc::peel_last", &test_peel_last);
   ehanc::run_test("ehanc::is_pack_uniform", &test_is_pack_uniform);
   ehanc::run_test("ehanc::pack_size", &test_pack_size);
+  ehanc::run_test("ehanc::is_iterable", &test_is_iterable);
 }

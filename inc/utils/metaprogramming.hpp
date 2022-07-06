@@ -7,7 +7,8 @@ namespace ehanc {
 
 /* {{{ doc */
 /**
- * @brief Identity metafunction. This version is unneeded if using >=C++20
+ * @brief Identity metafunction. This version is redundant if using
+ * >=C++20, as it is provided by the standard.
  */
 /* }}} */
 template <typename T>

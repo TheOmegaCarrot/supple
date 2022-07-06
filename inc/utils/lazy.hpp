@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "utils/metaprogramming.hpp"
+
 namespace ehanc {
 
 /* {{{ doc */
@@ -280,9 +282,7 @@ namespace impl {
  */
 /* }}} */
 template <typename T>
-struct lazy_inner_type_impl {
-  using type = T;
-};
+struct lazy_inner_type_impl : ::ehanc::type_identity<T> {};
 
 /* {{{ doc */
 /**
@@ -293,9 +293,7 @@ struct lazy_inner_type_impl {
  */
 /* }}} */
 template <typename T>
-struct lazy_inner_type_impl<lazy<T>> {
-  using type = T;
-};
+struct lazy_inner_type_impl<lazy<T>> : ::ehanc::type_identity<T> {};
 } // namespace impl
 
 /* {{{ doc */

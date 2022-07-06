@@ -7,26 +7,6 @@ namespace ehanc {
 
 /* {{{ doc */
 /**
- * @brief Metafunction to determine the type resulting from
- * addition of the parameter types.
- */
-/* }}} */
-template <typename... Ts>
-struct sum_type {
-  using type = decltype((... + std::declval<Ts>()));
-};
-
-/* {{{ doc */
-/**
- * @brief Helper alias template to make using the `sum_type`
- * metafunction less verbose and cumbersome.
- */
-/* }}} */
-template <typename... Ts>
-using sum_type_t = typename ::ehanc::sum_type<Ts...>::type;
-
-/* {{{ doc */
-/**
  * @brief Identity metafunction. This version is unneeded if using >=C++20
  */
 /* }}} */
@@ -43,6 +23,25 @@ struct type_identity {
 /* }}} */
 template <typename T>
 using type_identity_t = typename ::ehanc::type_identity<T>::type;
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine the type resulting from
+ * addition of the parameter types.
+ */
+/* }}} */
+template <typename... Ts>
+struct sum_type
+    : ::ehanc::type_identity<decltype((... + std::declval<Ts>()))> {};
+
+/* {{{ doc */
+/**
+ * @brief Helper alias template to make using the `sum_type`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename... Ts>
+using sum_type_t = typename ::ehanc::sum_type<Ts...>::type;
 
 /* {{{ doc */
 /**
@@ -80,9 +79,7 @@ constexpr inline const bool is_type_in_pack_v =
  */
 /* }}} */
 template <typename... Pack>
-struct peel_first {
-  using type = void;
-};
+struct peel_first : ::ehanc::type_identity<void> {};
 
 /* {{{ doc */
 /**
@@ -91,9 +88,7 @@ struct peel_first {
  */
 /* }}} */
 template <typename First, typename... Pack>
-struct peel_first<First, Pack...> {
-  using type = First;
-};
+struct peel_first<First, Pack...> : ::ehanc::type_identity<First> {};
 
 /* {{{ doc */
 /**
@@ -111,9 +106,7 @@ using peel_first_t = typename ::ehanc::peel_first<Pack...>::type;
  */
 /* }}} */
 template <typename... Pack>
-struct peel_last {
-  using type = void;
-};
+struct peel_last : ::ehanc::type_identity<void> {};
 
 /* {{{ doc */
 /**
@@ -122,8 +115,8 @@ struct peel_last {
  */
 /* }}} */
 template <typename First, typename... Pack>
-struct peel_last<First, Pack...> {
-  using type = typename ::ehanc::peel_last<Pack...>::type;
+struct peel_last<First, Pack...>
+    : ::ehanc::type_identity<typename ::ehanc::peel_last<Pack...>::type> {
 };
 
 /* {{{ doc */
@@ -133,9 +126,7 @@ struct peel_last<First, Pack...> {
  */
 /* }}} */
 template <typename Last>
-struct peel_last<Last> {
-  using type = Last;
-};
+struct peel_last<Last> : ::ehanc::type_identity<Last> {};
 
 /* {{{ doc */
 /**
@@ -189,7 +180,6 @@ struct pack_size_impl
 /* }}} */
 template <typename T>
 struct pack_size_impl<T> : std::integral_constant<std::size_t, 1> {};
-
 } // namespace impl
 
 template <typename... Pack>

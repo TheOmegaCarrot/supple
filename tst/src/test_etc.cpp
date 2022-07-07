@@ -8,20 +8,6 @@
 #include "utils/etc.hpp"
 #include "utils/lazy.hpp"
 
-auto test_min_size() -> ehanc::test
-{
-  ehanc::test results;
-  std::array<int, 5> test1{};
-  std::array<int, 8> test2{};
-  std::array<int, 3> test3{};
-  std::array<int, 6> test4{};
-
-  results.add_case(ehanc::min_size(test1, test2, test3, test4),
-                   std::size_t{3});
-
-  return results;
-}
-
 struct copy_counter {
   copy_counter()                                       = default;
   ~copy_counter()                                      = default;
@@ -90,7 +76,6 @@ auto test_size_t_literals() -> ehanc::test
 
 void test_etc()
 {
-  ehanc::run_test("ehanc::min_size", &test_min_size);
   ehanc::run_test("ehanc::explicit_copy", &test_explicit_copy);
   ehanc::run_test("ehanc::literals::size_t_literal::operator\"\"_z",
                   &test_size_t_literals);

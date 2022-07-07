@@ -6,9 +6,52 @@
 #include <iterator>
 #include <utility>
 
-#include "utils/etc.hpp"
-
 namespace ehanc {
+
+/* {{{ doc */
+/**
+ * @brief Base case of recursive overload.
+ *
+ * @tparam Container Container which provides a `.size()`
+ * member function.
+ *
+ * @param cont Container whose size to query.
+ *
+ * @return Size of container `cont`.
+ */
+/* }}} */
+template <typename Container>
+constexpr auto min_size(const Container& cont) noexcept -> std::size_t
+{
+  return cont.size();
+}
+
+/* {{{ doc */
+/**
+ * @brief Returns size of smallest container provided.
+ * Calls size method internally.
+ *
+ * @tparam Container Container which provides a `.size()`
+ * member function.
+ *
+ * @tparam Containers Sequence of container types which all provide
+ * a `.size()` member function. Types may be mixed, so long as all
+ * `.size()` member functions return comparable types which can be
+ * passed to `std::min`.
+ *
+ * @param cont First container.
+ *
+ * @param conts Pack of remaining containers.
+ *
+ * @return Size of smallest container.
+ */
+/* }}} */
+template <typename Container, typename... Containers>
+constexpr auto min_size(const Container& cont,
+                        const Containers&... conts) noexcept -> std::size_t
+{
+  return std::min(::ehanc::min_size(cont), ::ehanc::min_size(conts...));
+}
 
 /* {{{ doc */
 /**

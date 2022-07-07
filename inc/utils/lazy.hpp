@@ -16,8 +16,8 @@ namespace ehanc {
  * this class will seamlessly and implicitly convert to the result
  * of calling the callable, but only call the callable a single time.
  *
- * @tparam RetType Return type of `m_func`. An `ehanc::lazy` is implicitly
- * convertible to the object of type `RetType` returned by `m_func`.
+ * @tparam T Return type of `m_func`. An `ehanc::lazy` is implicitly
+ * convertible to the object of type `value_type` returned by `m_func`.
  *
  * @code
  *
@@ -32,9 +32,18 @@ namespace ehanc {
  * @endcode
  */
 /* }}} */
-template <typename RetType>
+template <typename T>
 class lazy final
 {
+public:
+
+  /* {{{ doc */
+  /**
+   * @brief Type which the lazy object evaluates to.
+   */
+  /* }}} */
+  using value_type = T;
+
 private:
 
   /* {{{ doc */
@@ -43,7 +52,7 @@ private:
    * a useful value.
    */
   /* }}} */
-  mutable std::function<RetType()> m_func;
+  mutable std::function<value_type()> m_func;
 
   /* {{{ doc */
   /**
@@ -51,7 +60,7 @@ private:
    * needed.
    */
   /* }}} */
-  mutable std::optional<RetType> m_value{};
+  mutable std::optional<value_type> m_value{};
 
 public:
 
@@ -111,20 +120,13 @@ public:
 
   /* {{{ doc */
   /**
-   * @brief Type of contained value.
-   */
-  /* }}} */
-  using type = RetType;
-
-  /* {{{ doc */
-  /**
    * @brief Provides access to contained callable.
    *
    * @return Contained callable.
    */
   /* }}} */
   [[nodiscard]] constexpr auto func() const noexcept
-      -> std::add_lvalue_reference_t<std::function<RetType()>>
+      -> std::add_lvalue_reference_t<std::function<value_type()>>
   {
     return m_func;
   }
@@ -143,7 +145,7 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto get() const noexcept(noexcept(m_func()))
-      -> std::add_lvalue_reference_t<const RetType>
+      -> std::add_lvalue_reference_t<const value_type>
   {
     if ( not m_value.has_value() ) {
       m_value = m_func();
@@ -159,7 +161,7 @@ public:
    * @return Const reference to contained value.
    */
   /* }}} */
-  [[nodiscard]] constexpr operator const RetType&() const
+  [[nodiscard]] constexpr operator const value_type&() const
       noexcept(noexcept(m_func()))
   {
     return this->get();

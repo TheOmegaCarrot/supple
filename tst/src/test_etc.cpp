@@ -8,36 +8,6 @@
 #include "utils/etc.hpp"
 #include "utils/lazy.hpp"
 
-auto test_all_pass_cont() -> ehanc::test
-{
-  ehanc::test results;
-  std::vector<int> yes{1, 2, 3, 4, 2, 3};
-  std::array no{1, 2, 4, 9, 2, 3};
-  auto checker = [](const int i) -> bool { return i < 6; };
-
-  results.add_case(ehanc::all_pass(yes, checker), true,
-                   "Simple true case failed");
-  results.add_case(ehanc::all_pass(no, checker), false,
-                   "Simple false case failed");
-
-  return results;
-}
-
-auto test_all_pass_itr() -> ehanc::test
-{
-  ehanc::test results;
-  std::vector<int> yes{1, 2, 3, 4, 2, 3};
-  std::array no{1, 2, 4, 9, 2, 3};
-  auto checker = [](const int i) -> bool { return i < 6; };
-
-  results.add_case(ehanc::all_pass(yes.cbegin(), yes.cend(), checker),
-                   true, "Simple true case failed");
-  results.add_case(ehanc::all_pass(no.cbegin(), no.cend(), checker), false,
-                   "Simple false case failed");
-
-  return results;
-}
-
 auto test_min_size() -> ehanc::test
 {
   ehanc::test results;
@@ -120,8 +90,6 @@ auto test_size_t_literals() -> ehanc::test
 
 void test_etc()
 {
-  ehanc::run_test("ehanc::all_pass (container)", &test_all_pass_cont);
-  ehanc::run_test("ehanc::all_pass (iterators)", &test_all_pass_itr);
   ehanc::run_test("ehanc::min_size", &test_min_size);
   ehanc::run_test("ehanc::explicit_copy", &test_explicit_copy);
   ehanc::run_test("ehanc::literals::size_t_literal::operator\"\"_z",

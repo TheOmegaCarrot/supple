@@ -9,60 +9,6 @@ namespace ehanc {
 
 /* {{{ doc */
 /**
- * @brief Checks if all values in `cont` pass some predicate `func`.
- *
- * @tparam Container Container type which provides iterators.
- *
- * @tparam Predicate Unary function which takes the type contained in
- * `cont` and returns a bool.
- *
- * @param cont Container providing values to check.
- *
- * @param pred Condition to check all values in `cont` against.
- */
-/* }}} */
-template <typename Container, typename Predicate>
-auto all_pass(const Container& cont,
-              Predicate pred) noexcept(noexcept(pred(*std::cbegin(cont))))
-    -> bool
-{
-  bool check{true};
-  std::for_each(
-      cont.cbegin(), cont.cend(),
-      [&pred, &check](const auto& i) { check = check && pred(i); });
-  return check;
-}
-
-/* {{{ doc */
-/**
- * @brief Checks if all values in iterator range
- * pass some predicate `func`.
- *
- * @tparam Itr Iterator type.
- *
- * @tparam Predicate Unary function which takes the type pointed to by
- * the iterators and returns a bool.
- *
- * @param begin Begin iterator of range to check.
- *
- * @param end End iterator of range to check.
- *
- * @param pred Condition to check all values in cont against.
- */
-/* }}} */
-template <typename Itr, typename Predicate>
-auto all_pass(Itr begin, const Itr end,
-              Predicate pred) noexcept(noexcept(pred(*begin))) -> bool
-{
-  bool check{true};
-  std::for_each(begin, end, [&pred, &check](const auto& i) {
-    check = check && pred(i);
-  });
-  return check;
-}
-
-/* {{{ doc */
-/**
  * @brief Base case of recursive overload.
  *
  * @tparam Container Container which provides a `.size()`

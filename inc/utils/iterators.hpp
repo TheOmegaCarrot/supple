@@ -33,6 +33,10 @@ template <typename Itr>
                                               const Itr end) noexcept
     -> std::size_t
 {
+  if constexpr ( ::ehanc::is_random_access_v<Itr> ) {
+    return static_cast<std::size_t>(end - begin);
+  }
+
   std::size_t count{0};
   while ( begin != end ) {
     ++begin;

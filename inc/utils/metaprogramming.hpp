@@ -264,7 +264,7 @@ struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>())>,
 /* }}} */
 template <typename T>
 constexpr inline const bool is_bidirectional_v =
-    is_bidirectional<T>::value;
+    ::ehanc::is_bidirectional<T>::value;
 
 } // namespace ehanc
 

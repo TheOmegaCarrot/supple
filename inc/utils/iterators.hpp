@@ -6,6 +6,8 @@
 #include <iterator>
 #include <utility>
 
+#include "utils/metaprogramming.hpp"
+
 namespace ehanc {
 
 /* {{{ doc */
@@ -62,12 +64,21 @@ template <typename Iterable>
     return begin;
   }
 
-  std::size_t distance{::ehanc::forward_distance(begin, end) - 1};
-  for ( std::size_t i{0}; i != distance; ++i ) {
-    ++begin;
-  }
+  if constexpr ( ::ehanc::is_bidirectional_v<decltype(end)> ) {
+    return --end;
+  } else {
 
-  return begin;
+    if ( begin == end ) {
+      return begin;
+    }
+
+    std::size_t distance{::ehanc::forward_distance(begin, end) - 1};
+    for ( std::size_t i{0}; i != distance; ++i ) {
+      ++begin;
+    }
+
+    return begin;
+  }
 }
 
 /* {{{ doc */

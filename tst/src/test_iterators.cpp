@@ -24,10 +24,12 @@ auto test_last() -> ehanc::test
 
   std::array<int, 2> test2{2, 3};
   std::vector<int> test3;
+  std::forward_list<int> test4{1, 2, 3, 4};
 
   results.add_case(*ehanc::last(test1), 5);
   results.add_case(*ehanc::last(test2), 3);
   results.add_case(ehanc::last(test3) == std::begin(test3), true);
+  results.add_case(*ehanc::last(test4), 4);
 
   return results;
 }
@@ -40,10 +42,12 @@ auto test_clast() -> ehanc::test
 
   std::array<int, 2> test2{2, 3};
   std::vector<int> test3;
+  std::forward_list<int> test4{1, 2, 3, 4};
 
   results.add_case(*ehanc::clast(test1), 5);
   results.add_case(*ehanc::clast(test2), 3);
   results.add_case(ehanc::clast(test3) == std::cbegin(test3), true);
+  results.add_case(*ehanc::clast(test4), 4);
 
   return results;
 }

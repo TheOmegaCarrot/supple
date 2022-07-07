@@ -1,8 +1,13 @@
 #ifndef EHANC_UTILS_METAPROGRAMMING_HPP
 #define EHANC_UTILS_METAPROGRAMMING_HPP
 
+#include <deque>
+#include <forward_list>
 #include <iterator>
+#include <list>
+#include <queue>
 #include <type_traits>
+#include <vector>
 
 namespace ehanc {
 
@@ -200,16 +205,66 @@ template <typename... Pack>
 constexpr inline const std::size_t pack_size_v =
     ::ehanc::pack_size<Pack...>::value;
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type can be iterated over.
+ * Uses std::begin internally to determine this.
+ */
+/* }}} */
 template <typename T, typename = void>
 struct is_iterable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type can be iterated over.
+ * Uses std::begin internally to determine this. Specialization for true
+ * case.
+ */
+/* }}} */
 template <typename T>
 struct is_iterable<T,
                    std::void_t<decltype(std::begin(std::declval<T&>()))>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_iterable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T>
 constexpr inline const bool is_iterable_v = ::ehanc::is_iterable<T>::value;
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type supports pre-increment and
+ * pre-decrement operations. Intended for use with iterators.
+ */
+/* }}} */
+template <typename T, typename = void, typename = void>
+struct is_bidirectional : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type supports pre-increment and
+ * pre-decrement operations. Intended for use with iterators.
+ * Specialization for true case.
+ */
+/* }}} */
+template <typename T>
+struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>())>,
+                        std::void_t<decltype(--std::declval<T&>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_bidirectional`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T>
+constexpr inline const bool is_bidirectional_v =
+    is_bidirectional<T>::value;
 
 } // namespace ehanc
 

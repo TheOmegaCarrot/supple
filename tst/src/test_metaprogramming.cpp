@@ -357,6 +357,28 @@ static_assert(ehanc::is_bidirectional_v<std::vector<int>::iterator>);
 static_assert(ehanc::is_bidirectional_v<std::list<int>::iterator>);
 static_assert(ehanc::is_bidirectional_v<std::deque<int>::iterator>);
 
+auto test_is_random_access() -> ehanc::test
+{
+  ehanc::test results;
+
+  results.add_case(
+      ehanc::is_random_access_v<std::forward_list<int>::iterator>, false);
+  results.add_case(ehanc::is_random_access_v<std::vector<int>::iterator>,
+                   true);
+  results.add_case(ehanc::is_random_access_v<std::list<int>::iterator>,
+                   false);
+  results.add_case(ehanc::is_random_access_v<std::deque<int>::iterator>,
+                   true);
+
+  return results;
+}
+
+static_assert(
+    not ehanc::is_random_access_v<std::forward_list<int>::iterator>);
+static_assert(ehanc::is_random_access_v<std::vector<int>::iterator>);
+static_assert(not ehanc::is_random_access_v<std::list<int>::iterator>);
+static_assert(ehanc::is_random_access_v<std::deque<int>::iterator>);
+
 void test_metaprogramming()
 {
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
@@ -368,4 +390,5 @@ void test_metaprogramming()
   ehanc::run_test("ehanc::pack_size", &test_pack_size);
   ehanc::run_test("ehanc::is_iterable", &test_is_iterable);
   ehanc::run_test("ehanc::is_bidirectional", &test_is_bidirectional);
+  ehanc::run_test("ehanc::is_random_access", &test_is_random_access);
 }

@@ -266,6 +266,35 @@ template <typename T>
 constexpr inline const bool is_bidirectional_v =
     ::ehanc::is_bidirectional<T>::value;
 
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if an iterator is a
+ * random access iterator.
+ */
+/* }}} */
+template <typename T, typename = void, typename = void, typename = void,
+          typename = void, typename = void>
+struct is_random_access : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if an iterator is a
+ * random access iterator. Specialization for true case.
+ */
+/* }}} */
+template <typename T>
+struct is_random_access<
+    T, std::void_t<decltype(std::declval<T&>() += std::declval<int>())>,
+    std::void_t<decltype(std::declval<T&>() -= std::declval<int>())>,
+    std::void_t<decltype(std::declval<T&>() + std::declval<int>())>,
+    std::void_t<decltype(std::declval<T&>() - std::declval<int>())>,
+    std::void_t<decltype(std::declval<T&>() - std::declval<T&>())>>
+    : std::true_type {};
+
+template <typename T>
+constexpr inline const bool is_random_access_v =
+    ::ehanc::is_random_access<T>::value;
+
 } // namespace ehanc
 
 #endif

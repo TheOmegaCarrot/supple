@@ -12,41 +12,6 @@ namespace ehanc {
 
 /* {{{ doc */
 /**
- * @brief Computes distance between two iterators.
- * It is assumed `begin` is before `end`, meaning that incrementing
- * `begin` will eventually yield an iterator equal to `end`; if this
- * is not the case, behavior is undefined.
- *
- * @tparam Itr Iterator type satisfying only a minimal interface.
- * Simply being incrementable and equality-comparable is sufficient.
- *
- * @param begin Beginning iterator.
- *
- * @param end End iterator.
- *
- * @return Distance between begin and end. Distance being defined as
- * the number of times `begin` must be incremented to equal `end`.
- */
-/* }}} */
-template <typename Itr>
-[[nodiscard]] constexpr auto forward_distance(Itr begin,
-                                              const Itr end) noexcept
-    -> std::size_t
-{
-  if constexpr ( ::ehanc::is_random_access_v<Itr> ) {
-    return static_cast<std::size_t>(end - begin);
-  }
-
-  std::size_t count{0};
-  while ( begin != end ) {
-    ++begin;
-    ++count;
-  }
-  return count;
-}
-
-/* {{{ doc */
-/**
  * @brief Returns an iterator to the last element of the container.
  * In short, `++ehanc::last(container) == std::end(container)`
  *
@@ -76,7 +41,9 @@ template <typename Iterable>
       return begin;
     }
 
-    std::size_t distance{::ehanc::forward_distance(begin, end) - 1};
+    auto distance{static_cast<std::size_t>(std::distance(begin, end) - 1)};
+    static_assert(std::is_same_v<decltype(distance), std::size_t>);
+
     for ( std::size_t i{0}; i != distance; ++i ) {
       ++begin;
     }

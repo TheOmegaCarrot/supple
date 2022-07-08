@@ -8,22 +8,6 @@
 
 #include "utils/etc.hpp"
 
-auto test_forward_distance() -> ehanc::test
-{
-  ehanc::test results;
-  std::array<int, 5> test1{1, 2, 3, 4, 5};
-  std::forward_list<int> test2{1, 2, 3, 4, 5};
-
-  using namespace ehanc::literals::size_t_literal;
-
-  results.add_case(ehanc::forward_distance(test1.cbegin(), test1.cend()),
-                   5_z);
-  results.add_case(ehanc::forward_distance(test2.cbegin(), test2.cend()),
-                   5_z);
-
-  return results;
-}
-
 auto test_last() -> ehanc::test
 {
   ehanc::test results;
@@ -141,7 +125,6 @@ auto test_generative_sequence() -> ehanc::test
 
 void test_iterators()
 {
-  ehanc::run_test("ehanc::forward_distance", &test_forward_distance);
   ehanc::run_test("ehanc::last", &test_last);
   ehanc::run_test("ehanc::clast", &test_clast);
   ehanc::run_test("ehanc::sequence_iterator", &test_sequence_iterator);

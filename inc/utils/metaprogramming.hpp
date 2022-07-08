@@ -166,45 +166,6 @@ template <typename... Pack>
 constexpr inline const bool is_pack_uniform_v =
     ::ehanc::is_pack_uniform<Pack...>::value;
 
-namespace impl {
-/* {{{ doc */
-/**
- * @brief Incomplete implementation of a metafunction to get the size of
- * a pack.
- */
-/* }}} */
-template <typename T, typename... Pack>
-struct pack_size_impl
-    : std::integral_constant<
-          std::size_t, ::ehanc::impl::pack_size_impl<Pack...>::value + 1> {
-};
-
-/* {{{ doc */
-/**
- * @brief Incomplete implementation of a metafunction to get the size of
- * a pack. Specialization for base case.
- */
-/* }}} */
-template <typename T>
-struct pack_size_impl<T> : std::integral_constant<std::size_t, 1> {};
-} // namespace impl
-
-template <typename... Pack>
-struct pack_size
-    : std::integral_constant<
-          std::size_t,
-          ::ehanc::impl::pack_size_impl<void, Pack...>::value - 1> {};
-
-/* {{{ doc */
-/**
- * @brief Helper variable template to make using the `pack_size`
- * metafunction less verbose and cumbersome.
- */
-/* }}} */
-template <typename... Pack>
-constexpr inline const std::size_t pack_size_v =
-    ::ehanc::pack_size<Pack...>::value;
-
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type can be iterated over.

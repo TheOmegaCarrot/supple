@@ -19,12 +19,6 @@ auto uniform(Ts...) -> bool
   return ehanc::is_pack_uniform_v<Ts...>;
 }
 
-template <typename... Ts>
-auto sizer(Ts...) -> std::size_t
-{
-  return ehanc::pack_size_v<Ts...>;
-}
-
 auto main([[maybe_unused]] const int argc,
           [[maybe_unused]] const char* const* const argv) -> int
 {
@@ -32,7 +26,6 @@ auto main([[maybe_unused]] const int argc,
   std::cout << std::boolalpha
             << std::is_same_v<decltype(peeler()), void> << '\n'
             << uniform() << '\n'
-            << sizer() << '\n'
             << '\n';
 
   lazy_demo();

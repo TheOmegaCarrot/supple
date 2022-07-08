@@ -289,27 +289,6 @@ static_assert(ehanc::is_pack_uniform_v<int, int>);
 static_assert(not ehanc::is_pack_uniform_v<int, char>);
 static_assert(ehanc::is_pack_uniform_v<int>);
 
-auto test_pack_size() -> ehanc::test
-{
-  ehanc::test results;
-
-  results.add_case(ehanc::pack_size_v<int>, std::size_t{1});
-  results.add_case(ehanc::pack_size_v<int, char>, std::size_t{2});
-  results.add_case(ehanc::pack_size_v<int, bool, float>, std::size_t{3});
-  results.add_case(ehanc::pack_size_v<int, double, long, short>,
-                   std::size_t{4});
-  results.add_case(ehanc::pack_size_v<int, char, bool, int, int>,
-                   std::size_t{5});
-
-  return results;
-}
-
-static_assert(ehanc::pack_size_v<int> == 1);
-static_assert(ehanc::pack_size_v<int, char> == 2);
-static_assert(ehanc::pack_size_v<int, bool, float> == 3);
-static_assert(ehanc::pack_size_v<int, double, long, short> == 4);
-static_assert(ehanc::pack_size_v<int, char, bool, int, int> == 5);
-
 auto test_is_iterable() -> ehanc::test
 {
   ehanc::test results;
@@ -387,7 +366,6 @@ void test_metaprogramming()
   ehanc::run_test("ehanc::peel_first", &test_peel_first);
   ehanc::run_test("ehanc::peel_last", &test_peel_last);
   ehanc::run_test("ehanc::is_pack_uniform", &test_is_pack_uniform);
-  ehanc::run_test("ehanc::pack_size", &test_pack_size);
   ehanc::run_test("ehanc::is_iterable", &test_is_iterable);
   ehanc::run_test("ehanc::is_bidirectional", &test_is_bidirectional);
   ehanc::run_test("ehanc::is_random_access", &test_is_random_access);

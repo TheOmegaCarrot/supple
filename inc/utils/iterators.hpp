@@ -135,7 +135,10 @@ class sequence_iterator final
 {
 public:
 
-  using value_type = T;
+  using value_type        = T;
+  using difference_type   = std::ptrdiff_t;
+  using reference         = const T&;
+  using iterator_category = std::input_iterator_tag;
 
 private:
 
@@ -421,7 +424,10 @@ class generative_iterator final
 {
 public:
 
-  using value_type = T;
+  using value_type        = T;
+  using difference_type   = std::ptrdiff_t;
+  using reference         = const T&;
+  using iterator_category = std::input_iterator_tag;
 
 private:
 

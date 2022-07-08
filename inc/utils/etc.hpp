@@ -24,7 +24,7 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
   return t;
 }
 
-namespace literals {
+inline namespace literals {
 inline namespace size_t_literal {
 
 /* {{{ doc */

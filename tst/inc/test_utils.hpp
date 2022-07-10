@@ -11,8 +11,8 @@
 
 #include "utils/term_colors.h"
 
-constexpr inline const int TEST_OUTPUT_WIDTH         = 60;
-constexpr inline const std::string_view HEADER_COLOR = ehanc::FG_RED;
+constexpr inline int TEST_OUTPUT_WIDTH         = 60;
+constexpr inline std::string_view HEADER_COLOR = ehanc::FG_RED;
 
 namespace ehanc {
 

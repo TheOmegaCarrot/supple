@@ -234,7 +234,7 @@ struct is_lazy : ::ehanc::impl::is_lazy_impl<std::decay_t<T>> {};
  */
 /* }}} */
 template <typename T>
-constexpr inline const bool is_lazy_v = ::ehanc::is_lazy<T>::value;
+constexpr inline bool is_lazy_v = ::ehanc::is_lazy<T>::value;
 
 namespace impl {
 /* {{{ doc */
@@ -272,8 +272,7 @@ struct is_lazy_of : ::ehanc::impl::is_lazy_of_impl<T, std::decay_t<L>> {};
  */
 /* }}} */
 template <typename T, typename L>
-constexpr inline const bool is_lazy_of_v =
-    ::ehanc::is_lazy_of<T, L>::value;
+constexpr inline bool is_lazy_of_v = ::ehanc::is_lazy_of<T, L>::value;
 
 namespace impl {
 /* {{{ doc */

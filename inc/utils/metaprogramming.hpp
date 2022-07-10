@@ -76,7 +76,7 @@ struct is_type_in_pack<T> : std::false_type {};
  */
 /* }}} */
 template <typename T, typename... Pack>
-constexpr inline const bool is_type_in_pack_v =
+constexpr inline bool is_type_in_pack_v =
     ::ehanc::is_type_in_pack<T, Pack...>::value;
 
 /* {{{ doc */
@@ -163,7 +163,7 @@ struct is_pack_uniform
  */
 /* }}} */
 template <typename... Pack>
-constexpr inline const bool is_pack_uniform_v =
+constexpr inline bool is_pack_uniform_v =
     ::ehanc::is_pack_uniform<Pack...>::value;
 
 /* {{{ doc */
@@ -194,7 +194,7 @@ struct is_iterable<T,
  */
 /* }}} */
 template <typename T>
-constexpr inline const bool is_iterable_v = ::ehanc::is_iterable<T>::value;
+constexpr inline bool is_iterable_v = ::ehanc::is_iterable<T>::value;
 
 /* {{{ doc */
 /**
@@ -224,7 +224,7 @@ struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>())>,
  */
 /* }}} */
 template <typename T>
-constexpr inline const bool is_bidirectional_v =
+constexpr inline bool is_bidirectional_v =
     ::ehanc::is_bidirectional<T>::value;
 
 /* {{{ doc */
@@ -253,7 +253,7 @@ struct is_random_access<
     : std::true_type {};
 
 template <typename T>
-constexpr inline const bool is_random_access_v =
+constexpr inline bool is_random_access_v =
     ::ehanc::is_random_access<T>::value;
 
 } // namespace ehanc

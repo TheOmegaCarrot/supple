@@ -8,7 +8,8 @@
 
 #include "utils/lazy.hpp"
 
-auto test_sum_type() -> ehanc::test
+auto
+test_sum_type() -> ehanc::test
 {
   ehanc::test results;
 
@@ -64,7 +65,8 @@ static_assert(std::is_same_v<
                   ehanc::sum_type_t<short, short, short, short, int>, int>,
               "short + short + short + short + int == int");
 
-auto test_type_identity() -> ehanc::test
+auto
+test_type_identity() -> ehanc::test
 {
   ehanc::test results;
 
@@ -173,7 +175,8 @@ auto test_type_identity() -> ehanc::test
   return results;
 }
 
-auto test_is_type_in_pack() -> ehanc::test
+auto
+test_is_type_in_pack() -> ehanc::test
 {
   ehanc::test results;
 
@@ -201,7 +204,8 @@ static_assert(ehanc::is_type_in_pack_v<int, int, int, int>);
 static_assert(ehanc::is_type_in_pack_v<int, int>);
 static_assert(not ehanc::is_type_in_pack_v<int, char>);
 
-auto test_peel_first() -> ehanc::test
+auto
+test_peel_first() -> ehanc::test
 {
   ehanc::test results;
 
@@ -228,7 +232,8 @@ static_assert(
 static_assert(
     std::is_same_v<ehanc::peel_first_t<char, int, int, int>, char>);
 
-auto test_peel_last() -> ehanc::test
+auto
+test_peel_last() -> ehanc::test
 {
   ehanc::test results;
 
@@ -253,7 +258,8 @@ static_assert(
 static_assert(
     std::is_same_v<ehanc::peel_last_t<int, int, int, char>, char>);
 
-auto test_is_pack_uniform() -> ehanc::test
+auto
+test_is_pack_uniform() -> ehanc::test
 {
   ehanc::test results;
 
@@ -289,7 +295,8 @@ static_assert(ehanc::is_pack_uniform_v<int, int>);
 static_assert(not ehanc::is_pack_uniform_v<int, char>);
 static_assert(ehanc::is_pack_uniform_v<int>);
 
-auto test_is_iterable() -> ehanc::test
+auto
+test_is_iterable() -> ehanc::test
 {
   ehanc::test results;
 
@@ -314,7 +321,8 @@ static_assert(not ehanc::is_iterable_v<int>);
 static_assert(not ehanc::is_iterable_v<char>);
 static_assert(not ehanc::is_iterable_v<bool>);
 
-auto test_is_bidirectional() -> ehanc::test
+auto
+test_is_bidirectional() -> ehanc::test
 {
   ehanc::test results;
 
@@ -336,7 +344,8 @@ static_assert(ehanc::is_bidirectional_v<std::vector<int>::iterator>);
 static_assert(ehanc::is_bidirectional_v<std::list<int>::iterator>);
 static_assert(ehanc::is_bidirectional_v<std::deque<int>::iterator>);
 
-auto test_is_random_access() -> ehanc::test
+auto
+test_is_random_access() -> ehanc::test
 {
   ehanc::test results;
 
@@ -358,7 +367,8 @@ static_assert(ehanc::is_random_access_v<std::vector<int>::iterator>);
 static_assert(not ehanc::is_random_access_v<std::list<int>::iterator>);
 static_assert(ehanc::is_random_access_v<std::deque<int>::iterator>);
 
-void test_metaprogramming()
+void
+test_metaprogramming()
 {
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
   ehanc::run_test("ehanc::type_identity", &test_type_identity);

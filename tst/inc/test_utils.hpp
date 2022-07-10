@@ -20,17 +20,18 @@ class test
 {
 private:
 
-  int m_case_index{};
-  bool m_pass{true};
-  std::vector<std::string> m_cases{};
+  int m_case_index {};
+  bool m_pass {true};
+  std::vector<std::string> m_cases {};
 
 public:
 
   explicit test() = default;
 
   template <typename T>
-  inline void add_case(const T& result, const T& expected,
-                       const std::string_view message = "")
+  inline void
+  add_case(const T& result, const T& expected,
+           const std::string_view message = "")
   {
     ++m_case_index;
     if ( result != expected ) {
@@ -50,20 +51,23 @@ public:
     }
   }
 
-  inline auto cases() -> const std::vector<std::string>&
+  inline auto
+  cases() -> const std::vector<std::string>&
   {
     return m_cases;
   }
 
-  [[nodiscard]] inline auto pass() const -> bool
+  [[nodiscard]] inline auto
+  pass() const -> bool
   {
     return m_pass;
   }
 
 }; // class test
 
-inline void run_test(const std::string_view name,
-                     const std::function<test()>& test_func)
+inline void
+run_test(const std::string_view name,
+         const std::function<test()>& test_func)
 {
   test result = test_func();
 
@@ -83,8 +87,9 @@ inline void run_test(const std::string_view name,
   }
 }
 
-inline void test_section(const std::string_view section_name,
-                         const std::function<void()>& section_func)
+inline void
+test_section(const std::string_view section_name,
+             const std::function<void()>& section_func)
 {
   std::cout << HEADER_COLOR << section_name << ':' << RESET << '\n';
   section_func();

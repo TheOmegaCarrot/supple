@@ -9,7 +9,8 @@
 #include "test_lazy.h"
 #include "test_metaprogramming.h"
 
-auto main() -> int
+auto
+main() -> int
 {
 
   ehanc::test_section("Algorithm", &test_algorithm);

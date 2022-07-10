@@ -23,11 +23,11 @@ namespace ehanc {
  */
 /* }}} */
 template <typename Iterable>
-[[nodiscard]] constexpr auto last(const Iterable& container) noexcept
-    -> decltype(std::begin(container))
+[[nodiscard]] constexpr auto
+last(const Iterable& container) noexcept -> decltype(std::begin(container))
 {
-  auto begin{std::begin(container)};
-  auto end{std::end(container)};
+  auto begin {std::begin(container)};
+  auto end {std::end(container)};
 
   if ( begin == end ) {
     return begin;
@@ -41,10 +41,11 @@ template <typename Iterable>
       return begin;
     }
 
-    auto distance{static_cast<std::size_t>(std::distance(begin, end) - 1)};
+    auto distance {
+        static_cast<std::size_t>(std::distance(begin, end) - 1)};
     static_assert(std::is_same_v<decltype(distance), std::size_t>);
 
-    for ( std::size_t i{0}; i != distance; ++i ) {
+    for ( std::size_t i {0}; i != distance; ++i ) {
       ++begin;
     }
 
@@ -63,7 +64,8 @@ template <typename Iterable>
  */
 /* }}} */
 template <typename Iterable>
-[[nodiscard]] constexpr auto clast(const Iterable& container) noexcept
+[[nodiscard]] constexpr auto
+clast(const Iterable& container) noexcept
     -> decltype(std::cbegin(container))
 {
   return static_cast<decltype(std::cbegin(container))>(last(container));
@@ -75,7 +77,8 @@ template <typename Iterable>
  */
 /* }}} */
 template <typename T>
-constexpr void increment(T& t)
+constexpr void
+increment(T& t)
 {
   ++t;
 }
@@ -86,7 +89,8 @@ constexpr void increment(T& t)
  */
 /* }}} */
 template <typename T>
-constexpr void decrement(T& t)
+constexpr void
+decrement(T& t)
 {
   --t;
 }
@@ -109,8 +113,8 @@ public:
 
 private:
 
-  value_type m_val;
-  std::function<void(value_type&)> m_inc;
+  value_type m_val {};
+  std::function<void(value_type&)> m_inc {};
 
 public:
 
@@ -134,8 +138,8 @@ public:
                std::is_nothrow_constructible<T>,
                std::is_nothrow_move_constructible<T>>)
       // clang-format on
-      : m_val{std::forward<U>(init)}
-      , m_inc{std::forward<Incr>(func)}
+      : m_val {std::forward<U>(init)}
+      , m_inc {std::forward<Incr>(func)}
   {}
 
   ~sequence_iterator() noexcept(
@@ -150,11 +154,13 @@ public:
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
   // the noexcept freaks out older gcc versions
-  auto operator=(const sequence_iterator&) /* noexcept(
-      std::is_nothrow_copy_assignable_v<value_type>) */
+  auto
+  operator=(const sequence_iterator&) /* noexcept(
+ std::is_nothrow_copy_assignable_v<value_type>) */
       -> sequence_iterator& = default;
 
-  auto operator=(sequence_iterator&&) noexcept(
+  auto
+  operator=(sequence_iterator&&) noexcept(
       std::is_nothrow_move_assignable_v<value_type>)
       -> sequence_iterator& = default;
 
@@ -166,8 +172,8 @@ public:
    * @return Reference to self after incrementing.
    */
   /* }}} */
-  constexpr auto operator++() noexcept(noexcept(m_inc(m_val)))
-      -> sequence_iterator&
+  constexpr auto
+  operator++() noexcept(noexcept(m_inc(m_val))) -> sequence_iterator&
   {
     m_inc(m_val);
     return *this;
@@ -181,10 +187,10 @@ public:
    * @return Copy of self from before incrementing.
    */
   /* }}} */
-  constexpr auto operator++(int) noexcept(noexcept(++m_val))
-      -> sequence_iterator
+  constexpr auto
+  operator++(int) noexcept(noexcept(++m_val)) -> sequence_iterator
   {
-    sequence_iterator tmp{*this};
+    sequence_iterator tmp {*this};
     this->operator++();
     return tmp;
   }
@@ -197,7 +203,8 @@ public:
    * @return Const reference to contained value.
    */
   /* }}} */
-  constexpr auto operator*() noexcept -> const value_type&
+  constexpr auto
+  operator*() noexcept -> const value_type&
   {
     return m_val;
   }
@@ -207,7 +214,8 @@ public:
    * @brief Equality comparison operator.
    */
   /* }}} */
-  constexpr auto operator==(const sequence_iterator& rhs) noexcept -> bool
+  constexpr auto
+  operator==(const sequence_iterator& rhs) noexcept -> bool
   {
     return m_val == rhs.m_val;
   }
@@ -217,7 +225,8 @@ public:
    * @brief Inequality comparison operator.
    */
   /* }}} */
-  constexpr auto operator!=(const sequence_iterator& rhs) noexcept -> bool
+  constexpr auto
+  operator!=(const sequence_iterator& rhs) noexcept -> bool
   {
     return m_val != rhs.m_val;
   }
@@ -227,7 +236,8 @@ public:
    * @brief Less-than comparison operator.
    */
   /* }}} */
-  constexpr auto operator<(const sequence_iterator& rhs) noexcept -> bool
+  constexpr auto
+  operator<(const sequence_iterator& rhs) noexcept -> bool
   {
     return m_val < rhs.m_val;
   }
@@ -306,11 +316,13 @@ public:
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
   // the noexcept freaks out older gcc versions
-  auto operator=(const sequence&) /* noexcept(
-      std::is_nothrow_copy_assignable_v<value_type>) */
+  auto
+  operator=(const sequence&) /* noexcept(
+ std::is_nothrow_copy_assignable_v<value_type>) */
       -> sequence& = default;
 
-  auto operator=(sequence&&) noexcept(
+  auto
+  operator=(sequence&&) noexcept(
       std::is_nothrow_move_assignable_v<value_type>)
       -> sequence& = default;
 
@@ -319,7 +331,8 @@ public:
    * @brief Provide begin sequence iterator.
    */
   /* }}} */
-  constexpr auto begin() noexcept -> ::ehanc::sequence_iterator<value_type>
+  constexpr auto
+  begin() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
     return ::ehanc::sequence_iterator(m_begin, m_inc);
   }
@@ -329,8 +342,8 @@ public:
    * @brief Provide cbegin for compatibility.
    */
   /* }}} */
-  constexpr auto cbegin() noexcept
-      -> ::ehanc::sequence_iterator<value_type>
+  constexpr auto
+  cbegin() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
     return this->begin();
   }
@@ -340,7 +353,8 @@ public:
    * @brief Provide end sequence iterator.
    */
   /* }}} */
-  constexpr auto end() noexcept -> ::ehanc::sequence_iterator<value_type>
+  constexpr auto
+  end() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
     return ::ehanc::sequence_iterator(m_end, m_inc);
   }
@@ -350,7 +364,8 @@ public:
    * @brief Provide cbegin for compatibility.
    */
   /* }}} */
-  constexpr auto cend() noexcept -> ::ehanc::sequence_iterator<value_type>
+  constexpr auto
+  cend() noexcept -> ::ehanc::sequence_iterator<value_type>
   {
     return this->end();
   }
@@ -403,21 +418,21 @@ private:
    * @brief Function which is used to generate the sequence of values.
    */
   /* }}} */
-  std::function<value_type()> m_gen{};
+  std::function<value_type()> m_gen {};
 
   /* {{{ doc */
   /**
    * @brief Current value in the sequence.
    */
   /* }}} */
-  value_type m_val{};
+  value_type m_val {};
 
   /* {{{ doc */
   /**
    * @brief Current "index" of the generated sequence.
    */
   /* }}} */
-  std::size_t m_count{0};
+  std::size_t m_count {0};
 
   /* {{{ doc */
   /**
@@ -425,7 +440,7 @@ private:
    * of iterations allowed.
    */
   /* }}} */
-  std::size_t m_sentinel{0};
+  std::size_t m_sentinel {0};
 
 public:
 
@@ -450,14 +465,14 @@ public:
                          std::is_nothrow_move_constructible<Func>,
                          std::is_nothrow_constructible<value_type>>)
       : m_gen(std::forward<Func>(func))
-      , m_val{m_gen()}
+      , m_val {m_gen()}
 
   {}
 
   template <typename I, typename = std::enable_if_t<std::is_integral_v<I>>>
   explicit constexpr generative_iterator(const I sentinel) noexcept(
       std::is_nothrow_default_constructible_v<value_type>)
-      : m_sentinel{static_cast<std::size_t>(sentinel)}
+      : m_sentinel {static_cast<std::size_t>(sentinel)}
   {}
 
   template <typename I, typename = std::enable_if_t<std::is_integral_v<I>>>
@@ -466,7 +481,7 @@ public:
       //clang-format off
       noexcept(std::is_nothrow_default_constructible_v<value_type>)
       //clang-format on
-      : m_sentinel{static_cast<std::size_t>(sentinel)}
+      : m_sentinel {static_cast<std::size_t>(sentinel)}
   {}
 
   ~generative_iterator() noexcept(
@@ -480,11 +495,13 @@ public:
   generative_iterator(generative_iterator&&) noexcept(
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  auto operator=(const generative_iterator&) noexcept(
+  auto
+  operator=(const generative_iterator&) noexcept(
       std::is_nothrow_copy_assignable_v<value_type>)
       -> generative_iterator& = default;
 
-  auto operator=(generative_iterator&&) noexcept(
+  auto
+  operator=(generative_iterator&&) noexcept(
       std::is_nothrow_move_assignable_v<value_type>)
       -> generative_iterator& = default;
 
@@ -496,8 +513,8 @@ public:
    * @return Reference to self after incrementing.
    */
   /* }}} */
-  constexpr auto operator++() noexcept(noexcept(m_gen()))
-      -> generative_iterator&
+  constexpr auto
+  operator++() noexcept(noexcept(m_gen())) -> generative_iterator&
   {
     m_val = m_gen();
     ++m_count;
@@ -512,12 +529,13 @@ public:
    * @return Copy of self from before incrementing.
    */
   /* }}} */
-  constexpr auto operator++(int) noexcept(
+  constexpr auto
+  operator++(int) noexcept(
       noexcept(m_gen())
       && std::is_nothrow_copy_constructible_v<decltype(*this)>)
       -> generative_iterator
   {
-    generative_iterator tmp{*this};
+    generative_iterator tmp {*this};
     this->operator++();
     return tmp;
   }
@@ -530,7 +548,8 @@ public:
    * @return Const reference to contained value.
    */
   /* }}} */
-  constexpr auto operator*() noexcept -> const value_type&
+  constexpr auto
+  operator*() noexcept -> const value_type&
   {
     return m_val;
   }
@@ -541,8 +560,8 @@ public:
    * of iterations against rhs's sentinel value.
    */
   /* }}} */
-  constexpr auto operator==(const generative_iterator& rhs) noexcept
-      -> bool
+  constexpr auto
+  operator==(const generative_iterator& rhs) noexcept -> bool
   {
     return m_count == rhs.m_sentinel;
   }
@@ -553,8 +572,8 @@ public:
    * of iterations against rhs's sentinel value.
    */
   /* }}} */
-  constexpr auto operator!=(const generative_iterator& rhs) noexcept
-      -> bool
+  constexpr auto
+  operator!=(const generative_iterator& rhs) noexcept -> bool
   {
     return m_count != rhs.m_sentinel;
   }
@@ -564,7 +583,8 @@ public:
    * @brief Less-than comparison operator.
    */
   /* }}} */
-  constexpr auto operator<(const generative_iterator& rhs) noexcept -> bool
+  constexpr auto
+  operator<(const generative_iterator& rhs) noexcept -> bool
   {
     return m_count < rhs.m_sentinel;
   }
@@ -633,33 +653,36 @@ public:
       std::is_nothrow_move_constructible_v<value_type>) = default;
 
   // the noexcept freaks out older gcc versions
-  auto operator=(const generative_sequence&) /* noexcept(
-      std::is_nothrow_copy_assignable_v<value_type>) */
+  auto
+  operator=(const generative_sequence&) /* noexcept(
+ std::is_nothrow_copy_assignable_v<value_type>) */
       -> generative_sequence& = default;
 
-  auto operator=(generative_sequence&&) noexcept(
+  auto
+  operator=(generative_sequence&&) noexcept(
       std::is_nothrow_move_assignable_v<value_type>)
       -> generative_sequence& = default;
 
-  constexpr auto begin() noexcept
-      -> ::ehanc::generative_iterator<value_type>
+  constexpr auto
+  begin() noexcept -> ::ehanc::generative_iterator<value_type>
   {
     return ::ehanc::generative_iterator(m_gen);
   }
 
-  constexpr auto cbegin() noexcept
-      -> ::ehanc::generative_iterator<value_type>
+  constexpr auto
+  cbegin() noexcept -> ::ehanc::generative_iterator<value_type>
   {
     return this->begin();
   }
 
-  constexpr auto end() noexcept -> ::ehanc::generative_iterator<value_type>
+  constexpr auto
+  end() noexcept -> ::ehanc::generative_iterator<value_type>
   {
     return ::ehanc::generative_iterator<value_type>(m_max);
   }
 
-  constexpr auto cend() noexcept
-      -> ::ehanc::generative_iterator<value_type>
+  constexpr auto
+  cend() noexcept -> ::ehanc::generative_iterator<value_type>
   {
     return this->end();
   }

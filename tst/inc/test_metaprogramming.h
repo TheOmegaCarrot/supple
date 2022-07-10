@@ -3,6 +3,7 @@
 
 #include "utils/metaprogramming.hpp"
 
-void test_metaprogramming();
+void
+test_metaprogramming();
 
 #endif

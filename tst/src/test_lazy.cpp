@@ -2,13 +2,14 @@
 
 #include <iostream>
 
-auto test_lazy_class() -> ehanc::test
+auto
+test_lazy_class() -> ehanc::test
 {
   ehanc::test results;
 
   std::vector<int> check;
 
-  ehanc::lazy<int> test([&check, i{5}]() mutable -> int {
+  ehanc::lazy<int> test([&check, i {5}]() mutable -> int {
     check.push_back(2);
     return i++;
   });
@@ -25,27 +26,29 @@ auto test_lazy_class() -> ehanc::test
   return results;
 }
 
-auto test_lazy_has_value() -> ehanc::test
+auto
+test_lazy_has_value() -> ehanc::test
 {
   ehanc::test results;
 
-  auto test{ehanc::make_lazy([]() { return 5; })};
+  auto test {ehanc::make_lazy([]() { return 5; })};
 
   results.add_case(test.has_value(), false,
                    "Should not have value before use");
 
-  [[maybe_unused]] auto discarded{test.get()};
+  [[maybe_unused]] auto discarded {test.get()};
 
   results.add_case(test.has_value(), true, "Should have value after use");
 
   return results;
 }
 
-auto test_make_lazy() -> ehanc::test
+auto
+test_make_lazy() -> ehanc::test
 {
   ehanc::test results;
 
-  auto test{ehanc::make_lazy([]() { return 5; })};
+  auto test {ehanc::make_lazy([]() { return 5; })};
 
   results.add_case(test.get(), 5, "Incorrect evaluation");
   results.add_case(test.get(), 5, "Incorrect evaluation");
@@ -53,7 +56,8 @@ auto test_make_lazy() -> ehanc::test
   return results;
 }
 
-auto test_is_lazy() -> ehanc::test
+auto
+test_is_lazy() -> ehanc::test
 {
   ehanc::test results;
 
@@ -91,7 +95,8 @@ static_assert(ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>);
 static_assert(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>);
 static_assert(not ehanc::is_lazy_v<int>);
 
-auto test_is_lazy_of() -> ehanc::test
+auto
+test_is_lazy_of() -> ehanc::test
 {
   ehanc::test results;
 
@@ -172,7 +177,8 @@ static_assert(
 static_assert(not ehanc::is_lazy_of_v<int, int>);
 static_assert(not ehanc::is_lazy_of_v<int, char>);
 
-auto test_lazy_inner_type() -> ehanc::test
+auto
+test_lazy_inner_type() -> ehanc::test
 {
   ehanc::test results;
 
@@ -329,7 +335,8 @@ static_assert(
                                  const volatile ehanc::lazy<int>&&>>);
 static_assert(std::is_same_v<int, ehanc::lazy_inner_type_t<int>>);
 
-void test_lazy()
+void
+test_lazy()
 {
   ehanc::run_test("ehanc::lazy", &test_lazy_class);
   ehanc::run_test("ehanc::lazy::has_value", &test_lazy_has_value);

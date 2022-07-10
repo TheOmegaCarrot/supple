@@ -21,7 +21,8 @@ namespace ehanc {
  */
 /* }}} */
 template <typename Container>
-constexpr auto min_size(const Container& cont) noexcept -> std::size_t
+constexpr auto
+min_size(const Container& cont) noexcept -> std::size_t
 {
   return cont.size();
 }
@@ -47,8 +48,9 @@ constexpr auto min_size(const Container& cont) noexcept -> std::size_t
  */
 /* }}} */
 template <typename Container, typename... Containers>
-constexpr auto min_size(const Container& cont,
-                        const Containers&... conts) noexcept -> std::size_t
+constexpr auto
+min_size(const Container& cont, const Containers&... conts) noexcept
+    -> std::size_t
 {
   return std::min(::ehanc::min_size(cont), ::ehanc::min_size(conts...));
 }
@@ -75,13 +77,14 @@ constexpr auto min_size(const Container& cont,
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>
-constexpr void for_each_adjacent(
-    const Itr begin, const Itr end,
-    BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+constexpr void
+for_each_adjacent(const Itr begin, const Itr end,
+                  BinaryFunc&& func) noexcept(noexcept(func(*begin,
+                                                            *begin)))
 {
-  Itr leader{begin};
+  Itr leader {begin};
   ++leader;
-  Itr follower{begin};
+  Itr follower {begin};
 
   for ( ; leader != end; ++leader, ++follower ) {
     func(*leader, *follower);
@@ -131,14 +134,15 @@ for_each_pair(Itr&& begin, Itr&& end,
  */
 /* }}} */
 template <typename Itr, typename BinaryFunc>
-constexpr void for_each_adjacent_n(
-    const Itr begin, const Itr end, const std::size_t n,
-    BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+constexpr void
+for_each_adjacent_n(const Itr begin, const Itr end, const std::size_t n,
+                    BinaryFunc&& func) noexcept(noexcept(func(*begin,
+                                                              *begin)))
 {
-  std::size_t count{0};
-  Itr leader{begin};
+  std::size_t count {0};
+  Itr leader {begin};
   ++leader;
-  Itr follower{begin};
+  Itr follower {begin};
 
   for ( ; count != n && leader != end; ++count, ++leader, ++follower ) {
     func(*leader, *follower);
@@ -242,12 +246,13 @@ for_each_both(Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
  */
 /* }}} */
 template <typename Itr1, typename Itr2, typename BinaryFunc>
-constexpr void for_each_both_n(
-    Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
-    const std::size_t n,
-    BinaryFunc&& func) noexcept(noexcept(func(*begin1, *begin2)))
+constexpr void
+for_each_both_n(Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
+                const std::size_t n,
+                BinaryFunc&& func) noexcept(noexcept(func(*begin1,
+                                                          *begin2)))
 {
-  for ( std::size_t count{0};
+  for ( std::size_t count {0};
         (count != n && begin1 != end1 && begin2 != end2);
         ++count, ++begin1, ++begin2 ) {
     func(*begin1, *begin2);
@@ -288,7 +293,7 @@ constexpr void
 for_each_all_n(VarFunc&& func, const std::size_t n,
                Begins... begins) noexcept(noexcept(func(*begins...)))
 {
-  for ( std::size_t i{0}; i != n; ++i ) {
+  for ( std::size_t i {0}; i != n; ++i ) {
     func(*begins...);
     (++begins, ...);
   }

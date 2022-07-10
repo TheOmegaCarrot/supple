@@ -4,6 +4,7 @@
 #include "test_utils.hpp"
 #include "utils/etc.hpp"
 
-void test_etc();
+void
+test_etc();
 
 #endif

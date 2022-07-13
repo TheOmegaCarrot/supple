@@ -37,10 +37,6 @@ last(const Iterable& container) noexcept -> decltype(std::begin(container))
     return --end;
   } else {
 
-    if ( begin == end ) {
-      return begin;
-    }
-
     auto distance {
         static_cast<std::size_t>(std::distance(begin, end) - 1)};
     static_assert(std::is_same_v<decltype(distance), std::size_t>);

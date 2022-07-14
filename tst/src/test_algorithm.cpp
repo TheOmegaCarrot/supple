@@ -33,12 +33,10 @@ test_for_each_adjacent() -> ehanc::test
                              test_output.push_back(i + j);
                            });
 
-  auto [test, ref] =
-      std::mismatch(test_output.cbegin(), test_output.cend(),
-                    reference_output.cbegin(), reference_output.cend());
-
-  results.add_case(test == test_output.cend(), true);
-  results.add_case(ref == reference_output.cend(), true);
+  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
+                              reference_output.cbegin(),
+                              reference_output.cend()),
+                   true);
 
   return results;
 }
@@ -55,13 +53,10 @@ test_for_each_adjacent_n() -> ehanc::test
                              [&test_output](const int i, const int j) {
                                test_output.push_back(i + j);
                              });
-
-  auto [test, ref] =
-      std::mismatch(test_output.cbegin(), test_output.cend(),
-                    reference_output.cbegin(), reference_output.cend());
-
-  results.add_case(test == test_output.cend(), true);
-  results.add_case(ref == reference_output.cend(), true);
+  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
+                              reference_output.cbegin(),
+                              reference_output.cend()),
+                   true);
 
   return results;
 }
@@ -81,12 +76,10 @@ test_for_each_all() -> ehanc::test
       },
       test1, test2);
 
-  auto [test, ref] =
-      std::mismatch(test_output.cbegin(), test_output.cend(),
-                    reference_output.cbegin(), reference_output.cend());
-
-  results.add_case(test == test_output.cend(), true);
-  results.add_case(ref == reference_output.cend(), true);
+  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
+                              reference_output.cbegin(),
+                              reference_output.cend()),
+                   true);
 
   return results;
 }
@@ -106,12 +99,10 @@ test_for_each_all_c() -> ehanc::test
       },
       test1, test2);
 
-  auto [test, ref] =
-      std::mismatch(test_output.cbegin(), test_output.cend(),
-                    reference_output.cbegin(), reference_output.cend());
-
-  results.add_case(test == test_output.cend(), true);
-  results.add_case(ref == reference_output.cend(), true);
+  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
+                              reference_output.cbegin(),
+                              reference_output.cend()),
+                   true);
 
   return results;
 }
@@ -131,12 +122,10 @@ test_for_each_all_n() -> ehanc::test
       },
       3, test1.cbegin(), test2.cbegin());
 
-  auto [test, ref] =
-      std::mismatch(test_output.cbegin(), test_output.cend(),
-                    reference_output.cbegin(), reference_output.cend());
-
-  results.add_case(test == test_output.cend(), true);
-  results.add_case(ref == reference_output.cend(), true);
+  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
+                              reference_output.cbegin(),
+                              reference_output.cend()),
+                   true);
 
   return results;
 }
@@ -157,12 +146,10 @@ test_for_each_both() -> ehanc::test
                          test_output.push_back(i + j);
                        });
 
-  auto [test, ref] =
-      std::mismatch(test_output.cbegin(), test_output.cend(),
-                    reference_output.cbegin(), reference_output.cend());
-
-  results.add_case(test == test_output.cend(), true);
-  results.add_case(ref == reference_output.cend(), true);
+  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
+                              reference_output.cbegin(),
+                              reference_output.cend()),
+                   true);
 
   return results;
 }
@@ -183,12 +170,10 @@ test_for_each_both_n() -> ehanc::test
                            test_output.push_back(i + j);
                          });
 
-  auto [test, ref] =
-      std::mismatch(test_output.cbegin(), test_output.cend(),
-                    reference_output.cbegin(), reference_output.cend());
-
-  results.add_case(test == test_output.cend(), true);
-  results.add_case(ref == reference_output.cend(), true);
+  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
+                              reference_output.cbegin(),
+                              reference_output.cend()),
+                   true);
 
   return results;
 }

@@ -82,8 +82,7 @@ for_each_adjacent(const Itr begin, const Itr end,
                   BinaryFunc&& func) noexcept(noexcept(func(*begin,
                                                             *begin)))
 {
-  Itr leader {begin};
-  ++leader;
+  Itr leader {std::next(begin)};
   Itr follower {begin};
 
   for ( ; leader != end; ++leader, ++follower ) {
@@ -140,8 +139,7 @@ for_each_adjacent_n(const Itr begin, const Itr end, const std::size_t n,
                                                               *begin)))
 {
   std::size_t count {0};
-  Itr leader {begin};
-  ++leader;
+  Itr leader {std::next(begin)};
   Itr follower {begin};
 
   for ( ; count != n && leader != end; ++count, ++leader, ++follower ) {

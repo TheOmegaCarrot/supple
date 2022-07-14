@@ -4,7 +4,6 @@
 #include "test_utils.hpp"
 #include "utils/algorithm.hpp"
 
-void
-test_algorithm();
+void test_algorithm();
 
 #endif

@@ -95,8 +95,7 @@ public:
    * Weird to copy.
    */
   /* }}} */
-  constexpr auto
-  operator=(const lazy& rhs) noexcept -> lazy& = delete;
+  constexpr auto operator=(const lazy& rhs) noexcept -> lazy& = delete;
 
   /* {{{ doc */
   /**
@@ -110,8 +109,7 @@ public:
    * Straightforward to move.
    */
   /* }}} */
-  constexpr auto
-  operator=(lazy&& rhs) noexcept -> lazy& = default;
+  constexpr auto operator=(lazy&& rhs) noexcept -> lazy& = default;
 
   /* {{{ doc */
   /**
@@ -127,15 +125,13 @@ public:
    * @return Contained callable.
    */
   /* }}} */
-  [[nodiscard]] constexpr auto
-  func() const noexcept
+  [[nodiscard]] constexpr auto func() const noexcept
       -> std::add_lvalue_reference_t<std::function<value_type()>>
   {
     return m_func;
   }
 
-  [[nodiscard]] constexpr auto
-  has_value() const noexcept -> bool
+  [[nodiscard]] constexpr auto has_value() const noexcept -> bool
   {
     return m_value.has_value();
   }
@@ -148,8 +144,7 @@ public:
    * @return Const reference to contained value.
    */
   /* }}} */
-  [[nodiscard]] constexpr auto
-  get() const noexcept(noexcept(m_func()))
+  [[nodiscard]] constexpr auto get() const noexcept(noexcept(m_func()))
       -> std::add_lvalue_reference_t<const value_type>
   {
     if ( not m_value.has_value() ) {
@@ -192,8 +187,8 @@ public:
  */
 /* }}} */
 template <typename Func>
-constexpr auto
-make_lazy(Func&& func) noexcept -> lazy<std::invoke_result_t<Func>>
+constexpr auto make_lazy(Func&& func) noexcept
+    -> lazy<std::invoke_result_t<Func>>
 {
   return lazy<decltype(func())>(std::forward<Func>(func));
 }

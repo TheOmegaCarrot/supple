@@ -4,7 +4,6 @@
 #include "test_utils.hpp"
 #include "utils/lazy.hpp"
 
-void
-test_lazy();
+void test_lazy();
 
 #endif

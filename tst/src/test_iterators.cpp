@@ -8,8 +8,7 @@
 
 #include "utils/etc.hpp"
 
-auto
-test_last() -> ehanc::test
+auto test_last() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1 {};
@@ -27,8 +26,7 @@ test_last() -> ehanc::test
   return results;
 }
 
-auto
-test_clast() -> ehanc::test
+auto test_clast() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1 {};
@@ -46,8 +44,7 @@ test_clast() -> ehanc::test
   return results;
 }
 
-auto
-test_sequence_iterator() -> ehanc::test
+auto test_sequence_iterator() -> ehanc::test
 {
   ehanc::test results;
 
@@ -75,8 +72,7 @@ test_sequence_iterator() -> ehanc::test
   return results;
 }
 
-auto
-test_sequence() -> ehanc::test
+auto test_sequence() -> ehanc::test
 {
   ehanc::test results;
 
@@ -93,8 +89,7 @@ test_sequence() -> ehanc::test
   return results;
 }
 
-auto
-test_generative_iterator() -> ehanc::test
+auto test_generative_iterator() -> ehanc::test
 {
   ehanc::test results;
 
@@ -115,8 +110,7 @@ test_generative_iterator() -> ehanc::test
   return results;
 }
 
-auto
-test_generative_sequence() -> ehanc::test
+auto test_generative_sequence() -> ehanc::test
 {
   ehanc::test results;
 
@@ -129,8 +123,7 @@ test_generative_sequence() -> ehanc::test
   return results;
 }
 
-void
-test_iterators()
+void test_iterators()
 {
   ehanc::run_test("ehanc::last", &test_last);
   ehanc::run_test("ehanc::clast", &test_clast);

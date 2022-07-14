@@ -4,8 +4,7 @@
 
 #include "test_algorithm.h"
 
-auto
-test_min_size() -> ehanc::test
+auto test_min_size() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1 {};
@@ -19,8 +18,7 @@ test_min_size() -> ehanc::test
   return results;
 }
 
-auto
-test_for_each_adjacent() -> ehanc::test
+auto test_for_each_adjacent() -> ehanc::test
 {
   ehanc::test results;
   std::vector<int> test_input(6);
@@ -41,8 +39,7 @@ test_for_each_adjacent() -> ehanc::test
   return results;
 }
 
-auto
-test_for_each_adjacent_n() -> ehanc::test
+auto test_for_each_adjacent_n() -> ehanc::test
 {
   ehanc::test results;
   std::vector<int> test_input {1, 2, 3, 4, 5, 6};
@@ -61,8 +58,7 @@ test_for_each_adjacent_n() -> ehanc::test
   return results;
 }
 
-auto
-test_for_each_all() -> ehanc::test
+auto test_for_each_all() -> ehanc::test
 {
   ehanc::test results;
   std::array test1 {4, 9, 16, 25};
@@ -84,8 +80,7 @@ test_for_each_all() -> ehanc::test
   return results;
 }
 
-auto
-test_for_each_all_c() -> ehanc::test
+auto test_for_each_all_c() -> ehanc::test
 {
   ehanc::test results;
   const std::array test1 {4, 9, 16, 25};
@@ -107,8 +102,7 @@ test_for_each_all_c() -> ehanc::test
   return results;
 }
 
-auto
-test_for_each_all_n() -> ehanc::test
+auto test_for_each_all_n() -> ehanc::test
 {
   ehanc::test results;
   std::array test1 {4, 9, 16, 25};
@@ -130,8 +124,7 @@ test_for_each_all_n() -> ehanc::test
   return results;
 }
 
-auto
-test_for_each_both() -> ehanc::test
+auto test_for_each_both() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test_input_1 {};
@@ -154,8 +147,7 @@ test_for_each_both() -> ehanc::test
   return results;
 }
 
-auto
-test_for_each_both_n() -> ehanc::test
+auto test_for_each_both_n() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test_input_1 {};
@@ -178,8 +170,7 @@ test_for_each_both_n() -> ehanc::test
   return results;
 }
 
-void
-test_algorithm()
+void test_algorithm()
 {
   ehanc::run_test("ehanc::min_size", &test_min_size);
   ehanc::run_test("ehanc::for_each_adjacent", &test_for_each_adjacent);

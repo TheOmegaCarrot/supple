@@ -9,13 +9,11 @@
 #include "utils/lazy.hpp"
 
 struct copy_counter {
-  copy_counter()               = default;
-  ~copy_counter()              = default;
-  copy_counter(copy_counter&&) = default;
-  auto
-  operator=(const copy_counter&) -> copy_counter& = default;
-  auto
-  operator=(copy_counter&&) -> copy_counter& = default;
+  copy_counter()                                       = default;
+  ~copy_counter()                                      = default;
+  copy_counter(copy_counter&&)                         = default;
+  auto operator=(const copy_counter&) -> copy_counter& = default;
+  auto operator=(copy_counter&&) -> copy_counter&      = default;
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int copy_count;
@@ -29,8 +27,7 @@ struct copy_counter {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 int copy_counter::copy_count {0};
 
-auto
-test_explicit_copy() -> ehanc::test
+auto test_explicit_copy() -> ehanc::test
 {
   ehanc::test results;
   copy_counter test;
@@ -61,8 +58,7 @@ test_explicit_copy() -> ehanc::test
   return results;
 }
 
-auto
-test_size_t_literals() -> ehanc::test
+auto test_size_t_literals() -> ehanc::test
 {
   ehanc::test results;
 
@@ -79,8 +75,7 @@ test_size_t_literals() -> ehanc::test
   return results;
 }
 
-void
-test_etc()
+void test_etc()
 {
   ehanc::run_test("ehanc::explicit_copy", &test_explicit_copy);
   ehanc::run_test("ehanc::literals::size_t_literal::operator\"\"_z",

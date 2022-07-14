@@ -2,8 +2,7 @@
 
 #include <iostream>
 
-auto
-test_lazy_class() -> ehanc::test
+auto test_lazy_class() -> ehanc::test
 {
   ehanc::test results;
 
@@ -26,8 +25,7 @@ test_lazy_class() -> ehanc::test
   return results;
 }
 
-auto
-test_lazy_has_value() -> ehanc::test
+auto test_lazy_has_value() -> ehanc::test
 {
   ehanc::test results;
 
@@ -43,8 +41,7 @@ test_lazy_has_value() -> ehanc::test
   return results;
 }
 
-auto
-test_make_lazy() -> ehanc::test
+auto test_make_lazy() -> ehanc::test
 {
   ehanc::test results;
 
@@ -56,8 +53,7 @@ test_make_lazy() -> ehanc::test
   return results;
 }
 
-auto
-test_is_lazy() -> ehanc::test
+auto test_is_lazy() -> ehanc::test
 {
   ehanc::test results;
 
@@ -95,8 +91,7 @@ static_assert(ehanc::is_lazy_v<volatile ehanc::lazy<int>&&>);
 static_assert(ehanc::is_lazy_v<const volatile ehanc::lazy<int>&&>);
 static_assert(not ehanc::is_lazy_v<int>);
 
-auto
-test_is_lazy_of() -> ehanc::test
+auto test_is_lazy_of() -> ehanc::test
 {
   ehanc::test results;
 
@@ -177,8 +172,7 @@ static_assert(
 static_assert(not ehanc::is_lazy_of_v<int, int>);
 static_assert(not ehanc::is_lazy_of_v<int, char>);
 
-auto
-test_lazy_inner_type() -> ehanc::test
+auto test_lazy_inner_type() -> ehanc::test
 {
   ehanc::test results;
 
@@ -335,8 +329,7 @@ static_assert(
                                  const volatile ehanc::lazy<int>&&>>);
 static_assert(std::is_same_v<int, ehanc::lazy_inner_type_t<int>>);
 
-void
-test_lazy()
+void test_lazy()
 {
   ehanc::run_test("ehanc::lazy", &test_lazy_class);
   ehanc::run_test("ehanc::lazy::has_value", &test_lazy_has_value);

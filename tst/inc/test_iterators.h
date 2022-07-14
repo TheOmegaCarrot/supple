@@ -3,7 +3,6 @@
 
 #include "utils/iterators.hpp"
 
-void
-test_iterators();
+void test_iterators();
 
 #endif

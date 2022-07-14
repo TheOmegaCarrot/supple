@@ -458,8 +458,8 @@ public:
   {}
 
   template <typename I, typename = std::enable_if_t<std::is_integral_v<I>>>
-  explicit constexpr generative_iterator(
-      [[maybe_unused]] const generative_iterator& dummy, const I sentinel)
+  explicit constexpr generative_iterator(const generative_iterator&,
+                                         const I sentinel)
       //clang-format off
       noexcept(std::is_nothrow_default_constructible_v<value_type>)
       //clang-format on

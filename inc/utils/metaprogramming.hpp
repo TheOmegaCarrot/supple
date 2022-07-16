@@ -202,7 +202,7 @@ constexpr inline bool is_iterable_v = ::ehanc::is_iterable<T>::value;
  * pre-decrement operations. Intended for use with iterators.
  */
 /* }}} */
-template <typename T, typename = void, typename = void>
+template <typename T, typename = void>
 struct is_bidirectional : std::false_type {};
 
 /* {{{ doc */
@@ -213,8 +213,8 @@ struct is_bidirectional : std::false_type {};
  */
 /* }}} */
 template <typename T>
-struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>())>,
-                        std::void_t<decltype(--std::declval<T&>())>>
+struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>()),
+                                       decltype(--std::declval<T&>())>>
     : std::true_type {};
 
 /* {{{ doc */
@@ -233,8 +233,7 @@ constexpr inline bool is_bidirectional_v =
  * random access iterator.
  */
 /* }}} */
-template <typename T, typename = void, typename = void, typename = void,
-          typename = void, typename = void>
+template <typename T, typename = void>
 struct is_random_access : std::false_type {};
 
 /* {{{ doc */
@@ -245,11 +244,11 @@ struct is_random_access : std::false_type {};
 /* }}} */
 template <typename T>
 struct is_random_access<
-    T, std::void_t<decltype(std::declval<T&>() += std::declval<int>())>,
-    std::void_t<decltype(std::declval<T&>() -= std::declval<int>())>,
-    std::void_t<decltype(std::declval<T&>() + std::declval<int>())>,
-    std::void_t<decltype(std::declval<T&>() - std::declval<int>())>,
-    std::void_t<decltype(std::declval<T&>() - std::declval<T&>())>>
+    T, std::void_t<decltype(std::declval<T&>() += std::declval<int>()),
+                   decltype(std::declval<T&>() -= std::declval<int>()),
+                   decltype(std::declval<T&>() + std::declval<int>()),
+                   decltype(std::declval<T&>() - std::declval<int>()),
+                   decltype(std::declval<T&>() - std::declval<T&>())>>
     : std::true_type {};
 
 template <typename T>

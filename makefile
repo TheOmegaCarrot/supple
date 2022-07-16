@@ -78,16 +78,16 @@ tst/bin/test: tst/bin tst/obj tst/obj/test_lazy.o tst/obj/test_iterators.o tst/o
 	@$(CXX) -o $@ tst/obj/*.o $(CXXFLAGS)
 	@ln -sf tst/bin/test ./run_tests
 
-obj/main.o: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/lazy.hpp inc/utils/metaprogramming.hpp inc/utils/term_colors.h
+obj/main.o: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/metaprogramming.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc $(CXXFLAGS)
 	@ln -sf ../../obj/main.o tst/obj/main.o
 
-asm/main.s: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/lazy.hpp inc/utils/metaprogramming.hpp inc/utils/term_colors.h
+asm/main.s: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/metaprogramming.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mGenerating\t $@\033[1;0m\n"
 	@$(CXX) -S -o $@ $< -Iinc $(CXXFLAGS)
 
-pre/main.ii: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/lazy.hpp inc/utils/metaprogramming.hpp inc/utils/term_colors.h
+pre/main.ii: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.hpp inc/utils/iterators.hpp inc/utils/metaprogramming.hpp inc/utils/lazy.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mPreprocessing\t $@\033[1;0m\n"
 	@$(CXX) -E -o $@ $< -Iinc $(CXXFLAGS)
 
@@ -95,7 +95,7 @@ tst/obj/test_lazy.o: tst/src/test_lazy.cpp tst/inc/test_lazy.h tst/inc/test_util
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/test_iterators.o: tst/src/test_iterators.cpp tst/inc/test_iterators.h inc/utils/iterators.hpp tst/inc/test_utils.hpp inc/utils/term_colors.h
+tst/obj/test_iterators.o: tst/src/test_iterators.cpp tst/inc/test_iterators.h inc/utils/iterators.hpp inc/utils/metaprogramming.hpp tst/inc/test_utils.hpp inc/utils/term_colors.h inc/utils/etc.hpp
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
@@ -103,11 +103,11 @@ tst/obj/test_etc.o: tst/src/test_etc.cpp tst/inc/test_etc.h tst/inc/test_utils.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/test_algorithm.o: tst/src/test_algorithm.cpp tst/inc/test_algorithm.h tst/inc/test_utils.hpp inc/utils/term_colors.h inc/utils/algorithm.hpp inc/utils/etc.hpp
+tst/obj/test_algorithm.o: tst/src/test_algorithm.cpp tst/inc/test_algorithm.h tst/inc/test_utils.hpp inc/utils/term_colors.h inc/utils/algorithm.hpp
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.hpp inc/utils/term_colors.h tst/inc/test_algorithm.h tst/inc/test_utils.hpp inc/utils/algorithm.hpp inc/utils/etc.hpp tst/inc/test_etc.h tst/inc/test_iterators.h inc/utils/iterators.hpp tst/inc/test_lazy.h inc/utils/lazy.hpp inc/utils/metaprogramming.hpp tst/inc/test_metaprogramming.h
+tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.hpp inc/utils/term_colors.h tst/inc/test_algorithm.h tst/inc/test_utils.hpp inc/utils/algorithm.hpp tst/inc/test_etc.h inc/utils/etc.hpp tst/inc/test_iterators.h inc/utils/iterators.hpp inc/utils/metaprogramming.hpp tst/inc/test_lazy.h inc/utils/lazy.hpp tst/inc/test_metaprogramming.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 

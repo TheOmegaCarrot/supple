@@ -144,7 +144,7 @@ public:
    * @return Const reference to contained value.
    */
   /* }}} */
-  [[nodiscard]] constexpr auto get() const noexcept(noexcept(m_func()))
+  [[nodiscard]] constexpr auto get() const noexcept
       -> std::add_lvalue_reference_t<const value_type>
   {
     if ( not m_value.has_value() ) {
@@ -161,8 +161,7 @@ public:
    * @return Const reference to contained value.
    */
   /* }}} */
-  [[nodiscard]] constexpr operator const value_type&() const
-      noexcept(noexcept(m_func()))
+  [[nodiscard]] constexpr operator const value_type&() const noexcept
   {
     return this->get();
   }

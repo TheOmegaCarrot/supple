@@ -55,6 +55,51 @@ constexpr auto min_size(const Container& cont,
 
 /* {{{ doc */
 /**
+ * @brief Base case of recursive overload.
+ *
+ * @tparam Container Container which provides a `.size()`
+ * member function.
+ *
+ * @param cont Container whose size to query.
+ *
+ * @return Size of container `cont`.
+ */
+/* }}} */
+template <typename Container>
+constexpr auto max_size(const Container& cont) noexcept -> std::size_t
+{
+  return cont.size();
+}
+
+/* {{{ doc */
+/**
+ * @brief Returns size of largest container provided.
+ * Calls size method internally.
+ *
+ * @tparam Container Container which provides a `.size()`
+ * member function.
+ *
+ * @tparam Containers Sequence of container types which all provide
+ * a `.size()` member function. Types may be mixed, so long as all
+ * `.size()` member functions return comparable types which can be
+ * passed to `std::max`.
+ *
+ * @param cont First container.
+ *
+ * @param conts Pack of remaining containers.
+ *
+ * @return Size of smallest container.
+ */
+/* }}} */
+template <typename Container, typename... Containers>
+constexpr auto max_size(const Container& cont,
+                        const Containers&... conts) noexcept -> std::size_t
+{
+  return std::max(::ehanc::max_size(cont), ::ehanc::max_size(conts...));
+}
+
+/* {{{ doc */
+/**
  * @brief Applies `func` to each adjacent pair of elements.
  *
  * Example: Range is: {1, 2, 3}

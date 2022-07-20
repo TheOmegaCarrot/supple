@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "test_algorithm.h"
+#include "utils/etc.hpp"
 
 auto test_min_size() -> ehanc::test
 {
@@ -12,8 +13,8 @@ auto test_min_size() -> ehanc::test
   std::array<int, 3> test3 {};
   std::array<int, 6> test4 {};
 
-  results.add_case(ehanc::min_size(test1, test2, test3, test4),
-                   std::size_t {3});
+  using ehanc::literals::operator""_z;
+  results.add_case(ehanc::min_size(test1, test2, test3, test4), 3_z);
 
   return results;
 }
@@ -26,8 +27,8 @@ auto test_max_size() -> ehanc::test
   std::array<int, 3> test3 {};
   std::array<int, 6> test4 {};
 
-  results.add_case(ehanc::max_size(test1, test2, test3, test4),
-                   std::size_t {8});
+  using ehanc::literals::operator""_z;
+  results.add_case(ehanc::max_size(test1, test2, test3, test4), 8_z);
 
   return results;
 }

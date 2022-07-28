@@ -198,6 +198,37 @@ constexpr inline bool is_iterable_v = ::ehanc::is_iterable<T>::value;
 
 /* {{{ doc */
 /**
+ * @brief Metafunction to determine if a type meets the minimum criteria
+ * for being an iterator. Those being that the type is dereferenceable, and
+ * pre-incrementable.
+ */
+/* }}} */
+template <typename T, typename = void>
+struct is_iterator : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type meets the minimum criteria
+ * for being an iterator. Those being that the type is dereferenceable, and
+ * pre-incrementable. Specialization for true case.
+ */
+/* }}} */
+template <typename T>
+struct is_iterator<T, std::void_t<decltype(*std::declval<T>()),
+                                  decltype(++std::declval<T&>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_iterator`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T>
+constexpr inline bool is_iterator_v = ::ehanc::is_iterator<T>::value;
+
+/* {{{ doc */
+/**
  * @brief Metafunction to determine if a type supports pre-increment and
  * pre-decrement operations. Intended for use with iterators.
  */

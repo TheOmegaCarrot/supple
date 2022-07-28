@@ -314,6 +314,26 @@ static_assert(not ehanc::is_iterable_v<int>);
 static_assert(not ehanc::is_iterable_v<char>);
 static_assert(not ehanc::is_iterable_v<bool>);
 
+auto test_is_iterator() -> ehanc::test
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_iterator_v<int>, false);
+  results.add_case(ehanc::is_iterator_v<std::vector<int>::iterator>, true);
+  results.add_case(ehanc::is_iterator_v<std::array<int, 5>::iterator>,
+                   true);
+  results.add_case(ehanc::is_iterator_v<int*>, true);
+  results.add_case(ehanc::is_iterator_v<const int*>, true);
+
+  return results;
+}
+
+static_assert(not ehanc::is_iterator_v<int>);
+static_assert(ehanc::is_iterator_v<std::vector<int>::iterator>);
+static_assert(ehanc::is_iterator_v<std::array<int, 5>::iterator>);
+static_assert(ehanc::is_iterator_v<int*>);
+static_assert(ehanc::is_iterator_v<const int*>);
+
 auto test_is_bidirectional() -> ehanc::test
 {
   ehanc::test results;
@@ -367,6 +387,7 @@ void test_metaprogramming()
   ehanc::run_test("ehanc::peel_last", &test_peel_last);
   ehanc::run_test("ehanc::is_pack_uniform", &test_is_pack_uniform);
   ehanc::run_test("ehanc::is_iterable", &test_is_iterable);
+  ehanc::run_test("ehanc::is_iterator", &test_is_iterator);
   ehanc::run_test("ehanc::is_bidirectional", &test_is_bidirectional);
   ehanc::run_test("ehanc::is_random_access", &test_is_random_access);
 }

@@ -32,6 +32,16 @@ auto main([[maybe_unused]] const int argc,
 
   /* lazy_demo(); */
 
+  std::cout << ehanc::to_string(
+      std::tuple<int, char, double> {12, 'q', 15.932})
+            << '\n';
+  std::cout << ehanc::to_string(std::pair<int, char> {3, 'c'}) << '\n';
+  std::cout << ehanc::to_string(std::vector<int> {1, 2, 5, 8}) << '\n';
+  std::cout << ehanc::to_string(std::list<char> {'a', 'p', 'p', 'l', 'e'})
+            << '\n';
+  std::cout << ehanc::to_string(ehanc::sequence(1, 10)) << '\n';
+  std::cout << ehanc::to_string(0) << '\n';
+
   return 0;
 }
 

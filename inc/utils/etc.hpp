@@ -4,6 +4,10 @@
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
+#include <sstream>
+
+#include "utils/iterators.hpp"
+#include "utils/metaprogramming.hpp"
 
 namespace ehanc {
 
@@ -22,6 +26,34 @@ template <typename T>
 explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 {
   return t;
+}
+
+template <typename T>
+auto to_string([[maybe_unused]] const T& value) -> std::string
+{
+  std::stringstream out;
+  if constexpr ( ::ehanc::is_tuple_v<T> ) {
+
+    return "Tuple";
+
+  } else if constexpr ( ::ehanc::is_pair_v<T> ) {
+
+    out << "( " << ::ehanc::to_string(value.first) << ", "
+        << ::ehanc::to_string(value.second) << " )";
+
+  } else if constexpr ( ::ehanc::is_iterable_v<T> ) {
+
+    out << "[ ";
+    std::for_each(value.cbegin(), value.cend(),
+                  [&out](const auto& i) { out << i << ", "; });
+    out << "\b\b ]";
+
+  } else {
+
+    out << value;
+  }
+
+  return out.str();
 }
 
 inline namespace literals {

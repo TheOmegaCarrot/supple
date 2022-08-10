@@ -401,20 +401,72 @@ for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
 
 namespace impl {
 
+/* {{{ doc */
+/**
+ * @brief Applies a function to the `Index` element of a tuple. Not
+ * intended to be called outside ::ehanc::impl::for_each_in_tuple_impl.
+ *
+ * @tparam Tuple Tuple type.
+ *
+ * @tparam Func Function type.
+ *
+ * @tparam Index Index of tuple to apply function to.
+ *
+ * @param func Function to apply to a member of tuple.
+ *
+ * @param tup Tuple to apply function to a member of.
+ */
+/* }}} */
 template <typename Tuple, typename Func, std::size_t Index>
 constexpr void apply_to_tuple_index(Func&& func, const Tuple& tup)
 {
   func(std::get<Index>(tup));
 }
 
+/* {{{ doc */
+/**
+ * @brief Applies a visitor function to every member of a tuple. Not
+ * intended to be called outside ::ehanc::for_each_in_tuple.
+ *
+ * @tparam Tuple Tuple type.
+ *
+ * @tparam Func Function type.
+ *
+ * @tparam Inds Sequence of integers for template wizardry.
+ *
+ * @param tup Tuple to apply function to a member of.
+ *
+ * @param func Function to apply to a member of tuple.
+ *
+ * @param magic std::index_sequence just there for deducing Inds for
+ * template wizardry.
+ */
+/* }}} */
 template <typename Tuple, typename Func, std::size_t... Inds>
-constexpr void for_each_in_tuple_impl(const Tuple& tup, Func&& func,
-                                      std::index_sequence<Inds...>)
+constexpr void
+for_each_in_tuple_impl(const Tuple& tup, Func&& func,
+                       [[maybe_unused]] std::index_sequence<Inds...> magic)
 {
   (::ehanc::impl::apply_to_tuple_index<Tuple, Func, Inds>(func, tup), ...);
 }
+
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Applies a visitor function to every member of a tuple. Would not
+ * have been possible without what I learned from this CppCon talk:
+ * https://www.youtube.com/watch?v=15etE6WcvBY
+ *
+ * @tparam Tuple Tuple type.
+ *
+ * @tparam Func Visitor function type.
+ *
+ * @param tup Tuple to apply a visitor function to every element of.
+ *
+ * @param func Visitor function.
+ */
+/* }}} */
 template <typename Tuple, typename Func>
 constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept
 {

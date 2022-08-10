@@ -6,7 +6,9 @@
 #include <iterator>
 #include <list>
 #include <queue>
+#include <tuple>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace ehanc {
@@ -282,9 +284,89 @@ struct is_random_access<
                    decltype(std::declval<T&>() - std::declval<T&>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_random_access`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T>
 constexpr inline bool is_random_access_v =
     ::ehanc::is_random_access<T>::value;
+
+namespace impl {
+/* {{{ doc */
+/**
+ * @brief Partial implementation of a metafunction to determine
+ * if a type is a std::tuple.
+ */
+/* }}} */
+template <typename... Ts>
+struct is_tuple_impl : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Partial implementation of a metafunction to determine
+ * if a type is a std::tuple. Specialization for true case.
+ */
+/* }}} */
+template <typename... Ts>
+struct is_tuple_impl<std::tuple<Ts...>> : std::true_type {};
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type is a std::tuple.
+ */
+/* }}} */
+template <typename T>
+struct is_tuple : ::ehanc::impl::is_tuple_impl<std::decay_t<T>> {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_tuple`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T>
+constexpr inline bool is_tuple_v = ::ehanc::is_tuple<T>::value;
+
+namespace impl {
+/* {{{ doc */
+/**
+ * @brief Partial implementation of a metafunction to determine
+ * if a type is a std::pair.
+ */
+/* }}} */
+template <typename... Ts>
+struct is_pair_impl : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Partial implementation of a metafunction to determine
+ * if a type is a std::pair. Specialization for true case.
+ */
+/* }}} */
+template <typename... Ts>
+struct is_pair_impl<std::pair<Ts...>> : std::true_type {};
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type is a std::pair.
+ */
+/* }}} */
+template <typename T>
+struct is_pair : ::ehanc::impl::is_pair_impl<std::decay_t<T>> {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_pair`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T>
+constexpr inline bool is_pair_v = ::ehanc::is_pair<T>::value;
 
 } // namespace ehanc
 

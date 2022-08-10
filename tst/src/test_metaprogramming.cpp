@@ -378,6 +378,194 @@ static_assert(ehanc::is_random_access_v<std::vector<int>::iterator>);
 static_assert(not ehanc::is_random_access_v<std::list<int>::iterator>);
 static_assert(ehanc::is_random_access_v<std::deque<int>::iterator>);
 
+auto test_is_tuple() -> ehanc::test
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_tuple_v<std::tuple<int, char, double>>, true);
+  results.add_case(ehanc::is_tuple_v<const std::tuple<int, char, double>>,
+                   true);
+  results.add_case(
+      ehanc::is_tuple_v<volatile std::tuple<int, char, double>>, true);
+  results.add_case(
+      ehanc::is_tuple_v<const volatile std::tuple<int, char, double>>,
+      true);
+  results.add_case(ehanc::is_tuple_v<std::tuple<int, char, double>&>,
+                   true);
+  results.add_case(ehanc::is_tuple_v<const std::tuple<int, char, double>&>,
+                   true);
+  results.add_case(
+      ehanc::is_tuple_v<volatile std::tuple<int, char, double>&>, true);
+  results.add_case(
+      ehanc::is_tuple_v<const volatile std::tuple<int, char, double>&>,
+      true);
+  results.add_case(ehanc::is_tuple_v<std::tuple<int, char, double>&&>,
+                   true);
+  results.add_case(
+      ehanc::is_tuple_v<const std::tuple<int, char, double>&&>, true);
+  results.add_case(
+      ehanc::is_tuple_v<volatile std::tuple<int, char, double>&&>, true);
+  results.add_case(
+      ehanc::is_tuple_v<const volatile std::tuple<int, char, double>&&>,
+      true);
+
+  results.add_case(ehanc::is_tuple_v<std::tuple<int, char>>, true);
+  results.add_case(ehanc::is_tuple_v<const std::tuple<int, char>>, true);
+  results.add_case(ehanc::is_tuple_v<volatile std::tuple<int, char>>,
+                   true);
+  results.add_case(ehanc::is_tuple_v<const volatile std::tuple<int, char>>,
+                   true);
+  results.add_case(ehanc::is_tuple_v<std::tuple<int, char>&>, true);
+  results.add_case(ehanc::is_tuple_v<const std::tuple<int, char>&>, true);
+  results.add_case(ehanc::is_tuple_v<volatile std::tuple<int, char>&>,
+                   true);
+  results.add_case(
+      ehanc::is_tuple_v<const volatile std::tuple<int, char>&>, true);
+  results.add_case(ehanc::is_tuple_v<std::tuple<int, char>&&>, true);
+  results.add_case(ehanc::is_tuple_v<const std::tuple<int, char>&&>, true);
+  results.add_case(ehanc::is_tuple_v<volatile std::tuple<int, char>&&>,
+                   true);
+  results.add_case(
+      ehanc::is_tuple_v<const volatile std::tuple<int, char>&&>, true);
+
+  results.add_case(ehanc::is_tuple_v<std::pair<int, char>>, false);
+  results.add_case(ehanc::is_tuple_v<const std::pair<int, char>>, false);
+  results.add_case(ehanc::is_tuple_v<volatile std::pair<int, char>>,
+                   false);
+  results.add_case(ehanc::is_tuple_v<const volatile std::pair<int, char>>,
+                   false);
+  results.add_case(ehanc::is_tuple_v<std::pair<int, char>&>, false);
+  results.add_case(ehanc::is_tuple_v<const std::pair<int, char>&>, false);
+  results.add_case(ehanc::is_tuple_v<volatile std::pair<int, char>&>,
+                   false);
+  results.add_case(ehanc::is_tuple_v<const volatile std::pair<int, char>&>,
+                   false);
+  results.add_case(ehanc::is_tuple_v<std::pair<int, char>&&>, false);
+  results.add_case(ehanc::is_tuple_v<const std::pair<int, char>&&>, false);
+  results.add_case(ehanc::is_tuple_v<volatile std::pair<int, char>&&>,
+                   false);
+  results.add_case(
+      ehanc::is_tuple_v<const volatile std::pair<int, char>&&>, false);
+
+  results.add_case(ehanc::is_tuple_v<int>, false);
+
+  return results;
+}
+
+static_assert(ehanc::is_tuple_v<std::tuple<int, char, double>>);
+static_assert(ehanc::is_tuple_v<const std::tuple<int, char, double>>);
+static_assert(ehanc::is_tuple_v<volatile std::tuple<int, char, double>>);
+static_assert(
+    ehanc::is_tuple_v<const volatile std::tuple<int, char, double>>);
+static_assert(ehanc::is_tuple_v<std::tuple<int, char, double>&>);
+static_assert(ehanc::is_tuple_v<const std::tuple<int, char, double>&>);
+static_assert(ehanc::is_tuple_v<volatile std::tuple<int, char, double>&>);
+static_assert(
+    ehanc::is_tuple_v<const volatile std::tuple<int, char, double>&>);
+static_assert(ehanc::is_tuple_v<std::tuple<int, char, double>&&>);
+static_assert(ehanc::is_tuple_v<const std::tuple<int, char, double>&&>);
+static_assert(ehanc::is_tuple_v<volatile std::tuple<int, char, double>&&>);
+static_assert(
+    ehanc::is_tuple_v<const volatile std::tuple<int, char, double>&&>);
+static_assert(ehanc::is_tuple_v<std::tuple<int, char>>);
+static_assert(ehanc::is_tuple_v<const std::tuple<int, char>>);
+static_assert(ehanc::is_tuple_v<volatile std::tuple<int, char>>);
+static_assert(ehanc::is_tuple_v<const volatile std::tuple<int, char>>);
+static_assert(ehanc::is_tuple_v<std::tuple<int, char>&>);
+static_assert(ehanc::is_tuple_v<const std::tuple<int, char>&>);
+static_assert(ehanc::is_tuple_v<volatile std::tuple<int, char>&>);
+static_assert(ehanc::is_tuple_v<const volatile std::tuple<int, char>&>);
+static_assert(ehanc::is_tuple_v<std::tuple<int, char>&&>);
+static_assert(ehanc::is_tuple_v<const std::tuple<int, char>&&>);
+static_assert(ehanc::is_tuple_v<volatile std::tuple<int, char>&&>);
+static_assert(ehanc::is_tuple_v<const volatile std::tuple<int, char>&&>);
+static_assert(not ehanc::is_tuple_v<std::pair<int, char>>);
+static_assert(not ehanc::is_tuple_v<const std::pair<int, char>>);
+static_assert(not ehanc::is_tuple_v<volatile std::pair<int, char>>);
+static_assert(not ehanc::is_tuple_v<const volatile std::pair<int, char>>);
+static_assert(not ehanc::is_tuple_v<std::pair<int, char>&>);
+static_assert(not ehanc::is_tuple_v<const std::pair<int, char>&>);
+static_assert(not ehanc::is_tuple_v<volatile std::pair<int, char>&>);
+static_assert(not ehanc::is_tuple_v<const volatile std::pair<int, char>&>);
+static_assert(not ehanc::is_tuple_v<std::pair<int, char>&&>);
+static_assert(not ehanc::is_tuple_v<const std::pair<int, char>&&>);
+static_assert(not ehanc::is_tuple_v<volatile std::pair<int, char>&&>);
+static_assert(
+    not ehanc::is_tuple_v<const volatile std::pair<int, char>&&>);
+static_assert(not ehanc::is_tuple_v<int>);
+
+auto test_is_pair() -> ehanc::test
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_pair_v<std::pair<int, char>>, true);
+  results.add_case(ehanc::is_pair_v<const std::pair<int, char>>, true);
+  results.add_case(ehanc::is_pair_v<volatile std::pair<int, char>>, true);
+  results.add_case(ehanc::is_pair_v<const volatile std::pair<int, char>>,
+                   true);
+  results.add_case(ehanc::is_pair_v<std::pair<int, char>&>, true);
+  results.add_case(ehanc::is_pair_v<const std::pair<int, char>&>, true);
+  results.add_case(ehanc::is_pair_v<volatile std::pair<int, char>&>, true);
+  results.add_case(ehanc::is_pair_v<const volatile std::pair<int, char>&>,
+                   true);
+  results.add_case(ehanc::is_pair_v<std::pair<int, char>&&>, true);
+  results.add_case(ehanc::is_pair_v<const std::pair<int, char>&&>, true);
+  results.add_case(ehanc::is_pair_v<volatile std::pair<int, char>&&>,
+                   true);
+  results.add_case(ehanc::is_pair_v<const volatile std::pair<int, char>&&>,
+                   true);
+
+  results.add_case(ehanc::is_pair_v<std::tuple<int, char>>, false);
+  results.add_case(ehanc::is_pair_v<const std::tuple<int, char>>, false);
+  results.add_case(ehanc::is_pair_v<volatile std::tuple<int, char>>,
+                   false);
+  results.add_case(ehanc::is_pair_v<const volatile std::tuple<int, char>>,
+                   false);
+  results.add_case(ehanc::is_pair_v<std::tuple<int, char>&>, false);
+  results.add_case(ehanc::is_pair_v<const std::tuple<int, char>&>, false);
+  results.add_case(ehanc::is_pair_v<volatile std::tuple<int, char>&>,
+                   false);
+  results.add_case(ehanc::is_pair_v<const volatile std::tuple<int, char>&>,
+                   false);
+  results.add_case(ehanc::is_pair_v<std::tuple<int, char>&&>, false);
+  results.add_case(ehanc::is_pair_v<const std::tuple<int, char>&&>, false);
+  results.add_case(ehanc::is_pair_v<volatile std::tuple<int, char>&&>,
+                   false);
+  results.add_case(
+      ehanc::is_pair_v<const volatile std::tuple<int, char>&&>, false);
+
+  results.add_case(ehanc::is_pair_v<int>, false);
+
+  return results;
+}
+
+static_assert(ehanc::is_pair_v<std::pair<int, char>>);
+static_assert(ehanc::is_pair_v<const std::pair<int, char>>);
+static_assert(ehanc::is_pair_v<volatile std::pair<int, char>>);
+static_assert(ehanc::is_pair_v<const volatile std::pair<int, char>>);
+static_assert(ehanc::is_pair_v<std::pair<int, char>&>);
+static_assert(ehanc::is_pair_v<const std::pair<int, char>&>);
+static_assert(ehanc::is_pair_v<volatile std::pair<int, char>&>);
+static_assert(ehanc::is_pair_v<const volatile std::pair<int, char>&>);
+static_assert(ehanc::is_pair_v<std::pair<int, char>&&>);
+static_assert(ehanc::is_pair_v<const std::pair<int, char>&&>);
+static_assert(ehanc::is_pair_v<volatile std::pair<int, char>&&>);
+static_assert(ehanc::is_pair_v<const volatile std::pair<int, char>&&>);
+static_assert(not ehanc::is_pair_v<std::tuple<int, char>>);
+static_assert(not ehanc::is_pair_v<const std::tuple<int, char>>);
+static_assert(not ehanc::is_pair_v<volatile std::tuple<int, char>>);
+static_assert(not ehanc::is_pair_v<const volatile std::tuple<int, char>>);
+static_assert(not ehanc::is_pair_v<std::tuple<int, char>&>);
+static_assert(not ehanc::is_pair_v<const std::tuple<int, char>&>);
+static_assert(not ehanc::is_pair_v<volatile std::tuple<int, char>&>);
+static_assert(not ehanc::is_pair_v<const volatile std::tuple<int, char>&>);
+static_assert(not ehanc::is_pair_v<std::tuple<int, char>&&>);
+static_assert(not ehanc::is_pair_v<const std::tuple<int, char>&&>);
+static_assert(not ehanc::is_pair_v<volatile std::tuple<int, char>&&>);
+static_assert(
+    not ehanc::is_pair_v<const volatile std::tuple<int, char>&&>);
+static_assert(not ehanc::is_pair_v<int>);
+
 void test_metaprogramming()
 {
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
@@ -390,4 +578,6 @@ void test_metaprogramming()
   ehanc::run_test("ehanc::is_iterator", &test_is_iterator);
   ehanc::run_test("ehanc::is_bidirectional", &test_is_bidirectional);
   ehanc::run_test("ehanc::is_random_access", &test_is_random_access);
+  ehanc::run_test("ehanc::is_tuple", &test_is_tuple);
+  ehanc::run_test("ehanc::is_pair", &test_is_pair);
 }

@@ -5,6 +5,8 @@
 
 /// @cond
 
+// NOLINTBEGIN
+
 void lazy_demo();
 
 template <typename... Ts>
@@ -23,12 +25,12 @@ auto main([[maybe_unused]] const int argc,
           [[maybe_unused]] const char* const* const argv) -> int
 {
 
-  std::cout << std::boolalpha
-            << std::is_same_v<decltype(peeler()), void> << '\n'
-            << uniform() << '\n'
-            << '\n';
+  /* std::cout << std::boolalpha */
+  /*           << std::is_same_v<decltype(peeler()), void> << '\n' */
+  /*           << uniform() << '\n' */
+  /*           << '\n'; */
 
-  lazy_demo();
+  /* lazy_demo(); */
 
   return 0;
 }
@@ -107,3 +109,5 @@ void lazy_demo()
   std::cout << deduced << '\n';
   std::cout << deduced << '\n';
 }
+
+// NOLINTEND

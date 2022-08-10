@@ -417,11 +417,11 @@ namespace impl {
  * @param tup Tuple to apply function to a member of.
  */
 /* }}} */
-template <typename Tuple, typename Func, std::size_t Index>
-constexpr void apply_to_tuple_index(Func&& func, const Tuple& tup)
-{
-  func(std::get<Index>(tup));
-}
+/* template <typename Tuple, typename Func, std::size_t Index> */
+/* constexpr void apply_to_tuple_index(Func&& func, const Tuple& tup) */
+/* { */
+/*   func(std::get<Index>(tup)); */
+/* } */
 
 /* {{{ doc */
 /**
@@ -447,7 +447,7 @@ constexpr void
 for_each_in_tuple_impl(const Tuple& tup, Func&& func,
                        [[maybe_unused]] std::index_sequence<Inds...> magic)
 {
-  (::ehanc::impl::apply_to_tuple_index<Tuple, Func, Inds>(func, tup), ...);
+  (func(std::get<Inds>(tup)), ...);
 }
 
 } // namespace impl

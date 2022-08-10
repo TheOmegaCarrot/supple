@@ -301,6 +301,9 @@ auto test_is_iterable() -> ehanc::test
   results.add_case(ehanc::is_iterable_v<int>, false);
   results.add_case(ehanc::is_iterable_v<char>, false);
   results.add_case(ehanc::is_iterable_v<bool>, false);
+  results.add_case(ehanc::is_iterable_v<std::tuple<int, char, bool>>,
+                   false);
+  results.add_case(ehanc::is_iterable_v<std::pair<int, char>>, false);
 
   return results;
 }
@@ -313,6 +316,8 @@ static_assert(ehanc::is_iterable_v<int[5]>);
 static_assert(not ehanc::is_iterable_v<int>);
 static_assert(not ehanc::is_iterable_v<char>);
 static_assert(not ehanc::is_iterable_v<bool>);
+static_assert(not ehanc::is_iterable_v<std::tuple<int, char, bool>>);
+static_assert(not ehanc::is_iterable_v<std::pair<int, char>>);
 
 auto test_is_iterator() -> ehanc::test
 {

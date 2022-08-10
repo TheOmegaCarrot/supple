@@ -6,6 +6,7 @@
 #include <iterator>
 #include <sstream>
 
+#include "utils/algorithm.hpp"
 #include "utils/iterators.hpp"
 #include "utils/metaprogramming.hpp"
 
@@ -34,7 +35,10 @@ auto to_string([[maybe_unused]] const T& value) -> std::string
   std::stringstream out;
   if constexpr ( ::ehanc::is_tuple_v<T> ) {
 
-    return "Tuple";
+    out << "( ";
+    ::ehanc::for_each_in_tuple(
+        value, [&out](const auto& i) { out << i << ", "; });
+    out << "\b\b )";
 
   } else if constexpr ( ::ehanc::is_pair_v<T> ) {
 

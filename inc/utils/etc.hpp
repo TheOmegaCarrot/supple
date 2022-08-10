@@ -7,7 +7,6 @@
 #include <sstream>
 
 #include "utils/algorithm.hpp"
-#include "utils/iterators.hpp"
 #include "utils/metaprogramming.hpp"
 
 namespace ehanc {
@@ -33,6 +32,7 @@ template <typename T>
 auto to_string([[maybe_unused]] const T& value) -> std::string
 {
   std::stringstream out;
+  out << std::boolalpha;
   if constexpr ( ::ehanc::is_tuple_v<T> ) {
 
     out << "( ";

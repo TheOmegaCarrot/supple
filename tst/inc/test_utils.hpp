@@ -9,6 +9,7 @@
 #include <string_view>
 #include <tuple>
 
+#include "utils/etc.hpp"
 #include "utils/term_colors.h"
 
 constexpr inline int TEST_OUTPUT_WIDTH         = 60;
@@ -40,8 +41,9 @@ public:
       detail << std::boolalpha << std::left << std::setw(10) << FG_RED
              << "Case " << m_case_index << '\t' << message
              << "\n\n\tExpected:\n"
-             << RESET << '\t' << expected << FG_RED << "\n\n\tGot:\n"
-             << RESET << '\t' << result << '\n'
+             << RESET << '\t' << ::ehanc::to_string(expected) << FG_RED
+             << "\n\n\tGot:\n"
+             << RESET << '\t' << ::ehanc::to_string(result) << '\n'
              << '\n';
 
       m_cases.push_back(detail.str());

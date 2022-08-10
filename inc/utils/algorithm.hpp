@@ -399,6 +399,29 @@ for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
                           std::cbegin(containers)...);
 }
 
+namespace impl {
+
+template <typename Tuple, typename Func, std::size_t Index>
+constexpr void apply_to_tuple_index(Func&& func, const Tuple& tup)
+{
+  func(std::get<Index>(tup));
+}
+
+template <typename Tuple, typename Func, std::size_t... Inds>
+constexpr void for_each_in_tuple_impl(const Tuple& tup, Func&& func,
+                                      std::index_sequence<Inds...>)
+{
+  (::ehanc::impl::apply_to_tuple_index<Tuple, Func, Inds>(func, tup), ...);
+}
+} // namespace impl
+
+template <typename Tuple, typename Func>
+constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  ::ehanc::impl::for_each_in_tuple_impl(tup, func, seq);
+}
+
 } // namespace ehanc
 
 #endif

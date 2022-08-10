@@ -185,6 +185,35 @@ auto test_for_each_both_n() -> ehanc::test
   return results;
 }
 
+auto test_for_each_in_tuple() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple<int, char, bool> test {42, 'c', false};
+
+  ehanc::for_each_in_tuple(
+      test, [&results, index {0}](const auto& i) mutable {
+        using I = std::decay_t<decltype(i)>;
+
+        if constexpr ( std::is_same_v<I, int> ) {
+          results.add_case(static_cast<int>(i), 42);
+          results.add_case(index, 0);
+
+        } else if constexpr ( std::is_same_v<I, char> ) {
+          results.add_case(static_cast<char>(i), 'c');
+          results.add_case(index, 1);
+
+        } else if constexpr ( std::is_same_v<I, bool> ) {
+          results.add_case(static_cast<bool>(i), false);
+          results.add_case(index, 2);
+        }
+
+        ++index;
+      });
+
+  return results;
+}
+
 void test_algorithm()
 {
   ehanc::run_test("ehanc::min_size", &test_min_size);
@@ -196,4 +225,5 @@ void test_algorithm()
   ehanc::run_test("ehanc::for_each_all_c", &test_for_each_all_c);
   ehanc::run_test("ehanc::for_each_both", &test_for_each_both);
   ehanc::run_test("ehanc::for_each_both_n", &test_for_each_both_n);
+  ehanc::run_test("ehanc::for_each_in_tuple", &test_for_each_in_tuple);
 }

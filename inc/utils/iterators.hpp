@@ -316,7 +316,7 @@ public:
    * @brief Provide begin sequence iterator.
    */
   /* }}} */
-  constexpr auto begin() const noexcept
+  [[nodiscard]] constexpr auto begin() const noexcept
       -> ::ehanc::sequence_iterator<value_type>
   {
     return ::ehanc::sequence_iterator(m_begin, m_inc);
@@ -327,7 +327,7 @@ public:
    * @brief Provide cbegin for compatibility.
    */
   /* }}} */
-  constexpr auto cbegin() const noexcept
+  [[nodiscard]] constexpr auto cbegin() const noexcept
       -> ::ehanc::sequence_iterator<value_type>
   {
     return this->begin();
@@ -338,7 +338,7 @@ public:
    * @brief Provide end sequence iterator.
    */
   /* }}} */
-  constexpr auto end() const noexcept
+  [[nodiscard]] constexpr auto end() const noexcept
       -> ::ehanc::sequence_iterator<value_type>
   {
     return ::ehanc::sequence_iterator(m_end, m_inc);
@@ -349,7 +349,7 @@ public:
    * @brief Provide cbegin for compatibility.
    */
   /* }}} */
-  constexpr auto cend() const noexcept
+  [[nodiscard]] constexpr auto cend() const noexcept
       -> ::ehanc::sequence_iterator<value_type>
   {
     return this->end();

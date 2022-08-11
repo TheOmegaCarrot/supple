@@ -571,6 +571,27 @@ static_assert(
     not ehanc::is_pair_v<const volatile std::tuple<int, char>&&>);
 static_assert(not ehanc::is_pair_v<int>);
 
+auto test_is_printable() -> ehanc::test
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_printable_v<int>, true);
+  results.add_case(ehanc::is_printable_v<char>, true);
+  results.add_case(ehanc::is_printable_v<bool>, true);
+  results.add_case(ehanc::is_printable_v<std::string>, true);
+  results.add_case(ehanc::is_printable_v<std::vector<int>>, false);
+  results.add_case(ehanc::is_printable_v<std::list<std::string>>, false);
+
+  return results;
+}
+
+static_assert(ehanc::is_printable_v<int>);
+static_assert(ehanc::is_printable_v<char>);
+static_assert(ehanc::is_printable_v<bool>);
+static_assert(ehanc::is_printable_v<std::string>);
+static_assert(not ehanc::is_printable_v<std::vector<int>>);
+static_assert(not ehanc::is_printable_v<std::list<std::string>>);
+
 void test_metaprogramming()
 {
   ehanc::run_test("ehanc::sum_type", &test_sum_type);
@@ -585,4 +606,5 @@ void test_metaprogramming()
   ehanc::run_test("ehanc::is_random_access", &test_is_random_access);
   ehanc::run_test("ehanc::is_tuple", &test_is_tuple);
   ehanc::run_test("ehanc::is_pair", &test_is_pair);
+  ehanc::run_test("ehanc::is_printable", &test_is_printable);
 }

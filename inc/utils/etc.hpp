@@ -33,12 +33,20 @@ auto to_string([[maybe_unused]] const T& value) -> std::string
 {
   std::stringstream out;
   out << std::boolalpha;
-  if constexpr ( ::ehanc::is_tuple_v<T> ) {
+
+  if constexpr ( ::ehanc::is_printable_v<T> ) {
+
+    out << value;
+
+  } else if constexpr ( ::ehanc::is_tuple_v<T> ) {
 
     out << "( ";
     ::ehanc::for_each_in_tuple(
         value, [&out](const auto& i) { out << i << ", "; });
-    out << "\b\b )";
+    // Move "write head" 2 characters before the end, and overwrite from
+    // there Much less jank way of removing trailing ", "
+    out.seekp(-2, std::ios_base::end);
+    out << " )";
 
   } else if constexpr ( ::ehanc::is_pair_v<T> ) {
 
@@ -50,11 +58,8 @@ auto to_string([[maybe_unused]] const T& value) -> std::string
     out << "[ ";
     std::for_each(value.cbegin(), value.cend(),
                   [&out](const auto& i) { out << i << ", "; });
-    out << "\b\b ]";
-
-  } else {
-
-    out << value;
+    out.seekp(-2, std::ios_base::end);
+    out << " ]";
   }
 
   return out.str();

@@ -368,6 +368,17 @@ struct is_pair : ::ehanc::impl::is_pair_impl<std::decay_t<T>> {};
 template <typename T>
 constexpr inline bool is_pair_v = ::ehanc::is_pair<T>::value;
 
+template <typename T, typename = void>
+struct is_printable : std::false_type {};
+
+template <typename T>
+struct is_printable<T, std::void_t<decltype(std::declval<std::ostream&>()
+                                            << std::declval<T>())>>
+    : std::true_type {};
+
+template <typename T>
+constexpr inline bool is_printable_v = ::ehanc::is_printable<T>::value;
+
 } // namespace ehanc
 
 #endif

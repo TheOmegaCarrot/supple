@@ -58,6 +58,27 @@ auto test_explicit_copy() -> ehanc::test
   return results;
 }
 
+auto test_to_string() -> ehanc::test
+{
+  ehanc::test results;
+
+  using namespace std::literals;
+
+  std::tuple test1 {1, "hello", true};
+  results.add_case(ehanc::to_string(test1), "( 1, hello, true )"s,
+                   "tuple");
+
+  std::pair test2 {42, "Neat"s};
+  results.add_case(ehanc::to_string(test2), "( 42, Neat )"s, "pair");
+
+  std::vector test3 {1, 2, 42, 81};
+  results.add_case(ehanc::to_string(test3), "[ 1, 2, 42, 81 ]"s, "vector");
+
+  results.add_case(ehanc::to_string(1), "1"s, "int");
+
+  return results;
+}
+
 auto test_size_t_literals() -> ehanc::test
 {
   ehanc::test results;
@@ -78,6 +99,7 @@ auto test_size_t_literals() -> ehanc::test
 void test_etc()
 {
   ehanc::run_test("ehanc::explicit_copy", &test_explicit_copy);
+  ehanc::run_test("ehanc::to_string", &test_to_string);
   ehanc::run_test("ehanc::literals::size_t_literal::operator\"\"_z",
                   &test_size_t_literals);
 }

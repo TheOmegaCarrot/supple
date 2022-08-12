@@ -6,8 +6,6 @@
 #include "test_metaprogramming.h"
 #include "test_utils.hpp"
 
-#include "utils/lazy.hpp"
-
 auto test_sum_type() -> ehanc::test
 {
   ehanc::test results;
@@ -24,9 +22,6 @@ auto test_sum_type() -> ehanc::test
   results.add_case(
       std::is_same_v<ehanc::sum_type_t<double, float>, double>, true,
       "double + float == double");
-  results.add_case(
-      std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>, true,
-      "ehanc::lazy<int> + int == int");
   results.add_case(std::is_same_v<ehanc::sum_type_t<int, short>, short>,
                    false, "int + short == int");
   results.add_case(std::is_same_v<ehanc::sum_type_t<double, int>, int>,
@@ -51,9 +46,6 @@ static_assert(std::is_same_v<ehanc::sum_type_t<double, int>, double>,
               "double + int == double");
 static_assert(std::is_same_v<ehanc::sum_type_t<double, float>, double>,
               "double + float == double");
-static_assert(
-    std::is_same_v<ehanc::sum_type_t<ehanc::lazy<int>, int>, int>,
-    "ehanc::lazy<int> + int == int");
 static_assert(std::is_same_v<ehanc::sum_type_t<int, short>, int>,
               "int + short == int");
 static_assert(std::is_same_v<ehanc::sum_type_t<double, int>, double>,
@@ -179,8 +171,6 @@ auto test_is_type_in_pack() -> ehanc::test
 
   results.add_case(ehanc::is_type_in_pack_v<int, char, bool, int>, true);
   results.add_case(ehanc::is_type_in_pack_v<int, int, bool, int>, true);
-  results.add_case(
-      ehanc::is_type_in_pack_v<int, char, bool, ehanc::lazy<int>>, false);
   results.add_case(ehanc::is_type_in_pack_v<int, char, bool, char, char,
                                             char, float, double>,
                    false);
@@ -193,8 +183,6 @@ auto test_is_type_in_pack() -> ehanc::test
 
 static_assert(ehanc::is_type_in_pack_v<int, char, bool, int>);
 static_assert(ehanc::is_type_in_pack_v<int, int, bool, int>);
-static_assert(
-    not ehanc::is_type_in_pack_v<int, char, bool, ehanc::lazy<int>>);
 static_assert(not ehanc::is_type_in_pack_v<int, char, bool, char, char,
                                            char, float, double>);
 static_assert(ehanc::is_type_in_pack_v<int, int, int, int>);

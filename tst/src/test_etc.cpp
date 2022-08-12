@@ -6,7 +6,6 @@
 #include "test_etc.h"
 
 #include "utils/etc.hpp"
-#include "utils/lazy.hpp"
 
 struct copy_counter {
   copy_counter()                                       = default;

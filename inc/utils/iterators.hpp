@@ -354,6 +354,12 @@ public:
   {
     return this->end();
   }
+
+  [[nodiscard]] constexpr auto empty() const noexcept -> bool
+  {
+    return this->begin() == this->end();
+  }
+
 }; // class sequence
 
 template <typename T, typename F>

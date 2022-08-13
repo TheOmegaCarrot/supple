@@ -86,6 +86,19 @@ auto test_sequence() -> ehanc::test
     results.add_case(i, j--);
   }
 
+  ehanc::sequence seq {ehanc::sequence(0, 10)};
+  results.add_case(seq.empty(), false, "Should not report empty");
+
+  ehanc::sequence empty_sequence {ehanc::sequence(2, 2)};
+  results.add_case(empty_sequence.empty(), true, "Should report empty");
+
+  for ( int i : empty_sequence ) {
+    results.add_case(
+        false, true,
+        "Iteration over empty sequence should not happen\nValue: "
+            + std::to_string(i));
+  }
+
   return results;
 }
 

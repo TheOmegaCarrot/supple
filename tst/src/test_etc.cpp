@@ -73,7 +73,19 @@ auto test_to_string() -> ehanc::test
   std::vector test3 {1, 2, 42, 81};
   results.add_case(ehanc::to_string(test3), "[ 1, 2, 42, 81 ]"s, "vector");
 
+  std::list<std::pair<int, bool>> test4 {
+      {1,  true},
+      {2, false},
+      {5,  true}
+  };
+  results.add_case(ehanc::to_string(test4),
+                   "[ ( 1, true ), ( 2, false ), ( 5, true ) ]"s,
+                   "List of tuples");
+
   results.add_case(ehanc::to_string(1), "1"s, "int");
+
+  results.add_case(ehanc::to_string(std::vector<int> {}), "[ ]"s,
+                   "empty vector");
 
   return results;
 }

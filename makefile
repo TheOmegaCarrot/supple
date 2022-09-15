@@ -3,7 +3,7 @@ STD=-std=c++17
 OPT=-O0
 WARN=-Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wredundant-decls -Wconversion -Wnon-virtual-dtor -Wunused -Wdouble-promotion -Wformat=2 -Wnull-dereference -Wimplicit-fallthrough -Wuninitialized -Wstrict-overflow=4 -Wold-style-cast -Wfloat-equal -Wundef -Wshadow -Wfree-nonheap-object -Wsign-conversion -Wno-multichar -Woverloaded-virtual -Wctor-dtor-privacy -Wsign-promo -Wmisleading-indentation -Wzero-as-null-pointer-constant -Wsuggest-override -Weffc++ -Wno-error=effc++ -Werror -fsanitize=address -fsanitize=leak -fsanitize=undefined
 CXX=clang++
-ADDFLAGS=-g
+ADDFLAGS=
 CXXFLAGS=$(STD) $(OPT) $(ADDFLAGS) $(WARN)
 TSTARGS=
 EXE=bin/$(PROJNAME)
@@ -72,7 +72,7 @@ $(EXE): obj/main.o
 	@$(CXX) -o $@ $^ $(CXXFLAGS)
 	@ln -sf $(EXE) ./run
 
-tst/bin/test: tst/bin tst/obj tst/obj/test_iterators.o tst/obj/test_etc.o tst/obj/test_algorithm.o tst/obj/maintest.o tst/obj/test_metaprogramming.o obj/main.o
+tst/bin/test: tst/bin tst/obj tst/obj/maintest.o tst/obj/test_iterators.o tst/obj/test_metaprogramming.o tst/obj/test_algorithm.o tst/obj/test_etc.o obj/main.o
 	@printf "\033[1;32mLinking\t\t tst/bin/test\033[1;0m\n"
 	@rm -f tst/obj/main.o
 	@$(CXX) -o $@ tst/obj/*.o $(CXXFLAGS)
@@ -91,11 +91,15 @@ pre/main.ii: src/main.cpp inc/utils/all.h inc/utils/algorithm.hpp inc/utils/etc.
 	@printf "\033[1;32mPreprocessing\t $@\033[1;0m\n"
 	@$(CXX) -E -o $@ $< -Iinc $(CXXFLAGS)
 
+tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.hpp inc/utils/etc.hpp inc/utils/algorithm.hpp inc/utils/metaprogramming.hpp inc/utils/term_colors.h tst/inc/test_algorithm.h tst/inc/test_utils.hpp tst/inc/test_etc.h tst/inc/test_iterators.h inc/utils/iterators.hpp tst/inc/test_metaprogramming.h
+	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
+	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
+
 tst/obj/test_iterators.o: tst/src/test_iterators.cpp tst/inc/test_iterators.h inc/utils/iterators.hpp inc/utils/metaprogramming.hpp tst/inc/test_utils.hpp inc/utils/etc.hpp inc/utils/algorithm.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/test_etc.o: tst/src/test_etc.cpp tst/inc/test_etc.h tst/inc/test_utils.hpp inc/utils/etc.hpp inc/utils/algorithm.hpp inc/utils/metaprogramming.hpp inc/utils/term_colors.h
+tst/obj/test_metaprogramming.o: tst/src/test_metaprogramming.cpp  tst/inc/test_metaprogramming.h inc/utils/metaprogramming.hpp tst/inc/test_utils.hpp inc/utils/etc.hpp inc/utils/algorithm.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
@@ -103,10 +107,6 @@ tst/obj/test_algorithm.o: tst/src/test_algorithm.cpp tst/inc/test_algorithm.h ts
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
 
-tst/obj/maintest.o: tst/src/maintest.cpp tst/inc/test_utils.hpp inc/utils/etc.hpp inc/utils/algorithm.hpp inc/utils/metaprogramming.hpp inc/utils/term_colors.h tst/inc/test_algorithm.h tst/inc/test_utils.hpp tst/inc/test_etc.h tst/inc/test_iterators.h inc/utils/iterators.hpp tst/inc/test_metaprogramming.h
-	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
-	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)
-
-tst/obj/test_metaprogramming.o: tst/src/test_metaprogramming.cpp  tst/inc/test_metaprogramming.h inc/utils/metaprogramming.hpp tst/inc/test_utils.hpp inc/utils/etc.hpp inc/utils/algorithm.hpp inc/utils/term_colors.h
+tst/obj/test_etc.o: tst/src/test_etc.cpp tst/inc/test_etc.h tst/inc/test_utils.hpp inc/utils/etc.hpp inc/utils/algorithm.hpp inc/utils/metaprogramming.hpp inc/utils/term_colors.h
 	@printf "\033[1;32mBuilding object\t $@\033[1;0m\n"
 	@$(CXX) -c -o $@ $< -Iinc -Itst/inc $(CXXFLAGS)

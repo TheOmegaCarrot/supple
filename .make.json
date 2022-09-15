@@ -1,5 +1,5 @@
 {"PROJNAME": "utils",
-"ADDFLAGS": "-g",
+"ADDFLAGS": "",
 "STD": "-std=c++17",
 "OPT": "-O0",
 "CXX": "clang++",

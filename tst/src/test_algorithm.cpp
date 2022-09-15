@@ -214,6 +214,33 @@ auto test_for_each_in_tuple() -> ehanc::test
   return results;
 }
 
+auto test_bkprt_generate() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::vector<int> test(10);
+  std::vector<int> ref(10);
+
+  ehanc::bkprt::generate(test.begin(), test.end(),
+                         [i {0}]() mutable { return ++i; });
+  std::generate(ref.begin(), ref.end(), [i {0}]() mutable { return ++i; });
+
+  ehanc::for_each_both(
+      test.begin(), test.end(), ref.begin(), ref.end(),
+      [&results, index {0}](const auto t, const auto r) mutable {
+        const std::string case_string([&index]() {
+          std::string tmp("Index ");
+          tmp += std::to_string(index);
+          ++index;
+          return tmp;
+        }()); // IILE
+
+        results.add_case(t, r, case_string);
+      });
+
+  return results;
+}
+
 void test_algorithm()
 {
   ehanc::run_test("ehanc::min_size", &test_min_size);
@@ -226,4 +253,5 @@ void test_algorithm()
   ehanc::run_test("ehanc::for_each_both", &test_for_each_both);
   ehanc::run_test("ehanc::for_each_both_n", &test_for_each_both_n);
   ehanc::run_test("ehanc::for_each_in_tuple", &test_for_each_in_tuple);
+  ehanc::run_test("ehanc::bkprt::generate", &test_bkprt_generate);
 }

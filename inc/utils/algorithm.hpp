@@ -452,6 +452,21 @@ constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept
   ::ehanc::impl::for_each_in_tuple_impl(tup, func, seq);
 }
 
+inline namespace bkprt {
+
+template <typename Itr, typename Gen>
+constexpr void
+generate(Itr begin, const Itr end,
+         Gen&& gen) noexcept(noexcept(gen()) && noexcept(*begin))
+{
+  while ( begin != end ) {
+    *begin = gen();
+    ++begin;
+  }
+}
+
+} // namespace bkprt
+
 } // namespace ehanc
 
 #endif

@@ -1,5 +1,7 @@
 #include <array>
+#include <forward_list>
 #include <list>
+#include <queue>
 #include <type_traits>
 #include <vector>
 

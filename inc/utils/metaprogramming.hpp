@@ -1,15 +1,10 @@
 #ifndef EHANC_UTILS_METAPROGRAMMING_HPP
 #define EHANC_UTILS_METAPROGRAMMING_HPP
 
-#include <deque>
-#include <forward_list>
 #include <iterator>
-#include <list>
-#include <queue>
 #include <tuple>
 #include <type_traits>
 #include <utility>
-#include <vector>
 
 namespace ehanc {
 

@@ -12,7 +12,7 @@ EXE=bin/$(PROJNAME)
 default: tags exe test
 
 .PHONY: exe
-exe: bin obj $(EXE)
+exe: tst/obj bin obj $(EXE)
 
 .PHONY: test
 test: tst/bin/test
@@ -32,7 +32,7 @@ doc:
 
 .PHONY: docopen
 docopen: doc
-	@firefox -new-window doc/html/index.html >/dev/null 2>&1 & disown
+	@firefox -new-window doc/html/index.html >/dev/null 2>&1
 
 .PHONY: all
 all: tags exe assembly preprocess doc test

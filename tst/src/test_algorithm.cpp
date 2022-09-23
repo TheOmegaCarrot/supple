@@ -33,6 +33,27 @@ auto test_max_size() -> ehanc::test
   return results;
 }
 
+auto test_contains() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::vector<int> test1 {1, 2, 3, 4, 5, 6};
+
+  results.add_case(ehanc::contains(test1.begin(), test1.end(), 2), true,
+                   "Contains 2");
+  results.add_case(ehanc::contains(test1.begin(), test1.end(), 42), false,
+                   "Does not contain 42");
+
+  std::vector<long> test2 {1, 2, 3, 4, 5, 6};
+
+  results.add_case(ehanc::contains(test2.begin(), test2.end(), 2), true,
+                   "Contains 2");
+  results.add_case(ehanc::contains(test2.begin(), test2.end(), 42), false,
+                   "Does not contain 42");
+
+  return results;
+}
+
 auto test_for_each_adjacent() -> ehanc::test
 {
   ehanc::test results;
@@ -245,6 +266,7 @@ void test_algorithm()
 {
   ehanc::run_test("ehanc::min_size", &test_min_size);
   ehanc::run_test("ehanc::max_size", &test_max_size);
+  ehanc::run_test("ehanc::contains", &test_contains);
   ehanc::run_test("ehanc::for_each_adjacent", &test_for_each_adjacent);
   ehanc::run_test("ehanc::for_each_adjacent_n", &test_for_each_adjacent_n);
   ehanc::run_test("ehanc::for_each_all_n", &test_for_each_all_n);

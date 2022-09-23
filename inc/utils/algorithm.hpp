@@ -1,9 +1,11 @@
 #ifndef EHANC_UTILS_ALGORITHM_HPP
 #define EHANC_UTILS_ALGORITHM_HPP
 
+#include <algorithm>
 #include <cstddef>
 #include <functional>
 #include <iterator>
+#include <type_traits>
 #include <utility>
 
 namespace ehanc {
@@ -96,6 +98,16 @@ constexpr auto max_size(const Container& cont,
                         const Containers&... conts) noexcept -> std::size_t
 {
   return std::max(::ehanc::max_size(cont), ::ehanc::max_size(conts...));
+}
+
+template <typename Itr>
+constexpr auto
+contains(const Itr begin, const Itr end,
+         const typename std::iterator_traits<Itr>::value_type
+             value) noexcept(noexcept(std::find(begin, end, value)))
+    -> bool
+{
+  return std::find(begin, end, value) != end;
 }
 
 /* {{{ doc */

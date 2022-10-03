@@ -279,6 +279,37 @@ static_assert(ehanc::is_pack_uniform_v<int, int>);
 static_assert(not ehanc::is_pack_uniform_v<int, char>);
 static_assert(ehanc::is_pack_uniform_v<int>);
 
+auto test_is_pack_only() -> ehanc::test
+{
+  ehanc::test results;
+
+  results.add_case(ehanc::is_pack_only_v<double, double, double, double>,
+                   true);
+  results.add_case(ehanc::is_pack_only_v<double, double, double, int>,
+                   false);
+  results.add_case(ehanc::is_pack_only_v<int, int, int, int>, true);
+  results.add_case(ehanc::is_pack_only_v<int, double, double, double>,
+                   false);
+  results.add_case(
+      ehanc::is_pack_only_v<std::string, std::string_view,
+                            std::string_view, std::string_view>,
+      false);
+  results.add_case(ehanc::is_pack_only_v<double>, false);
+  results.add_case(ehanc::is_pack_only_v<void>, false);
+
+  return results;
+}
+
+static_assert(ehanc::is_pack_only_v<double, double, double, double>);
+static_assert(not ehanc::is_pack_only_v<double, double, double, int>);
+static_assert(ehanc::is_pack_only_v<int, int, int, int>);
+static_assert(not ehanc::is_pack_only_v<int, double, double, double>);
+static_assert(
+    not ehanc::is_pack_only_v<std::string, std::string_view,
+                              std::string_view, std::string_view>);
+static_assert(not ehanc::is_pack_only_v<double>);
+static_assert(not ehanc::is_pack_only_v<void>);
+
 auto test_is_iterable() -> ehanc::test
 {
   ehanc::test results;
@@ -590,6 +621,7 @@ void test_metaprogramming()
   ehanc::run_test("ehanc::peel_first", &test_peel_first);
   ehanc::run_test("ehanc::peel_last", &test_peel_last);
   ehanc::run_test("ehanc::is_pack_uniform", &test_is_pack_uniform);
+  ehanc::run_test("ehanc::is_pack_only", &test_is_pack_only);
   ehanc::run_test("ehanc::is_iterable", &test_is_iterable);
   ehanc::run_test("ehanc::is_iterator", &test_is_iterator);
   ehanc::run_test("ehanc::is_bidirectional", &test_is_bidirectional);

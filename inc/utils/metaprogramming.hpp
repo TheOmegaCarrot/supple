@@ -165,6 +165,31 @@ constexpr inline bool is_pack_uniform_v =
 
 /* {{{ doc */
 /**
+ * @brief Metafunction to determine if all types in a pack
+ * are a specifc type. Returns false if pack is empty.
+ */
+/* }}} */
+template <typename T, typename... Pack>
+struct is_pack_only
+    : std::conjunction<::ehanc::is_pack_uniform<Pack...>,
+                       std::is_same<T, ehanc::peel_first_t<Pack...>>> {};
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if all types in a pack
+ * are a specifc type. Returns false if pack is empty.
+ * Specialization for empty pack.
+ */
+/* }}} */
+template <typename T>
+struct is_pack_only<T> : std::false_type {};
+
+template <typename T, typename... Pack>
+constexpr inline bool is_pack_only_v =
+    ::ehanc::is_pack_only<T, Pack...>::value;
+
+/* {{{ doc */
+/**
  * @brief Metafunction to determine if a type can be iterated over.
  * Uses std::begin internally to determine this.
  */

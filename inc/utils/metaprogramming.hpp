@@ -184,6 +184,12 @@ struct is_pack_only
 template <typename T>
 struct is_pack_only<T> : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_pack_only`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename... Pack>
 constexpr inline bool is_pack_only_v =
     ::ehanc::is_pack_only<T, Pack...>::value;

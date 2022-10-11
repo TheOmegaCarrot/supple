@@ -1,4 +1,5 @@
 #include <array>
+#include <cstdint>
 #include <numeric>
 #include <vector>
 
@@ -44,7 +45,7 @@ auto test_contains() -> ehanc::test
   results.add_case(ehanc::contains(test1.begin(), test1.end(), 42), false,
                    "Does not contain 42");
 
-  std::vector<long> test2 {1, 2, 3, 4, 5, 6};
+  std::vector<std::int64_t> test2 {1, 2, 3, 4, 5, 6};
 
   results.add_case(ehanc::contains(test2.begin(), test2.end(), 2), true,
                    "Contains 2");

@@ -14,8 +14,9 @@ auto test_sum_type() -> ehanc::test
 
   results.add_case(std::is_same_v<ehanc::sum_type_t<int, int>, int>, true,
                    "int + int == int");
-  results.add_case(std::is_same_v<ehanc::sum_type_t<short, short>, int>,
-                   true, "short + short == int");
+  results.add_case(
+      std::is_same_v<ehanc::sum_type_t<int16_t, int16_t>, int>, true,
+      "int16_t + int16_t == int");
   results.add_case(
       std::is_same_v<ehanc::sum_type_t<double, double>, double>, true,
       "double + double == double");
@@ -24,39 +25,41 @@ auto test_sum_type() -> ehanc::test
   results.add_case(
       std::is_same_v<ehanc::sum_type_t<double, float>, double>, true,
       "double + float == double");
-  results.add_case(std::is_same_v<ehanc::sum_type_t<int, short>, short>,
-                   false, "int + short == int");
+  results.add_case(
+      std::is_same_v<ehanc::sum_type_t<int, int16_t>, int16_t>, false,
+      "int + int16_t == int");
   results.add_case(std::is_same_v<ehanc::sum_type_t<double, int>, int>,
                    false, "double + int == double");
   results.add_case(std::is_same_v<ehanc::sum_type_t<char, int>, char>,
                    false, "char + int == int");
   results.add_case(
-      std::is_same_v<ehanc::sum_type_t<short, short, short, short, int>,
-                     int>,
-      true, "short + short + short + short + int == int");
+      std::is_same_v<
+          ehanc::sum_type_t<int16_t, int16_t, int16_t, int16_t, int>, int>,
+      true, "int16_t + int16_t + int16_t + int16_t + int == int");
 
   return results;
 }
 
 static_assert(std::is_same_v<ehanc::sum_type_t<int, int>, int>,
               "int + int == int");
-static_assert(std::is_same_v<ehanc::sum_type_t<short, short>, int>,
-              "short + short == int");
+static_assert(std::is_same_v<ehanc::sum_type_t<int16_t, int16_t>, int>,
+              "int16_t + int16_t == int");
 static_assert(std::is_same_v<ehanc::sum_type_t<double, double>, double>,
               "double + double == double");
 static_assert(std::is_same_v<ehanc::sum_type_t<double, int>, double>,
               "double + int == double");
 static_assert(std::is_same_v<ehanc::sum_type_t<double, float>, double>,
               "double + float == double");
-static_assert(std::is_same_v<ehanc::sum_type_t<int, short>, int>,
-              "int + short == int");
+static_assert(std::is_same_v<ehanc::sum_type_t<int, int16_t>, int>,
+              "int + int16_t == int");
 static_assert(std::is_same_v<ehanc::sum_type_t<double, int>, double>,
               "double + int == double");
 static_assert(std::is_same_v<ehanc::sum_type_t<char, int>, int>,
               "char + int == int");
-static_assert(std::is_same_v<
-                  ehanc::sum_type_t<short, short, short, short, int>, int>,
-              "short + short + short + short + int == int");
+static_assert(
+    std::is_same_v<
+        ehanc::sum_type_t<int16_t, int16_t, int16_t, int16_t, int>, int>,
+    "int16_t + int16_t + int16_t + int16_t + int == int");
 
 auto test_type_identity() -> ehanc::test
 {

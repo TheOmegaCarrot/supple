@@ -95,7 +95,7 @@ auto test_size_t_literals() -> ehanc::test
 {
   ehanc::test results;
 
-  using namespace ehanc::size_t_literal;
+  using ehanc::size_t_literal::operator""_z;
   /* using namespace ehanc::literals::size_t_literal; */ // also works
   /* using namespace ehanc::literals; */                 // also works
   std::size_t i {500};

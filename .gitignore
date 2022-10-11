@@ -2,9 +2,13 @@ obj
 bin
 tst/obj
 tst/bin
-asm
-pre
-run
-run_tests
 doc/html
 tags
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+.cache
+Makefile
+run_tests
+utils

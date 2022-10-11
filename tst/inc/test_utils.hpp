@@ -88,9 +88,10 @@ inline void run_test(const std::string_view name,
 inline void test_section(const std::string_view section_name,
                          const std::function<void()>& section_func)
 {
+  std::cout << '\n';
   std::cout << HEADER_COLOR << section_name << ':' << RESET << '\n';
   section_func();
-  std::cout << '\n' << '\n';
+  std::cout << '\n';
 }
 
 } // namespace ehanc

@@ -1,5 +1,5 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,readability-*,performance-*,portability-*,bugprone-*,modernize-*,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-readability-avoid-const-params-in-decls,-readability-identifier-length,-readability-named-parameter,-bugprone-unhandled-exception-at-new'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,readability-*,performance-*,portability-*,bugprone-*,modernize-*,google-*,-google-objc-*,misc-*,cert-*,-misc-non-private-member-variables-in-classes,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-readability-avoid-const-params-in-decls,-readability-identifier-length,-readability-named-parameter,-bugprone-unhandled-exception-at-new,-cppcoreguidelines-owning-memory,-readability-else-after-return,-readability-redundant-member-init'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false

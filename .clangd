@@ -1,0 +1,4 @@
+# vim:ft=yaml
+CompileFlags:
+  Add: [-xc++, -std=c++17]
+  Compiler: clang++

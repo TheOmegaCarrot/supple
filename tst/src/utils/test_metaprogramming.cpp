@@ -5,8 +5,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "test_metaprogramming.h"
 #include "test_utils.hpp"
+#include "utils/test_metaprogramming.h"
 
 static auto test_sum_type() -> ehanc::test
 {

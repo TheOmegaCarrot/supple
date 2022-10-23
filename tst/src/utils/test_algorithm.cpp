@@ -3,8 +3,8 @@
 #include <numeric>
 #include <vector>
 
-#include "test_algorithm.h"
 #include "utils/etc.hpp"
+#include "utils/test_algorithm.h"
 
 static auto test_min_size() -> ehanc::test
 {

@@ -8,6 +8,7 @@
 
 namespace ehanc {
 
+// type_identity
 /* {{{ doc */
 /**
  * @brief Identity metafunction. This version is redundant if using
@@ -28,6 +29,7 @@ struct type_identity {
 template <typename T>
 using type_identity_t = typename ::ehanc::type_identity<T>::type;
 
+// sum_type
 /* {{{ doc */
 /**
  * @brief Metafunction to determine the type resulting from
@@ -47,6 +49,7 @@ struct sum_type
 template <typename... Ts>
 using sum_type_t = typename ::ehanc::sum_type<Ts...>::type;
 
+// is_type_in_pack
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if type T is present in pack.
@@ -76,6 +79,7 @@ template <typename T, typename... Pack>
 constexpr inline bool is_type_in_pack_v =
     ::ehanc::is_type_in_pack<T, Pack...>::value;
 
+// peel_first
 /* {{{ doc */
 /**
  * @brief Metafunction to return first type in a pack. Empty pack
@@ -103,6 +107,7 @@ struct peel_first<First, Pack...> : ::ehanc::type_identity<First> {};
 template <typename... Pack>
 using peel_first_t = typename ::ehanc::peel_first<Pack...>::type;
 
+// peel_last
 /* {{{ doc */
 /**
  * @brief Metafunction to return last type in a pack. Empty pack considered
@@ -141,6 +146,7 @@ struct peel_last<Last> : ::ehanc::type_identity<Last> {};
 template <typename... Pack>
 using peel_last_t = typename ::ehanc::peel_last<Pack...>::type;
 
+// is_pack_uniform
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -163,6 +169,7 @@ template <typename... Pack>
 constexpr inline bool is_pack_uniform_v =
     ::ehanc::is_pack_uniform<Pack...>::value;
 
+// is_pack_only
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -194,6 +201,7 @@ template <typename T, typename... Pack>
 constexpr inline bool is_pack_only_v =
     ::ehanc::is_pack_only<T, Pack...>::value;
 
+// is_iterable
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type can be iterated over.
@@ -224,6 +232,7 @@ struct is_iterable<T,
 template <typename T>
 constexpr inline bool is_iterable_v = ::ehanc::is_iterable<T>::value;
 
+// is_iterator
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type meets the minimum criteria
@@ -255,6 +264,7 @@ struct is_iterator<T, std::void_t<decltype(*std::declval<T>()),
 template <typename T>
 constexpr inline bool is_iterator_v = ::ehanc::is_iterator<T>::value;
 
+// is_bidirectional
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type supports pre-increment and
@@ -286,6 +296,7 @@ template <typename T>
 constexpr inline bool is_bidirectional_v =
     ::ehanc::is_bidirectional<T>::value;
 
+// is_random_access
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if an iterator is a
@@ -320,6 +331,7 @@ template <typename T>
 constexpr inline bool is_random_access_v =
     ::ehanc::is_random_access<T>::value;
 
+// is_tuple
 namespace impl {
 /* {{{ doc */
 /**
@@ -357,6 +369,7 @@ struct is_tuple : ::ehanc::impl::is_tuple_impl<std::decay_t<T>> {};
 template <typename T>
 constexpr inline bool is_tuple_v = ::ehanc::is_tuple<T>::value;
 
+// is_pair
 namespace impl {
 /* {{{ doc */
 /**
@@ -394,6 +407,7 @@ struct is_pair : ::ehanc::impl::is_pair_impl<std::decay_t<T>> {};
 template <typename T>
 constexpr inline bool is_pair_v = ::ehanc::is_pair<T>::value;
 
+// is_printable
 template <typename T, typename = void>
 struct is_printable : std::false_type {};
 

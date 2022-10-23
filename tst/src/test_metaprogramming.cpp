@@ -8,7 +8,7 @@
 #include "test_metaprogramming.h"
 #include "test_utils.hpp"
 
-auto test_sum_type() -> ehanc::test
+static auto test_sum_type() -> ehanc::test
 {
   ehanc::test results;
 
@@ -61,7 +61,7 @@ static_assert(
         ehanc::sum_type_t<int16_t, int16_t, int16_t, int16_t, int>, int>,
     "int16_t + int16_t + int16_t + int16_t + int == int");
 
-auto test_type_identity() -> ehanc::test
+static auto test_type_identity() -> ehanc::test
 {
   ehanc::test results;
 
@@ -170,7 +170,7 @@ auto test_type_identity() -> ehanc::test
   return results;
 }
 
-auto test_is_type_in_pack() -> ehanc::test
+static auto test_is_type_in_pack() -> ehanc::test
 {
   ehanc::test results;
 
@@ -194,7 +194,7 @@ static_assert(ehanc::is_type_in_pack_v<int, int, int, int>);
 static_assert(ehanc::is_type_in_pack_v<int, int>);
 static_assert(not ehanc::is_type_in_pack_v<int, char>);
 
-auto test_peel_first() -> ehanc::test
+static auto test_peel_first() -> ehanc::test
 {
   ehanc::test results;
 
@@ -221,7 +221,7 @@ static_assert(
 static_assert(
     std::is_same_v<ehanc::peel_first_t<char, int, int, int>, char>);
 
-auto test_peel_last() -> ehanc::test
+static auto test_peel_last() -> ehanc::test
 {
   ehanc::test results;
 
@@ -246,7 +246,7 @@ static_assert(
 static_assert(
     std::is_same_v<ehanc::peel_last_t<int, int, int, char>, char>);
 
-auto test_is_pack_uniform() -> ehanc::test
+static auto test_is_pack_uniform() -> ehanc::test
 {
   ehanc::test results;
 
@@ -282,7 +282,7 @@ static_assert(ehanc::is_pack_uniform_v<int, int>);
 static_assert(not ehanc::is_pack_uniform_v<int, char>);
 static_assert(ehanc::is_pack_uniform_v<int>);
 
-auto test_is_pack_only() -> ehanc::test
+static auto test_is_pack_only() -> ehanc::test
 {
   ehanc::test results;
 
@@ -313,7 +313,7 @@ static_assert(
 static_assert(not ehanc::is_pack_only_v<double>);
 static_assert(not ehanc::is_pack_only_v<void>);
 
-auto test_is_iterable() -> ehanc::test
+static auto test_is_iterable() -> ehanc::test
 {
   ehanc::test results;
 
@@ -343,7 +343,7 @@ static_assert(not ehanc::is_iterable_v<bool>);
 static_assert(not ehanc::is_iterable_v<std::tuple<int, char, bool>>);
 static_assert(not ehanc::is_iterable_v<std::pair<int, char>>);
 
-auto test_is_iterator() -> ehanc::test
+static auto test_is_iterator() -> ehanc::test
 {
   ehanc::test results;
 
@@ -363,7 +363,7 @@ static_assert(ehanc::is_iterator_v<std::array<int, 5>::iterator>);
 static_assert(ehanc::is_iterator_v<int*>);
 static_assert(ehanc::is_iterator_v<const int*>);
 
-auto test_is_bidirectional() -> ehanc::test
+static auto test_is_bidirectional() -> ehanc::test
 {
   ehanc::test results;
 
@@ -385,7 +385,7 @@ static_assert(ehanc::is_bidirectional_v<std::vector<int>::iterator>);
 static_assert(ehanc::is_bidirectional_v<std::list<int>::iterator>);
 static_assert(ehanc::is_bidirectional_v<std::deque<int>::iterator>);
 
-auto test_is_random_access() -> ehanc::test
+static auto test_is_random_access() -> ehanc::test
 {
   ehanc::test results;
 
@@ -407,7 +407,7 @@ static_assert(ehanc::is_random_access_v<std::vector<int>::iterator>);
 static_assert(not ehanc::is_random_access_v<std::list<int>::iterator>);
 static_assert(ehanc::is_random_access_v<std::deque<int>::iterator>);
 
-auto test_is_tuple() -> ehanc::test
+static auto test_is_tuple() -> ehanc::test
 {
   ehanc::test results;
 
@@ -523,7 +523,7 @@ static_assert(
     not ehanc::is_tuple_v<const volatile std::pair<int, char>&&>);
 static_assert(not ehanc::is_tuple_v<int>);
 
-auto test_is_pair() -> ehanc::test
+static auto test_is_pair() -> ehanc::test
 {
   ehanc::test results;
 
@@ -595,7 +595,7 @@ static_assert(
     not ehanc::is_pair_v<const volatile std::tuple<int, char>&&>);
 static_assert(not ehanc::is_pair_v<int>);
 
-auto test_is_printable() -> ehanc::test
+static auto test_is_printable() -> ehanc::test
 {
   ehanc::test results;
 

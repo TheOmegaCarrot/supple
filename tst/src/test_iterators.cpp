@@ -8,7 +8,7 @@
 
 #include "utils/etc.hpp"
 
-auto test_last() -> ehanc::test
+static auto test_last() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1 {};
@@ -26,7 +26,7 @@ auto test_last() -> ehanc::test
   return results;
 }
 
-auto test_clast() -> ehanc::test
+static auto test_clast() -> ehanc::test
 {
   ehanc::test results;
   std::array<int, 5> test1 {};
@@ -44,7 +44,7 @@ auto test_clast() -> ehanc::test
   return results;
 }
 
-auto test_sequence_iterator() -> ehanc::test
+static auto test_sequence_iterator() -> ehanc::test
 {
   ehanc::test results;
 
@@ -72,7 +72,7 @@ auto test_sequence_iterator() -> ehanc::test
   return results;
 }
 
-auto test_sequence() -> ehanc::test
+static auto test_sequence() -> ehanc::test
 {
   ehanc::test results;
 
@@ -102,7 +102,7 @@ auto test_sequence() -> ehanc::test
   return results;
 }
 
-auto test_generative_iterator() -> ehanc::test
+static auto test_generative_iterator() -> ehanc::test
 {
   ehanc::test results;
 
@@ -123,7 +123,7 @@ auto test_generative_iterator() -> ehanc::test
   return results;
 }
 
-auto test_generative_sequence() -> ehanc::test
+static auto test_generative_sequence() -> ehanc::test
 {
   ehanc::test results;
 

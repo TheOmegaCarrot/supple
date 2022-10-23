@@ -27,7 +27,7 @@ struct copy_counter {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 int copy_counter::copy_count {0};
 
-auto test_explicit_copy() -> ehanc::test
+static auto test_explicit_copy() -> ehanc::test
 {
   ehanc::test results;
   copy_counter test;
@@ -58,7 +58,7 @@ auto test_explicit_copy() -> ehanc::test
   return results;
 }
 
-auto test_to_string() -> ehanc::test
+static auto test_to_string() -> ehanc::test
 {
   ehanc::test results;
 
@@ -91,7 +91,7 @@ auto test_to_string() -> ehanc::test
   return results;
 }
 
-auto test_size_t_literals() -> ehanc::test
+static auto test_size_t_literals() -> ehanc::test
 {
   ehanc::test results;
 

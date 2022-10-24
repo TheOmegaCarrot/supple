@@ -55,6 +55,28 @@ static auto test_contains() -> ehanc::test
   return results;
 }
 
+static auto test_transform_if() -> ehanc::test
+{
+  ehanc::test results;
+
+  const std::vector<int> test_input {1, 2, 3, 4, 5, 6, 7, 8};
+  std::vector<int> test_output;
+  const std::vector<int> reference_output {6, 12, 18, 24};
+  auto is_even {[](int value) { return value % 2 == 0; }};
+  auto times_three {[](int value) -> int { return value * 3; }};
+
+  ehanc::transform_if(test_input.cbegin(), test_input.cend(),
+                      std::back_inserter(test_output), is_even,
+                      times_three);
+
+  ehanc::for_each_both(
+      test_output.cbegin(), test_output.cend(), reference_output.cbegin(),
+      reference_output.cend(),
+      [&results](int test, int ref) { results.add_case(test, ref); });
+
+  return results;
+}
+
 static auto test_for_each_adjacent() -> ehanc::test
 {
   ehanc::test results;
@@ -268,6 +290,7 @@ void test_algorithm()
   ehanc::run_test("ehanc::min_size", &test_min_size);
   ehanc::run_test("ehanc::max_size", &test_max_size);
   ehanc::run_test("ehanc::contains", &test_contains);
+  ehanc::run_test("ehanc::transform_if", &test_transform_if);
   ehanc::run_test("ehanc::for_each_adjacent", &test_for_each_adjacent);
   ehanc::run_test("ehanc::for_each_adjacent_n", &test_for_each_adjacent_n);
   ehanc::run_test("ehanc::for_each_all_n", &test_for_each_all_n);

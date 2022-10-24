@@ -112,6 +112,52 @@ contains(const Itr begin, const Itr end,
 
 /* {{{ doc */
 /**
+ * @brief Conditionally transforms each element of a range.
+ *
+ * @tparam Itr Input iterator type. A forward iterator is sufficient.
+ *
+ * @tparam OutItr Output iterator type.
+ * `OutItr = value; OutItr = another;` must insert `value` then `another`
+ * into the output range to produce expected behavior.
+ * Specializations of `std::back_insert_iterator`, `std::insert_iterator`,
+ * and `std::front_insert_iterator` satisfy the preconditions, so long as
+ * the underlying container contains an appropriate type.
+ *
+ * @tparam Predicate Type of unary predicate callable. Must accept a
+ * single parameter of type `Itr::value_type`, and return a `bool`.
+ *
+ * @tparam TransformFunc Type of unary transforming callable. Must accept a
+ * single parameter of type `Itr::value_type`, and return a value
+ * implicitly convertible to `OutItr::container_type::value_type`.
+ *
+ * @param begin Beginning of input range.
+ *
+ * @param end End of input range.
+ *
+ * @param output_itr Output iterator to range used as destination of
+ * transformed values.
+ *
+ * @param pred Unary predicate used to determine if an input value will be
+ * transformed.
+ *
+ * @param func Unary function used to transform data.
+ */
+/* }}} */
+template <typename Itr, typename OutItr, typename Predicate,
+          typename TransformFunc>
+constexpr void
+transform_if(Itr begin, const Itr end, OutItr output_itr, Predicate&& pred,
+             TransformFunc&& func) noexcept(noexcept(func(*begin)))
+{
+  for ( ; begin != end; ++begin ) {
+    if ( pred(*begin) ) {
+      output_itr = func(*begin);
+    }
+  }
+}
+
+/* {{{ doc */
+/**
  * @brief Applies `func` to each adjacent pair of elements.
  *
  * Example: Range is: {1, 2, 3}

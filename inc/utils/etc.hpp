@@ -60,9 +60,9 @@ auto to_string(const T& value) -> std::string
       return "[ ]";
     } else {
       out << "[ ";
-      std::for_each(value.cbegin(), value.cend(), [&out](const auto& i) {
-        out << ehanc::to_string(i) << ", ";
-      });
+      std::for_each(
+          std::begin(value), std::end(value),
+          [&out](const auto& i) { out << ehanc::to_string(i) << ", "; });
       out.seekp(-2, std::ios_base::end);
       out << " ]";
     }

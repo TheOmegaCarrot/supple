@@ -29,7 +29,7 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 }
 
 template <typename T>
-auto to_string([[maybe_unused]] const T& value) -> std::string
+auto to_string(const T& value) -> std::string
 {
   std::stringstream out;
   out << std::boolalpha;

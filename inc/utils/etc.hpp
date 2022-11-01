@@ -29,8 +29,17 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 }
 
 template <typename T>
-auto to_string(const T& value) -> std::string
+auto to_string(const T& value) noexcept -> std::string
 {
+
+  using decayT = std::decay_t<T>;
+
+  static_assert(
+      std::disjunction_v<
+          ::ehanc::is_printable<decayT>, ::ehanc::is_tuple<decayT>,
+          ::ehanc::is_pair<decayT>, ::ehanc::is_iterable<decayT>>,
+      "Attempting to call ehanc::to_string with an unsupported type");
+
   std::stringstream out;
   out << std::boolalpha;
 

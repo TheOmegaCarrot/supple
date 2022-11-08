@@ -103,7 +103,13 @@ constexpr auto max_size(const Container& cont,
 template <typename Itr>
 constexpr auto
 contains(const Itr begin, const Itr end,
-         const typename std::iterator_traits<Itr>::value_type
+         // oh boy
+         std::add_lvalue_reference_t<
+             // ref to
+             std::add_const_t<
+                 //const
+                 typename std::iterator_traits<Itr>::value_type>>
+             // basically: decltype(value) == const Itr::value_type &
              value) noexcept(noexcept(std::find(begin, end, value)))
     -> bool
 {

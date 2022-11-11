@@ -269,10 +269,11 @@ overload(Ls...) -> overload<Ls...>;
 
 static auto test_tuple_transform() -> ehanc::test
 {
+  using ehanc::literals::size_t_literal::operator""_z;
+
   ehanc::test results;
 
   std::tuple<int, char, bool> test1 {42, 'c', false};
-  std::tuple<int, char, bool> test2 {81, 'g', true};
 
   auto out1 {ehanc::tuple_transform(
       test1,
@@ -283,6 +284,30 @@ static auto test_tuple_transform() -> ehanc::test
   results.add_case(std::get<0>(out1), 84, "out1 : 0");
   results.add_case(std::get<1>(out1), 'C', "out1 : 1");
   results.add_case(std::get<2>(out1), true, "out1 : 2");
+
+  std::tuple<std::string, std::vector<int>> test2 {
+      "Hello", {3, 9, 2}
+  };
+
+  auto out2 {ehanc::tuple_transform(
+      test2,
+      overload {[](const std::string& str) { return str.length(); },
+                [](const std::vector<int>& vec) { return vec.size(); }})};
+
+  results.add_case(std::get<0>(out2), 5_z, "out2 : 0");
+  results.add_case(std::get<1>(out2), 3_z, "out2 : 1");
+
+  std::pair<std::string, std::vector<int>> test3 {
+      "Hello", {3, 9, 3}
+  };
+
+  auto out3 {ehanc::tuple_transform(
+      test3,
+      overload {[](const std::string& str) { return str.length(); },
+                [](const std::vector<int>& vec) { return vec.size(); }})};
+
+  results.add_case(std::get<0>(out3), 5_z, "out3 : 0");
+  results.add_case(std::get<1>(out3), 3_z, "out3 : 1");
 
   return results;
 }

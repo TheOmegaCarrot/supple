@@ -3,6 +3,7 @@
 #include <numeric>
 #include <vector>
 
+#include "utils/algorithm.hpp"
 #include "utils/etc.hpp"
 #include "utils/test_algorithm.h"
 
@@ -258,6 +259,34 @@ static auto test_for_each_in_tuple() -> ehanc::test
   return results;
 }
 
+template <typename... Ls>
+struct overload : Ls... {
+  using Ls::operator()...;
+};
+
+template <typename... Ls>
+overload(Ls...) -> overload<Ls...>;
+
+static auto test_tuple_transform() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple<int, char, bool> test1 {42, 'c', false};
+  std::tuple<int, char, bool> test2 {81, 'g', true};
+
+  auto out1 {ehanc::tuple_transform(
+      test1,
+      overload {[](int a) { return 2 * a; },
+                [](char b) { return static_cast<char>(std::toupper(b)); },
+                [](bool c) { return !c; }})};
+
+  results.add_case(std::get<0>(out1), 84, "out1 : 0");
+  results.add_case(std::get<1>(out1), 'C', "out1 : 1");
+  results.add_case(std::get<2>(out1), true, "out1 : 2");
+
+  return results;
+}
+
 static auto test_bkprt_generate() -> ehanc::test
 {
   ehanc::test results;
@@ -299,5 +328,6 @@ void test_algorithm()
   ehanc::run_test("ehanc::for_each_both", &test_for_each_both);
   ehanc::run_test("ehanc::for_each_both_n", &test_for_each_both_n);
   ehanc::run_test("ehanc::for_each_in_tuple", &test_for_each_in_tuple);
+  ehanc::run_test("ehanc::tuple_transform", &test_tuple_transform);
   ehanc::run_test("ehanc::bkprt::generate", &test_bkprt_generate);
 }

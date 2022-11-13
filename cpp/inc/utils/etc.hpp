@@ -6,8 +6,8 @@
 #include <iterator>
 #include <sstream>
 
-#include "utils/algorithm.hpp"
-#include "utils/metaprogramming.hpp"
+#include "algorithm.hpp"
+#include "metaprogramming.hpp"
 
 namespace ehanc {
 

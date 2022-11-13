@@ -1,10 +1,10 @@
 #ifndef EHANC_UTILS_ALL_H
 #define EHANC_UTILS_ALL_H
 
-#include "utils/algorithm.hpp"
-#include "utils/etc.hpp"
-#include "utils/iterators.hpp"
-#include "utils/metaprogramming.hpp"
-#include "utils/term_colors.h"
+#include "algorithm.hpp"
+#include "etc.hpp"
+#include "iterators.hpp"
+#include "metaprogramming.hpp"
+#include "term_colors.h"
 
 #endif

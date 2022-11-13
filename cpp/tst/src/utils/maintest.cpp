@@ -5,6 +5,7 @@
 
 #include "utils/test_algorithm.h"
 #include "utils/test_etc.h"
+#include "utils/test_fake_ranges.h"
 #include "utils/test_iterators.h"
 #include "utils/test_metaprogramming.h"
 
@@ -12,6 +13,8 @@ auto main() -> int
 {
 
   ehanc::test_section("Algorithm", &test_algorithm);
+
+  ehanc::test_section("Fake Ranges", &test_fake_ranges);
 
   ehanc::test_section("Iterators", &test_iterators);
 

@@ -63,6 +63,16 @@ auto count(Container&& container, const T& value) noexcept(noexcept(
   return std::count(std::begin(container), std::end(container), value);
 }
 
+template <typename Container, typename Pred>
+auto count_if(Container&& container, Pred&& pred) noexcept(
+    noexcept(std::count(std::begin(container), std::end(container), pred)))
+    -> typename std::iterator_traits<
+        decltype(std::begin(container))>::difference_type
+{
+  return std::count_if(std::begin(container), std::end(container),
+                       std::forward<Pred>(pred));
+}
+
 } // namespace ehanc::fr
 
 #endif

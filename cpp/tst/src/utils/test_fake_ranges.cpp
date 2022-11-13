@@ -82,4 +82,5 @@ void test_fake_ranges()
   /* ehanc::run_test("for_each", &test_for_each); */
   /* ehanc::run_test("for_each_n", &test_for_each_n); */
   ehanc::run_test("count", &test_count);
+  /* ehanc::run_test("count_if", &test_count_if); */
 }

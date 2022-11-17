@@ -312,6 +312,21 @@ static auto test_tuple_transform() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_count_if() -> ehanc::test
+{
+  using ehanc::literals::size_t_literal::operator""_z;
+
+  ehanc::test results;
+
+  std::tuple test {7, 2, 42.53, 3.14F, 9344285UL, -83LL};
+  results.add_case(
+      ehanc::tuple_count_if(
+          test, [](const auto& i) -> std::size_t { return i > 5; }),
+      3_z);
+
+  return results;
+}
+
 static auto test_bkprt_generate() -> ehanc::test
 {
   ehanc::test results;
@@ -354,5 +369,6 @@ void test_algorithm()
   ehanc::run_test("ehanc::for_each_both_n", &test_for_each_both_n);
   ehanc::run_test("ehanc::for_each_in_tuple", &test_for_each_in_tuple);
   ehanc::run_test("ehanc::tuple_transform", &test_tuple_transform);
+  ehanc::run_test("ehanc::tuple_count_if", &test_tuple_count_if);
   ehanc::run_test("ehanc::bkprt::generate", &test_bkprt_generate);
 }

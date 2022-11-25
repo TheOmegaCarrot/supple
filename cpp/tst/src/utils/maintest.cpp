@@ -7,11 +7,14 @@
 #include "utils/test_etc.h"
 #include "utils/test_iterators.h"
 #include "utils/test_metaprogramming.h"
+#include "utils/test_tuple_algo.h"
 
 auto main() -> int
 {
 
   ehanc::test_section("Algorithm", &test_algorithm);
+
+  ehanc::test_section("Tuple Algorithms", &test_tuple_algo);
 
   ehanc::test_section("Iterators", &test_iterators);
 

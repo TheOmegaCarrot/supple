@@ -206,7 +206,6 @@ template <typename Tuple, typename T, std::size_t... pre_idxs,
 [[nodiscard]] constexpr auto
 tuple_insert_impl(const Tuple& tup, T&& data,
                   std::index_sequence<pre_idxs...>,
-
                   std::index_sequence<post_idxs...>)
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};

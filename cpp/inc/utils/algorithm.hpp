@@ -574,6 +574,86 @@ template <typename Tuple, typename Func>
 
 namespace impl {
 
+template <typename Tuple, typename T, std::size_t... Inds>
+[[nodiscard]] constexpr auto
+tuple_push_back_impl(const Tuple& tup, T&& data,
+                     std::index_sequence<Inds...>) noexcept
+{
+  return std::tuple(std::get<Inds>(tup)..., std::forward<T>(data));
+}
+
+} // namespace impl
+
+template <typename Tuple, typename T>
+[[nodiscard]] constexpr auto tuple_push_back(const Tuple& tup,
+                                             T&& data) noexcept
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  return ::ehanc::impl::tuple_push_back_impl(tup, std::forward<T>(data),
+                                             seq);
+}
+
+namespace impl {
+
+template <typename Tuple, std::size_t... Inds>
+[[nodiscard]] constexpr auto
+tuple_pop_back_impl(const Tuple& tup,
+                    std::index_sequence<Inds...>) noexcept
+{
+  return std::tuple(std::get<Inds>(tup)...);
+}
+
+} // namespace impl
+
+template <typename Tuple>
+[[nodiscard]] constexpr auto tuple_pop_back(const Tuple& tup) noexcept
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  return ::ehanc::impl::tuple_pop_back_impl(tup, seq);
+}
+
+namespace impl {
+
+template <typename Tuple, typename T, std::size_t... Inds>
+[[nodiscard]] constexpr auto
+tuple_push_front_impl(const Tuple& tup, T&& data,
+                      std::index_sequence<Inds...>) noexcept
+{
+  return std::tuple(std::forward<T>(data), std::get<Inds>(tup)...);
+}
+
+} // namespace impl
+
+template <typename Tuple, typename T>
+[[nodiscard]] constexpr auto tuple_push_front(const Tuple& tup,
+                                              T&& data) noexcept
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  return ::ehanc::impl::tuple_push_front_impl(tup, std::forward<T>(data),
+                                              seq);
+}
+
+namespace impl {
+
+template <typename Tuple, std::size_t... Inds>
+[[nodiscard]] constexpr auto
+tuple_pop_front_impl(const Tuple& tup,
+                     std::index_sequence<Inds...>) noexcept
+{
+  return std::tuple(std::get<Inds + 1>(tup)...);
+}
+
+} // namespace impl
+
+template <typename Tuple>
+[[nodiscard]] constexpr auto tuple_pop_front(const Tuple& tup) noexcept
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  return ::ehanc::impl::tuple_pop_front_impl(tup, seq);
+}
+
+namespace impl {
+
 template <typename Tuple, typename Pred, std::size_t... Inds>
 constexpr auto tuple_count_if_impl(const Tuple& tup, Pred&& pred,
                                    std::index_sequence<Inds...>) noexcept

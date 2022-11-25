@@ -312,6 +312,62 @@ static auto test_tuple_transform() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_push_back() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {3, 3.14, 'd'};
+  std::tuple expected1 {3, 3.14, 'd', true};
+
+  auto result1 {ehanc::tuple_push_back(test1, true)};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
+static auto test_tuple_pop_back() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {3, 3.14, 'd'};
+  std::tuple expected1 {3, 3.14};
+
+  auto result1 {ehanc::tuple_pop_back(test1)};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
+static auto test_tuple_push_front() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {3, 3.14, 'd'};
+  std::tuple expected1 {true, 3, 3.14, 'd'};
+
+  auto result1 {ehanc::tuple_push_front(test1, true)};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
+static auto test_tuple_pop_front() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {3, 3.14, 'd'};
+  std::tuple expected1 {3.14, 'd'};
+
+  auto result1 {ehanc::tuple_pop_front(test1)};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
 static auto test_tuple_count_if() -> ehanc::test
 {
   using ehanc::literals::size_t_literal::operator""_z;
@@ -369,6 +425,10 @@ void test_algorithm()
   ehanc::run_test("ehanc::for_each_both_n", &test_for_each_both_n);
   ehanc::run_test("ehanc::for_each_in_tuple", &test_for_each_in_tuple);
   ehanc::run_test("ehanc::tuple_transform", &test_tuple_transform);
+  ehanc::run_test("ehanc::tuple_push_back", &test_tuple_push_back);
+  ehanc::run_test("ehanc::tuple_pop_front", &test_tuple_pop_front);
+  ehanc::run_test("ehanc::tuple_push_front", &test_tuple_push_front);
+  ehanc::run_test("ehanc::tuple_pop_back", &test_tuple_pop_back);
   ehanc::run_test("ehanc::tuple_count_if", &test_tuple_count_if);
   ehanc::run_test("ehanc::bkprt::generate", &test_bkprt_generate);
 }

@@ -6,5 +6,6 @@
 #include "iterators.hpp"
 #include "metaprogramming.hpp"
 #include "term_colors.h"
+#include "tuple_algo.hpp"
 
 #endif

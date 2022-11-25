@@ -39,6 +39,19 @@ auto main([[maybe_unused]] const int argc,
   std::cout << ehanc::to_string(ehanc::sequence(1, 10)) << '\n';
   std::cout << ehanc::to_string(0) << '\n';
 
+  std::tuple example {true, 3.14, 42, 'p'};
+  std::string what {"what"};
+  std::cout << ehanc::to_string(ehanc::tuple_push_back(example, what))
+            << '\n';
+  std::cout << ehanc::to_string(ehanc::tuple_pop_back(example)) << '\n';
+  std::cout << ehanc::to_string(ehanc::tuple_push_front(example, what))
+            << '\n';
+  std::cout << ehanc::to_string(ehanc::tuple_pop_front(example)) << '\n';
+  std::cout << ehanc::to_string(
+      ehanc::tuple_insert<decltype(example), std::string, 2>(example,
+                                                             what))
+            << '\n';
+
   return 0;
 }
 

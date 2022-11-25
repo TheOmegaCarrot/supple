@@ -368,6 +368,35 @@ static auto test_tuple_pop_front() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_insert() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test_input {3, 3.14};
+  std::tuple expected1 {3, true, 3.14};
+
+  auto result1 {ehanc::tuple_insert<decltype(test_input), bool, 1>(
+      test_input, true)};
+
+  results.add_case(result1, expected1);
+
+  std::tuple expected2 {3, 3.14, true};
+  auto result2 {
+      ehanc::tuple_insert<decltype(test_input), bool,
+                          std::tuple_size_v<decltype(test_input)>>(
+          test_input, true)};
+
+  results.add_case(result2, expected2, "max index");
+
+  std::tuple expected3 {true, 3, 3.14};
+  auto result3 {ehanc::tuple_insert<decltype(test_input), bool, 0>(
+      test_input, true)};
+
+  results.add_case(result3, expected3);
+
+  return results;
+}
+
 static auto test_tuple_count_if() -> ehanc::test
 {
   using ehanc::literals::size_t_literal::operator""_z;
@@ -429,6 +458,7 @@ void test_algorithm()
   ehanc::run_test("ehanc::tuple_pop_front", &test_tuple_pop_front);
   ehanc::run_test("ehanc::tuple_push_front", &test_tuple_push_front);
   ehanc::run_test("ehanc::tuple_pop_back", &test_tuple_pop_back);
+  ehanc::run_test("ehanc::tuple_insert", &test_tuple_insert);
   ehanc::run_test("ehanc::tuple_count_if", &test_tuple_count_if);
   ehanc::run_test("ehanc::bkprt::generate", &test_bkprt_generate);
 }

@@ -539,7 +539,7 @@ template <typename Tuple, typename Func, std::size_t... Inds>
 constexpr auto tuple_transform_impl(const Tuple& tup, Func&& func,
                                     std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple(func(std::get<Inds>(tup))...);
+  return std::tuple {func(std::get<Inds>(tup))...};
 }
 
 } // namespace impl
@@ -579,7 +579,7 @@ template <typename Tuple, typename T, std::size_t... Inds>
 tuple_push_back_impl(const Tuple& tup, T&& data,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple(std::get<Inds>(tup)..., std::forward<T>(data));
+  return std::tuple {std::get<Inds>(tup)..., std::forward<T>(data)};
 }
 
 } // namespace impl
@@ -600,7 +600,7 @@ template <typename Tuple, std::size_t... Inds>
 tuple_pop_back_impl(const Tuple& tup,
                     std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple(std::get<Inds>(tup)...);
+  return std::tuple {std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -619,7 +619,7 @@ template <typename Tuple, typename T, std::size_t... Inds>
 tuple_push_front_impl(const Tuple& tup, T&& data,
                       std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple(std::forward<T>(data), std::get<Inds>(tup)...);
+  return std::tuple {std::forward<T>(data), std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -640,7 +640,7 @@ template <typename Tuple, std::size_t... Inds>
 tuple_pop_front_impl(const Tuple& tup,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple(std::get<Inds + 1>(tup)...);
+  return std::tuple {std::get<Inds + 1>(tup)...};
 }
 
 } // namespace impl
@@ -650,6 +650,36 @@ template <typename Tuple>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return ::ehanc::impl::tuple_pop_front_impl(tup, seq);
+}
+
+namespace impl {
+
+template <typename Tuple, typename T, std::size_t... pre_idxs,
+          std::size_t... post_idxs>
+[[nodiscard]] constexpr auto
+tuple_insert_impl(const Tuple& tup, T&& data,
+                  std::index_sequence<pre_idxs...>,
+                  std::index_sequence<post_idxs...>)
+{
+  constexpr std::size_t idx {sizeof...(pre_idxs)};
+
+  return std::tuple {std::get<pre_idxs>(tup)..., std::forward<T>(data),
+                     std::get<post_idxs + idx>(tup)...};
+}
+
+} // namespace impl
+
+template <typename Tuple, typename T, std::size_t Idx>
+[[nodiscard]] constexpr auto tuple_insert(const Tuple& tup, T&& data)
+{
+  static_assert(Idx <= std::tuple_size_v<Tuple>, "Index out of bounds");
+
+  auto pre_seq {std::make_index_sequence<Idx> {}};
+  auto post_seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
+
+  return ::ehanc::impl::tuple_insert_impl(tup, std::forward<T>(data),
+                                          pre_seq, post_seq);
 }
 
 namespace impl {

@@ -6,8 +6,8 @@
 #include <iterator>
 #include <sstream>
 
-#include "algorithm.hpp"
 #include "metaprogramming.hpp"
+#include "tuple_algo.hpp"
 
 namespace ehanc {
 

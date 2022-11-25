@@ -33,6 +33,13 @@ using type_identity_t = typename ::ehanc::type_identity<T>::type;
 template <std::size_t idx>
 struct index_constant : std::integral_constant<std::size_t, idx> {};
 
+// index_pair
+template <std::size_t t_first, std::size_t t_second>
+struct index_pair {
+  constexpr inline static std::size_t first {t_first};
+  constexpr inline static std::size_t second {t_second};
+};
+
 // sum_type
 /* {{{ doc */
 /**

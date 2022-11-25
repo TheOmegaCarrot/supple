@@ -131,6 +131,20 @@ tuple_push_back_impl(const Tuple& tup, T&& data,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Returns a new tuple with `data` appended to the end
+ * ex. tuple_push_back(std::tuple{2, 4.8}, true) == std::tuple{2, 4.8, true}
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @tparam T Type of data to append
+ *
+ * @param tup Tuple to append to
+ *
+ * @param data Value to append
+ */
+/* }}} */
 template <typename Tuple, typename T>
 [[nodiscard]] constexpr auto tuple_push_back(const Tuple& tup,
                                              T&& data) noexcept
@@ -152,6 +166,16 @@ tuple_pop_back_impl(const Tuple& tup,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Returns a new tuple with the last element removed
+ * ex. tuple_pop_back(std::tuple{2, 4.8, true}) == std::tuple{2, 4.8}
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @param tup Tuple to remove the last element from
+ */
+/* }}} */
 template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_pop_back(const Tuple& tup) noexcept
 {
@@ -171,6 +195,19 @@ tuple_push_front_impl(const Tuple& tup, T&& data,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Returns a new tuple with `data` prepended to the beginning
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @tparam T Type of data to prepend
+ *
+ * @param tup Tuple to prepend to
+ *
+ * @param data Value to prepend
+ */
+/* }}} */
 template <typename Tuple, typename T>
 [[nodiscard]] constexpr auto tuple_push_front(const Tuple& tup,
                                               T&& data) noexcept
@@ -192,6 +229,16 @@ tuple_pop_front_impl(const Tuple& tup,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Returns a new tuple with the first element removed
+ * ex. tuple_pop_back(std::tuple{2, 4.8, true}) == std::tuple{2, 4.8}
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @param tup Tuple to remove the first element from
+ */
+/* }}} */
 template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_pop_front(const Tuple& tup) noexcept
 {
@@ -206,7 +253,7 @@ template <typename Tuple, typename T, std::size_t... pre_idxs,
 [[nodiscard]] constexpr auto
 tuple_insert_impl(const Tuple& tup, T&& data,
                   std::index_sequence<pre_idxs...>,
-                  std::index_sequence<post_idxs...>)
+                  std::index_sequence<post_idxs...>) noexcept
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
@@ -216,9 +263,28 @@ tuple_insert_impl(const Tuple& tup, T&& data,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Inserts a value into an arbitrary index of a tuple.
+ * ex. tuple_insert(std::tuple{3, true}, ehanc::index_constant<1>, 5.8) 
+ * == std::tuple{3, 5.8, true}
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @tparam Idx Index to insert at
+ *
+ * @param tup Tuple to insert into
+ *
+ * @param deduction_helper Only exists so that `Idx` can be deduced
+ *
+ * @param data Value to insert
+ */
+/* }}} */
 template <typename Tuple, typename T, std::size_t Idx>
 [[nodiscard]] constexpr auto
-tuple_insert(const Tuple& tup, ehanc::index_constant<Idx>, T&& data)
+tuple_insert(const Tuple& tup,
+             [[maybe_unused]] ehanc::index_constant<Idx> deduction_helper,
+             T&& data) noexcept
 {
   static_assert(Idx <= std::tuple_size_v<Tuple>, "Index out of bounds");
 
@@ -228,6 +294,96 @@ tuple_insert(const Tuple& tup, ehanc::index_constant<Idx>, T&& data)
 
   return ::ehanc::impl::tuple_insert_impl(tup, std::forward<T>(data),
                                           pre_seq, post_seq);
+}
+
+namespace impl {
+
+template <typename Tuple, std::size_t... Inds, std::size_t begin>
+[[nodiscard]] constexpr auto
+subtuple_impl(const Tuple& tup,
+              [[maybe_unused]] std::index_sequence<Inds...>,
+              [[maybe_unused]] ehanc::index_constant<begin>)
+{
+  return std::tuple {std::get<Inds + begin>(tup)...};
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Creates a subtuple from a range of indices.
+ * Returned tuple will be created from the half-open range [begin, end).
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @tparam begin Beginning index
+ *
+ * @tparam end Ending index
+ *
+ * @param tup Tuple to extract a subtuple from
+ *
+ * @param begin_deduct_help Provides deduction for `begin`
+ *
+ * @param end_deduct_help Provides deduction for `end`
+ */
+/* }}} */
+template <typename Tuple, std::size_t begin, std::size_t end>
+[[nodiscard]] constexpr auto
+subtuple(const Tuple& tup, ehanc::index_constant<begin> begin_deduct_help,
+         [[maybe_unused]] ehanc::index_constant<end> end_deduct_help)
+{
+  static_assert(begin < std::tuple_size_v<Tuple>, "Begin out of bounds");
+  static_assert(end <= std::tuple_size_v<Tuple>, "Begin out of bounds");
+
+  auto seq {std::make_index_sequence<end - begin> {}};
+
+  return ::ehanc::impl::subtuple_impl(tup, seq, begin_deduct_help);
+}
+
+/* {{{ doc */
+/**
+ * @brief Creates a subtuple from a range of indices.
+ * Returned tuple will be created from the half-open range [begin, end).
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @tparam begin Beginning index
+ *
+ * @tparam end Ending index
+ *
+ * @param tup Tuple to extract a subtuple from
+ *
+ * @param deduction_helper Provides deduction for `begin` and `end`
+ */
+/* }}} */
+template <typename Tuple, std::size_t begin, std::size_t end>
+[[nodiscard]] constexpr auto
+subtuple(const Tuple& tup, [[maybe_unused]] ehanc::index_pair<begin, end>
+                               deduction_helper) noexcept
+{
+  return ::ehanc::subtuple(tup, ehanc::index_constant<begin> {},
+                           ehanc::index_constant<end> {});
+}
+
+/* {{{ doc */
+/**
+ * @brief Creates a subtuple from a range of indices.
+ * Returned tuple will be created from the half-open range [begin, end).
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @tparam begin Beginning index
+ *
+ * @tparam end Ending index
+ *
+ * @param tup Tuple to extract a subtuple from
+ */
+/* }}} */
+template <typename Tuple, std::size_t begin, std::size_t end>
+[[nodiscard]] constexpr auto subtuple(const Tuple& tup) noexcept
+{
+  return ::ehanc::subtuple(tup, ehanc::index_constant<begin> {},
+                           ehanc::index_constant<end> {});
 }
 
 namespace impl {

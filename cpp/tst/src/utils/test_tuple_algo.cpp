@@ -169,6 +169,49 @@ static auto test_tuple_insert() -> ehanc::test
   return results;
 }
 
+static auto test_subtuple() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::string str {"subtuple"};
+  std::vector vec {1, 2, 3, 4};
+  std::tuple test_input {3, true, str, 3.14, vec};
+
+  std::tuple expected1 {str, 3.14, vec};
+  auto result1 {ehanc::subtuple(test_input, ehanc::index_constant<2> {},
+                                ehanc::index_constant<5> {})};
+
+  results.add_case(result1, expected1);
+
+  std::tuple expected2 {test_input};
+  auto result2 {ehanc::subtuple(
+      test_input, ehanc::index_constant<0> {},
+      ehanc::index_constant<std::tuple_size_v<decltype(test_input)>> {})};
+
+  results.add_case(result2, expected2);
+
+  std::tuple expected3 {3, true, str};
+  auto result3 {ehanc::subtuple(test_input, ehanc::index_constant<0> {},
+                                ehanc::index_constant<3> {})};
+
+  results.add_case(result3, expected3);
+
+  std::tuple expected4 {3, true, str};
+  auto result4 {ehanc::subtuple(test_input, ehanc::index_pair<0, 3> {})};
+
+  results.add_case(result4, expected4);
+
+  std::tuple expected5 {str, 3.14, vec};
+  auto result5 {ehanc::subtuple(test_input, ehanc::index_pair<2, 5> {})};
+
+  std::tuple expected6 {str, 3.14, vec};
+  auto result6 {ehanc::subtuple<decltype(test_input), 2, 5>(test_input)};
+
+  results.add_case(result6, expected6);
+
+  return results;
+}
+
 static auto test_tuple_count_if() -> ehanc::test
 {
   using ehanc::literals::size_t_literal::operator""_z;
@@ -193,5 +236,6 @@ void test_tuple_algo()
   ehanc::run_test("ehanc::tuple_push_front", &test_tuple_push_front);
   ehanc::run_test("ehanc::tuple_pop_back", &test_tuple_pop_back);
   ehanc::run_test("ehanc::tuple_insert", &test_tuple_insert);
+  ehanc::run_test("ehanc::subtuple", &test_subtuple);
   ehanc::run_test("ehanc::tuple_count_if", &test_tuple_count_if);
 }

@@ -1,5 +1,6 @@
 #include "utils/test_tuple_algo.h"
 #include "test_utils.hpp"
+#include "utils/metaprogramming.hpp"
 
 static auto test_for_each_in_tuple() -> ehanc::test
 {
@@ -146,22 +147,22 @@ static auto test_tuple_insert() -> ehanc::test
   std::tuple test_input {3, 3.14};
   std::tuple expected1 {3, true, 3.14};
 
-  auto result1 {ehanc::tuple_insert<decltype(test_input), bool, 1>(
-      test_input, true)};
+  auto result1 {
+      ehanc::tuple_insert(test_input, ehanc::index_constant<1> {}, true)};
 
   results.add_case(result1, expected1);
 
   std::tuple expected2 {3, 3.14, true};
-  auto result2 {
-      ehanc::tuple_insert<decltype(test_input), bool,
-                          std::tuple_size_v<decltype(test_input)>>(
-          test_input, true)};
+  auto result2 {ehanc::tuple_insert(
+      test_input,
+      ehanc::index_constant<std::tuple_size_v<decltype(test_input)>> {},
+      true)};
 
   results.add_case(result2, expected2, "max index");
 
   std::tuple expected3 {true, 3, 3.14};
-  auto result3 {ehanc::tuple_insert<decltype(test_input), bool, 0>(
-      test_input, true)};
+  auto result3 {
+      ehanc::tuple_insert(test_input, ehanc::index_constant<0> {}, true)};
 
   results.add_case(result3, expected3);
 

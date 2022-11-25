@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "metaprogramming.hpp"
+
 namespace ehanc {
 
 namespace impl {
@@ -202,20 +204,22 @@ namespace impl {
 template <typename Tuple, typename T, std::size_t... pre_idxs,
           std::size_t... post_idxs>
 [[nodiscard]] constexpr auto
-tuple_insert_impl(const Tuple& tup, const T& data,
+tuple_insert_impl(const Tuple& tup, T&& data,
                   std::index_sequence<pre_idxs...>,
+
                   std::index_sequence<post_idxs...>)
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-  return std::tuple {std::get<pre_idxs>(tup)..., data,
+  return std::tuple {std::get<pre_idxs>(tup)..., std::forward<T>(data),
                      std::get<post_idxs + idx>(tup)...};
 }
 
 } // namespace impl
 
 template <typename Tuple, typename T, std::size_t Idx>
-[[nodiscard]] constexpr auto tuple_insert(const Tuple& tup, const T& data)
+[[nodiscard]] constexpr auto
+tuple_insert(const Tuple& tup, ehanc::index_constant<Idx>, T&& data)
 {
   static_assert(Idx <= std::tuple_size_v<Tuple>, "Index out of bounds");
 
@@ -223,7 +227,8 @@ template <typename Tuple, typename T, std::size_t Idx>
   auto post_seq {
       std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
 
-  return ::ehanc::impl::tuple_insert_impl(tup, data, pre_seq, post_seq);
+  return ::ehanc::impl::tuple_insert_impl(tup, std::forward<T>(data),
+                                          pre_seq, post_seq);
 }
 
 namespace impl {

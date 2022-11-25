@@ -29,6 +29,10 @@ struct type_identity {
 template <typename T>
 using type_identity_t = typename ::ehanc::type_identity<T>::type;
 
+// index_constant
+template <std::size_t idx>
+struct index_constant : std::integral_constant<std::size_t, idx> {};
+
 // sum_type
 /* {{{ doc */
 /**

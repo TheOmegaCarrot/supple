@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "utils/all.h"
+#include "utils/metaprogramming.hpp"
 
 /// @cond
 
@@ -48,8 +49,7 @@ auto main([[maybe_unused]] const int argc,
             << '\n';
   std::cout << ehanc::to_string(ehanc::tuple_pop_front(example)) << '\n';
   std::cout << ehanc::to_string(
-      ehanc::tuple_insert<decltype(example), std::string, 2>(example,
-                                                             what))
+      ehanc::tuple_insert(example, ehanc::index_constant<2> {}, what))
             << '\n';
 
   return 0;

@@ -143,6 +143,8 @@ tuple_push_back_impl(const Tuple& tup, T&& data,
  * @param tup Tuple to append to
  *
  * @param data Value to append
+ *
+ * @return New tuple with `data` appended
  */
 /* }}} */
 template <typename Tuple, typename T>
@@ -174,6 +176,8 @@ tuple_pop_back_impl(const Tuple& tup,
  * @tparam Tuple Tuple type
  *
  * @param tup Tuple to remove the last element from
+ *
+ * @return New tuple with last element removed
  */
 /* }}} */
 template <typename Tuple>
@@ -206,6 +210,8 @@ tuple_push_front_impl(const Tuple& tup, T&& data,
  * @param tup Tuple to prepend to
  *
  * @param data Value to prepend
+ *
+ * @return New tuple with `data` prepended
  */
 /* }}} */
 template <typename Tuple, typename T>
@@ -237,6 +243,8 @@ tuple_pop_front_impl(const Tuple& tup,
  * @tparam Tuple Tuple type
  *
  * @param tup Tuple to remove the first element from
+ *
+ * @return New tuple with first element removed
  */
 /* }}} */
 template <typename Tuple>
@@ -279,6 +287,8 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
  * @param deduction_helper Only exists so that `Idx` can be deduced
  *
  * @param data Value(s) to insert
+ *
+ * @return New tuple with `data` inserted at index `Idx`
  */
 /* }}} */
 template <typename Tuple, typename... T, std::size_t Idx>

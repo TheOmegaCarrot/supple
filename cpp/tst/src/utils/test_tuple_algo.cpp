@@ -230,6 +230,8 @@ static auto test_subtuple() -> ehanc::test
   std::tuple expected5 {str, 3.14, vec};
   auto result5 {ehanc::subtuple(test_input, ehanc::index_pair<2, 5> {})};
 
+  results.add_case(result5, expected5);
+
   std::tuple expected6 {str, 3.14, vec};
   auto result6 {ehanc::subtuple<decltype(test_input), 2, 5>(test_input)};
 

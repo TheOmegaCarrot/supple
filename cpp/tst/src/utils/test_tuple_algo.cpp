@@ -166,6 +166,14 @@ static auto test_tuple_insert() -> ehanc::test
 
   results.add_case(result3, expected3);
 
+  std::string neat {"neat"};
+  std::vector vec {1, 2, 3, 4};
+  std::tuple expected4 {3, 42069, neat, vec, 3.14};
+  auto result4 {ehanc::tuple_insert(
+      test_input, ehanc::index_constant<1> {}, 42069, neat, vec)};
+
+  results.add_case(result4, expected4);
+
   return results;
 }
 

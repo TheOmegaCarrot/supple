@@ -297,6 +297,15 @@ tuple_insert(const Tuple& tup,
                                           std::forward<T>(data)...);
 }
 
+template <typename Tuple, std::size_t... Idxs>
+[[nodiscard]] constexpr auto
+tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...>) noexcept
+{
+  static_assert(((Idxs < std::tuple_size_v<Tuple>)&&...));
+
+  return std::tuple {std::get<Idxs>(tup)...};
+}
+
 namespace impl {
 
 template <typename Tuple, std::size_t... Inds, std::size_t begin>

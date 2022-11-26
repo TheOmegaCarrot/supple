@@ -1,6 +1,7 @@
 #include "utils/test_tuple_algo.h"
 #include "test_utils.hpp"
 #include "utils/metaprogramming.hpp"
+#include "utils/tuple_algo.hpp"
 
 static auto test_for_each_in_tuple() -> ehanc::test
 {
@@ -177,6 +178,23 @@ static auto test_tuple_insert() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_reorder() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::string reorder {"reorder"};
+  std::vector vec {1, 2, 3, 4};
+  std::tuple test_input {3, 3.14, true, reorder, vec};
+  std::tuple expected1 {3.14, reorder, 3, 3.14, vec, true};
+
+  auto result1 {ehanc::tuple_reorder(
+      test_input, std::index_sequence<1, 3, 0, 1, 4, 2> {})};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
 static auto test_subtuple() -> ehanc::test
 {
   ehanc::test results;
@@ -244,6 +262,7 @@ void test_tuple_algo()
   ehanc::run_test("ehanc::tuple_push_front", &test_tuple_push_front);
   ehanc::run_test("ehanc::tuple_pop_back", &test_tuple_pop_back);
   ehanc::run_test("ehanc::tuple_insert", &test_tuple_insert);
+  ehanc::run_test("ehanc::tuple_reorder", &test_tuple_reorder);
   ehanc::run_test("ehanc::subtuple", &test_subtuple);
   ehanc::run_test("ehanc::tuple_count_if", &test_tuple_count_if);
 }

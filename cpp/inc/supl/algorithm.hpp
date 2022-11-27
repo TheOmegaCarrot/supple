@@ -198,23 +198,6 @@ constexpr void for_each_adjacent(
 
 /* {{{ doc */
 /**
- * @brief Forwarding function alias for for_each_adjacent following rename.
- *
- * @deprecated Renamed to `for_each_adjacent`.
- */
-/* }}} */
-template <typename Itr, typename BinaryFunc>
-[[deprecated("Use for_each_adjacent")]] constexpr void
-for_each_pair(Itr&& begin, Itr&& end,
-              BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
-{
-  ::supl::for_each_adjacent(std::forward<Itr>(begin),
-                             std::forward<Itr>(end),
-                             std::forward<BinaryFunc>(func));
-}
-
-/* {{{ doc */
-/**
  * @brief Applies `func` to each adjacent pair of elements.
  * Iteration ceases when the range runs out of adjacent pairs,
  * or when `n` iterations have occurred; whichever comes first.
@@ -250,23 +233,6 @@ constexpr void for_each_adjacent_n(
   for ( ; count != n && leader != end; ++count, ++leader, ++follower ) {
     func(*leader, *follower);
   }
-}
-
-/* {{{ doc */
-/**
- * @brief Forwarding function alias for for_each_adjacent following rename.
- *
- * @deprecated Renamed to `for_each_adjacent_n`.
- */
-/* }}} */
-template <typename Itr, typename BinaryFunc>
-[[deprecated("Use for_each_adjacent_n")]] constexpr void
-for_each_pair_n(Itr&& begin, Itr&& end, const std::size_t n,
-                BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
-{
-  ::supl::for_each_adjacent_n(std::forward<Itr>(begin),
-                               std::forward<Itr>(end), n,
-                               std::forward<BinaryFunc>(func));
 }
 
 /* {{{ doc */
@@ -424,12 +390,12 @@ template <typename VarFunc, typename... Containers>
 constexpr void
 for_each_all(VarFunc&& func, Containers&... containers) noexcept(
     noexcept(::supl::for_each_all_n(std::forward<VarFunc>(func),
-                                     ::supl::min_size(containers...),
-                                     std::begin(containers)...)))
+                                    ::supl::min_size(containers...),
+                                    std::begin(containers)...)))
 {
   ::supl::for_each_all_n(std::forward<VarFunc>(func),
-                          ::supl::min_size(containers...),
-                          std::begin(containers)...);
+                         ::supl::min_size(containers...),
+                         std::begin(containers)...);
 }
 
 /* {{{ doc */
@@ -459,8 +425,8 @@ for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
                             std::cbegin(containers)...)))
 {
   ::supl::for_each_all_n(std::forward<VarFunc>(func),
-                          ::supl::min_size(containers...),
-                          std::cbegin(containers)...);
+                         ::supl::min_size(containers...),
+                         std::cbegin(containers)...);
 }
 
 inline namespace bkprt {

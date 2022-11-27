@@ -247,3 +247,34 @@ static_assert(supl::are_less_comparable_v<int, double>);
 static_assert(supl::are_less_comparable_v<int, bool>);
 static_assert(supl::are_less_comparable_v<int, char>);
 static_assert(not supl::are_less_comparable_v<int, std::vector<int>>);
+
+///////////////////////////////////////////// are_less_eq_comparable
+
+static_assert(supl::are_less_eq_comparable_v<int, int>);
+static_assert(supl::are_less_eq_comparable_v<int, char>);
+static_assert(supl::are_less_eq_comparable_v<int, float>);
+static_assert(supl::are_less_eq_comparable_v<int, double>);
+static_assert(supl::are_less_eq_comparable_v<int, bool>);
+static_assert(supl::are_less_eq_comparable_v<int, char>);
+static_assert(not supl::are_less_eq_comparable_v<int, std::vector<int>>);
+
+///////////////////////////////////////////// are_greater_comparable
+
+static_assert(supl::are_greater_comparable_v<int, int>);
+static_assert(supl::are_greater_comparable_v<int, char>);
+static_assert(supl::are_greater_comparable_v<int, float>);
+static_assert(supl::are_greater_comparable_v<int, double>);
+static_assert(supl::are_greater_comparable_v<int, bool>);
+static_assert(supl::are_greater_comparable_v<int, char>);
+static_assert(not supl::are_greater_comparable_v<int, std::vector<int>>);
+
+///////////////////////////////////////////// are_greater_eq_comparable
+
+static_assert(supl::are_greater_eq_comparable_v<int, int>);
+static_assert(supl::are_greater_eq_comparable_v<int, char>);
+static_assert(supl::are_greater_eq_comparable_v<int, float>);
+static_assert(supl::are_greater_eq_comparable_v<int, double>);
+static_assert(supl::are_greater_eq_comparable_v<int, bool>);
+static_assert(supl::are_greater_eq_comparable_v<int, char>);
+static_assert(
+    not supl::are_greater_eq_comparable_v<int, std::vector<int>>);

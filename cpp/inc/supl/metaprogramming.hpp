@@ -464,6 +464,48 @@ template <typename T, typename U>
 constexpr inline bool are_less_comparable_v =
     ::supl::are_less_comparable<T, U>::value;
 
+///////////////////////////////////////////// are_less_eq_comparable
+
+template <typename T, typename U, typename = void>
+struct are_less_eq_comparable : std::false_type {};
+
+template <typename T, typename U>
+struct are_less_eq_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() <= std::declval<U>())>>
+    : std::true_type {};
+
+template <typename T, typename U>
+constexpr inline bool are_less_eq_comparable_v =
+    ::supl::are_less_eq_comparable<T, U>::value;
+
+///////////////////////////////////////////// are_less_comparable
+
+template <typename T, typename U, typename = void>
+struct are_greater_comparable : std::false_type {};
+
+template <typename T, typename U>
+struct are_greater_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() > std::declval<U>())>>
+    : std::true_type {};
+
+template <typename T, typename U>
+constexpr inline bool are_greater_comparable_v =
+    ::supl::are_greater_comparable<T, U>::value;
+
+///////////////////////////////////////////// are_greater_eq_comparable
+
+template <typename T, typename U, typename = void>
+struct are_greater_eq_comparable : std::false_type {};
+
+template <typename T, typename U>
+struct are_greater_eq_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() >= std::declval<U>())>>
+    : std::true_type {};
+
+template <typename T, typename U>
+constexpr inline bool are_greater_eq_comparable_v =
+    ::supl::are_greater_eq_comparable<T, U>::value;
+
 } // namespace supl
 
 #endif

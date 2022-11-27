@@ -3,6 +3,14 @@
 #include "utils/metaprogramming.hpp"
 #include "utils/tuple_algo.hpp"
 
+template <typename... Ls>
+struct overload : Ls... {
+  using Ls::operator()...;
+};
+
+template <typename... Ls>
+overload(Ls...) -> overload<Ls...>;
+
 static auto test_for_each_in_tuple() -> ehanc::test
 {
   ehanc::test results;
@@ -31,14 +39,6 @@ static auto test_for_each_in_tuple() -> ehanc::test
 
   return results;
 }
-
-template <typename... Ls>
-struct overload : Ls... {
-  using Ls::operator()...;
-};
-
-template <typename... Ls>
-overload(Ls...) -> overload<Ls...>;
 
 static auto test_tuple_transform() -> ehanc::test
 {
@@ -81,6 +81,75 @@ static auto test_tuple_transform() -> ehanc::test
 
   results.add_case(std::get<0>(out3), 5_z, "out3 : 0");
   results.add_case(std::get<1>(out3), 3_z, "out3 : 1");
+
+  return results;
+}
+
+static auto test_tuple_any_of() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {42, 'c', false};
+
+  results.add_case(
+      ehanc::tuple_any_of(test1,
+                          overload {[](const int i) { return i < 10; },
+                                    [](const char c) { return c == 'c'; },
+                                    [](const auto&) { return false; }
+
+                          }),
+      true);
+
+  results.add_case(
+      ehanc::tuple_any_of(test1,
+                          overload {[](const auto& i) { return i < 0; },
+                                    [](const bool b) { return b; }}),
+      false);
+
+  return results;
+}
+
+static auto test_tuple_all_of() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {42, 'c', false};
+
+  results.add_case(
+      ehanc::tuple_all_of(test1,
+                          overload {[](const bool b) { return not b; },
+                                    [](const auto& i) { return i > 2; }}),
+      true);
+
+  results.add_case(
+      ehanc::tuple_all_of(test1,
+                          overload {[](const bool b) { return b; },
+                                    [](const auto& i) { return i > 2; }}),
+      false);
+
+  return results;
+}
+
+static auto test_tuple_none_of() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {42, 'c', false};
+
+  results.add_case(
+      ehanc::tuple_none_of(test1,
+                           overload {[](const int i) { return i < 10; },
+                                     [](const char c) { return c == 'c'; },
+                                     [](const auto&) { return false; }
+
+                           }),
+      false);
+
+  results.add_case(
+      ehanc::tuple_none_of(test1,
+                           overload {[](const auto& i) { return i < 0; },
+                                     [](const bool b) { return b; }}),
+      true);
 
   return results;
 }
@@ -259,6 +328,9 @@ void test_tuple_algo()
 {
   ehanc::run_test("ehanc::for_each_in_tuple", &test_for_each_in_tuple);
   ehanc::run_test("ehanc::tuple_transform", &test_tuple_transform);
+  ehanc::run_test("ehanc::tuple_any_of", &test_tuple_any_of);
+  ehanc::run_test("ehanc::tuple_all_of", &test_tuple_all_of);
+  ehanc::run_test("ehanc::tuple_none_of", &test_tuple_none_of);
   ehanc::run_test("ehanc::tuple_push_back", &test_tuple_push_back);
   ehanc::run_test("ehanc::tuple_pop_front", &test_tuple_pop_front);
   ehanc::run_test("ehanc::tuple_push_front", &test_tuple_push_front);

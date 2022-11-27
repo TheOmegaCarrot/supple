@@ -121,6 +121,65 @@ template <typename Tuple, typename Func>
 
 namespace impl {
 
+template <typename Tuple, typename Pred, std::size_t... Inds>
+[[nodiscard]] constexpr auto
+tuple_any_of_impl(const Tuple& tup, Pred&& pred,
+                  std::index_sequence<Inds...>) noexcept -> bool
+{
+  static_assert(
+      std::conjunction_v<std::is_invocable_r<
+          bool, Pred, decltype(std::get<Inds>(tup))>...>,
+      "Predicate must be invocable returning a bool with every type in the tuple");
+
+  return (pred(std::get<Inds>(tup)) || ...);
+}
+
+} // namespace impl
+
+template <typename Tuple, typename Pred>
+[[nodiscard]] constexpr auto tuple_any_of(const Tuple& tup,
+                                          Pred&& pred) noexcept -> bool
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  return ::ehanc::impl::tuple_any_of_impl(tup, std::forward<Pred>(pred),
+                                          seq);
+}
+
+namespace impl {
+
+template <typename Tuple, typename Pred, std::size_t... Inds>
+[[nodiscard]] constexpr auto
+tuple_all_of_impl(const Tuple& tup, Pred&& pred,
+                  std::index_sequence<Inds...>) noexcept -> bool
+{
+  static_assert(
+      std::conjunction_v<std::is_invocable_r<
+          bool, Pred, decltype(std::get<Inds>(tup))>...>,
+      "Predicate must be invocable returning a bool with every type in the tuple");
+
+  return (pred(std::get<Inds>(tup)) && ...);
+}
+
+} // namespace impl
+
+template <typename Tuple, typename Pred>
+[[nodiscard]] constexpr auto tuple_all_of(const Tuple& tup,
+                                          Pred&& pred) noexcept -> bool
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  return ::ehanc::impl::tuple_all_of_impl(tup, std::forward<Pred>(pred),
+                                          seq);
+}
+
+template <typename Tuple, typename Pred>
+[[nodiscard]] constexpr auto tuple_none_of(const Tuple& tup,
+                                           Pred&& pred) noexcept -> bool
+{
+  return not ::ehanc::tuple_any_of(tup, std::forward<Pred>(pred));
+}
+
+namespace impl {
+
 template <typename Tuple, typename T, std::size_t... Inds>
 [[nodiscard]] constexpr auto
 tuple_push_back_impl(const Tuple& tup, T&& data,

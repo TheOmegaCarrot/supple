@@ -436,6 +436,34 @@ struct is_printable<T, std::void_t<decltype(std::declval<std::ostream&>()
 template <typename T>
 constexpr inline bool is_printable_v = ::supl::is_printable<T>::value;
 
+///////////////////////////////////////////// are_equality_comparable
+
+template <typename T, typename U, typename = void>
+struct are_equality_comparable : std::false_type {};
+
+template <typename T, typename U>
+struct are_equality_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() == std::declval<U>())>>
+    : std::true_type {};
+
+template <typename T, typename U>
+constexpr inline bool are_equality_comparable_v =
+    ::supl::are_equality_comparable<T, U>::value;
+
+///////////////////////////////////////////// are_less_comparable
+
+template <typename T, typename U, typename = void>
+struct are_less_comparable : std::false_type {};
+
+template <typename T, typename U>
+struct are_less_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() < std::declval<U>())>>
+    : std::true_type {};
+
+template <typename T, typename U>
+constexpr inline bool are_less_comparable_v =
+    ::supl::are_less_comparable<T, U>::value;
+
 } // namespace supl
 
 #endif

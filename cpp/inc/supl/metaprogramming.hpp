@@ -9,6 +9,7 @@
 namespace supl {
 
 ///////////////////////////////////////////// type_identity
+
 /* {{{ doc */
 /**
  * @brief Identity metafunction. This version is redundant if using
@@ -20,20 +21,13 @@ struct type_identity {
   using type = T;
 };
 
-/* {{{ doc */
-/**
- * @brief Helper alias template to make using the `type_identity`
- * metafunction less verbose and cumbersome.
- */
-/* }}} */
-template <typename T>
-using type_identity_t = typename ::supl::type_identity<T>::type;
-
 ///////////////////////////////////////////// index_constant
+
 template <std::size_t idx>
 struct index_constant : std::integral_constant<std::size_t, idx> {};
 
 ///////////////////////////////////////////// index_pair
+
 template <std::size_t t_first, std::size_t t_second>
 struct index_pair {
   constexpr inline static std::size_t first {t_first};
@@ -41,6 +35,7 @@ struct index_pair {
 };
 
 ///////////////////////////////////////////// sum_type
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine the type resulting from
@@ -61,6 +56,7 @@ template <typename... Ts>
 using sum_type_t = typename ::supl::sum_type<Ts...>::type;
 
 ///////////////////////////////////////////// is_type_in_pack
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if type T is present in pack.
@@ -91,6 +87,7 @@ constexpr inline bool is_type_in_pack_v =
     ::supl::is_type_in_pack<T, Pack...>::value;
 
 ///////////////////////////////////////////// peel_first
+
 /* {{{ doc */
 /**
  * @brief Metafunction to return first type in a pack. Empty pack
@@ -119,6 +116,7 @@ template <typename... Pack>
 using peel_first_t = typename ::supl::peel_first<Pack...>::type;
 
 ///////////////////////////////////////////// peel_last
+
 /* {{{ doc */
 /**
  * @brief Metafunction to return last type in a pack. Empty pack considered
@@ -136,8 +134,7 @@ struct peel_last : ::supl::type_identity<void> {};
 /* }}} */
 template <typename First, typename... Pack>
 struct peel_last<First, Pack...>
-    : ::supl::type_identity<typename ::supl::peel_last<Pack...>::type> {
-};
+    : ::supl::type_identity<typename ::supl::peel_last<Pack...>::type> {};
 
 /* {{{ doc */
 /**
@@ -158,6 +155,7 @@ template <typename... Pack>
 using peel_last_t = typename ::supl::peel_last<Pack...>::type;
 
 ///////////////////////////////////////////// is_pack_uniform
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -181,6 +179,7 @@ constexpr inline bool is_pack_uniform_v =
     ::supl::is_pack_uniform<Pack...>::value;
 
 ///////////////////////////////////////////// is_pack_only
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -213,6 +212,7 @@ constexpr inline bool is_pack_only_v =
     ::supl::is_pack_only<T, Pack...>::value;
 
 ///////////////////////////////////////////// is_iterable
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type can be iterated over.
@@ -244,6 +244,7 @@ template <typename T>
 constexpr inline bool is_iterable_v = ::supl::is_iterable<T>::value;
 
 ///////////////////////////////////////////// is_iterator
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type meets the minimum criteria
@@ -276,6 +277,7 @@ template <typename T>
 constexpr inline bool is_iterator_v = ::supl::is_iterator<T>::value;
 
 ///////////////////////////////////////////// is_bidirectional
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type supports pre-increment and
@@ -308,6 +310,7 @@ constexpr inline bool is_bidirectional_v =
     ::supl::is_bidirectional<T>::value;
 
 ///////////////////////////////////////////// is_random_access
+
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if an iterator is a
@@ -343,6 +346,7 @@ constexpr inline bool is_random_access_v =
     ::supl::is_random_access<T>::value;
 
 ///////////////////////////////////////////// is_tuple
+
 namespace impl {
 /* {{{ doc */
 /**
@@ -381,6 +385,7 @@ template <typename T>
 constexpr inline bool is_tuple_v = ::supl::is_tuple<T>::value;
 
 ///////////////////////////////////////////// is_pair
+
 namespace impl {
 /* {{{ doc */
 /**
@@ -419,6 +424,7 @@ template <typename T>
 constexpr inline bool is_pair_v = ::supl::is_pair<T>::value;
 
 ///////////////////////////////////////////// is_printable
+
 template <typename T, typename = void>
 struct is_printable : std::false_type {};
 

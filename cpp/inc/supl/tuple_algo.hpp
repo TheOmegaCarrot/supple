@@ -57,8 +57,7 @@ template <typename Tuple, typename Func>
 constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  ::supl::impl::for_each_in_tuple_impl(tup, std::forward<Func>(func),
-                                        seq);
+  ::supl::impl::for_each_in_tuple_impl(tup, std::forward<Func>(func), seq);
 }
 
 namespace impl {
@@ -116,7 +115,7 @@ template <typename Tuple, typename Func>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return ::supl::impl::tuple_transform_impl(tup, std::forward<Func>(func),
-                                             seq);
+                                            seq);
 }
 
 namespace impl {
@@ -136,13 +135,33 @@ tuple_any_of_impl(const Tuple& tup, Pred&& pred,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Determine if any elements of a tuple satisfy a unary predicate
+ *
+ * @tparam Tuple Input tuple type
+ *
+ * @tparam Pred Type of unary predicate.
+ * Must return `bool` for every element of the input tuple.
+ * This requirement checked by `static_assert`.
+ *
+ * @param tup Input tuple
+ *
+ * @param pred Unary predicate.
+ * Must return `bool` for every element of the input tuple.
+ * This requirement checked by `static_assert`.
+ *
+ * @return Returns `true` if `pred` applied to any element of `tup`
+ * returns true. Returns `false` otherwise.
+ */
+/* }}} */
 template <typename Tuple, typename Pred>
 [[nodiscard]] constexpr auto tuple_any_of(const Tuple& tup,
                                           Pred&& pred) noexcept -> bool
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return ::supl::impl::tuple_any_of_impl(tup, std::forward<Pred>(pred),
-                                          seq);
+                                         seq);
 }
 
 namespace impl {
@@ -162,15 +181,55 @@ tuple_all_of_impl(const Tuple& tup, Pred&& pred,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Determine if all elements of a tuple satisfy a unary predicate
+ *
+ * @tparam Tuple Input tuple type
+ *
+ * @tparam Pred Type of unary predicate.
+ * Must return `bool` for every element of the input tuple.
+ * This requirement checked by `static_assert`.
+ *
+ * @param tup Input tuple
+ *
+ * @param pred Unary predicate.
+ * Must return `bool` for every element of the input tuple.
+ * This requirement checked by `static_assert`.
+ *
+ * @return Returns `true` if `pred` applied to all elements of `tup`
+ * return true. Returns `false` otherwise.
+ */
+/* }}} */
 template <typename Tuple, typename Pred>
 [[nodiscard]] constexpr auto tuple_all_of(const Tuple& tup,
                                           Pred&& pred) noexcept -> bool
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return ::supl::impl::tuple_all_of_impl(tup, std::forward<Pred>(pred),
-                                          seq);
+                                         seq);
 }
 
+/* {{{ doc */
+/**
+ * @brief Determine if no elements of a tuple satisfy a unary predicate
+ *
+ * @tparam Tuple Input tuple type
+ *
+ * @tparam Pred Type of unary predicate.
+ * Must return `bool` for every element of the input tuple.
+ * This requirement checked by `static_assert`.
+ *
+ * @param tup Input tuple
+ *
+ * @param pred Unary predicate.
+ * Must return `bool` for every element of the input tuple.
+ * This requirement checked by `static_assert`.
+ *
+ * @return Returns `true` if `pred` applied to no elements of `tup`
+ * return true. Returns `false` otherwise.
+ */
+/* }}} */
 template <typename Tuple, typename Pred>
 [[nodiscard]] constexpr auto tuple_none_of(const Tuple& tup,
                                            Pred&& pred) noexcept -> bool
@@ -212,7 +271,7 @@ template <typename Tuple, typename T>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return ::supl::impl::tuple_push_back_impl(tup, std::forward<T>(data),
-                                             seq);
+                                            seq);
 }
 
 namespace impl {
@@ -279,7 +338,7 @@ template <typename Tuple, typename T>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return ::supl::impl::tuple_push_front_impl(tup, std::forward<T>(data),
-                                              seq);
+                                             seq);
 }
 
 namespace impl {
@@ -363,7 +422,7 @@ tuple_insert(const Tuple& tup,
       std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
 
   return ::supl::impl::tuple_insert_impl(tup, pre_seq, post_seq,
-                                          std::forward<T>(data)...);
+                                         std::forward<T>(data)...);
 }
 
 template <typename Tuple, std::size_t... Idxs>
@@ -441,7 +500,7 @@ subtuple(const Tuple& tup, [[maybe_unused]] supl::index_pair<begin, end>
                                deduction_helper) noexcept
 {
   return ::supl::subtuple(tup, supl::index_constant<begin> {},
-                           supl::index_constant<end> {});
+                          supl::index_constant<end> {});
 }
 
 /* {{{ doc */
@@ -462,7 +521,7 @@ template <typename Tuple, std::size_t begin, std::size_t end>
 [[nodiscard]] constexpr auto subtuple(const Tuple& tup) noexcept
 {
   return ::supl::subtuple(tup, supl::index_constant<begin> {},
-                           supl::index_constant<end> {});
+                          supl::index_constant<end> {});
 }
 
 namespace impl {
@@ -500,7 +559,7 @@ template <typename Tuple, typename Pred>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return ::supl::impl::tuple_count_if_impl(tup, std::forward<Pred>(pred),
-                                            seq);
+                                           seq);
 }
 
 } // namespace supl

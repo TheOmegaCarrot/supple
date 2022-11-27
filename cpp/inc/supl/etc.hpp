@@ -1,5 +1,5 @@
-#ifndef EHANC_UTILS_ETC_HPP
-#define EHANC_UTILS_ETC_HPP
+#ifndef SUPPLEMENTARIES_ETC_HPP
+#define SUPPLEMENTARIES_ETC_HPP
 
 #include <algorithm>
 #include <cstddef>

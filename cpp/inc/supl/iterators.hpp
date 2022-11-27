@@ -1,5 +1,5 @@
-#ifndef EHANC_UTILS_ITERATORS_HPP
-#define EHANC_UTILS_ITERATORS_HPP
+#ifndef SUPPLEMENTARIES_ITERATORS_HPP
+#define SUPPLEMENTARIES_ITERATORS_HPP
 
 #include <cstddef>
 #include <functional>

@@ -1,5 +1,5 @@
-#ifndef EHANC_UTILS_ALL_H
-#define EHANC_UTILS_ALL_H
+#ifndef SUPPLEMENTARIES_ALL_H
+#define SUPPLEMENTARIES_ALL_H
 
 #include "algorithm.hpp"
 #include "etc.hpp"

@@ -1,6 +1,10 @@
 #ifndef SUPPLEMENTARIES_FAKE_RANGES_HPP
 #define SUPPLEMENTARIES_FAKE_RANGES_HPP
 
+// Still a work in progress
+// The goal is to have every STL algorithm and `supl` algorithm
+// have a `fr` counterpart
+
 #include <algorithm>
 #include <cstddef>
 #include <numeric>

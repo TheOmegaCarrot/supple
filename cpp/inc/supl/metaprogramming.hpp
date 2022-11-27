@@ -8,7 +8,7 @@
 
 namespace supl {
 
-// type_identity
+///////////////////////////////////////////// type_identity
 /* {{{ doc */
 /**
  * @brief Identity metafunction. This version is redundant if using
@@ -29,18 +29,18 @@ struct type_identity {
 template <typename T>
 using type_identity_t = typename ::supl::type_identity<T>::type;
 
-// index_constant
+///////////////////////////////////////////// index_constant
 template <std::size_t idx>
 struct index_constant : std::integral_constant<std::size_t, idx> {};
 
-// index_pair
+///////////////////////////////////////////// index_pair
 template <std::size_t t_first, std::size_t t_second>
 struct index_pair {
   constexpr inline static std::size_t first {t_first};
   constexpr inline static std::size_t second {t_second};
 };
 
-// sum_type
+///////////////////////////////////////////// sum_type
 /* {{{ doc */
 /**
  * @brief Metafunction to determine the type resulting from
@@ -60,7 +60,7 @@ struct sum_type
 template <typename... Ts>
 using sum_type_t = typename ::supl::sum_type<Ts...>::type;
 
-// is_type_in_pack
+///////////////////////////////////////////// is_type_in_pack
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if type T is present in pack.
@@ -90,7 +90,7 @@ template <typename T, typename... Pack>
 constexpr inline bool is_type_in_pack_v =
     ::supl::is_type_in_pack<T, Pack...>::value;
 
-// peel_first
+///////////////////////////////////////////// peel_first
 /* {{{ doc */
 /**
  * @brief Metafunction to return first type in a pack. Empty pack
@@ -118,7 +118,7 @@ struct peel_first<First, Pack...> : ::supl::type_identity<First> {};
 template <typename... Pack>
 using peel_first_t = typename ::supl::peel_first<Pack...>::type;
 
-// peel_last
+///////////////////////////////////////////// peel_last
 /* {{{ doc */
 /**
  * @brief Metafunction to return last type in a pack. Empty pack considered
@@ -157,7 +157,7 @@ struct peel_last<Last> : ::supl::type_identity<Last> {};
 template <typename... Pack>
 using peel_last_t = typename ::supl::peel_last<Pack...>::type;
 
-// is_pack_uniform
+///////////////////////////////////////////// is_pack_uniform
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -180,7 +180,7 @@ template <typename... Pack>
 constexpr inline bool is_pack_uniform_v =
     ::supl::is_pack_uniform<Pack...>::value;
 
-// is_pack_only
+///////////////////////////////////////////// is_pack_only
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if all types in a pack
@@ -212,7 +212,7 @@ template <typename T, typename... Pack>
 constexpr inline bool is_pack_only_v =
     ::supl::is_pack_only<T, Pack...>::value;
 
-// is_iterable
+///////////////////////////////////////////// is_iterable
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type can be iterated over.
@@ -243,7 +243,7 @@ struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T&>())),
 template <typename T>
 constexpr inline bool is_iterable_v = ::supl::is_iterable<T>::value;
 
-// is_iterator
+///////////////////////////////////////////// is_iterator
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type meets the minimum criteria
@@ -275,7 +275,7 @@ struct is_iterator<T, std::void_t<decltype(*std::declval<T>()),
 template <typename T>
 constexpr inline bool is_iterator_v = ::supl::is_iterator<T>::value;
 
-// is_bidirectional
+///////////////////////////////////////////// is_bidirectional
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if a type supports pre-increment and
@@ -307,7 +307,7 @@ template <typename T>
 constexpr inline bool is_bidirectional_v =
     ::supl::is_bidirectional<T>::value;
 
-// is_random_access
+///////////////////////////////////////////// is_random_access
 /* {{{ doc */
 /**
  * @brief Metafunction to determine if an iterator is a
@@ -342,7 +342,7 @@ template <typename T>
 constexpr inline bool is_random_access_v =
     ::supl::is_random_access<T>::value;
 
-// is_tuple
+///////////////////////////////////////////// is_tuple
 namespace impl {
 /* {{{ doc */
 /**
@@ -380,7 +380,7 @@ struct is_tuple : ::supl::impl::is_tuple_impl<std::decay_t<T>> {};
 template <typename T>
 constexpr inline bool is_tuple_v = ::supl::is_tuple<T>::value;
 
-// is_pair
+///////////////////////////////////////////// is_pair
 namespace impl {
 /* {{{ doc */
 /**
@@ -418,7 +418,7 @@ struct is_pair : ::supl::impl::is_pair_impl<std::decay_t<T>> {};
 template <typename T>
 constexpr inline bool is_pair_v = ::supl::is_pair<T>::value;
 
-// is_printable
+///////////////////////////////////////////// is_printable
 template <typename T, typename = void>
 struct is_printable : std::false_type {};
 

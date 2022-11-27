@@ -425,83 +425,185 @@ constexpr inline bool is_pair_v = ::supl::is_pair<T>::value;
 
 ///////////////////////////////////////////// is_printable
 
+/* {{{ doc */
+/**
+ * @brief Determines if `operator<<(std::ostream&, T)` is defined for a type `T`.
+ */
+/* }}} */
 template <typename T, typename = void>
 struct is_printable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Determines if `operator<<(std::ostream&, T)` is defined for a type `T`.
+ * Specialization for true case.
+ */
+/* }}} */
 template <typename T>
 struct is_printable<T, std::void_t<decltype(std::declval<std::ostream&>()
                                             << std::declval<T>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_printable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T>
 constexpr inline bool is_printable_v = ::supl::is_printable<T>::value;
 
 ///////////////////////////////////////////// are_equality_comparable
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator==`.
+ */
+/* }}} */
 template <typename T, typename U, typename = void>
 struct are_equality_comparable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator==`.
+ * Specialization for true case.
+ */
+/* }}} */
 template <typename T, typename U>
 struct are_equality_comparable<
     T, U, std::void_t<decltype(std::declval<T>() == std::declval<U>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_equality_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename U>
 constexpr inline bool are_equality_comparable_v =
     ::supl::are_equality_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_less_comparable
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<`.
+ */
+/* }}} */
 template <typename T, typename U, typename = void>
 struct are_less_comparable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<`.
+ * Specialization for true case.
+ */
+/* }}} */
 template <typename T, typename U>
 struct are_less_comparable<
     T, U, std::void_t<decltype(std::declval<T>() < std::declval<U>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_less_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename U>
 constexpr inline bool are_less_comparable_v =
     ::supl::are_less_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_less_eq_comparable
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<=`.
+ */
+/* }}} */
 template <typename T, typename U, typename = void>
 struct are_less_eq_comparable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator<=`.
+ * Specialization for true case.
+ */
+/* }}} */
 template <typename T, typename U>
 struct are_less_eq_comparable<
     T, U, std::void_t<decltype(std::declval<T>() <= std::declval<U>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_less_eq_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename U>
 constexpr inline bool are_less_eq_comparable_v =
     ::supl::are_less_eq_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_less_comparable
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>`.
+ */
+/* }}} */
 template <typename T, typename U, typename = void>
 struct are_greater_comparable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>`.
+ * Specialization for true case.
+ */
+/* }}} */
 template <typename T, typename U>
 struct are_greater_comparable<
     T, U, std::void_t<decltype(std::declval<T>() > std::declval<U>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_greater_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename U>
 constexpr inline bool are_greater_comparable_v =
     ::supl::are_greater_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_greater_eq_comparable
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>=`.
+ */
+/* }}} */
 template <typename T, typename U, typename = void>
 struct are_greater_eq_comparable : std::false_type {};
 
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator>=`.
+ * Specialization for true case.
+ */
+/* }}} */
 template <typename T, typename U>
 struct are_greater_eq_comparable<
     T, U, std::void_t<decltype(std::declval<T>() >= std::declval<U>())>>
     : std::true_type {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_greater_eq_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T, typename U>
 constexpr inline bool are_greater_eq_comparable_v =
     ::supl::are_greater_eq_comparable<T, U>::value;

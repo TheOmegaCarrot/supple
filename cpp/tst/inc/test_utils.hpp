@@ -15,7 +15,7 @@
 constexpr inline int TEST_OUTPUT_WIDTH         = 60;
 constexpr inline std::string_view HEADER_COLOR = supl::FG_RED;
 
-namespace supl {
+namespace ehanc {
 
 class test
 {
@@ -38,12 +38,12 @@ public:
       m_pass = false;
       std::stringstream detail;
 
-      detail << std::boolalpha << std::left << std::setw(10) << FG_RED
-             << "Case " << m_case_index << '\t' << message
+      detail << std::boolalpha << std::left << std::setw(10)
+             << supl::FG_RED << "Case " << m_case_index << '\t' << message
              << "\n\n\tExpected:\n"
-             << RESET << '\t' << ::supl::to_string(expected) << FG_RED
-             << "\n\n\tGot:\n"
-             << RESET << '\t' << ::supl::to_string(result) << '\n'
+             << supl::RESET << '\t' << ::supl::to_string(expected)
+             << supl::FG_RED << "\n\n\tGot:\n"
+             << supl::RESET << '\t' << ::supl::to_string(result) << '\n'
              << '\n';
 
       m_cases.push_back(detail.str());
@@ -71,12 +71,12 @@ inline void run_test(const std::string_view name,
 
   if ( result.pass() ) {
     std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH)
-              << std::setfill('.') << name << FG_GREEN << "PASS" << RESET
-              << '\n';
+              << std::setfill('.') << name << supl::FG_GREEN << "PASS"
+              << supl::RESET << '\n';
   } else {
     std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH)
-              << std::setfill('.') << name << FG_RED << "FAIL" << RESET
-              << '\n'
+              << std::setfill('.') << name << supl::FG_RED << "FAIL"
+              << supl::RESET << '\n'
               << '\n';
 
     for ( const auto& details : result.cases() ) {
@@ -89,11 +89,11 @@ inline void test_section(const std::string_view section_name,
                          const std::function<void()>& section_func)
 {
   std::cout << '\n';
-  std::cout << HEADER_COLOR << section_name << ':' << RESET << '\n';
+  std::cout << HEADER_COLOR << section_name << ':' << supl::RESET << '\n';
   section_func();
   std::cout << '\n';
 }
 
-} // namespace supl
+} // namespace ehanc
 
 #endif

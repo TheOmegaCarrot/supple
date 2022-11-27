@@ -27,9 +27,9 @@ struct copy_counter {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 int copy_counter::copy_count {0};
 
-static auto test_explicit_copy() -> supl::test
+static auto test_explicit_copy() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   copy_counter test;
 
   results.add_case(copy_counter::copy_count, 0,
@@ -58,9 +58,9 @@ static auto test_explicit_copy() -> supl::test
   return results;
 }
 
-static auto test_to_string() -> supl::test
+static auto test_to_string() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   using namespace std::literals;
 
@@ -91,9 +91,9 @@ static auto test_to_string() -> supl::test
   return results;
 }
 
-static auto test_size_t_literals() -> supl::test
+static auto test_size_t_literals() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   using supl::size_t_literal::operator""_z;
   /* using namespace supl::literals::size_t_literal; */ // also works
@@ -110,8 +110,8 @@ static auto test_size_t_literals() -> supl::test
 
 void test_etc()
 {
-  supl::run_test("supl::explicit_copy", &test_explicit_copy);
-  supl::run_test("supl::to_string", &test_to_string);
-  supl::run_test("supl::literals::size_t_literal::operator\"\"_z",
+  ehanc::run_test("supl::explicit_copy", &test_explicit_copy);
+  ehanc::run_test("supl::to_string", &test_to_string);
+  ehanc::run_test("supl::literals::size_t_literal::operator\"\"_z",
                   &test_size_t_literals);
 }

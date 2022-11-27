@@ -11,9 +11,9 @@ struct overload : Ls... {
 template <typename... Ls>
 overload(Ls...) -> overload<Ls...>;
 
-static auto test_for_each_in_tuple() -> supl::test
+static auto test_for_each_in_tuple() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple<int, char, bool> test {42, 'c', false};
 
@@ -40,11 +40,11 @@ static auto test_for_each_in_tuple() -> supl::test
   return results;
 }
 
-static auto test_tuple_transform() -> supl::test
+static auto test_tuple_transform() -> ehanc::test
 {
   using supl::literals::size_t_literal::operator""_z;
 
-  supl::test results;
+  ehanc::test results;
 
   std::tuple<int, char, bool> test1 {42, 'c', false};
 
@@ -85,9 +85,9 @@ static auto test_tuple_transform() -> supl::test
   return results;
 }
 
-static auto test_tuple_any_of() -> supl::test
+static auto test_tuple_any_of() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test1 {42, 'c', false};
 
@@ -109,9 +109,9 @@ static auto test_tuple_any_of() -> supl::test
   return results;
 }
 
-static auto test_tuple_all_of() -> supl::test
+static auto test_tuple_all_of() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test1 {42, 'c', false};
 
@@ -130,9 +130,9 @@ static auto test_tuple_all_of() -> supl::test
   return results;
 }
 
-static auto test_tuple_none_of() -> supl::test
+static auto test_tuple_none_of() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test1 {42, 'c', false};
 
@@ -154,9 +154,9 @@ static auto test_tuple_none_of() -> supl::test
   return results;
 }
 
-static auto test_tuple_push_back() -> supl::test
+static auto test_tuple_push_back() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3, 3.14, 'd', true};
@@ -168,9 +168,9 @@ static auto test_tuple_push_back() -> supl::test
   return results;
 }
 
-static auto test_tuple_pop_back() -> supl::test
+static auto test_tuple_pop_back() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3, 3.14};
@@ -182,9 +182,9 @@ static auto test_tuple_pop_back() -> supl::test
   return results;
 }
 
-static auto test_tuple_push_front() -> supl::test
+static auto test_tuple_push_front() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {true, 3, 3.14, 'd'};
@@ -196,9 +196,9 @@ static auto test_tuple_push_front() -> supl::test
   return results;
 }
 
-static auto test_tuple_pop_front() -> supl::test
+static auto test_tuple_pop_front() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3.14, 'd'};
@@ -210,9 +210,9 @@ static auto test_tuple_pop_front() -> supl::test
   return results;
 }
 
-static auto test_tuple_insert() -> supl::test
+static auto test_tuple_insert() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test_input {3, 3.14};
   std::tuple expected1 {3, true, 3.14};
@@ -247,9 +247,9 @@ static auto test_tuple_insert() -> supl::test
   return results;
 }
 
-static auto test_tuple_reorder() -> supl::test
+static auto test_tuple_reorder() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::string reorder {"reorder"};
   std::vector vec {1, 2, 3, 4};
@@ -264,9 +264,9 @@ static auto test_tuple_reorder() -> supl::test
   return results;
 }
 
-static auto test_subtuple() -> supl::test
+static auto test_subtuple() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::string str {"subtuple"};
   std::vector vec {1, 2, 3, 4};
@@ -309,11 +309,11 @@ static auto test_subtuple() -> supl::test
   return results;
 }
 
-static auto test_tuple_count_if() -> supl::test
+static auto test_tuple_count_if() -> ehanc::test
 {
   using supl::literals::size_t_literal::operator""_z;
 
-  supl::test results;
+  ehanc::test results;
 
   std::tuple test {7, 2, 42.53, 3.14F, 9344285UL, -83LL};
   results.add_case(
@@ -326,17 +326,17 @@ static auto test_tuple_count_if() -> supl::test
 
 void test_tuple_algo()
 {
-  supl::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
-  supl::run_test("supl::tuple_transform", &test_tuple_transform);
-  supl::run_test("supl::tuple_any_of", &test_tuple_any_of);
-  supl::run_test("supl::tuple_all_of", &test_tuple_all_of);
-  supl::run_test("supl::tuple_none_of", &test_tuple_none_of);
-  supl::run_test("supl::tuple_push_back", &test_tuple_push_back);
-  supl::run_test("supl::tuple_pop_front", &test_tuple_pop_front);
-  supl::run_test("supl::tuple_push_front", &test_tuple_push_front);
-  supl::run_test("supl::tuple_pop_back", &test_tuple_pop_back);
-  supl::run_test("supl::tuple_insert", &test_tuple_insert);
-  supl::run_test("supl::tuple_reorder", &test_tuple_reorder);
-  supl::run_test("supl::subtuple", &test_subtuple);
-  supl::run_test("supl::tuple_count_if", &test_tuple_count_if);
+  ehanc::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
+  ehanc::run_test("supl::tuple_transform", &test_tuple_transform);
+  ehanc::run_test("supl::tuple_any_of", &test_tuple_any_of);
+  ehanc::run_test("supl::tuple_all_of", &test_tuple_all_of);
+  ehanc::run_test("supl::tuple_none_of", &test_tuple_none_of);
+  ehanc::run_test("supl::tuple_push_back", &test_tuple_push_back);
+  ehanc::run_test("supl::tuple_pop_front", &test_tuple_pop_front);
+  ehanc::run_test("supl::tuple_push_front", &test_tuple_push_front);
+  ehanc::run_test("supl::tuple_pop_back", &test_tuple_pop_back);
+  ehanc::run_test("supl::tuple_insert", &test_tuple_insert);
+  ehanc::run_test("supl::tuple_reorder", &test_tuple_reorder);
+  ehanc::run_test("supl::subtuple", &test_subtuple);
+  ehanc::run_test("supl::tuple_count_if", &test_tuple_count_if);
 }

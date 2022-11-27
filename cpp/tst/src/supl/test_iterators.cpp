@@ -8,9 +8,9 @@
 
 #include "supl/etc.hpp"
 
-static auto test_last() -> supl::test
+static auto test_last() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array<int, 5> test1 {};
   std::iota(test1.begin(), test1.end(), 1);
 
@@ -26,9 +26,9 @@ static auto test_last() -> supl::test
   return results;
 }
 
-static auto test_clast() -> supl::test
+static auto test_clast() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array<int, 5> test1 {};
   std::iota(test1.begin(), test1.end(), 1);
 
@@ -44,9 +44,9 @@ static auto test_clast() -> supl::test
   return results;
 }
 
-static auto test_sequence_iterator() -> supl::test
+static auto test_sequence_iterator() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   supl::sequence_iterator begin(0);
   supl::sequence_iterator end(10);
@@ -72,9 +72,9 @@ static auto test_sequence_iterator() -> supl::test
   return results;
 }
 
-static auto test_sequence() -> supl::test
+static auto test_sequence() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   int j {0};
   for ( int i : supl::sequence(0, 10) ) {
@@ -102,9 +102,9 @@ static auto test_sequence() -> supl::test
   return results;
 }
 
-static auto test_generative_iterator() -> supl::test
+static auto test_generative_iterator() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   supl::generative_iterator begin([j {0}]() mutable { return j++; });
   supl::generative_iterator<decltype(begin)::value_type> end(10);
@@ -123,9 +123,9 @@ static auto test_generative_iterator() -> supl::test
   return results;
 }
 
-static auto test_generative_sequence() -> supl::test
+static auto test_generative_sequence() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   int k {0};
   for ( int i : supl::generative_sequence(
@@ -138,10 +138,10 @@ static auto test_generative_sequence() -> supl::test
 
 void test_iterators()
 {
-  supl::run_test("supl::last", &test_last);
-  supl::run_test("supl::clast", &test_clast);
-  supl::run_test("supl::sequence_iterator", &test_sequence_iterator);
-  supl::run_test("supl::sequence", &test_sequence);
-  supl::run_test("supl::generative_iterator", &test_generative_iterator);
-  supl::run_test("supl::generative_sequence", &test_generative_sequence);
+  ehanc::run_test("supl::last", &test_last);
+  ehanc::run_test("supl::clast", &test_clast);
+  ehanc::run_test("supl::sequence_iterator", &test_sequence_iterator);
+  ehanc::run_test("supl::sequence", &test_sequence);
+  ehanc::run_test("supl::generative_iterator", &test_generative_iterator);
+  ehanc::run_test("supl::generative_sequence", &test_generative_sequence);
 }

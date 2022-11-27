@@ -7,9 +7,9 @@
 #include "supl/etc.hpp"
 #include "supl/test_algorithm.h"
 
-static auto test_min_size() -> supl::test
+static auto test_min_size() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array<int, 5> test1 {};
   std::array<int, 8> test2 {};
   std::array<int, 3> test3 {};
@@ -21,9 +21,9 @@ static auto test_min_size() -> supl::test
   return results;
 }
 
-static auto test_max_size() -> supl::test
+static auto test_max_size() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array<int, 5> test1 {};
   std::array<int, 8> test2 {};
   std::array<int, 3> test3 {};
@@ -35,9 +35,9 @@ static auto test_max_size() -> supl::test
   return results;
 }
 
-static auto test_contains() -> supl::test
+static auto test_contains() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::vector<int> test1 {1, 2, 3, 4, 5, 6};
 
@@ -56,9 +56,9 @@ static auto test_contains() -> supl::test
   return results;
 }
 
-static auto test_transform_if() -> supl::test
+static auto test_transform_if() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   const std::vector<int> test_input {1, 2, 3, 4, 5, 6, 7, 8};
   std::vector<int> test_output;
@@ -78,9 +78,9 @@ static auto test_transform_if() -> supl::test
   return results;
 }
 
-static auto test_for_each_adjacent() -> supl::test
+static auto test_for_each_adjacent() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::vector<int> test_input(6);
   std::iota(test_input.begin(), test_input.end(), 1);
   std::vector<int> test_output;
@@ -99,9 +99,9 @@ static auto test_for_each_adjacent() -> supl::test
   return results;
 }
 
-static auto test_for_each_adjacent_n() -> supl::test
+static auto test_for_each_adjacent_n() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::vector<int> test_input {1, 2, 3, 4, 5, 6};
   std::vector<int> test_output;
   std::vector<int> reference_output {3, 5, 7};
@@ -118,9 +118,9 @@ static auto test_for_each_adjacent_n() -> supl::test
   return results;
 }
 
-static auto test_for_each_all() -> supl::test
+static auto test_for_each_all() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array test1 {4, 9, 16, 25};
   std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
@@ -140,9 +140,9 @@ static auto test_for_each_all() -> supl::test
   return results;
 }
 
-static auto test_for_each_all_c() -> supl::test
+static auto test_for_each_all_c() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   const std::array test1 {4, 9, 16, 25};
   const std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
@@ -162,9 +162,9 @@ static auto test_for_each_all_c() -> supl::test
   return results;
 }
 
-static auto test_for_each_all_n() -> supl::test
+static auto test_for_each_all_n() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array test1 {4, 9, 16, 25};
   std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
@@ -184,9 +184,9 @@ static auto test_for_each_all_n() -> supl::test
   return results;
 }
 
-static auto test_for_each_both() -> supl::test
+static auto test_for_each_both() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array<int, 5> test_input_1 {};
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2 {10, 20, 30, 40};
@@ -207,9 +207,9 @@ static auto test_for_each_both() -> supl::test
   return results;
 }
 
-static auto test_for_each_both_n() -> supl::test
+static auto test_for_each_both_n() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
   std::array<int, 5> test_input_1 {};
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2 {10, 20, 30, 40};
@@ -230,9 +230,9 @@ static auto test_for_each_both_n() -> supl::test
   return results;
 }
 
-static auto test_bkprt_generate() -> supl::test
+static auto test_bkprt_generate() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   std::vector<int> test(10);
   std::vector<int> ref(10);
@@ -259,16 +259,16 @@ static auto test_bkprt_generate() -> supl::test
 
 void test_algorithm()
 {
-  supl::run_test("supl::min_size", &test_min_size);
-  supl::run_test("supl::max_size", &test_max_size);
-  supl::run_test("supl::contains", &test_contains);
-  supl::run_test("supl::transform_if", &test_transform_if);
-  supl::run_test("supl::for_each_adjacent", &test_for_each_adjacent);
-  supl::run_test("supl::for_each_adjacent_n", &test_for_each_adjacent_n);
-  supl::run_test("supl::for_each_all_n", &test_for_each_all_n);
-  supl::run_test("supl::for_each_all", &test_for_each_all);
-  supl::run_test("supl::for_each_all_c", &test_for_each_all_c);
-  supl::run_test("supl::for_each_both", &test_for_each_both);
-  supl::run_test("supl::for_each_both_n", &test_for_each_both_n);
-  supl::run_test("supl::bkprt::generate", &test_bkprt_generate);
+  ehanc::run_test("supl::min_size", &test_min_size);
+  ehanc::run_test("supl::max_size", &test_max_size);
+  ehanc::run_test("supl::contains", &test_contains);
+  ehanc::run_test("supl::transform_if", &test_transform_if);
+  ehanc::run_test("supl::for_each_adjacent", &test_for_each_adjacent);
+  ehanc::run_test("supl::for_each_adjacent_n", &test_for_each_adjacent_n);
+  ehanc::run_test("supl::for_each_all_n", &test_for_each_all_n);
+  ehanc::run_test("supl::for_each_all", &test_for_each_all);
+  ehanc::run_test("supl::for_each_all_c", &test_for_each_all_c);
+  ehanc::run_test("supl::for_each_both", &test_for_each_both);
+  ehanc::run_test("supl::for_each_both_n", &test_for_each_both_n);
+  ehanc::run_test("supl::bkprt::generate", &test_bkprt_generate);
 }

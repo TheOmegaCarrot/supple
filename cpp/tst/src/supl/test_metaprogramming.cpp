@@ -8,9 +8,9 @@
 #include "test_utils.hpp"
 #include "supl/test_metaprogramming.h"
 
-static auto test_sum_type() -> supl::test
+static auto test_sum_type() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(std::is_same_v<supl::sum_type_t<int, int>, int>, true,
                    "int + int == int");
@@ -61,9 +61,9 @@ static_assert(
         supl::sum_type_t<int16_t, int16_t, int16_t, int16_t, int>, int>,
     "int16_t + int16_t + int16_t + int16_t + int == int");
 
-static auto test_type_identity() -> supl::test
+static auto test_type_identity() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(std::is_same_v<supl::type_identity_t<char>, int>,
                    false, "char : int");
@@ -170,9 +170,9 @@ static auto test_type_identity() -> supl::test
   return results;
 }
 
-static auto test_is_type_in_pack() -> supl::test
+static auto test_is_type_in_pack() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_type_in_pack_v<int, char, bool, int>, true);
   results.add_case(supl::is_type_in_pack_v<int, int, bool, int>, true);
@@ -194,9 +194,9 @@ static_assert(supl::is_type_in_pack_v<int, int, int, int>);
 static_assert(supl::is_type_in_pack_v<int, int>);
 static_assert(not supl::is_type_in_pack_v<int, char>);
 
-static auto test_peel_first() -> supl::test
+static auto test_peel_first() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(
       std::is_same_v<supl::peel_first_t<int, char, char, char>, int>,
@@ -221,9 +221,9 @@ static_assert(
 static_assert(
     std::is_same_v<supl::peel_first_t<char, int, int, int>, char>);
 
-static auto test_peel_last() -> supl::test
+static auto test_peel_last() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(
       std::is_same_v<supl::peel_last_t<char, char, char, int>, int>,
@@ -246,9 +246,9 @@ static_assert(
 static_assert(
     std::is_same_v<supl::peel_last_t<int, int, int, char>, char>);
 
-static auto test_is_pack_uniform() -> supl::test
+static auto test_is_pack_uniform() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_pack_uniform_v<int, int, int, int, int>,
                    true);
@@ -282,9 +282,9 @@ static_assert(supl::is_pack_uniform_v<int, int>);
 static_assert(not supl::is_pack_uniform_v<int, char>);
 static_assert(supl::is_pack_uniform_v<int>);
 
-static auto test_is_pack_only() -> supl::test
+static auto test_is_pack_only() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_pack_only_v<double, double, double, double>,
                    true);
@@ -313,9 +313,9 @@ static_assert(
 static_assert(not supl::is_pack_only_v<double>);
 static_assert(not supl::is_pack_only_v<void>);
 
-static auto test_is_iterable() -> supl::test
+static auto test_is_iterable() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_iterable_v<std::vector<int>>, true);
   results.add_case(supl::is_iterable_v<std::list<int>>, true);
@@ -343,9 +343,9 @@ static_assert(not supl::is_iterable_v<bool>);
 static_assert(not supl::is_iterable_v<std::tuple<int, char, bool>>);
 static_assert(not supl::is_iterable_v<std::pair<int, char>>);
 
-static auto test_is_iterator() -> supl::test
+static auto test_is_iterator() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_iterator_v<int>, false);
   results.add_case(supl::is_iterator_v<std::vector<int>::iterator>, true);
@@ -363,9 +363,9 @@ static_assert(supl::is_iterator_v<std::array<int, 5>::iterator>);
 static_assert(supl::is_iterator_v<int*>);
 static_assert(supl::is_iterator_v<const int*>);
 
-static auto test_is_bidirectional() -> supl::test
+static auto test_is_bidirectional() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(
       supl::is_bidirectional_v<std::forward_list<int>::iterator>, false);
@@ -385,9 +385,9 @@ static_assert(supl::is_bidirectional_v<std::vector<int>::iterator>);
 static_assert(supl::is_bidirectional_v<std::list<int>::iterator>);
 static_assert(supl::is_bidirectional_v<std::deque<int>::iterator>);
 
-static auto test_is_random_access() -> supl::test
+static auto test_is_random_access() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(
       supl::is_random_access_v<std::forward_list<int>::iterator>, false);
@@ -407,9 +407,9 @@ static_assert(supl::is_random_access_v<std::vector<int>::iterator>);
 static_assert(not supl::is_random_access_v<std::list<int>::iterator>);
 static_assert(supl::is_random_access_v<std::deque<int>::iterator>);
 
-static auto test_is_tuple() -> supl::test
+static auto test_is_tuple() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_tuple_v<std::tuple<int, char, double>>, true);
   results.add_case(supl::is_tuple_v<const std::tuple<int, char, double>>,
@@ -523,9 +523,9 @@ static_assert(
     not supl::is_tuple_v<const volatile std::pair<int, char>&&>);
 static_assert(not supl::is_tuple_v<int>);
 
-static auto test_is_pair() -> supl::test
+static auto test_is_pair() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_pair_v<std::pair<int, char>>, true);
   results.add_case(supl::is_pair_v<const std::pair<int, char>>, true);
@@ -595,9 +595,9 @@ static_assert(
     not supl::is_pair_v<const volatile std::tuple<int, char>&&>);
 static_assert(not supl::is_pair_v<int>);
 
-static auto test_is_printable() -> supl::test
+static auto test_is_printable() -> ehanc::test
 {
-  supl::test results;
+  ehanc::test results;
 
   results.add_case(supl::is_printable_v<int>, true);
   results.add_case(supl::is_printable_v<char>, true);
@@ -618,18 +618,18 @@ static_assert(not supl::is_printable_v<std::list<std::string>>);
 
 void test_metaprogramming()
 {
-  supl::run_test("supl::sum_type", &test_sum_type);
-  supl::run_test("supl::type_identity", &test_type_identity);
-  supl::run_test("supl::is_type_in_pack", &test_is_type_in_pack);
-  supl::run_test("supl::peel_first", &test_peel_first);
-  supl::run_test("supl::peel_last", &test_peel_last);
-  supl::run_test("supl::is_pack_uniform", &test_is_pack_uniform);
-  supl::run_test("supl::is_pack_only", &test_is_pack_only);
-  supl::run_test("supl::is_iterable", &test_is_iterable);
-  supl::run_test("supl::is_iterator", &test_is_iterator);
-  supl::run_test("supl::is_bidirectional", &test_is_bidirectional);
-  supl::run_test("supl::is_random_access", &test_is_random_access);
-  supl::run_test("supl::is_tuple", &test_is_tuple);
-  supl::run_test("supl::is_pair", &test_is_pair);
-  supl::run_test("supl::is_printable", &test_is_printable);
+  ehanc::run_test("supl::sum_type", &test_sum_type);
+  ehanc::run_test("supl::type_identity", &test_type_identity);
+  ehanc::run_test("supl::is_type_in_pack", &test_is_type_in_pack);
+  ehanc::run_test("supl::peel_first", &test_peel_first);
+  ehanc::run_test("supl::peel_last", &test_peel_last);
+  ehanc::run_test("supl::is_pack_uniform", &test_is_pack_uniform);
+  ehanc::run_test("supl::is_pack_only", &test_is_pack_only);
+  ehanc::run_test("supl::is_iterable", &test_is_iterable);
+  ehanc::run_test("supl::is_iterator", &test_is_iterator);
+  ehanc::run_test("supl::is_bidirectional", &test_is_bidirectional);
+  ehanc::run_test("supl::is_random_access", &test_is_random_access);
+  ehanc::run_test("supl::is_tuple", &test_is_tuple);
+  ehanc::run_test("supl::is_pair", &test_is_pair);
+  ehanc::run_test("supl::is_printable", &test_is_printable);
 }

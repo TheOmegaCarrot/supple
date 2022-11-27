@@ -12,15 +12,15 @@
 auto main() -> int
 {
 
-  supl::test_section("Algorithm", &test_algorithm);
+  ehanc::test_section("Algorithm", &test_algorithm);
 
-  supl::test_section("Tuple Algorithms", &test_tuple_algo);
+  ehanc::test_section("Tuple Algorithms", &test_tuple_algo);
 
-  supl::test_section("Iterators", &test_iterators);
+  ehanc::test_section("Iterators", &test_iterators);
 
-  supl::test_section("Metaprogramming", &test_metaprogramming);
+  ehanc::test_section("Metaprogramming", &test_metaprogramming);
 
-  supl::test_section("Etc", &test_etc);
+  ehanc::test_section("Etc", &test_etc);
 
   return 0;
 }

@@ -12,6 +12,35 @@ namespace ehanc {
 template <typename... Pack>
 struct type_list {};
 
+///////////////////////////////////////////// contains
+
+template <typename T, typename LIST>
+struct contains_type;
+
+template <typename T, template <typename...> typename LIST,
+          typename... Pack>
+struct contains_type<T, LIST<Pack...>>
+    : ::ehanc::is_type_in_pack<T, Pack...> {};
+
+template <typename T, typename LIST>
+constexpr inline bool contains_type_v =
+    ::ehanc::contains_type<T, LIST>::value;
+
+///////////////////////////////////////////// type_list_size
+
+template <typename LIST>
+struct type_list_size;
+
+template <template <typename...> typename LIST, typename... Pack>
+struct type_list_size<LIST<Pack...>>
+    : ::ehanc::index_constant<sizeof...(Pack)> {};
+
+template <typename LIST>
+constexpr inline std::size_t type_list_size_v =
+    ::ehanc::type_list_size<LIST>::value;
+
+///////////////////////////////////////////// type_at_index
+
 ///////////////////////////////////////////// push_back
 
 template <typename LIST, typename T>

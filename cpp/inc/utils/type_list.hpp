@@ -41,6 +41,21 @@ constexpr inline std::size_t type_list_size_v =
 
 ///////////////////////////////////////////// type_at_index
 
+template <std::size_t Idx, typename LIST, std::size_t Current = 0>
+struct type_at_index;
+
+template <std::size_t Idx, template <typename...> typename LIST,
+          typename T, typename... Pack, std::size_t Current>
+struct type_at_index<Idx, LIST<T, Pack...>, Current>
+    : std::conditional_t<
+          Idx == Current, ::ehanc::type_identity<T>,
+          ::ehanc::type_at_index<Idx, LIST<Pack...>, Current + 1>> {
+  static_assert(Idx - Current <= sizeof...(Pack), "Index out of bounds");
+};
+
+template <std::size_t Idx, typename LIST, std::size_t Current = 0>
+using type_at_index_t = typename ::ehanc::type_at_index<Idx, LIST>::type;
+
 ///////////////////////////////////////////// push_back
 
 template <typename LIST, typename T>

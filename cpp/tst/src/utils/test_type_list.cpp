@@ -12,7 +12,11 @@ void test_type_list()
   // If this TU compiles, all tests pass
   // Test results here just for seratonin
 
+  ehanc::run_test("contains", &pass);
+  ehanc::run_test("type_list_size", &pass);
+  ehanc::run_test("type_at_index", &pass);
   ehanc::run_test("push_back", &pass);
+  ehanc::run_test("push_front", &pass);
 }
 
 ///////////////////////////////////////////// contains
@@ -47,6 +51,32 @@ static_assert(ehanc::type_list_size_v<
 
 static_assert(ehanc::type_list_size_v<
                   std::tuple<bool, int, char, float, bool>> == 5);
+
+///////////////////////////////////////////// type_at_index
+
+static_assert(std::is_same_v<
+              ehanc::type_at_index_t<0, ehanc::type_list<int, char, bool>>,
+              int>);
+
+static_assert(std::is_same_v<
+              ehanc::type_at_index_t<2, ehanc::type_list<int, char, bool>>,
+              bool>);
+
+static_assert(std::is_same_v<
+              ehanc::type_at_index_t<1, ehanc::type_list<int, char, bool>>,
+              char>);
+
+static_assert(
+    std::is_same_v<ehanc::type_at_index_t<0, std::tuple<int, char, bool>>,
+                   int>);
+
+static_assert(
+    std::is_same_v<ehanc::type_at_index_t<2, std::tuple<int, char, bool>>,
+                   bool>);
+
+static_assert(
+    std::is_same_v<ehanc::type_at_index_t<1, std::tuple<int, char, bool>>,
+                   char>);
 
 ///////////////////////////////////////////// push_back
 

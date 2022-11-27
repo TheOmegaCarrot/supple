@@ -9,13 +9,13 @@
 #include <string_view>
 #include <tuple>
 
-#include "utils/etc.hpp"
-#include "utils/term_colors.h"
+#include "supl/etc.hpp"
+#include "supl/term_colors.h"
 
 constexpr inline int TEST_OUTPUT_WIDTH         = 60;
-constexpr inline std::string_view HEADER_COLOR = ehanc::FG_RED;
+constexpr inline std::string_view HEADER_COLOR = supl::FG_RED;
 
-namespace ehanc {
+namespace supl {
 
 class test
 {
@@ -41,9 +41,9 @@ public:
       detail << std::boolalpha << std::left << std::setw(10) << FG_RED
              << "Case " << m_case_index << '\t' << message
              << "\n\n\tExpected:\n"
-             << RESET << '\t' << ::ehanc::to_string(expected) << FG_RED
+             << RESET << '\t' << ::supl::to_string(expected) << FG_RED
              << "\n\n\tGot:\n"
-             << RESET << '\t' << ::ehanc::to_string(result) << '\n'
+             << RESET << '\t' << ::supl::to_string(result) << '\n'
              << '\n';
 
       m_cases.push_back(detail.str());
@@ -94,6 +94,6 @@ inline void test_section(const std::string_view section_name,
   std::cout << '\n';
 }
 
-} // namespace ehanc
+} // namespace supl
 
 #endif

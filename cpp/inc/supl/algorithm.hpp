@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace ehanc {
+namespace supl {
 
 /* {{{ doc */
 /**
@@ -52,7 +52,7 @@ template <typename Container, typename... Containers>
 constexpr auto min_size(const Container& cont,
                         const Containers&... conts) noexcept -> std::size_t
 {
-  return std::min(::ehanc::min_size(cont), ::ehanc::min_size(conts...));
+  return std::min(::supl::min_size(cont), ::supl::min_size(conts...));
 }
 
 /* {{{ doc */
@@ -97,7 +97,7 @@ template <typename Container, typename... Containers>
 constexpr auto max_size(const Container& cont,
                         const Containers&... conts) noexcept -> std::size_t
 {
-  return std::max(::ehanc::max_size(cont), ::ehanc::max_size(conts...));
+  return std::max(::supl::max_size(cont), ::supl::max_size(conts...));
 }
 
 template <typename Itr>
@@ -208,7 +208,7 @@ template <typename Itr, typename BinaryFunc>
 for_each_pair(Itr&& begin, Itr&& end,
               BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {
-  ::ehanc::for_each_adjacent(std::forward<Itr>(begin),
+  ::supl::for_each_adjacent(std::forward<Itr>(begin),
                              std::forward<Itr>(end),
                              std::forward<BinaryFunc>(func));
 }
@@ -264,7 +264,7 @@ template <typename Itr, typename BinaryFunc>
 for_each_pair_n(Itr&& begin, Itr&& end, const std::size_t n,
                 BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
 {
-  ::ehanc::for_each_adjacent_n(std::forward<Itr>(begin),
+  ::supl::for_each_adjacent_n(std::forward<Itr>(begin),
                                std::forward<Itr>(end), n,
                                std::forward<BinaryFunc>(func));
 }
@@ -423,12 +423,12 @@ for_each_all_n(VarFunc&& func, const std::size_t n,
 template <typename VarFunc, typename... Containers>
 constexpr void
 for_each_all(VarFunc&& func, Containers&... containers) noexcept(
-    noexcept(::ehanc::for_each_all_n(std::forward<VarFunc>(func),
-                                     ::ehanc::min_size(containers...),
+    noexcept(::supl::for_each_all_n(std::forward<VarFunc>(func),
+                                     ::supl::min_size(containers...),
                                      std::begin(containers)...)))
 {
-  ::ehanc::for_each_all_n(std::forward<VarFunc>(func),
-                          ::ehanc::min_size(containers...),
+  ::supl::for_each_all_n(std::forward<VarFunc>(func),
+                          ::supl::min_size(containers...),
                           std::begin(containers)...);
 }
 
@@ -455,11 +455,11 @@ template <typename VarFunc, typename... Containers>
 constexpr void
 for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
     noexcept(for_each_all_n(std::forward<VarFunc>(func),
-                            ::ehanc::min_size(containers...),
+                            ::supl::min_size(containers...),
                             std::cbegin(containers)...)))
 {
-  ::ehanc::for_each_all_n(std::forward<VarFunc>(func),
-                          ::ehanc::min_size(containers...),
+  ::supl::for_each_all_n(std::forward<VarFunc>(func),
+                          ::supl::min_size(containers...),
                           std::cbegin(containers)...);
 }
 
@@ -494,6 +494,6 @@ generate(Itr begin, const Itr end,
 
 } // namespace bkprt
 
-} // namespace ehanc
+} // namespace supl
 
 #endif

@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace ehanc {
+namespace supl {
 
 // type_identity
 /* {{{ doc */
@@ -27,7 +27,7 @@ struct type_identity {
  */
 /* }}} */
 template <typename T>
-using type_identity_t = typename ::ehanc::type_identity<T>::type;
+using type_identity_t = typename ::supl::type_identity<T>::type;
 
 // index_constant
 template <std::size_t idx>
@@ -49,7 +49,7 @@ struct index_pair {
 /* }}} */
 template <typename... Ts>
 struct sum_type
-    : ::ehanc::type_identity<decltype((... + std::declval<Ts>()))> {};
+    : ::supl::type_identity<decltype((... + std::declval<Ts>()))> {};
 
 /* {{{ doc */
 /**
@@ -58,7 +58,7 @@ struct sum_type
  */
 /* }}} */
 template <typename... Ts>
-using sum_type_t = typename ::ehanc::sum_type<Ts...>::type;
+using sum_type_t = typename ::supl::sum_type<Ts...>::type;
 
 // is_type_in_pack
 /* {{{ doc */
@@ -88,7 +88,7 @@ struct is_type_in_pack<T> : std::false_type {};
 /* }}} */
 template <typename T, typename... Pack>
 constexpr inline bool is_type_in_pack_v =
-    ::ehanc::is_type_in_pack<T, Pack...>::value;
+    ::supl::is_type_in_pack<T, Pack...>::value;
 
 // peel_first
 /* {{{ doc */
@@ -98,7 +98,7 @@ constexpr inline bool is_type_in_pack_v =
  */
 /* }}} */
 template <typename... Pack>
-struct peel_first : ::ehanc::type_identity<void> {};
+struct peel_first : ::supl::type_identity<void> {};
 
 /* {{{ doc */
 /**
@@ -107,7 +107,7 @@ struct peel_first : ::ehanc::type_identity<void> {};
  */
 /* }}} */
 template <typename First, typename... Pack>
-struct peel_first<First, Pack...> : ::ehanc::type_identity<First> {};
+struct peel_first<First, Pack...> : ::supl::type_identity<First> {};
 
 /* {{{ doc */
 /**
@@ -116,7 +116,7 @@ struct peel_first<First, Pack...> : ::ehanc::type_identity<First> {};
  */
 /* }}} */
 template <typename... Pack>
-using peel_first_t = typename ::ehanc::peel_first<Pack...>::type;
+using peel_first_t = typename ::supl::peel_first<Pack...>::type;
 
 // peel_last
 /* {{{ doc */
@@ -126,7 +126,7 @@ using peel_first_t = typename ::ehanc::peel_first<Pack...>::type;
  */
 /* }}} */
 template <typename... Pack>
-struct peel_last : ::ehanc::type_identity<void> {};
+struct peel_last : ::supl::type_identity<void> {};
 
 /* {{{ doc */
 /**
@@ -136,7 +136,7 @@ struct peel_last : ::ehanc::type_identity<void> {};
 /* }}} */
 template <typename First, typename... Pack>
 struct peel_last<First, Pack...>
-    : ::ehanc::type_identity<typename ::ehanc::peel_last<Pack...>::type> {
+    : ::supl::type_identity<typename ::supl::peel_last<Pack...>::type> {
 };
 
 /* {{{ doc */
@@ -146,7 +146,7 @@ struct peel_last<First, Pack...>
  */
 /* }}} */
 template <typename Last>
-struct peel_last<Last> : ::ehanc::type_identity<Last> {};
+struct peel_last<Last> : ::supl::type_identity<Last> {};
 
 /* {{{ doc */
 /**
@@ -155,7 +155,7 @@ struct peel_last<Last> : ::ehanc::type_identity<Last> {};
  */
 /* }}} */
 template <typename... Pack>
-using peel_last_t = typename ::ehanc::peel_last<Pack...>::type;
+using peel_last_t = typename ::supl::peel_last<Pack...>::type;
 
 // is_pack_uniform
 /* {{{ doc */
@@ -167,7 +167,7 @@ using peel_last_t = typename ::ehanc::peel_last<Pack...>::type;
 template <typename... Pack>
 struct is_pack_uniform
     : std::conditional_t<
-          (std::is_same_v<::ehanc::peel_first_t<Pack...>, Pack> && ...),
+          (std::is_same_v<::supl::peel_first_t<Pack...>, Pack> && ...),
           std::true_type, std::false_type> {};
 
 /* {{{ doc */
@@ -178,7 +178,7 @@ struct is_pack_uniform
 /* }}} */
 template <typename... Pack>
 constexpr inline bool is_pack_uniform_v =
-    ::ehanc::is_pack_uniform<Pack...>::value;
+    ::supl::is_pack_uniform<Pack...>::value;
 
 // is_pack_only
 /* {{{ doc */
@@ -189,8 +189,8 @@ constexpr inline bool is_pack_uniform_v =
 /* }}} */
 template <typename T, typename... Pack>
 struct is_pack_only
-    : std::conjunction<::ehanc::is_pack_uniform<Pack...>,
-                       std::is_same<T, ehanc::peel_first_t<Pack...>>> {};
+    : std::conjunction<::supl::is_pack_uniform<Pack...>,
+                       std::is_same<T, supl::peel_first_t<Pack...>>> {};
 
 /* {{{ doc */
 /**
@@ -210,7 +210,7 @@ struct is_pack_only<T> : std::false_type {};
 /* }}} */
 template <typename T, typename... Pack>
 constexpr inline bool is_pack_only_v =
-    ::ehanc::is_pack_only<T, Pack...>::value;
+    ::supl::is_pack_only<T, Pack...>::value;
 
 // is_iterable
 /* {{{ doc */
@@ -241,7 +241,7 @@ struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T&>())),
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_iterable_v = ::ehanc::is_iterable<T>::value;
+constexpr inline bool is_iterable_v = ::supl::is_iterable<T>::value;
 
 // is_iterator
 /* {{{ doc */
@@ -273,7 +273,7 @@ struct is_iterator<T, std::void_t<decltype(*std::declval<T>()),
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_iterator_v = ::ehanc::is_iterator<T>::value;
+constexpr inline bool is_iterator_v = ::supl::is_iterator<T>::value;
 
 // is_bidirectional
 /* {{{ doc */
@@ -305,7 +305,7 @@ struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>()),
 /* }}} */
 template <typename T>
 constexpr inline bool is_bidirectional_v =
-    ::ehanc::is_bidirectional<T>::value;
+    ::supl::is_bidirectional<T>::value;
 
 // is_random_access
 /* {{{ doc */
@@ -340,7 +340,7 @@ struct is_random_access<
 /* }}} */
 template <typename T>
 constexpr inline bool is_random_access_v =
-    ::ehanc::is_random_access<T>::value;
+    ::supl::is_random_access<T>::value;
 
 // is_tuple
 namespace impl {
@@ -369,7 +369,7 @@ struct is_tuple_impl<std::tuple<Ts...>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_tuple : ::ehanc::impl::is_tuple_impl<std::decay_t<T>> {};
+struct is_tuple : ::supl::impl::is_tuple_impl<std::decay_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -378,7 +378,7 @@ struct is_tuple : ::ehanc::impl::is_tuple_impl<std::decay_t<T>> {};
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_tuple_v = ::ehanc::is_tuple<T>::value;
+constexpr inline bool is_tuple_v = ::supl::is_tuple<T>::value;
 
 // is_pair
 namespace impl {
@@ -407,7 +407,7 @@ struct is_pair_impl<std::pair<Ts...>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_pair : ::ehanc::impl::is_pair_impl<std::decay_t<T>> {};
+struct is_pair : ::supl::impl::is_pair_impl<std::decay_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -416,7 +416,7 @@ struct is_pair : ::ehanc::impl::is_pair_impl<std::decay_t<T>> {};
  */
 /* }}} */
 template <typename T>
-constexpr inline bool is_pair_v = ::ehanc::is_pair<T>::value;
+constexpr inline bool is_pair_v = ::supl::is_pair<T>::value;
 
 // is_printable
 template <typename T, typename = void>
@@ -428,8 +428,8 @@ struct is_printable<T, std::void_t<decltype(std::declval<std::ostream&>()
     : std::true_type {};
 
 template <typename T>
-constexpr inline bool is_printable_v = ::ehanc::is_printable<T>::value;
+constexpr inline bool is_printable_v = ::supl::is_printable<T>::value;
 
-} // namespace ehanc
+} // namespace supl
 
 #endif

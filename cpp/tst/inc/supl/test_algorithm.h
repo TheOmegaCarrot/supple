@@ -2,7 +2,7 @@
 #define TEST_ALGORITHM_H
 
 #include "test_utils.hpp"
-#include "utils/algorithm.hpp"
+#include "supl/algorithm.hpp"
 
 void test_algorithm();
 

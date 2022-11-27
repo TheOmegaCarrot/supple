@@ -8,14 +8,14 @@
 
 #include "metaprogramming.hpp"
 
-namespace ehanc {
+namespace supl {
 
 namespace impl {
 
 /* {{{ doc */
 /**
  * @brief Applies a visitor function to every member of a tuple. Not
- * intended to be called outside ::ehanc::for_each_in_tuple.
+ * intended to be called outside ::supl::for_each_in_tuple.
  *
  * @tparam Tuple Tuple type.
  *
@@ -57,7 +57,7 @@ template <typename Tuple, typename Func>
 constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  ::ehanc::impl::for_each_in_tuple_impl(tup, std::forward<Func>(func),
+  ::supl::impl::for_each_in_tuple_impl(tup, std::forward<Func>(func),
                                         seq);
 }
 
@@ -67,7 +67,7 @@ namespace impl {
 /**
  * @brief Applies a visitor function to every member of a tuple,
  * and maps the returned values to a new tuple.
- * Not intended to be called outside ::ehanc::for_each_in_tuple.
+ * Not intended to be called outside ::supl::for_each_in_tuple.
  *
  * @tparam Tuple Tuple type.
  *
@@ -95,7 +95,7 @@ constexpr auto tuple_transform_impl(const Tuple& tup, Func&& func,
 /**
  * @brief Applies a visitor function to every member of a tuple,
  * and maps the returned values to a new tuple.
- * Not intended to be called outside ::ehanc::for_each_in_tuple.
+ * Not intended to be called outside ::supl::for_each_in_tuple.
  * Would not have been possible without what I learned from this CppCon talk:
  * https://www.youtube.com/watch?v=15etE6WcvBY
  *
@@ -115,7 +115,7 @@ template <typename Tuple, typename Func>
                                              Func&& func) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::ehanc::impl::tuple_transform_impl(tup, std::forward<Func>(func),
+  return ::supl::impl::tuple_transform_impl(tup, std::forward<Func>(func),
                                              seq);
 }
 
@@ -141,7 +141,7 @@ template <typename Tuple, typename Pred>
                                           Pred&& pred) noexcept -> bool
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::ehanc::impl::tuple_any_of_impl(tup, std::forward<Pred>(pred),
+  return ::supl::impl::tuple_any_of_impl(tup, std::forward<Pred>(pred),
                                           seq);
 }
 
@@ -167,7 +167,7 @@ template <typename Tuple, typename Pred>
                                           Pred&& pred) noexcept -> bool
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::ehanc::impl::tuple_all_of_impl(tup, std::forward<Pred>(pred),
+  return ::supl::impl::tuple_all_of_impl(tup, std::forward<Pred>(pred),
                                           seq);
 }
 
@@ -175,7 +175,7 @@ template <typename Tuple, typename Pred>
 [[nodiscard]] constexpr auto tuple_none_of(const Tuple& tup,
                                            Pred&& pred) noexcept -> bool
 {
-  return not ::ehanc::tuple_any_of(tup, std::forward<Pred>(pred));
+  return not ::supl::tuple_any_of(tup, std::forward<Pred>(pred));
 }
 
 namespace impl {
@@ -211,7 +211,7 @@ template <typename Tuple, typename T>
                                              T&& data) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::ehanc::impl::tuple_push_back_impl(tup, std::forward<T>(data),
+  return ::supl::impl::tuple_push_back_impl(tup, std::forward<T>(data),
                                              seq);
 }
 
@@ -243,7 +243,7 @@ template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_pop_back(const Tuple& tup) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
-  return ::ehanc::impl::tuple_pop_back_impl(tup, seq);
+  return ::supl::impl::tuple_pop_back_impl(tup, seq);
 }
 
 namespace impl {
@@ -278,7 +278,7 @@ template <typename Tuple, typename T>
                                               T&& data) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::ehanc::impl::tuple_push_front_impl(tup, std::forward<T>(data),
+  return ::supl::impl::tuple_push_front_impl(tup, std::forward<T>(data),
                                               seq);
 }
 
@@ -310,7 +310,7 @@ template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_pop_front(const Tuple& tup) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
-  return ::ehanc::impl::tuple_pop_front_impl(tup, seq);
+  return ::supl::impl::tuple_pop_front_impl(tup, seq);
 }
 
 namespace impl {
@@ -332,7 +332,7 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
 /* {{{ doc */
 /**
  * @brief Inserts value(s) into an arbitrary index of a tuple.
- * ex. tuple_insert(std::tuple{3, true}, ehanc::index_constant<1>, 5.8) 
+ * ex. tuple_insert(std::tuple{3, true}, supl::index_constant<1>, 5.8) 
  * == std::tuple{3, 5.8, true}
  *
  * @tparam Tuple Tuple type
@@ -353,7 +353,7 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
 template <typename Tuple, typename... T, std::size_t Idx>
 [[nodiscard]] constexpr auto
 tuple_insert(const Tuple& tup,
-             [[maybe_unused]] ehanc::index_constant<Idx> deduction_helper,
+             [[maybe_unused]] supl::index_constant<Idx> deduction_helper,
              T&&... data) noexcept
 {
   static_assert(Idx <= std::tuple_size_v<Tuple>, "Index out of bounds");
@@ -362,7 +362,7 @@ tuple_insert(const Tuple& tup,
   auto post_seq {
       std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
 
-  return ::ehanc::impl::tuple_insert_impl(tup, pre_seq, post_seq,
+  return ::supl::impl::tuple_insert_impl(tup, pre_seq, post_seq,
                                           std::forward<T>(data)...);
 }
 
@@ -381,7 +381,7 @@ template <typename Tuple, std::size_t... Inds, std::size_t begin>
 [[nodiscard]] constexpr auto
 subtuple_impl(const Tuple& tup,
               [[maybe_unused]] std::index_sequence<Inds...>,
-              [[maybe_unused]] ehanc::index_constant<begin>)
+              [[maybe_unused]] supl::index_constant<begin>)
 {
   return std::tuple {std::get<Inds + begin>(tup)...};
 }
@@ -408,15 +408,15 @@ subtuple_impl(const Tuple& tup,
 /* }}} */
 template <typename Tuple, std::size_t begin, std::size_t end>
 [[nodiscard]] constexpr auto
-subtuple(const Tuple& tup, ehanc::index_constant<begin> begin_deduct_help,
-         [[maybe_unused]] ehanc::index_constant<end> end_deduct_help)
+subtuple(const Tuple& tup, supl::index_constant<begin> begin_deduct_help,
+         [[maybe_unused]] supl::index_constant<end> end_deduct_help)
 {
   static_assert(begin < std::tuple_size_v<Tuple>, "Begin out of bounds");
   static_assert(end <= std::tuple_size_v<Tuple>, "Begin out of bounds");
 
   auto seq {std::make_index_sequence<end - begin> {}};
 
-  return ::ehanc::impl::subtuple_impl(tup, seq, begin_deduct_help);
+  return ::supl::impl::subtuple_impl(tup, seq, begin_deduct_help);
 }
 
 /* {{{ doc */
@@ -437,11 +437,11 @@ subtuple(const Tuple& tup, ehanc::index_constant<begin> begin_deduct_help,
 /* }}} */
 template <typename Tuple, std::size_t begin, std::size_t end>
 [[nodiscard]] constexpr auto
-subtuple(const Tuple& tup, [[maybe_unused]] ehanc::index_pair<begin, end>
+subtuple(const Tuple& tup, [[maybe_unused]] supl::index_pair<begin, end>
                                deduction_helper) noexcept
 {
-  return ::ehanc::subtuple(tup, ehanc::index_constant<begin> {},
-                           ehanc::index_constant<end> {});
+  return ::supl::subtuple(tup, supl::index_constant<begin> {},
+                           supl::index_constant<end> {});
 }
 
 /* {{{ doc */
@@ -461,8 +461,8 @@ subtuple(const Tuple& tup, [[maybe_unused]] ehanc::index_pair<begin, end>
 template <typename Tuple, std::size_t begin, std::size_t end>
 [[nodiscard]] constexpr auto subtuple(const Tuple& tup) noexcept
 {
-  return ::ehanc::subtuple(tup, ehanc::index_constant<begin> {},
-                           ehanc::index_constant<end> {});
+  return ::supl::subtuple(tup, supl::index_constant<begin> {},
+                           supl::index_constant<end> {});
 }
 
 namespace impl {
@@ -499,10 +499,10 @@ template <typename Tuple, typename Pred>
     -> std::size_t
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::ehanc::impl::tuple_count_if_impl(tup, std::forward<Pred>(pred),
+  return ::supl::impl::tuple_count_if_impl(tup, std::forward<Pred>(pred),
                                             seq);
 }
 
-} // namespace ehanc
+} // namespace supl
 
 #endif

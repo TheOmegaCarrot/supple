@@ -9,7 +9,7 @@
 #include "metaprogramming.hpp"
 #include "tuple_algo.hpp"
 
-namespace ehanc {
+namespace supl {
 
 /* {{{ doc */
 /**
@@ -36,34 +36,34 @@ auto to_string(const T& value) noexcept -> std::string
 
   static_assert(
       std::disjunction_v<
-          ::ehanc::is_printable<decayT>, ::ehanc::is_tuple<decayT>,
-          ::ehanc::is_pair<decayT>, ::ehanc::is_iterable<decayT>>,
-      "Attempting to call ehanc::to_string with an unsupported type");
+          ::supl::is_printable<decayT>, ::supl::is_tuple<decayT>,
+          ::supl::is_pair<decayT>, ::supl::is_iterable<decayT>>,
+      "Attempting to call supl::to_string with an unsupported type");
 
   std::stringstream out;
   out << std::boolalpha;
 
-  if constexpr ( ::ehanc::is_printable_v<T> ) {
+  if constexpr ( ::supl::is_printable_v<T> ) {
 
     out << value;
 
-  } else if constexpr ( ::ehanc::is_tuple_v<T> ) {
+  } else if constexpr ( ::supl::is_tuple_v<T> ) {
 
     out << "( ";
-    ::ehanc::for_each_in_tuple(value, [&out](const auto& i) {
-      out << ehanc::to_string(i) << ", ";
+    ::supl::for_each_in_tuple(value, [&out](const auto& i) {
+      out << supl::to_string(i) << ", ";
     });
     // Move "write head" 2 characters before the end, and overwrite from
     // there Much less jank way of removing trailing ", "
     out.seekp(-2, std::ios_base::end);
     out << " )";
 
-  } else if constexpr ( ::ehanc::is_pair_v<T> ) {
+  } else if constexpr ( ::supl::is_pair_v<T> ) {
 
-    out << "( " << ::ehanc::to_string(value.first) << ", "
-        << ::ehanc::to_string(value.second) << " )";
+    out << "( " << ::supl::to_string(value.first) << ", "
+        << ::supl::to_string(value.second) << " )";
 
-  } else if constexpr ( ::ehanc::is_iterable_v<T> ) {
+  } else if constexpr ( ::supl::is_iterable_v<T> ) {
 
     if ( value.empty() ) {
       return "[ ]";
@@ -71,7 +71,7 @@ auto to_string(const T& value) noexcept -> std::string
       out << "[ ";
       std::for_each(
           std::begin(value), std::end(value),
-          [&out](const auto& i) { out << ehanc::to_string(i) << ", "; });
+          [&out](const auto& i) { out << supl::to_string(i) << ", "; });
       out.seekp(-2, std::ios_base::end);
       out << " ]";
     }
@@ -101,6 +101,6 @@ inline namespace size_t_literal {
 
 } // namespace literals
 
-} // namespace ehanc
+} // namespace supl
 
 #endif

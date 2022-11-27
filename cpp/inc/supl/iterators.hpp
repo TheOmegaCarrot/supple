@@ -8,12 +8,12 @@
 
 #include "metaprogramming.hpp"
 
-namespace ehanc {
+namespace supl {
 
 /* {{{ doc */
 /**
  * @brief Returns an iterator to the last element of the container.
- * In short, `++ehanc::last(container) == std::end(container)`
+ * In short, `++supl::last(container) == std::end(container)`
  *
  * @tparam Iterable Type which provides iterators.
  *
@@ -33,7 +33,7 @@ template <typename Iterable>
     return begin;
   }
 
-  if constexpr ( ::ehanc::is_bidirectional_v<decltype(end)> ) {
+  if constexpr ( ::supl::is_bidirectional_v<decltype(end)> ) {
     return --end;
   } else {
 
@@ -52,7 +52,7 @@ template <typename Iterable>
 /* {{{ doc */
 /**
  * @brief Returns a const iterator to the last element of the container.
- * In short, `++ehanc::clast(container) == std::end(container)`
+ * In short, `++supl::clast(container) == std::end(container)`
  *
  * @param container Container which supports at least forward iterators.
  *
@@ -125,7 +125,7 @@ public:
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
   explicit constexpr sequence_iterator(
-      U init, Incr func = ::ehanc::increment<value_type>)
+      U init, Incr func = ::supl::increment<value_type>)
       // clang-format off
       noexcept(std::conjunction_v<
                std::is_nothrow_constructible<T>,
@@ -280,7 +280,7 @@ public:
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
   explicit sequence(U&& begin, U&& end,
-                    Incr&& func = ::ehanc::increment<value_type>)
+                    Incr&& func = ::supl::increment<value_type>)
       // clang-format off
                     noexcept(std::conjunction_v<
                              std::is_nothrow_constructible<T>,
@@ -317,9 +317,9 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto begin() const noexcept
-      -> ::ehanc::sequence_iterator<value_type>
+      -> ::supl::sequence_iterator<value_type>
   {
-    return ::ehanc::sequence_iterator(m_begin, m_inc);
+    return ::supl::sequence_iterator(m_begin, m_inc);
   }
 
   /* {{{ doc */
@@ -328,7 +328,7 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto cbegin() const noexcept
-      -> ::ehanc::sequence_iterator<value_type>
+      -> ::supl::sequence_iterator<value_type>
   {
     return this->begin();
   }
@@ -339,9 +339,9 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto end() const noexcept
-      -> ::ehanc::sequence_iterator<value_type>
+      -> ::supl::sequence_iterator<value_type>
   {
-    return ::ehanc::sequence_iterator(m_end, m_inc);
+    return ::supl::sequence_iterator(m_end, m_inc);
   }
 
   /* {{{ doc */
@@ -350,7 +350,7 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto cend() const noexcept
-      -> ::ehanc::sequence_iterator<value_type>
+      -> ::supl::sequence_iterator<value_type>
   {
     return this->end();
   }
@@ -385,8 +385,8 @@ sequence(T, T) -> sequence<std::decay_t<T>>;
  * }
  *
  * void generative() {
- *    std::for_each(ehanc::generative_iterator(generator),
- *    ehanc::generative_iterator(MAXIMUM), some_func);
+ *    std::for_each(supl::generative_iterator(generator),
+ *    supl::generative_iterator(MAXIMUM), some_func);
  * }
  *
  * @endcode
@@ -648,24 +648,24 @@ public:
       -> generative_sequence& = default;
 
   constexpr auto begin() noexcept
-      -> ::ehanc::generative_iterator<value_type>
+      -> ::supl::generative_iterator<value_type>
   {
-    return ::ehanc::generative_iterator(m_gen);
+    return ::supl::generative_iterator(m_gen);
   }
 
   constexpr auto cbegin() noexcept
-      -> ::ehanc::generative_iterator<value_type>
+      -> ::supl::generative_iterator<value_type>
   {
     return this->begin();
   }
 
-  constexpr auto end() noexcept -> ::ehanc::generative_iterator<value_type>
+  constexpr auto end() noexcept -> ::supl::generative_iterator<value_type>
   {
-    return ::ehanc::generative_iterator<value_type>(m_max);
+    return ::supl::generative_iterator<value_type>(m_max);
   }
 
   constexpr auto cend() noexcept
-      -> ::ehanc::generative_iterator<value_type>
+      -> ::supl::generative_iterator<value_type>
   {
     return this->end();
   }
@@ -675,6 +675,6 @@ public:
 template <typename T, typename F>
 generative_sequence(T, F) -> generative_sequence<std::invoke_result_t<F>>;
 
-} // namespace ehanc
+} // namespace supl
 
 #endif

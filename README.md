@@ -1,4 +1,4 @@
-# cpp-utils
+# Supplementaries
 
 # What is this?
 
@@ -18,5 +18,5 @@ I've made things just as a learning exercise.
 
 # How do I use this?
 
-Just copy `./inc/utils` to somewhere the compiler is
+Just copy `./inc/supl` to somewhere the compiler is
 looking for includes (`-Isomewhere`) and just include what you need.

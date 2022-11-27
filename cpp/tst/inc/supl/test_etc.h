@@ -2,7 +2,7 @@
 #define TEST_ETC_H
 
 #include "test_utils.hpp"
-#include "utils/etc.hpp"
+#include "supl/etc.hpp"
 
 void test_etc();
 

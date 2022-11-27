@@ -1,7 +1,7 @@
-#include "utils/test_tuple_algo.h"
+#include "supl/test_tuple_algo.h"
 #include "test_utils.hpp"
-#include "utils/metaprogramming.hpp"
-#include "utils/tuple_algo.hpp"
+#include "supl/metaprogramming.hpp"
+#include "supl/tuple_algo.hpp"
 
 template <typename... Ls>
 struct overload : Ls... {
@@ -11,13 +11,13 @@ struct overload : Ls... {
 template <typename... Ls>
 overload(Ls...) -> overload<Ls...>;
 
-static auto test_for_each_in_tuple() -> ehanc::test
+static auto test_for_each_in_tuple() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple<int, char, bool> test {42, 'c', false};
 
-  ehanc::for_each_in_tuple(
+  supl::for_each_in_tuple(
       test, [&results, index {0}](const auto& i) mutable {
         using I = std::decay_t<decltype(i)>;
 
@@ -40,15 +40,15 @@ static auto test_for_each_in_tuple() -> ehanc::test
   return results;
 }
 
-static auto test_tuple_transform() -> ehanc::test
+static auto test_tuple_transform() -> supl::test
 {
-  using ehanc::literals::size_t_literal::operator""_z;
+  using supl::literals::size_t_literal::operator""_z;
 
-  ehanc::test results;
+  supl::test results;
 
   std::tuple<int, char, bool> test1 {42, 'c', false};
 
-  auto out1 {ehanc::tuple_transform(
+  auto out1 {supl::tuple_transform(
       test1,
       overload {[](int a) { return 2 * a; },
                 [](char b) { return static_cast<char>(std::toupper(b)); },
@@ -62,7 +62,7 @@ static auto test_tuple_transform() -> ehanc::test
       "Hello", {3, 9, 2}
   };
 
-  auto out2 {ehanc::tuple_transform(
+  auto out2 {supl::tuple_transform(
       test2,
       overload {[](const std::string& str) { return str.length(); },
                 [](const std::vector<int>& vec) { return vec.size(); }})};
@@ -74,7 +74,7 @@ static auto test_tuple_transform() -> ehanc::test
       "Hello", {3, 9, 3}
   };
 
-  auto out3 {ehanc::tuple_transform(
+  auto out3 {supl::tuple_transform(
       test3,
       overload {[](const std::string& str) { return str.length(); },
                 [](const std::vector<int>& vec) { return vec.size(); }})};
@@ -85,14 +85,14 @@ static auto test_tuple_transform() -> ehanc::test
   return results;
 }
 
-static auto test_tuple_any_of() -> ehanc::test
+static auto test_tuple_any_of() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test1 {42, 'c', false};
 
   results.add_case(
-      ehanc::tuple_any_of(test1,
+      supl::tuple_any_of(test1,
                           overload {[](const int i) { return i < 10; },
                                     [](const char c) { return c == 'c'; },
                                     [](const auto&) { return false; }
@@ -101,7 +101,7 @@ static auto test_tuple_any_of() -> ehanc::test
       true);
 
   results.add_case(
-      ehanc::tuple_any_of(test1,
+      supl::tuple_any_of(test1,
                           overload {[](const auto& i) { return i < 0; },
                                     [](const bool b) { return b; }}),
       false);
@@ -109,20 +109,20 @@ static auto test_tuple_any_of() -> ehanc::test
   return results;
 }
 
-static auto test_tuple_all_of() -> ehanc::test
+static auto test_tuple_all_of() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test1 {42, 'c', false};
 
   results.add_case(
-      ehanc::tuple_all_of(test1,
+      supl::tuple_all_of(test1,
                           overload {[](const bool b) { return not b; },
                                     [](const auto& i) { return i > 2; }}),
       true);
 
   results.add_case(
-      ehanc::tuple_all_of(test1,
+      supl::tuple_all_of(test1,
                           overload {[](const bool b) { return b; },
                                     [](const auto& i) { return i > 2; }}),
       false);
@@ -130,14 +130,14 @@ static auto test_tuple_all_of() -> ehanc::test
   return results;
 }
 
-static auto test_tuple_none_of() -> ehanc::test
+static auto test_tuple_none_of() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test1 {42, 'c', false};
 
   results.add_case(
-      ehanc::tuple_none_of(test1,
+      supl::tuple_none_of(test1,
                            overload {[](const int i) { return i < 10; },
                                      [](const char c) { return c == 'c'; },
                                      [](const auto&) { return false; }
@@ -146,7 +146,7 @@ static auto test_tuple_none_of() -> ehanc::test
       false);
 
   results.add_case(
-      ehanc::tuple_none_of(test1,
+      supl::tuple_none_of(test1,
                            overload {[](const auto& i) { return i < 0; },
                                      [](const bool b) { return b; }}),
       true);
@@ -154,109 +154,109 @@ static auto test_tuple_none_of() -> ehanc::test
   return results;
 }
 
-static auto test_tuple_push_back() -> ehanc::test
+static auto test_tuple_push_back() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3, 3.14, 'd', true};
 
-  auto result1 {ehanc::tuple_push_back(test1, true)};
+  auto result1 {supl::tuple_push_back(test1, true)};
 
   results.add_case(result1, expected1);
 
   return results;
 }
 
-static auto test_tuple_pop_back() -> ehanc::test
+static auto test_tuple_pop_back() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3, 3.14};
 
-  auto result1 {ehanc::tuple_pop_back(test1)};
+  auto result1 {supl::tuple_pop_back(test1)};
 
   results.add_case(result1, expected1);
 
   return results;
 }
 
-static auto test_tuple_push_front() -> ehanc::test
+static auto test_tuple_push_front() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {true, 3, 3.14, 'd'};
 
-  auto result1 {ehanc::tuple_push_front(test1, true)};
+  auto result1 {supl::tuple_push_front(test1, true)};
 
   results.add_case(result1, expected1);
 
   return results;
 }
 
-static auto test_tuple_pop_front() -> ehanc::test
+static auto test_tuple_pop_front() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3.14, 'd'};
 
-  auto result1 {ehanc::tuple_pop_front(test1)};
+  auto result1 {supl::tuple_pop_front(test1)};
 
   results.add_case(result1, expected1);
 
   return results;
 }
 
-static auto test_tuple_insert() -> ehanc::test
+static auto test_tuple_insert() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test_input {3, 3.14};
   std::tuple expected1 {3, true, 3.14};
 
   auto result1 {
-      ehanc::tuple_insert(test_input, ehanc::index_constant<1> {}, true)};
+      supl::tuple_insert(test_input, supl::index_constant<1> {}, true)};
 
   results.add_case(result1, expected1);
 
   std::tuple expected2 {3, 3.14, true};
-  auto result2 {ehanc::tuple_insert(
+  auto result2 {supl::tuple_insert(
       test_input,
-      ehanc::index_constant<std::tuple_size_v<decltype(test_input)>> {},
+      supl::index_constant<std::tuple_size_v<decltype(test_input)>> {},
       true)};
 
   results.add_case(result2, expected2, "max index");
 
   std::tuple expected3 {true, 3, 3.14};
   auto result3 {
-      ehanc::tuple_insert(test_input, ehanc::index_constant<0> {}, true)};
+      supl::tuple_insert(test_input, supl::index_constant<0> {}, true)};
 
   results.add_case(result3, expected3);
 
   std::string neat {"neat"};
   std::vector vec {1, 2, 3, 4};
   std::tuple expected4 {3, 42069, neat, vec, 3.14};
-  auto result4 {ehanc::tuple_insert(
-      test_input, ehanc::index_constant<1> {}, 42069, neat, vec)};
+  auto result4 {supl::tuple_insert(
+      test_input, supl::index_constant<1> {}, 42069, neat, vec)};
 
   results.add_case(result4, expected4);
 
   return results;
 }
 
-static auto test_tuple_reorder() -> ehanc::test
+static auto test_tuple_reorder() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::string reorder {"reorder"};
   std::vector vec {1, 2, 3, 4};
   std::tuple test_input {3, 3.14, true, reorder, vec};
   std::tuple expected1 {3.14, reorder, 3, 3.14, vec, true};
 
-  auto result1 {ehanc::tuple_reorder(
+  auto result1 {supl::tuple_reorder(
       test_input, std::index_sequence<1, 3, 0, 1, 4, 2> {})};
 
   results.add_case(result1, expected1);
@@ -264,60 +264,60 @@ static auto test_tuple_reorder() -> ehanc::test
   return results;
 }
 
-static auto test_subtuple() -> ehanc::test
+static auto test_subtuple() -> supl::test
 {
-  ehanc::test results;
+  supl::test results;
 
   std::string str {"subtuple"};
   std::vector vec {1, 2, 3, 4};
   std::tuple test_input {3, true, str, 3.14, vec};
 
   std::tuple expected1 {str, 3.14, vec};
-  auto result1 {ehanc::subtuple(test_input, ehanc::index_constant<2> {},
-                                ehanc::index_constant<5> {})};
+  auto result1 {supl::subtuple(test_input, supl::index_constant<2> {},
+                                supl::index_constant<5> {})};
 
   results.add_case(result1, expected1);
 
   std::tuple expected2 {test_input};
-  auto result2 {ehanc::subtuple(
-      test_input, ehanc::index_constant<0> {},
-      ehanc::index_constant<std::tuple_size_v<decltype(test_input)>> {})};
+  auto result2 {supl::subtuple(
+      test_input, supl::index_constant<0> {},
+      supl::index_constant<std::tuple_size_v<decltype(test_input)>> {})};
 
   results.add_case(result2, expected2);
 
   std::tuple expected3 {3, true, str};
-  auto result3 {ehanc::subtuple(test_input, ehanc::index_constant<0> {},
-                                ehanc::index_constant<3> {})};
+  auto result3 {supl::subtuple(test_input, supl::index_constant<0> {},
+                                supl::index_constant<3> {})};
 
   results.add_case(result3, expected3);
 
   std::tuple expected4 {3, true, str};
-  auto result4 {ehanc::subtuple(test_input, ehanc::index_pair<0, 3> {})};
+  auto result4 {supl::subtuple(test_input, supl::index_pair<0, 3> {})};
 
   results.add_case(result4, expected4);
 
   std::tuple expected5 {str, 3.14, vec};
-  auto result5 {ehanc::subtuple(test_input, ehanc::index_pair<2, 5> {})};
+  auto result5 {supl::subtuple(test_input, supl::index_pair<2, 5> {})};
 
   results.add_case(result5, expected5);
 
   std::tuple expected6 {str, 3.14, vec};
-  auto result6 {ehanc::subtuple<decltype(test_input), 2, 5>(test_input)};
+  auto result6 {supl::subtuple<decltype(test_input), 2, 5>(test_input)};
 
   results.add_case(result6, expected6);
 
   return results;
 }
 
-static auto test_tuple_count_if() -> ehanc::test
+static auto test_tuple_count_if() -> supl::test
 {
-  using ehanc::literals::size_t_literal::operator""_z;
+  using supl::literals::size_t_literal::operator""_z;
 
-  ehanc::test results;
+  supl::test results;
 
   std::tuple test {7, 2, 42.53, 3.14F, 9344285UL, -83LL};
   results.add_case(
-      ehanc::tuple_count_if(
+      supl::tuple_count_if(
           test, [](const auto& i) -> std::size_t { return i > 5; }),
       3_z);
 
@@ -326,17 +326,17 @@ static auto test_tuple_count_if() -> ehanc::test
 
 void test_tuple_algo()
 {
-  ehanc::run_test("ehanc::for_each_in_tuple", &test_for_each_in_tuple);
-  ehanc::run_test("ehanc::tuple_transform", &test_tuple_transform);
-  ehanc::run_test("ehanc::tuple_any_of", &test_tuple_any_of);
-  ehanc::run_test("ehanc::tuple_all_of", &test_tuple_all_of);
-  ehanc::run_test("ehanc::tuple_none_of", &test_tuple_none_of);
-  ehanc::run_test("ehanc::tuple_push_back", &test_tuple_push_back);
-  ehanc::run_test("ehanc::tuple_pop_front", &test_tuple_pop_front);
-  ehanc::run_test("ehanc::tuple_push_front", &test_tuple_push_front);
-  ehanc::run_test("ehanc::tuple_pop_back", &test_tuple_pop_back);
-  ehanc::run_test("ehanc::tuple_insert", &test_tuple_insert);
-  ehanc::run_test("ehanc::tuple_reorder", &test_tuple_reorder);
-  ehanc::run_test("ehanc::subtuple", &test_subtuple);
-  ehanc::run_test("ehanc::tuple_count_if", &test_tuple_count_if);
+  supl::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
+  supl::run_test("supl::tuple_transform", &test_tuple_transform);
+  supl::run_test("supl::tuple_any_of", &test_tuple_any_of);
+  supl::run_test("supl::tuple_all_of", &test_tuple_all_of);
+  supl::run_test("supl::tuple_none_of", &test_tuple_none_of);
+  supl::run_test("supl::tuple_push_back", &test_tuple_push_back);
+  supl::run_test("supl::tuple_pop_front", &test_tuple_pop_front);
+  supl::run_test("supl::tuple_push_front", &test_tuple_push_front);
+  supl::run_test("supl::tuple_pop_back", &test_tuple_pop_back);
+  supl::run_test("supl::tuple_insert", &test_tuple_insert);
+  supl::run_test("supl::tuple_reorder", &test_tuple_reorder);
+  supl::run_test("supl::subtuple", &test_subtuple);
+  supl::run_test("supl::tuple_count_if", &test_tuple_count_if);
 }

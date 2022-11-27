@@ -8,6 +8,7 @@
 #include "utils/test_iterators.h"
 #include "utils/test_metaprogramming.h"
 #include "utils/test_tuple_algo.h"
+#include "utils/test_type_list.h"
 
 auto main() -> int
 {
@@ -19,6 +20,8 @@ auto main() -> int
   ehanc::test_section("Iterators", &test_iterators);
 
   ehanc::test_section("Metaprogramming", &test_metaprogramming);
+
+  ehanc::test_section("Type List", &test_type_list);
 
   ehanc::test_section("Etc", &test_etc);
 

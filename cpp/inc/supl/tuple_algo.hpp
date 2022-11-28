@@ -125,10 +125,10 @@ template <typename Tuple, typename Pred, std::size_t... Inds>
 tuple_any_of_impl(const Tuple& tup, Pred&& pred,
                   std::index_sequence<Inds...>) noexcept -> bool
 {
-  static_assert(
-      std::conjunction_v<std::is_invocable_r<
-          bool, Pred, decltype(std::get<Inds>(tup))>...>,
-      "Predicate must be invocable returning a bool with every type in the tuple");
+  static_assert(std::conjunction_v<std::is_invocable_r<
+                    bool, Pred, decltype(std::get<Inds>(tup))>...>,
+                "Predicate must be invocable returning a bool with every "
+                "type in the tuple");
 
   return (pred(std::get<Inds>(tup)) || ...);
 }
@@ -171,10 +171,10 @@ template <typename Tuple, typename Pred, std::size_t... Inds>
 tuple_all_of_impl(const Tuple& tup, Pred&& pred,
                   std::index_sequence<Inds...>) noexcept -> bool
 {
-  static_assert(
-      std::conjunction_v<std::is_invocable_r<
-          bool, Pred, decltype(std::get<Inds>(tup))>...>,
-      "Predicate must be invocable returning a bool with every type in the tuple");
+  static_assert(std::conjunction_v<std::is_invocable_r<
+                    bool, Pred, decltype(std::get<Inds>(tup))>...>,
+                "Predicate must be invocable returning a bool with every "
+                "type in the tuple");
 
   return (pred(std::get<Inds>(tup)) && ...);
 }

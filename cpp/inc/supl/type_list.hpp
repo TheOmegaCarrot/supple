@@ -1,6 +1,8 @@
 #ifndef SUPPLEMENTARIES_TYPE_LIST_HPP
 #define SUPPLEMENTARIES_TYPE_LIST_HPP
 
+// Still a work in progress
+
 #include <type_traits>
 
 #include "metaprogramming.hpp"

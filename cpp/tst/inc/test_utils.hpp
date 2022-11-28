@@ -7,7 +7,8 @@
 #include <sstream>
 #include <string>
 #include <string_view>
-#include <tuple>
+#include <type_traits>
+#include <vector>
 
 #include "supl/etc.hpp"
 #include "supl/term_colors.h"
@@ -41,9 +42,9 @@ public:
       detail << std::boolalpha << std::left << std::setw(10)
              << supl::FG_RED << "Case " << m_case_index << '\t' << message
              << "\n\n\tExpected:\n"
-             << supl::RESET << '\t' << ::supl::to_string(expected)
+             << supl::RESET << '\t' << supl::to_string(expected)
              << supl::FG_RED << "\n\n\tGot:\n"
-             << supl::RESET << '\t' << ::supl::to_string(result) << '\n'
+             << supl::RESET << '\t' << supl::to_string(result) << '\n'
              << '\n';
 
       m_cases.push_back(detail.str());
@@ -64,9 +65,12 @@ public:
 
 }; // class test
 
-inline void run_test(const std::string_view name,
-                     const std::function<test()>& test_func)
+template <typename TestFunc>
+inline void run_test(const std::string_view name, TestFunc&& test_func)
 {
+  static_assert(std::is_invocable_r_v<test, TestFunc>,
+                "Test function must have correct signature");
+
   test result = test_func();
 
   if ( result.pass() ) {
@@ -85,9 +89,12 @@ inline void run_test(const std::string_view name,
   }
 }
 
+template <typename Func>
 inline void test_section(const std::string_view section_name,
-                         const std::function<void()>& section_func)
+                         Func&& section_func)
 {
+  static_assert(std::is_invocable_r_v<void, Func>);
+
   std::cout << '\n';
   std::cout << HEADER_COLOR << section_name << ':' << supl::RESET << '\n';
   section_func();

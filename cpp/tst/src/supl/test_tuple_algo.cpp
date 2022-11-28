@@ -1,7 +1,7 @@
 #include "supl/test_tuple_algo.h"
-#include "test_utils.hpp"
 #include "supl/metaprogramming.hpp"
 #include "supl/tuple_algo.hpp"
+#include "test_utils.hpp"
 
 template <typename... Ls>
 struct overload : Ls... {
@@ -93,17 +93,17 @@ static auto test_tuple_any_of() -> ehanc::test
 
   results.add_case(
       supl::tuple_any_of(test1,
-                          overload {[](const int i) { return i < 10; },
-                                    [](const char c) { return c == 'c'; },
-                                    [](const auto&) { return false; }
+                         overload {[](const int i) { return i < 10; },
+                                   [](const char c) { return c == 'c'; },
+                                   [](const auto&) { return false; }
 
-                          }),
+                         }),
       true);
 
   results.add_case(
       supl::tuple_any_of(test1,
-                          overload {[](const auto& i) { return i < 0; },
-                                    [](const bool b) { return b; }}),
+                         overload {[](const auto& i) { return i < 0; },
+                                   [](const bool b) { return b; }}),
       false);
 
   return results;
@@ -117,14 +117,14 @@ static auto test_tuple_all_of() -> ehanc::test
 
   results.add_case(
       supl::tuple_all_of(test1,
-                          overload {[](const bool b) { return not b; },
-                                    [](const auto& i) { return i > 2; }}),
+                         overload {[](const bool b) { return not b; },
+                                   [](const auto& i) { return i > 2; }}),
       true);
 
   results.add_case(
       supl::tuple_all_of(test1,
-                          overload {[](const bool b) { return b; },
-                                    [](const auto& i) { return i > 2; }}),
+                         overload {[](const bool b) { return b; },
+                                   [](const auto& i) { return i > 2; }}),
       false);
 
   return results;
@@ -138,17 +138,17 @@ static auto test_tuple_none_of() -> ehanc::test
 
   results.add_case(
       supl::tuple_none_of(test1,
-                           overload {[](const int i) { return i < 10; },
-                                     [](const char c) { return c == 'c'; },
-                                     [](const auto&) { return false; }
+                          overload {[](const int i) { return i < 10; },
+                                    [](const char c) { return c == 'c'; },
+                                    [](const auto&) { return false; }
 
-                           }),
+                          }),
       false);
 
   results.add_case(
       supl::tuple_none_of(test1,
-                           overload {[](const auto& i) { return i < 0; },
-                                     [](const bool b) { return b; }}),
+                          overload {[](const auto& i) { return i < 0; },
+                                    [](const bool b) { return b; }}),
       true);
 
   return results;
@@ -239,10 +239,35 @@ static auto test_tuple_insert() -> ehanc::test
   std::string neat {"neat"};
   std::vector vec {1, 2, 3, 4};
   std::tuple expected4 {3, 42069, neat, vec, 3.14};
-  auto result4 {supl::tuple_insert(
-      test_input, supl::index_constant<1> {}, 42069, neat, vec)};
+  auto result4 {supl::tuple_insert(test_input, supl::index_constant<1> {},
+                                   42069, neat, vec)};
 
   results.add_case(result4, expected4);
+
+  return results;
+}
+
+static auto test_tuple_split() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::string split {"split"};
+  std::vector vec {1, 2, 3, 4};
+  std::tuple test_input {3, 3.14, vec, true, 'f', split};
+
+  std::tuple expected1_first {3, 3.14, vec};
+  std::tuple expected1_second {true, 'f', split};
+  auto result1 {supl::tuple_split(test_input, supl::index_constant<3> {})};
+
+  results.add_case(result1.first, expected1_first);
+  results.add_case(result1.second, expected1_second);
+
+  std::tuple expected2_first {3, 3.14, vec, true, 'f'};
+  std::tuple expected2_second {split};
+  auto result2 {supl::tuple_split(test_input, supl::index_constant<5> {})};
+
+  results.add_case(result2.first, expected2_first);
+  results.add_case(result2.second, expected2_second);
 
   return results;
 }
@@ -274,7 +299,7 @@ static auto test_subtuple() -> ehanc::test
 
   std::tuple expected1 {str, 3.14, vec};
   auto result1 {supl::subtuple(test_input, supl::index_constant<2> {},
-                                supl::index_constant<5> {})};
+                               supl::index_constant<5> {})};
 
   results.add_case(result1, expected1);
 
@@ -287,7 +312,7 @@ static auto test_subtuple() -> ehanc::test
 
   std::tuple expected3 {3, true, str};
   auto result3 {supl::subtuple(test_input, supl::index_constant<0> {},
-                                supl::index_constant<3> {})};
+                               supl::index_constant<3> {})};
 
   results.add_case(result3, expected3);
 
@@ -337,6 +362,7 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_pop_back", &test_tuple_pop_back);
   ehanc::run_test("supl::tuple_insert", &test_tuple_insert);
   ehanc::run_test("supl::tuple_reorder", &test_tuple_reorder);
+  ehanc::run_test("supl::tuple_split", &test_tuple_split);
   ehanc::run_test("supl::subtuple", &test_subtuple);
   ehanc::run_test("supl::tuple_count_if", &test_tuple_count_if);
 }

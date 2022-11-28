@@ -435,6 +435,53 @@ tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...>) noexcept
 }
 
 namespace impl {
+template <typename Tuple, std::size_t... Pre_Idxs,
+          std::size_t... Post_Idxs, std::size_t Idx>
+[[nodiscard]] constexpr auto
+tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
+                 std::index_sequence<Post_Idxs...>,
+                 supl::index_constant<Idx>)
+{
+  return std::pair {std::tuple {std::get<Pre_Idxs>(tup)...},
+                    std::tuple {std::get<Post_Idxs + Idx>(tup)...}};
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Splits a tuple at an arbitrary index.
+ * Element at index `Idx` will be the first element of the second tuple.
+ * ex. tuple_split(std::tuple{1, true, 'g'}, index_constant<1>) ==
+ * std::pair{std::tuple{1}, std::tuple{true, 'g'}}
+ *
+ * @tparam Tuple Input tuple type.
+ *
+ * @tparam Idx Index at which to split.
+ *
+ * @param tup Tuple to split.
+ *
+ * @param idx Deduction helper.
+ *
+ * @return Pair of tuples split from `tup` at index `Idx`.
+ * ex. tuple_split(std::tuple{1, true, 'g'}, index_constant<1>) ==
+ * std::pair{std::tuple{1}, std::tuple{true, 'g'}}
+ */
+/* }}} */
+template <typename Tuple, std::size_t Idx>
+[[nodiscard]] constexpr auto
+tuple_split(const Tuple& tup, supl::index_constant<Idx> idx) noexcept
+{
+  static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
+
+  auto pre_seq {std::make_index_sequence<Idx> {}};
+  auto post_seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
+
+  return ::supl::impl::tuple_split_impl(tup, pre_seq, post_seq, idx);
+}
+
+namespace impl {
 
 template <typename Tuple, std::size_t... Inds, std::size_t begin>
 [[nodiscard]] constexpr auto

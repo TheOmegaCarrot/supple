@@ -67,8 +67,8 @@ static auto test_transform_if() -> ehanc::test
   auto times_three {[](int value) -> int { return value * 3; }};
 
   supl::transform_if(test_input.cbegin(), test_input.cend(),
-                      std::back_inserter(test_output), is_even,
-                      times_three);
+                     std::back_inserter(test_output), is_even,
+                     times_three);
 
   supl::for_each_both(
       test_output.cbegin(), test_output.cend(), reference_output.cbegin(),
@@ -87,9 +87,9 @@ static auto test_for_each_adjacent() -> ehanc::test
   std::vector<int> reference_output {3, 5, 7, 9, 11};
 
   supl::for_each_adjacent(test_input.cbegin(), test_input.cend(),
-                           [&test_output](const int i, const int j) {
-                             test_output.push_back(i + j);
-                           });
+                          [&test_output](const int i, const int j) {
+                            test_output.push_back(i + j);
+                          });
 
   results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
                               reference_output.cbegin(),
@@ -107,9 +107,9 @@ static auto test_for_each_adjacent_n() -> ehanc::test
   std::vector<int> reference_output {3, 5, 7};
 
   supl::for_each_adjacent_n(test_input.cbegin(), test_input.cend(), 3,
-                             [&test_output](const int i, const int j) {
-                               test_output.push_back(i + j);
-                             });
+                            [&test_output](const int i, const int j) {
+                              test_output.push_back(i + j);
+                            });
   results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
                               reference_output.cbegin(),
                               reference_output.cend()),
@@ -194,10 +194,10 @@ static auto test_for_each_both() -> ehanc::test
   std::array<int, 4> reference_output {11, 22, 33, 44};
 
   supl::for_each_both(test_input_1.cbegin(), test_input_1.cend(),
-                       test_input_2.cbegin(), test_input_2.cend(),
-                       [&test_output](const auto& i, const auto& j) {
-                         test_output.push_back(i + j);
-                       });
+                      test_input_2.cbegin(), test_input_2.cend(),
+                      [&test_output](const auto& i, const auto& j) {
+                        test_output.push_back(i + j);
+                      });
 
   results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
                               reference_output.cbegin(),
@@ -217,10 +217,10 @@ static auto test_for_each_both_n() -> ehanc::test
   std::array<int, 2> reference_output {11, 22};
 
   supl::for_each_both_n(test_input_1.cbegin(), test_input_1.cend(),
-                         test_input_2.cbegin(), test_input_2.cend(), 2,
-                         [&test_output](const auto& i, const auto& j) {
-                           test_output.push_back(i + j);
-                         });
+                        test_input_2.cbegin(), test_input_2.cend(), 2,
+                        [&test_output](const auto& i, const auto& j) {
+                          test_output.push_back(i + j);
+                        });
 
   results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
                               reference_output.cbegin(),
@@ -238,7 +238,7 @@ static auto test_bkprt_generate() -> ehanc::test
   std::vector<int> ref(10);
 
   supl::bkprt::generate(test.begin(), test.end(),
-                         [i {0}]() mutable { return ++i; });
+                        [i {0}]() mutable { return ++i; });
   std::generate(ref.begin(), ref.end(), [i {0}]() mutable { return ++i; });
 
   supl::for_each_both(

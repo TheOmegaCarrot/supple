@@ -35,9 +35,9 @@ auto to_string(const T& value) noexcept -> std::string
   using decayT = std::decay_t<T>;
 
   static_assert(
-      std::disjunction_v<
-          ::supl::is_printable<decayT>, ::supl::is_tuple<decayT>,
-          ::supl::is_pair<decayT>, ::supl::is_iterable<decayT>>,
+      std::disjunction_v<::supl::is_printable<decayT>,
+                         ::supl::is_tuple<decayT>, ::supl::is_pair<decayT>,
+                         ::supl::is_iterable<decayT>>,
       "Attempting to call supl::to_string with an unsupported type");
 
   std::stringstream out;

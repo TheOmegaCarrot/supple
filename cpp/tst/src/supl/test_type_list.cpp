@@ -102,4 +102,3 @@ static_assert(std::is_same_v<supl::type_list<bool>,
 static_assert(
     std::is_same_v<std::tuple<bool, int, char>,
                    supl::push_front_t<std::tuple<int, char>, bool>>);
-

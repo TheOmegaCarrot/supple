@@ -664,8 +664,7 @@ public:
     return ::supl::generative_iterator<value_type>(m_max);
   }
 
-  constexpr auto cend() noexcept
-      -> ::supl::generative_iterator<value_type>
+  constexpr auto cend() noexcept -> ::supl::generative_iterator<value_type>
   {
     return this->end();
   }

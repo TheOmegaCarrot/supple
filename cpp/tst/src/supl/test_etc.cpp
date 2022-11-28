@@ -65,8 +65,7 @@ static auto test_to_string() -> ehanc::test
   using namespace std::literals;
 
   std::tuple test1 {1, "hello", true};
-  results.add_case(supl::to_string(test1), "( 1, hello, true )"s,
-                   "tuple");
+  results.add_case(supl::to_string(test1), "( 1, hello, true )"s, "tuple");
 
   std::pair test2 {42, "Neat"s};
   results.add_case(supl::to_string(test2), "( 42, Neat )"s, "pair");

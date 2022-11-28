@@ -128,8 +128,8 @@ static auto test_generative_sequence() -> ehanc::test
   ehanc::test results;
 
   int k {0};
-  for ( int i : supl::generative_sequence(
-            5, [j {0}]() mutable { return j++; }) ) {
+  for ( int i :
+        supl::generative_sequence(5, [j {0}]() mutable { return j++; }) ) {
     results.add_case(i, k++);
   }
 

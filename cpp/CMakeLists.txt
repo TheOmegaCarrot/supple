@@ -4,6 +4,7 @@ project(supl LANGUAGES CXX)
 set(standard 17)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR SYMBOLIC)
 
 macro(sanitize)
   message("-- Using sanitizers")

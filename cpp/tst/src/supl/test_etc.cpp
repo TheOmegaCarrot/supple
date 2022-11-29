@@ -87,6 +87,15 @@ static auto test_to_string() -> ehanc::test
   results.add_case(supl::to_string(std::vector<int> {}), "[ ]"s,
                    "empty vector");
 
+  results.add_case(supl::to_string(std::tuple<> {}), "( )"s);
+
+  results.add_case(supl::to_string(std::tuple<int> {5}), "( 5 )"s);
+
+  std::tuple test5 {test1, test3, false};
+
+  results.add_case(supl::to_string(test5),
+                   "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s);
+
   return results;
 }
 

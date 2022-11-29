@@ -49,6 +49,10 @@ auto to_string(const T& value) noexcept -> std::string
 
   } else if constexpr ( ::supl::is_tuple_v<T> ) {
 
+    if constexpr ( std::tuple_size_v<T> == 0 ) {
+      return "( )";
+    }
+
     out << "( ";
     ::supl::for_each_in_tuple(value, [&out](const auto& i) {
       out << supl::to_string(i) << ", ";

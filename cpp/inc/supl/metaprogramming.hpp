@@ -393,7 +393,7 @@ namespace impl {
  * if a type is a std::pair.
  */
 /* }}} */
-template <typename... Ts>
+template <typename T>
 struct is_pair_impl : std::false_type {};
 
 /* {{{ doc */
@@ -402,8 +402,8 @@ struct is_pair_impl : std::false_type {};
  * if a type is a std::pair. Specialization for true case.
  */
 /* }}} */
-template <typename... Ts>
-struct is_pair_impl<std::pair<Ts...>> : std::true_type {};
+template <typename First, typename Second>
+struct is_pair_impl<std::pair<First, Second>> : std::true_type {};
 } // namespace impl
 
 /* {{{ doc */

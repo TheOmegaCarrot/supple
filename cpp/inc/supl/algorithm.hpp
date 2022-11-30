@@ -156,7 +156,7 @@ constexpr void transform_if(
     TransformFunc&& func) noexcept(noexcept(std::invoke(func, *begin)))
 {
   for ( ; begin != end; ++begin ) {
-    if ( pred(*begin) ) {
+    if ( std::invoke(pred, *begin) ) {
       output_itr = std::invoke(func, *begin);
     }
   }

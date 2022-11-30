@@ -131,7 +131,7 @@ tuple_any_of_impl(const Tuple& tup, Pred&& pred,
                 "Predicate must be invocable returning a bool with every "
                 "type in the tuple");
 
-  return (pred(std::get<Inds>(tup)) || ...);
+  return (std::invoke(pred, std::get<Inds>(tup)) || ...);
 }
 
 } // namespace impl
@@ -177,7 +177,7 @@ tuple_all_of_impl(const Tuple& tup, Pred&& pred,
                 "Predicate must be invocable returning a bool with every "
                 "type in the tuple");
 
-  return (pred(std::get<Inds>(tup)) && ...);
+  return (std::invoke(pred, std::get<Inds>(tup)) && ...);
 }
 
 } // namespace impl
@@ -579,7 +579,8 @@ constexpr auto tuple_count_if_impl(const Tuple& tup, Pred&& pred,
                                    std::index_sequence<Inds...>) noexcept
     -> std::size_t
 {
-  return (static_cast<std::size_t>(pred(std::get<Inds>(tup))) + ...);
+  return (static_cast<std::size_t>(std::invoke(pred, std::get<Inds>(tup)))
+          + ...);
 }
 
 } // namespace impl

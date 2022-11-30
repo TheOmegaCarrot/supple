@@ -106,7 +106,7 @@ static auto test_for_each_adjacent_n() -> ehanc::test
   std::vector<int> test_output;
   std::vector<int> reference_output {3, 5, 7};
 
-  supl::for_each_adjacent_n(test_input.cbegin(), test_input.cend(), 3,
+  supl::for_each_adjacent_n(test_input.cbegin(), 3,
                             [&test_output](const int i, const int j) {
                               test_output.push_back(i + j);
                             });
@@ -216,8 +216,7 @@ static auto test_for_each_both_n() -> ehanc::test
   std::vector<int> test_output;
   std::array<int, 2> reference_output {11, 22};
 
-  supl::for_each_both_n(test_input_1.cbegin(), test_input_1.cend(),
-                        test_input_2.cbegin(), test_input_2.cend(), 2,
+  supl::for_each_both_n(test_input_1.cbegin(), test_input_2.cbegin(), 2,
                         [&test_output](const auto& i, const auto& j) {
                           test_output.push_back(i + j);
                         });

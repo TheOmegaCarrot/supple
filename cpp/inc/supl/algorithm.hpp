@@ -200,8 +200,9 @@ constexpr void for_each_adjacent(
 /* {{{ doc */
 /**
  * @brief Applies `func` to each adjacent pair of elements.
- * Iteration ceases when the range runs out of adjacent pairs,
- * or when `n` iterations have occurred; whichever comes first.
+ * Iteration ceases when `n` iterations have occurred.
+ * If `n` is greater than the size of the range,
+ * behavior is undefined.
  *
  * Example: Range is: {1, 2, 3}
  *
@@ -215,8 +216,6 @@ constexpr void for_each_adjacent(
  *
  * @param begin Iterator to the beginning of the range.
  *
- * @param end Iterator to the end of the range.
- *
  * @param n Maximum number of calls to make.
  *
  * @param func Binary function to apply to each adjacent pair.
@@ -224,7 +223,7 @@ constexpr void for_each_adjacent(
 /* }}} */
 template <typename Itr, typename BinaryFunc>
 constexpr void for_each_adjacent_n(
-    const Itr begin, const Itr end, const std::size_t n,
+    const Itr begin, const std::size_t n,
     BinaryFunc&& func) noexcept(noexcept(std::invoke(func, *begin,
                                                      *begin)))
 {
@@ -232,7 +231,7 @@ constexpr void for_each_adjacent_n(
   Itr leader {std::next(begin)};
   Itr follower {begin};
 
-  for ( ; count != n && leader != end; ++count, ++leader, ++follower ) {
+  for ( ; count != n; ++count, ++leader, ++follower ) {
     std::invoke(func, *leader, *follower);
   }
 }
@@ -284,8 +283,9 @@ constexpr void for_each_both(
 /* {{{ doc */
 /**
  * @brief Applies `func` to each corresponding pair of elements.
- * Iteration ceases when either range runs out of members,
- * or when `n` iterations have occurred; whichever comes first.
+ * Iteration ceases when `n` iterations have occurred.
+ * If `n` is greater than the size of the range,
+ * behavior is undefined.
  *
  * Example: Range 1 is: {1, 2, 3}, Range 2 is: {4, 5, 6, 7}
  *
@@ -306,11 +306,7 @@ constexpr void for_each_both(
  *
  * @param begin1 Iterator to the beginning of range 1
  *
- * @param end1 Iterator to the end of range 1
- *
  * @param begin2 Iterator to the beginning of range 2
- *
- * @param end2 Iterator to the end of range 2
  *
  * @param n Maximum number of iterations.
  *
@@ -319,13 +315,11 @@ constexpr void for_each_both(
 /* }}} */
 template <typename Itr1, typename Itr2, typename BinaryFunc>
 constexpr void for_each_both_n(
-    Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
-    const std::size_t n,
+    Itr1 begin1, Itr2 begin2, const std::size_t n,
     BinaryFunc&& func) noexcept(noexcept(std::invoke(func, *begin1,
                                                      *begin2)))
 {
-  for ( std::size_t count {0};
-        (count != n && begin1 != end1 && begin2 != end2);
+  for ( std::size_t count {0}; (count != n);
         ++count, ++begin1, ++begin2 ) {
     std::invoke(func, *begin1, *begin2);
   }

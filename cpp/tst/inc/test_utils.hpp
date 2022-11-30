@@ -10,8 +10,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "supl/etc.hpp"
 #include "supl/term_colors.h"
+#include "supl/utility.hpp"
 
 constexpr inline int TEST_OUTPUT_WIDTH         = 60;
 constexpr inline std::string_view HEADER_COLOR = supl::FG_RED;

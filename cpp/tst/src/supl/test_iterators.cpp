@@ -6,7 +6,7 @@
 #include <numeric>
 #include <vector>
 
-#include "supl/etc.hpp"
+#include "supl/utility.hpp"
 
 static auto test_last() -> ehanc::test
 {

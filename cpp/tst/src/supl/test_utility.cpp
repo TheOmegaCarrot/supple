@@ -4,9 +4,9 @@
 #include <type_traits>
 #include <vector>
 
-#include "supl/test_etc.h"
+#include "supl/test_utility.h"
 
-#include "supl/etc.hpp"
+#include "supl/utility.hpp"
 
 struct copy_counter {
   copy_counter()                                       = default;
@@ -116,7 +116,7 @@ static auto test_size_t_literals() -> ehanc::test
   return results;
 }
 
-void test_etc()
+void test_utility()
 {
   ehanc::run_test("supl::explicit_copy", &test_explicit_copy);
   ehanc::run_test("supl::to_string", &test_to_string);

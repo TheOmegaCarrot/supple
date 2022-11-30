@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "supl/algorithm.hpp"
-#include "supl/etc.hpp"
+#include "supl/utility.hpp"
 #include "supl/test_algorithm.h"
 
 static auto test_min_size() -> ehanc::test

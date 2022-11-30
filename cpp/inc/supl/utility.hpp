@@ -1,5 +1,5 @@
-#ifndef SUPPLEMENTARIES_ETC_HPP
-#define SUPPLEMENTARIES_ETC_HPP
+#ifndef SUPPLEMENTARIES_UTILITY_HPP
+#define SUPPLEMENTARIES_UTILITY_HPP
 
 #include <algorithm>
 #include <cstddef>

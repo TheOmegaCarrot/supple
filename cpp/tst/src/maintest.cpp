@@ -4,12 +4,12 @@
 #include "test_utils.hpp"
 
 #include "supl/test_algorithm.h"
-#include "supl/test_etc.h"
 #include "supl/test_fake_ranges.h"
 #include "supl/test_iterators.h"
 #include "supl/test_metaprogramming.h"
 #include "supl/test_tuple_algo.h"
 #include "supl/test_type_list.h"
+#include "supl/test_utility.h"
 
 auto main() -> int
 {
@@ -26,7 +26,7 @@ auto main() -> int
 
   ehanc::test_section("Type List", &test_type_list);
 
-  ehanc::test_section("Etc", &test_etc);
+  ehanc::test_section("Utility", &test_utility);
 
   return 0;
 }

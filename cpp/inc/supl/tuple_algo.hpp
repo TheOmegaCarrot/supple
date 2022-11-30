@@ -2,6 +2,7 @@
 #define SUPPLEMENTARIES_TUPLE_ALGO_HPP
 
 #include <cstddef>
+#include <functional>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -33,7 +34,7 @@ constexpr void
 for_each_in_tuple_impl(Tuple&& tup, Func&& func,
                        std::index_sequence<Inds...>) noexcept
 {
-  (func(std::get<Inds>(tup)), ...);
+  (std::invoke(func, std::get<Inds>(tup)), ...);
 }
 
 } // namespace impl
@@ -85,7 +86,7 @@ template <typename Tuple, typename Func, std::size_t... Inds>
 constexpr auto tuple_transform_impl(const Tuple& tup, Func&& func,
                                     std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple {func(std::get<Inds>(tup))...};
+  return std::tuple {std::invoke(func, std::get<Inds>(tup))...};
 }
 
 } // namespace impl

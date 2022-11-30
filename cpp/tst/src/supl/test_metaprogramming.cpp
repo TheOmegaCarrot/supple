@@ -32,6 +32,11 @@ void test_metaprogramming()
   ehanc::run_test("supl::is_pair", &pass);
   ehanc::run_test("supl::is_printable", &pass);
   ehanc::run_test("supl::are_equality_comparable", &pass);
+  ehanc::run_test("supl::are_inequality_comparable", &pass);
+  ehanc::run_test("supl::are_less_comparable", &pass);
+  ehanc::run_test("supl::are_less_eq_comparable", &pass);
+  ehanc::run_test("supl::are_greater_comparable", &pass);
+  ehanc::run_test("supl::are_greater_eq_comparable", &pass);
 }
 
 ///////////////////////////////////////////// sum_type
@@ -237,6 +242,17 @@ static_assert(supl::are_equality_comparable_v<int, double>);
 static_assert(supl::are_equality_comparable_v<int, bool>);
 static_assert(supl::are_equality_comparable_v<int, char>);
 static_assert(not supl::are_equality_comparable_v<int, std::vector<int>>);
+
+///////////////////////////////////////////// are_inequality_comparable
+
+static_assert(supl::are_inequality_comparable_v<int, int>);
+static_assert(supl::are_inequality_comparable_v<int, char>);
+static_assert(supl::are_inequality_comparable_v<int, float>);
+static_assert(supl::are_inequality_comparable_v<int, double>);
+static_assert(supl::are_inequality_comparable_v<int, bool>);
+static_assert(supl::are_inequality_comparable_v<int, char>);
+static_assert(
+    not supl::are_inequality_comparable_v<int, std::vector<int>>);
 
 ///////////////////////////////////////////// are_less_comparable
 

@@ -484,6 +484,37 @@ template <typename T, typename U>
 constexpr inline bool are_equality_comparable_v =
     ::supl::are_equality_comparable<T, U>::value;
 
+///////////////////////////////////////////// are_inequality_comparable
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator==`.
+ */
+/* }}} */
+template <typename T, typename U, typename = void>
+struct are_inequality_comparable : std::false_type {};
+
+/* {{{ doc */
+/**
+ * @brief Determines if two types can be compared with `operator==`.
+ * Specialization for true case.
+ */
+/* }}} */
+template <typename T, typename U>
+struct are_inequality_comparable<
+    T, U, std::void_t<decltype(std::declval<T>() != std::declval<U>())>>
+    : std::true_type {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `are_inequality_comparable`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T, typename U>
+constexpr inline bool are_inequality_comparable_v =
+    ::supl::are_inequality_comparable<T, U>::value;
+
 ///////////////////////////////////////////// are_less_comparable
 
 /* {{{ doc */

@@ -12,11 +12,11 @@ void test_type_list()
   // If this TU compiles, all tests pass
   // Test results here just for seratonin
 
-  ehanc::run_test("contains", &pass);
-  ehanc::run_test("type_list_size", &pass);
-  ehanc::run_test("type_at_index", &pass);
-  ehanc::run_test("push_back", &pass);
-  ehanc::run_test("push_front", &pass);
+  ehanc::run_test("supl::contains", &pass);
+  ehanc::run_test("supl::type_list_size", &pass);
+  ehanc::run_test("supl::type_at_index", &pass);
+  ehanc::run_test("supl::push_back", &pass);
+  ehanc::run_test("supl::push_front", &pass);
 }
 
 ///////////////////////////////////////////// contains

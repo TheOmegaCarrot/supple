@@ -76,11 +76,11 @@ static auto test_count() -> ehanc::test
 
 void test_fake_ranges()
 {
-  ehanc::run_test("all_of", &test_all_of);
-  ehanc::run_test("any_of", &test_any_of);
-  ehanc::run_test("none_of", &test_none_of);
-  /* ehanc::run_test("for_each", &test_for_each); */
-  /* ehanc::run_test("for_each_n", &test_for_each_n); */
-  ehanc::run_test("count", &test_count);
-  /* ehanc::run_test("count_if", &test_count_if); */
+  ehanc::run_test("supl::fr::all_of", &test_all_of);
+  ehanc::run_test("supl::fr::any_of", &test_any_of);
+  ehanc::run_test("supl::fr::none_of", &test_none_of);
+  /* ehanc::run_test("supl::fr::for_each", &test_for_each); */
+  /* ehanc::run_test("supl::fr::for_each_n", &test_for_each_n); */
+  ehanc::run_test("supl::fr::count", &test_count);
+  /* ehanc::run_test("supl::fr::count_if", &test_count_if); */
 }

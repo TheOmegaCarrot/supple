@@ -151,13 +151,13 @@ contains(const Itr begin, const Itr end,
 /* }}} */
 template <typename Itr, typename OutItr, typename Predicate,
           typename TransformFunc>
-constexpr void
-transform_if(Itr begin, const Itr end, OutItr output_itr, Predicate&& pred,
-             TransformFunc&& func) noexcept(noexcept(func(*begin)))
+constexpr void transform_if(
+    Itr begin, const Itr end, OutItr output_itr, Predicate&& pred,
+    TransformFunc&& func) noexcept(noexcept(std::invoke(func, *begin)))
 {
   for ( ; begin != end; ++begin ) {
     if ( pred(*begin) ) {
-      output_itr = func(*begin);
+      output_itr = std::invoke(func, *begin);
     }
   }
 }
@@ -186,13 +186,14 @@ transform_if(Itr begin, const Itr end, OutItr output_itr, Predicate&& pred,
 template <typename Itr, typename BinaryFunc>
 constexpr void for_each_adjacent(
     const Itr begin, const Itr end,
-    BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+    BinaryFunc&& func) noexcept(noexcept(std::invoke(func, *begin,
+                                                     *begin)))
 {
   Itr leader {std::next(begin)};
   Itr follower {begin};
 
   for ( ; leader != end; ++leader, ++follower ) {
-    func(*leader, *follower);
+    std::invoke(func, *leader, *follower);
   }
 }
 
@@ -224,14 +225,15 @@ constexpr void for_each_adjacent(
 template <typename Itr, typename BinaryFunc>
 constexpr void for_each_adjacent_n(
     const Itr begin, const Itr end, const std::size_t n,
-    BinaryFunc&& func) noexcept(noexcept(func(*begin, *begin)))
+    BinaryFunc&& func) noexcept(noexcept(std::invoke(func, *begin,
+                                                     *begin)))
 {
   std::size_t count {0};
   Itr leader {std::next(begin)};
   Itr follower {begin};
 
   for ( ; count != n && leader != end; ++count, ++leader, ++follower ) {
-    func(*leader, *follower);
+    std::invoke(func, *leader, *follower);
   }
 }
 
@@ -269,12 +271,13 @@ constexpr void for_each_adjacent_n(
  */
 /* }}} */
 template <typename Itr1, typename Itr2, typename BinaryFunc>
-constexpr void
-for_each_both(Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
-              BinaryFunc&& func) noexcept(noexcept(func(*begin1, *begin2)))
+constexpr void for_each_both(
+    Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
+    BinaryFunc&& func) noexcept(noexcept(std::invoke(func, *begin1,
+                                                     *begin2)))
 {
   for ( ; (begin1 != end1 && begin2 != end2); ++begin1, ++begin2 ) {
-    func(*begin1, *begin2);
+    std::invoke(func, *begin1, *begin2);
   }
 }
 
@@ -318,12 +321,13 @@ template <typename Itr1, typename Itr2, typename BinaryFunc>
 constexpr void for_each_both_n(
     Itr1 begin1, const Itr1 end1, Itr2 begin2, const Itr2 end2,
     const std::size_t n,
-    BinaryFunc&& func) noexcept(noexcept(func(*begin1, *begin2)))
+    BinaryFunc&& func) noexcept(noexcept(std::invoke(func, *begin1,
+                                                     *begin2)))
 {
   for ( std::size_t count {0};
         (count != n && begin1 != end1 && begin2 != end2);
         ++count, ++begin1, ++begin2 ) {
-    func(*begin1, *begin2);
+    std::invoke(func, *begin1, *begin2);
   }
 }
 
@@ -357,12 +361,12 @@ constexpr void for_each_both_n(
  */
 /* }}} */
 template <typename VarFunc, typename... Begins>
-constexpr void
-for_each_all_n(VarFunc&& func, const std::size_t n,
-               Begins... begins) noexcept(noexcept(func(*begins...)))
+constexpr void for_each_all_n(
+    VarFunc&& func, const std::size_t n,
+    Begins... begins) noexcept(noexcept(std::invoke(func, *begins...)))
 {
   for ( std::size_t i {0}; i != n; ++i ) {
-    func(*begins...);
+    std::invoke(func, *begins...);
     (++begins, ...);
   }
 }
@@ -453,7 +457,7 @@ generate(Itr begin, const Itr end,
          Gen&& gen) noexcept(noexcept(gen()) && noexcept(*begin))
 {
   while ( begin != end ) {
-    *begin = gen();
+    *begin = std::invoke(gen);
     ++begin;
   }
 }

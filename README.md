@@ -18,5 +18,7 @@ I've made things just as a learning exercise.
 
 # How do I use this?
 
-Just copy `./inc/supl` to somewhere the compiler is
-looking for includes (`-Isomewhere`) and just include what you need.
+In your `CMakeLists.txt`, add the top-level of this repository as a subdirectory,
+and link the library `supplementaries`.
+
+Alternatively, you can simply copy `cpp/inc/supl` into your project.

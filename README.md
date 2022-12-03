@@ -5,6 +5,7 @@
 This is a small header-only library providing various handy utilities.
 Some may not be handy, and may just be me having a neat idea.
 Some loosely inspired by the STL, some just my ideas.
+This library is written with only C++17 in mind.
 
 ---
 

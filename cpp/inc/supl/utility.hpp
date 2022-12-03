@@ -16,6 +16,9 @@ namespace supl {
  * @brief Explicitly makes a copy of the parameter. Inspired by C++23's
  * `auto()` and `auto{}` syntax.
  *
+ * @pre Parameter must be copiable.
+ * If this precondition is not satisfied, it is a compile-time error.
+ *
  * @param t Value to be copied.
  *
  * @return Copy of `t`.
@@ -28,6 +31,17 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
   return t;
 }
 
+/* {{{ doc */
+/**
+ * @brief A singular function to convert many things to strings.
+ *
+ * @pre A parameter type `T` is valid if any of the below are true:
+ * - `operator<<(std::ostream&, T)` is defined
+ * - `T` is a tuple or pair of only valid types
+ * - `T` provides an iterator pair which dereference to a valid type
+ *
+ */
+/* }}} */
 template <typename T>
 auto to_string(const T& value) noexcept -> std::string
 {

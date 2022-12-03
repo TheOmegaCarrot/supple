@@ -33,6 +33,10 @@ constexpr auto min_size(const Container& cont) noexcept -> std::size_t
  * @brief Returns size of smallest container provided.
  * Calls size method internally.
  *
+ * @pre All parameters must have a `.size()` member function
+ * which returns a `std::size_t`.
+ * If this precondition is not satisfied, it is a compile-time error.
+ *
  * @tparam Container Container which provides a `.size()`
  * member function.
  *
@@ -78,6 +82,10 @@ constexpr auto max_size(const Container& cont) noexcept -> std::size_t
  * @brief Returns size of largest container provided.
  * Calls size method internally.
  *
+ * @pre All parameters must have a `.size()` member function
+ * which returns a `std::size_t`.
+ * If this precondition is not satisfied, it is a compile-time error.
+ *
  * @tparam Container Container which provides a `.size()`
  * member function.
  *
@@ -120,6 +128,13 @@ contains(const Itr begin, const Itr end,
 /**
  * @brief Conditionally transforms each element of a range.
  *
+ * @pre `end` must be reachable by incrementing `begin`.
+ * If this precondition is not satisfied, the result is undefined.
+ * 
+ * @pre All iterators in the half-open range [begin, end) must be
+ * dereferencable. 
+ * If this precondition is not satisfied, the result is undefined.
+ *
  * @tparam Itr Input iterator type. A forward iterator is sufficient.
  *
  * @tparam OutItr Output iterator type.
@@ -158,6 +173,7 @@ constexpr void transform_if(
   for ( ; begin != end; ++begin ) {
     if ( std::invoke(pred, *begin) ) {
       output_itr = std::invoke(func, *begin);
+      ++output_itr;
     }
   }
 }
@@ -169,6 +185,13 @@ constexpr void transform_if(
  * Example: Range is: {1, 2, 3}
  *
  * Calls to `func` will be: `func(1, 2)`, `func(2, 3)`
+ *
+ * @pre `end` must be reachable by incrementing `begin`.
+ * If this precondition is not satisfied, the result is undefined.
+ * 
+ * @pre All iterators in the half-open range [begin, end) must be
+ * dereferencable. 
+ * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr Iterator type satisfying only a minimal interface.
  * Simply being incrementable and equality-comparable is sufficient.
@@ -207,6 +230,10 @@ constexpr void for_each_adjacent(
  * Example: Range is: {1, 2, 3}
  *
  * Calls to `func` will be: `func(1, 2)`, `func(2, 3)`
+ * 
+ * @pre All iterators in the half-open range [begin, begin + n) must be
+ * dereferencable. 
+ * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr Iterator type satisfying only a minimal interface.
  * Simply being incrementable and equality-comparable is sufficient.
@@ -248,6 +275,20 @@ constexpr void for_each_adjacent_n(
  * * `func(1, 4)`
  * * `func(2, 5)`
  * * `func(3, 6)`
+ *
+ * @pre `end1` must be reachable by incrementing `begin1`.
+ * If this precondition is not satisfied, the result is undefined.
+ * 
+ * @pre All iterators in the half-open range [begin1, end1) must be
+ * dereferencable. 
+ * If this precondition is not satisfied, the result is undefined.
+ *
+ * @pre `end2` must be reachable by incrementing `begin2`.
+ * If this precondition is not satisfied, the result is undefined.
+ * 
+ * @pre All iterators in the half-open range [begin2, end2) must be
+ * dereferencable. 
+ * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr1 Iterator type satisfying only a minimal interface.
  * Simply being incrementable and equality-comparable is sufficient.
@@ -295,6 +336,14 @@ constexpr void for_each_both(
  * * `func(2, 5)`
  * * `func(3, 6)`
  *
+ * @pre All iterators in the half-open range [begin1, begin1 + n) must be
+ * dereferencable. 
+ * If this precondition is not satisfied, the result is undefined.
+ * 
+ * @pre All iterators in the half-open range [begin2, begin2 + n) must be
+ * dereferencable. 
+ * If this precondition is not satisfied, the result is undefined.
+ *
  * @tparam Itr1 Iterator type satisfying only a minimal interface.
  * Simply being incrementable and equality-comparable is sufficient.
  *
@@ -337,6 +386,10 @@ constexpr void for_each_both_n(
  *
  * `func` must have accept `int, char` as parameters.
  *
+ * @pre All iterators in the half-open range [begins, begins + n) must be
+ * dereferencable, for all iterators in the pack `begins`.
+ * If this precondition is not satisfied, the result is undefined.
+ * 
  * @tparam VarFunc A function which acccepts the types of all the
  * contaners in parameter order.
  *

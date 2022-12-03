@@ -19,6 +19,8 @@ I've made things just as a learning exercise.
 
 # How do I use this?
 
-You can simply clone this repository into your `CMAKE_PREFIX_PATH`.
+You can simply clone this repository into your `CMAKE_PREFIX_PATH`,
+find the package `supplementaries`,
+and link the target `supplementaries::supplementaries`.
 
 Alternatively, you can simply copy `cpp/inc/supl` into your project.

@@ -18,7 +18,6 @@ I've made things just as a learning exercise.
 
 # How do I use this?
 
-In your `CMakeLists.txt`, add the top-level of this repository as a subdirectory,
-and link the library `supplementaries`.
+You can simply clone this repository into your `CMAKE_PREFIX_PATH`.
 
 Alternatively, you can simply copy `cpp/inc/supl` into your project.

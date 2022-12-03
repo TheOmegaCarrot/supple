@@ -39,7 +39,13 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
  * - `operator<<(std::ostream&, T)` is defined
  * - `T` is a tuple or pair of only valid types
  * - `T` provides an iterator pair which dereference to a valid type
+ * If this precondition is not satisfied, it is a compile-time error.
  *
+ * @tparam T Type to be formatted to a string
+ *
+ * @param value Value to be formatted to a string
+ *
+ * @return String representation of `value`
  */
 /* }}} */
 template <typename T>
@@ -89,7 +95,7 @@ auto to_string(const T& value) noexcept -> std::string
       out << "[ ";
       std::for_each(
           std::begin(value), std::end(value),
-          [&out](const auto& i) { out << supl::to_string(i) << ", "; });
+          [&out](const auto& i) { out << ::supl::to_string(i) << ", "; });
       out.seekp(-2, std::ios_base::end);
       out << " ]";
     }

@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "metaprogramming.hpp"
+#include "type_list.hpp"
 
 namespace supl {
 
@@ -245,7 +246,8 @@ template <typename Tuple, typename T, std::size_t... Inds>
 tuple_push_back_impl(const Tuple& tup, T&& data,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple {std::get<Inds>(tup)..., std::forward<T>(data)};
+  return std::tuple<::supl::type_at_index_t<Inds, Tuple>..., T> {
+      std::get<Inds>(tup)..., std::forward<T>(data)};
 }
 
 } // namespace impl
@@ -282,7 +284,8 @@ template <typename Tuple, std::size_t... Inds>
 tuple_pop_back_impl(const Tuple& tup,
                     std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple {std::get<Inds>(tup)...};
+  return std::tuple<::supl::type_at_index_t<Inds, Tuple>...> {
+      std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -313,7 +316,8 @@ template <typename Tuple, typename T, std::size_t... Inds>
 tuple_push_front_impl(const Tuple& tup, T&& data,
                       std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple {std::forward<T>(data), std::get<Inds>(tup)...};
+  return std::tuple<T, ::supl::type_at_index_t<Inds, Tuple>...> {
+      std::forward<T>(data), std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -349,7 +353,8 @@ template <typename Tuple, std::size_t... Inds>
 tuple_pop_front_impl(const Tuple& tup,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple {std::get<Inds + 1>(tup)...};
+  return std::tuple<::supl::type_at_index_t<Inds + 1, Tuple>...> {
+      std::get<Inds + 1>(tup)...};
 }
 
 } // namespace impl

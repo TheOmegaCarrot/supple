@@ -165,6 +165,15 @@ static auto test_tuple_push_back() -> ehanc::test
 
   results.add_case(result1, expected1);
 
+  int ref_test {5};
+  std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
+  std::tuple<int&, int, char, bool, double> expected2 {ref_test, 3, 'g',
+                                                       true, 3.14};
+
+  auto result2 {supl::tuple_push_back(test2, 3.14)};
+
+  results.add_case(result2, expected2);
+
   return results;
 }
 
@@ -178,6 +187,14 @@ static auto test_tuple_pop_back() -> ehanc::test
   auto result1 {supl::tuple_pop_back(test1)};
 
   results.add_case(result1, expected1);
+
+  int ref_test {5};
+  std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
+  std::tuple<int&, int, char> expected2 {ref_test, 3, 'g'};
+
+  auto result2 {supl::tuple_pop_back(test2)};
+
+  results.add_case(result2, expected2);
 
   return results;
 }
@@ -193,6 +210,15 @@ static auto test_tuple_push_front() -> ehanc::test
 
   results.add_case(result1, expected1);
 
+  int ref_test {5};
+  std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
+  std::tuple<double, int&, int, char, bool> expected2 {3.14, ref_test, 3,
+                                                       'g', true};
+
+  auto result2 {supl::tuple_push_front(test2, 3.14)};
+
+  results.add_case(result2, expected2);
+
   return results;
 }
 
@@ -206,6 +232,14 @@ static auto test_tuple_pop_front() -> ehanc::test
   auto result1 {supl::tuple_pop_front(test1)};
 
   results.add_case(result1, expected1);
+
+  int ref_test {5};
+  std::tuple<bool, int&, int, char> test2 {true, ref_test, 3, 'g'};
+  std::tuple<int&, int, char> expected2 {ref_test, 3, 'g'};
+
+  auto result2 {supl::tuple_pop_front(test2)};
+
+  results.add_case(result2, expected2);
 
   return results;
 }

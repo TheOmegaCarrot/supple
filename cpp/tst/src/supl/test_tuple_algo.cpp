@@ -278,6 +278,15 @@ static auto test_tuple_insert() -> ehanc::test
 
   results.add_case(result4, expected4);
 
+  int ref_test {42};
+  std::tuple<char, int&, double> test_ref_input {'g', ref_test, 3.14};
+  std::tuple<char, int&, bool, char, double> expected5 {'g', ref_test,
+                                                        false, '*', 3.14};
+  auto result5 {supl::tuple_insert(
+      test_ref_input, supl::index_constant<2> {}, false, '*')};
+
+  results.add_case(result5, expected5);
+
   return results;
 }
 
@@ -303,6 +312,18 @@ static auto test_tuple_split() -> ehanc::test
   results.add_case(result2.first, expected2_first);
   results.add_case(result2.second, expected2_second);
 
+  int ref_test {42};
+  std::tuple<int&, char, bool, double, int&> test_ref_input {
+      ref_test, 'y', false, 3.14, ref_test};
+  std::tuple<int&, char, bool> expected3_first {ref_test, 'y', false};
+  std::tuple<double, int&> expected3_second {3.14, ref_test};
+
+  auto results3 {
+      supl::tuple_split(test_ref_input, supl::index_constant<3> {})};
+
+  results.add_case(results3.first, expected3_first);
+  results.add_case(results3.second, expected3_second);
+
   return results;
 }
 
@@ -319,6 +340,18 @@ static auto test_tuple_reorder() -> ehanc::test
       test_input, std::index_sequence<1, 3, 0, 1, 4, 2> {})};
 
   results.add_case(result1, expected1);
+
+  std::tuple<int, std::vector<int>&, std::string&, char, bool>
+      test_ref_input {42, vec, reorder, 'j', true};
+
+  std::tuple<std::vector<int>&, bool, char, std::string&,
+             std::vector<int>&, int>
+      expected2 {vec, true, 'j', reorder, vec, 42};
+
+  auto result2 {supl::tuple_reorder(
+      test_ref_input, std::index_sequence<1, 4, 3, 2, 1, 0> {})};
+
+  results.add_case(result2, expected2);
 
   return results;
 }
@@ -364,6 +397,14 @@ static auto test_subtuple() -> ehanc::test
   auto result6 {supl::subtuple<decltype(test_input), 2, 5>(test_input)};
 
   results.add_case(result6, expected6);
+
+  int ref_test {42};
+  std::tuple<char, bool, int&, double, char> test_ref_input {
+      'j', true, ref_test, 3.14, 'l'};
+  std::tuple<bool, int&, double> expected7 {true, ref_test, 3.14};
+  auto result7 {supl::subtuple(test_ref_input, supl::index_pair<1, 4> {})};
+
+  results.add_case(result7, expected7);
 
   return results;
 }

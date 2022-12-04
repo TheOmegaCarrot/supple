@@ -380,16 +380,19 @@ template <typename Tuple>
 
 namespace impl {
 
-template <typename Tuple, typename... T, std::size_t... pre_idxs,
+template <typename Tuple, typename... Ts, std::size_t... pre_idxs,
           std::size_t... post_idxs>
 [[nodiscard]] constexpr auto
 tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
-                  std::index_sequence<post_idxs...>, T&&... data) noexcept
+                  std::index_sequence<post_idxs...>, Ts&&... data) noexcept
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-  return std::tuple {std::get<pre_idxs>(tup)..., std::forward<T>(data)...,
-                     std::get<post_idxs + idx>(tup)...};
+  return std::tuple<::supl::type_at_index_t<pre_idxs, Tuple>...,
+                    std::decay_t<Ts>...,
+                    ::supl::type_at_index_t<post_idxs + idx, Tuple>...> {
+      std::get<pre_idxs>(tup)..., std::forward<Ts>(data)...,
+      std::get<post_idxs + idx>(tup)...};
 }
 
 } // namespace impl
@@ -437,7 +440,8 @@ tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...>) noexcept
 {
   static_assert(((Idxs < std::tuple_size_v<Tuple>)&&...));
 
-  return std::tuple {std::get<Idxs>(tup)...};
+  return std::tuple<::supl::type_at_index_t<Idxs, Tuple>...> {
+      std::get<Idxs>(tup)...};
 }
 
 namespace impl {
@@ -448,8 +452,11 @@ tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
                  std::index_sequence<Post_Idxs...>,
                  supl::index_constant<Idx>)
 {
-  return std::pair {std::tuple {std::get<Pre_Idxs>(tup)...},
-                    std::tuple {std::get<Post_Idxs + Idx>(tup)...}};
+  return std::pair {
+      std::tuple<::supl::type_at_index_t<Pre_Idxs, Tuple>...> {
+          std::get<Pre_Idxs>(tup)...},
+      std::tuple<::supl::type_at_index_t<Post_Idxs + Idx, Tuple>...> {
+          std::get<Post_Idxs + Idx>(tup)...}};
 }
 
 } // namespace impl
@@ -495,7 +502,8 @@ subtuple_impl(const Tuple& tup,
               [[maybe_unused]] std::index_sequence<Inds...>,
               [[maybe_unused]] supl::index_constant<begin>)
 {
-  return std::tuple {std::get<Inds + begin>(tup)...};
+  return std::tuple<::supl::type_at_index_t<Inds + begin, Tuple>...> {
+      std::get<Inds + begin>(tup)...};
 }
 
 } // namespace impl

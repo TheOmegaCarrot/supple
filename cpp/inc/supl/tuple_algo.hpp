@@ -434,6 +434,53 @@ tuple_insert(const Tuple& tup,
                                          std::forward<T>(data)...);
 }
 
+namespace impl {
+
+template <typename Tuple, std::size_t... pre_idxs,
+          std::size_t... post_idxs>
+[[nodiscard]] constexpr auto
+tuple_erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
+                 std::index_sequence<post_idxs...>) noexcept
+{
+  constexpr std::size_t idx {sizeof...(pre_idxs)};
+
+  return std::tuple<
+      ::supl::type_at_index_t<pre_idxs, Tuple>...,
+      ::supl::type_at_index_t<post_idxs + idx + 1, Tuple>...> {
+      std::get<pre_idxs>(tup)..., std::get<post_idxs + idx + 1>(tup)...};
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Erases element from a tuple at a given index.
+ *
+ * @tparam Tuple Type of input tuple.
+ *
+ * @tparam Idx Index at which to erase.
+ *
+ * @param tup Input tuple
+ *
+ * @param deduction_helper Only exists so `Idx` can be deduced
+ *
+ * @return New tuple with element at index `Idx` erased.
+ */
+/* }}} */
+template <typename Tuple, std::size_t Idx>
+[[nodiscard]] constexpr auto tuple_erase(
+    const Tuple& tup,
+    [[maybe_unused]] supl::index_constant<Idx> deduction_helper) noexcept
+{
+  static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
+
+  auto pre_seq {std::make_index_sequence<Idx> {}};
+  auto post_seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - Idx - 1> {}};
+
+  return ::supl::impl::tuple_erase_impl(tup, pre_seq, post_seq);
+}
+
 template <typename Tuple, std::size_t... Idxs>
 [[nodiscard]] constexpr auto
 tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...>) noexcept

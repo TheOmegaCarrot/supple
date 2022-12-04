@@ -290,6 +290,58 @@ static auto test_tuple_insert() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_erase() -> ehanc::test
+{
+  ehanc::test results;
+
+  constexpr static std::tuple test_input {3, true, 3.14};
+  constexpr static std::tuple expected1 {3, 3.14};
+
+  constexpr static auto result1 {
+      supl::tuple_erase(test_input, supl::index_constant<1> {})};
+
+  results.add_case(result1, expected1);
+
+  std::tuple expected2 {3, true};
+
+  auto result2 {supl::tuple_erase(test_input, supl::index_constant<2> {})};
+
+  results.add_case(result2, expected2);
+
+  std::tuple expected3 {true, 3.14};
+
+  auto result3 {supl::tuple_erase(test_input, supl::index_constant<0> {})};
+
+  results.add_case(result3, expected3);
+
+  constexpr static std::tuple<int, decltype(test_input)&, bool>
+      test_ref_input {42, test_input, false};
+
+  std::tuple<decltype(test_input)&, bool> expected4 {test_input, false};
+
+  auto result4 {
+      supl::tuple_erase(test_ref_input, supl::index_constant<0> {})};
+
+  results.add_case(result4, expected4);
+
+  std::tuple<int, bool> expected5 {42, false};
+
+  auto result5 {
+      supl::tuple_erase(test_ref_input, supl::index_constant<1> {})};
+
+  results.add_case(result5, expected5);
+
+  constexpr static std::tuple<int, decltype(test_input)&> expected6 {
+      42, test_input};
+
+  constexpr static auto result6 {
+      supl::tuple_erase(test_ref_input, supl::index_constant<2> {})};
+
+  results.add_case(result6, expected6);
+
+  return results;
+}
+
 static auto test_tuple_split() -> ehanc::test
 {
   ehanc::test results;
@@ -436,6 +488,7 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_push_front", &test_tuple_push_front);
   ehanc::run_test("supl::tuple_pop_back", &test_tuple_pop_back);
   ehanc::run_test("supl::tuple_insert", &test_tuple_insert);
+  ehanc::run_test("supl::tuple_erase", &test_tuple_erase);
   ehanc::run_test("supl::tuple_reorder", &test_tuple_reorder);
   ehanc::run_test("supl::tuple_split", &test_tuple_split);
   ehanc::run_test("supl::subtuple", &test_subtuple);

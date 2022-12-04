@@ -4,7 +4,8 @@ project(supl LANGUAGES CXX)
 set(standard 17)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR SYMBOLIC)
+file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
+     "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR SYMBOLIC)
 
 macro(sanitize)
   message("-- Using sanitizers")
@@ -63,7 +64,8 @@ elseif(MSVC)
   # Untested, unsupported
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
+                                           "Clang")
   if(CMAKE_BUILD_TYPE STREQUAL Debug)
     message("-- Build type: Debug")
     optimize(0)
@@ -80,5 +82,6 @@ set(test_exe_name run_tests)
 file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 add_executable(${test_exe_name} ${source_files} ${test_files})
 target_include_directories(${test_exe_name} PRIVATE inc)
-target_include_directories(${test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
+target_include_directories(${test_exe_name}
+                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
 set_property(TARGET ${test_exe_name} PROPERTY CXX_STANDARD ${standard})

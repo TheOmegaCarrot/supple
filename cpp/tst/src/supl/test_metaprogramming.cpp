@@ -62,6 +62,31 @@ static_assert(
         supl::sum_type_t<int16_t, int16_t, int16_t, int16_t, int>, int>,
     "int16_t + int16_t + int16_t + int16_t + int == int");
 
+///////////////////////////////////////////// remove_cvref
+
+static_assert(std::is_same_v<int, supl::remove_cvref_t<int>>);
+static_assert(std::is_same_v<int, supl::remove_cvref_t<const int>>);
+static_assert(std::is_same_v<int, supl::remove_cvref_t<volatile int>>);
+static_assert(
+    std::is_same_v<int, supl::remove_cvref_t<const volatile int>>);
+
+static_assert(std::is_same_v<int, supl::remove_cvref_t<int&>>);
+static_assert(std::is_same_v<int, supl::remove_cvref_t<const int&>>);
+static_assert(std::is_same_v<int, supl::remove_cvref_t<volatile int&>>);
+static_assert(
+    std::is_same_v<int, supl::remove_cvref_t<const volatile int&>>);
+
+static_assert(std::is_same_v<int, supl::remove_cvref_t<int&&>>);
+static_assert(std::is_same_v<int, supl::remove_cvref_t<const int&&>>);
+static_assert(std::is_same_v<int, supl::remove_cvref_t<volatile int&&>>);
+static_assert(
+    std::is_same_v<int, supl::remove_cvref_t<const volatile int&&>>);
+
+// NOLINTNEXTLINE(*-avoid-c-arrays)
+static_assert(std::is_same_v<int[5],
+                             // NOLINTNEXTLINE(*-avoid-c-arrays)
+                             supl::remove_cvref_t<const int[5]>>);
+
 ///////////////////////////////////////////// is_type_in_pack
 
 static_assert(supl::is_type_in_pack_v<int, char, bool, int>);

@@ -55,6 +55,14 @@ struct sum_type
 template <typename... Ts>
 using sum_type_t = typename ::supl::sum_type<Ts...>::type;
 
+///////////////////////////////////////////// remove_cvref
+
+template <typename T>
+struct remove_cvref : std::remove_cv<std::remove_reference_t<T>> {};
+
+template <typename T>
+using remove_cvref_t = typename ::supl::remove_cvref<T>::type;
+
 ///////////////////////////////////////////// is_type_in_pack
 
 /* {{{ doc */

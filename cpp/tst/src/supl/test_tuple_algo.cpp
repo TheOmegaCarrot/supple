@@ -309,9 +309,10 @@ static auto test_tuple_insert() -> ehanc::test
   results.add_case(result4, expected4);
 
   int ref_test {42};
-  std::tuple<char, int&, double> test_ref_input {'g', ref_test, 3.14};
-  std::tuple<char, int&, bool, char, double> expected5 {'g', ref_test,
-                                                        false, '*', 3.14};
+  std::tuple<const char, int&, double> test_ref_input {'g', ref_test,
+                                                       3.14};
+  std::tuple<const char, int&, bool, char, double> expected5 {
+      'g', ref_test, false, '*', 3.14};
   auto result5 {supl::tuple_insert(
       test_ref_input, supl::index_constant<2> {}, false, '*')};
 

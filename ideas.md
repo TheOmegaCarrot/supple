@@ -29,14 +29,3 @@ Perhaps also just a `tuple_emplace` that works like `tuple_insert`?
 template<typename Tuple, typename To_Be_Constructed, typename... Args>
 auto tuple_emplace_{back,front}(const Tuple& tup, Args&&... args);
 ```
-
-### Rotate_{Left,Right}:
-
-Yes, this *could* be done with `tuple_reorder`, but that would be much less clear, and would be more clunky and error prone.
-
-```cpp
-template<typename Tuple>
-auto tuple_rotate_{left,right}(const Tuple& tup);
-
-tuple_rotate_left(std::tuple{42, 3.14, false}) == std::tuple{3.14, false, 42}
-```

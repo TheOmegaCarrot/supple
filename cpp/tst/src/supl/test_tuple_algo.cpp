@@ -244,6 +244,36 @@ static auto test_tuple_pop_front() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_rotate_left() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test_input {42, false, 3.14, 'w'};
+
+  std::tuple expected1 {false, 3.14, 'w', 42};
+
+  auto result1 {supl::tuple_rotate_left(test_input)};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
+static auto test_tuple_rotate_right() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test_input {42, false, 3.14, 'w'};
+
+  std::tuple expected1 {'w', 42, false, 3.14};
+
+  auto result1 {supl::tuple_rotate_right(test_input)};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
 static auto test_tuple_insert() -> ehanc::test
 {
   ehanc::test results;
@@ -487,6 +517,8 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_pop_front", &test_tuple_pop_front);
   ehanc::run_test("supl::tuple_push_front", &test_tuple_push_front);
   ehanc::run_test("supl::tuple_pop_back", &test_tuple_pop_back);
+  ehanc::run_test("supl::tuple_rotate_left", &test_tuple_rotate_left);
+  ehanc::run_test("supl::tuple_rotate_right", &test_tuple_rotate_right);
   ehanc::run_test("supl::tuple_insert", &test_tuple_insert);
   ehanc::run_test("supl::tuple_erase", &test_tuple_erase);
   ehanc::run_test("supl::tuple_reorder", &test_tuple_reorder);

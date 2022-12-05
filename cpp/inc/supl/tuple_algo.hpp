@@ -380,6 +380,49 @@ template <typename Tuple>
 
 namespace impl {
 
+template <typename Tuple, std::size_t... Idxs>
+[[nodiscard]] constexpr auto
+tuple_rotate_left_impl(const Tuple& tup,
+                       std::index_sequence<Idxs...>) noexcept
+{
+  return std::tuple<::supl::type_at_index_t<Idxs + 1, Tuple>...,
+                    ::supl::type_at_index_t<0, Tuple>> {
+      std::get<Idxs + 1>(tup)..., std::get<0>(tup)};
+}
+
+} // namespace impl
+
+template <typename Tuple>
+[[nodiscard]] constexpr auto tuple_rotate_left(const Tuple& tup) noexcept
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  return ::supl::impl::tuple_rotate_left_impl(tup, seq);
+}
+
+namespace impl {
+
+template <typename Tuple, std::size_t... Idxs>
+[[nodiscard]] constexpr auto
+tuple_rotate_right_impl(const Tuple& tup,
+                        std::index_sequence<Idxs...>) noexcept
+{
+  return std::tuple<
+      ::supl::type_at_index_t<std::tuple_size_v<Tuple> - 1, Tuple>,
+      ::supl::type_at_index_t<Idxs, Tuple>...> {
+      std::get<std::tuple_size_v<Tuple> - 1>(tup), std::get<Idxs>(tup)...};
+}
+
+} // namespace impl
+
+template <typename Tuple>
+[[nodiscard]] constexpr auto tuple_rotate_right(const Tuple& tup) noexcept
+{
+  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  return ::supl::impl::tuple_rotate_right_impl(tup, seq);
+}
+
+namespace impl {
+
 template <typename Tuple, typename... Ts, std::size_t... pre_idxs,
           std::size_t... post_idxs>
 [[nodiscard]] constexpr auto

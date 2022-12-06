@@ -19,6 +19,7 @@ static auto pass() -> ehanc::test
 void test_metaprogramming()
 {
   ehanc::run_test("supl::sum_type", &pass);
+  ehanc::run_test("supl::remove_cvref", &pass);
   ehanc::run_test("supl::is_type_in_pack", &pass);
   ehanc::run_test("supl::peel_first", &pass);
   ehanc::run_test("supl::peel_last", &pass);

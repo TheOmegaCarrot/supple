@@ -90,7 +90,7 @@ namespace impl {
 
 template <template <typename...> typename LIST, typename... Pack,
           std::size_t... Idxs>
-auto front_n_impl(const LIST<Pack...>&, std::index_sequence<Idxs...>)
+auto front_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>)
     -> LIST<::supl::type_at_index_t<Idxs, LIST<Pack...>>...>;
 
 } // namespace impl

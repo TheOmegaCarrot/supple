@@ -14,6 +14,7 @@ void test_type_list()
 
   ehanc::run_test("supl::contains", &pass);
   ehanc::run_test("supl::type_list_size", &pass);
+  ehanc::run_test("supl::type_list_concat", &pass);
   ehanc::run_test("supl::type_at_index", &pass);
   ehanc::run_test("supl::push_back", &pass);
   ehanc::run_test("supl::push_front", &pass);
@@ -54,6 +55,47 @@ static_assert(supl::type_list_size_v<
 
 static_assert(
     supl::type_list_size_v<std::tuple<bool, int, char, float, bool>> == 5);
+
+///////////////////////////////////////////// type_list_concat
+
+static_assert(
+    std::is_same_v<
+        supl::type_list_concat_t<supl::type_list<int, bool, char>,
+                                 supl::type_list<float, std::size_t>>,
+        supl::type_list<int, bool, char, float, std::size_t>>);
+
+static_assert(std::is_same_v<
+              supl::type_list_concat_t<supl::type_list<int, bool, char>,
+                                       supl::type_list<>>,
+              supl::type_list<int, bool, char>>);
+
+static_assert(std::is_same_v<
+              supl::type_list_concat_t<supl::type_list<>,
+                                       supl::type_list<int, bool, char>>,
+              supl::type_list<int, bool, char>>);
+
+static_assert(std::is_same_v<supl::type_list_concat_t<supl::type_list<>,
+                                                      supl::type_list<>>,
+                             supl::type_list<>>);
+
+static_assert(std::is_same_v<
+              supl::type_list_concat_t<std::tuple<int, bool, char>,
+                                       std::tuple<float, std::size_t>>,
+              std::tuple<int, bool, char, float, std::size_t>>);
+
+static_assert(
+    std::is_same_v<supl::type_list_concat_t<std::tuple<int, bool, char>,
+                                            std::tuple<>>,
+                   std::tuple<int, bool, char>>);
+
+static_assert(
+    std::is_same_v<supl::type_list_concat_t<std::tuple<>,
+                                            std::tuple<int, bool, char>>,
+                   std::tuple<int, bool, char>>);
+
+static_assert(
+    std::is_same_v<supl::type_list_concat_t<std::tuple<>, std::tuple<>>,
+                   std::tuple<>>);
 
 ///////////////////////////////////////////// type_at_index
 

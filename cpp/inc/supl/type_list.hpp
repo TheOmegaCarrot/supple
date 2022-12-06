@@ -41,6 +41,20 @@ template <typename LIST>
 constexpr inline std::size_t type_list_size_v =
     ::supl::type_list_size<LIST>::value;
 
+///////////////////////////////////////////// type_list_concat
+
+template <typename LIST1, typename LIST2>
+struct type_list_concat;
+
+template <template <typename...> typename LIST, typename... Pack1,
+          typename... Pack2>
+struct type_list_concat<LIST<Pack1...>, LIST<Pack2...>>
+    : ::supl::type_identity<LIST<Pack1..., Pack2...>> {};
+
+template <typename LIST1, typename LIST2>
+using type_list_concat_t =
+    typename ::supl::type_list_concat<LIST1, LIST2>::type;
+
 ///////////////////////////////////////////// type_at_index
 
 template <std::size_t Idx, typename LIST, std::size_t Current = 0>

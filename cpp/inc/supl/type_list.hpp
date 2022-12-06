@@ -83,29 +83,29 @@ using at_index_t = typename ::supl::tl::at_index<Idx, LIST>::type;
 
 ///////////////////////////////////////////// push_back
 
-template <typename LIST, typename T>
+template <typename LIST, typename... T>
 struct push_back;
 
-template <template <typename...> typename LIST, typename T,
+template <template <typename...> typename LIST, typename... T,
           typename... Pack>
-struct push_back<LIST<Pack...>, T>
-    : ::supl::type_identity<LIST<Pack..., T>> {};
+struct push_back<LIST<Pack...>, T...>
+    : ::supl::type_identity<LIST<Pack..., T...>> {};
 
-template <typename LIST, typename T>
-using push_back_t = typename ::supl::tl::push_back<LIST, T>::type;
+template <typename LIST, typename... T>
+using push_back_t = typename ::supl::tl::push_back<LIST, T...>::type;
 
 ///////////////////////////////////////////// push_front
 
-template <typename LIST, typename T>
+template <typename LIST, typename... T>
 struct push_front;
 
 template <template <typename...> typename LIST, typename... Pack,
-          typename T>
-struct push_front<LIST<Pack...>, T>
-    : ::supl::type_identity<LIST<T, Pack...>> {};
+          typename... T>
+struct push_front<LIST<Pack...>, T...>
+    : ::supl::type_identity<LIST<T..., Pack...>> {};
 
-template <typename LIST, typename T>
-using push_front_t = typename ::supl::tl::push_front<LIST, T>::type;
+template <typename LIST, typename... T>
+using push_front_t = typename ::supl::tl::push_front<LIST, T...>::type;
 
 ///////////////////////////////////////////// front_n
 

@@ -15,6 +15,8 @@ void test_type_list()
   ehanc::run_test("supl::tl::contains", &pass);
   ehanc::run_test("supl::tl::size", &pass);
   ehanc::run_test("supl::tl::concat", &pass);
+  ehanc::run_test("supl::tl::front", &pass);
+  /* ehanc::run_test("supl::tl::back" &pass); */
   ehanc::run_test("supl::tl::at_index", &pass);
   ehanc::run_test("supl::tl::push_back", &pass);
   ehanc::run_test("supl::tl::push_front", &pass);
@@ -148,8 +150,29 @@ static_assert(
                    supl::tl::push_back_t<supl::tl::type_list<>, bool>>);
 
 static_assert(
+    std::is_same_v<supl::tl::type_list<int, char, bool, float, double>,
+                   supl::tl::push_back_t<supl::tl::type_list<int, char>,
+                                         bool, float, double>>);
+
+static_assert(std::is_same_v<supl::tl::type_list<bool, float, double>,
+                             supl::tl::push_back_t<supl::tl::type_list<>,
+                                                   bool, float, double>>);
+
+static_assert(std::is_same_v<supl::tl::type_list<int, char, bool>,
+                             supl::tl::push_back_t<supl::tl::type_list<>,
+                                                   int, char, bool>>);
+
+static_assert(
     std::is_same_v<std::tuple<int, char, bool>,
                    supl::tl::push_back_t<std::tuple<int, char>, bool>>);
+
+static_assert(std::is_same_v<std::tuple<int, char, bool, float, double>,
+                             supl::tl::push_back_t<std::tuple<int, char>,
+                                                   bool, float, double>>);
+
+static_assert(std::is_same_v<
+              std::tuple<bool, float, double>,
+              supl::tl::push_back_t<std::tuple<>, bool, float, double>>);
 
 ///////////////////////////////////////////// push_front
 
@@ -163,8 +186,28 @@ static_assert(
                    supl::tl::push_front_t<supl::tl::type_list<>, bool>>);
 
 static_assert(
+    std::is_same_v<supl::tl::type_list<bool, float, double, int, char>,
+                   supl::tl::push_front_t<supl::tl::type_list<int, char>,
+                                          bool, float, double>>);
+
+static_assert(std::is_same_v<supl::tl::type_list<bool, float, double>,
+                             supl::tl::push_front_t<supl::tl::type_list<>,
+                                                    bool, float, double>>);
+
+static_assert(
     std::is_same_v<std::tuple<bool, int, char>,
                    supl::tl::push_front_t<std::tuple<int, char>, bool>>);
+
+static_assert(std::is_same_v<std::tuple<bool>,
+                             supl::tl::push_front_t<std::tuple<>, bool>>);
+
+static_assert(std::is_same_v<std::tuple<bool, float, double, int, char>,
+                             supl::tl::push_front_t<std::tuple<int, char>,
+                                                    bool, float, double>>);
+
+static_assert(std::is_same_v<
+              std::tuple<bool, float, double>,
+              supl::tl::push_front_t<std::tuple<>, bool, float, double>>);
 
 ///////////////////////////////////////////// front_n
 

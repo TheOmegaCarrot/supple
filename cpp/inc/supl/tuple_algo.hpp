@@ -246,7 +246,7 @@ template <typename Tuple, typename T, std::size_t... Inds>
 tuple_push_back_impl(const Tuple& tup, T&& data,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple<::supl::type_at_index_t<Inds, Tuple>..., T> {
+  return std::tuple<::supl::tl::at_index_t<Inds, Tuple>..., T> {
       std::get<Inds>(tup)..., std::forward<T>(data)};
 }
 
@@ -284,7 +284,7 @@ template <typename Tuple, std::size_t... Inds>
 tuple_pop_back_impl(const Tuple& tup,
                     std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple<::supl::type_at_index_t<Inds, Tuple>...> {
+  return std::tuple<::supl::tl::at_index_t<Inds, Tuple>...> {
       std::get<Inds>(tup)...};
 }
 
@@ -316,7 +316,7 @@ template <typename Tuple, typename T, std::size_t... Inds>
 tuple_push_front_impl(const Tuple& tup, T&& data,
                       std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple<T, ::supl::type_at_index_t<Inds, Tuple>...> {
+  return std::tuple<T, ::supl::tl::at_index_t<Inds, Tuple>...> {
       std::forward<T>(data), std::get<Inds>(tup)...};
 }
 
@@ -353,7 +353,7 @@ template <typename Tuple, std::size_t... Inds>
 tuple_pop_front_impl(const Tuple& tup,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple<::supl::type_at_index_t<Inds + 1, Tuple>...> {
+  return std::tuple<::supl::tl::at_index_t<Inds + 1, Tuple>...> {
       std::get<Inds + 1>(tup)...};
 }
 
@@ -385,8 +385,8 @@ template <typename Tuple, std::size_t... Idxs>
 tuple_rotate_left_impl(const Tuple& tup,
                        std::index_sequence<Idxs...>) noexcept
 {
-  return std::tuple<::supl::type_at_index_t<Idxs + 1, Tuple>...,
-                    ::supl::type_at_index_t<0, Tuple>> {
+  return std::tuple<::supl::tl::at_index_t<Idxs + 1, Tuple>...,
+                    ::supl::tl::at_index_t<0, Tuple>> {
       std::get<Idxs + 1>(tup)..., std::get<0>(tup)};
 }
 
@@ -407,8 +407,8 @@ tuple_rotate_right_impl(const Tuple& tup,
                         std::index_sequence<Idxs...>) noexcept
 {
   return std::tuple<
-      ::supl::type_at_index_t<std::tuple_size_v<Tuple> - 1, Tuple>,
-      ::supl::type_at_index_t<Idxs, Tuple>...> {
+      ::supl::tl::at_index_t<std::tuple_size_v<Tuple> - 1, Tuple>,
+      ::supl::tl::at_index_t<Idxs, Tuple>...> {
       std::get<std::tuple_size_v<Tuple> - 1>(tup), std::get<Idxs>(tup)...};
 }
 
@@ -431,9 +431,9 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-  return std::tuple<::supl::type_at_index_t<pre_idxs, Tuple>...,
+  return std::tuple<::supl::tl::at_index_t<pre_idxs, Tuple>...,
                     std::decay_t<Ts>...,
-                    ::supl::type_at_index_t<post_idxs + idx, Tuple>...> {
+                    ::supl::tl::at_index_t<post_idxs + idx, Tuple>...> {
       std::get<pre_idxs>(tup)..., std::forward<Ts>(data)...,
       std::get<post_idxs + idx>(tup)...};
 }
@@ -488,8 +488,8 @@ tuple_erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
   return std::tuple<
-      ::supl::type_at_index_t<pre_idxs, Tuple>...,
-      ::supl::type_at_index_t<post_idxs + idx + 1, Tuple>...> {
+      ::supl::tl::at_index_t<pre_idxs, Tuple>...,
+      ::supl::tl::at_index_t<post_idxs + idx + 1, Tuple>...> {
       std::get<pre_idxs>(tup)..., std::get<post_idxs + idx + 1>(tup)...};
 }
 
@@ -530,7 +530,7 @@ tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...>) noexcept
 {
   static_assert(((Idxs < std::tuple_size_v<Tuple>)&&...));
 
-  return std::tuple<::supl::type_at_index_t<Idxs, Tuple>...> {
+  return std::tuple<::supl::tl::at_index_t<Idxs, Tuple>...> {
       std::get<Idxs>(tup)...};
 }
 
@@ -543,9 +543,9 @@ tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
                  supl::index_constant<Idx>)
 {
   return std::pair {
-      std::tuple<::supl::type_at_index_t<Pre_Idxs, Tuple>...> {
+      std::tuple<::supl::tl::at_index_t<Pre_Idxs, Tuple>...> {
           std::get<Pre_Idxs>(tup)...},
-      std::tuple<::supl::type_at_index_t<Post_Idxs + Idx, Tuple>...> {
+      std::tuple<::supl::tl::at_index_t<Post_Idxs + Idx, Tuple>...> {
           std::get<Post_Idxs + Idx>(tup)...}};
 }
 
@@ -592,7 +592,7 @@ subtuple_impl(const Tuple& tup,
               [[maybe_unused]] std::index_sequence<Inds...>,
               [[maybe_unused]] supl::index_constant<begin>)
 {
-  return std::tuple<::supl::type_at_index_t<Inds + begin, Tuple>...> {
+  return std::tuple<::supl::tl::at_index_t<Inds + begin, Tuple>...> {
       std::get<Inds + begin>(tup)...};
 }
 

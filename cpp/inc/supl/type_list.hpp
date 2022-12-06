@@ -7,7 +7,7 @@
 
 #include "metaprogramming.hpp"
 
-namespace supl {
+namespace supl::tl {
 
 ///////////////////////////////////////////// Type List
 
@@ -17,60 +17,57 @@ struct type_list {};
 ///////////////////////////////////////////// contains
 
 template <typename T, typename LIST>
-struct contains_type;
+struct contains;
 
 template <typename T, template <typename...> typename LIST,
           typename... Pack>
-struct contains_type<T, LIST<Pack...>>
-    : ::supl::is_type_in_pack<T, Pack...> {};
+struct contains<T, LIST<Pack...>> : ::supl::is_type_in_pack<T, Pack...> {};
 
 template <typename T, typename LIST>
-constexpr inline bool contains_type_v =
-    ::supl::contains_type<T, LIST>::value;
+constexpr inline bool contains_v = ::supl::tl::contains<T, LIST>::value;
 
-///////////////////////////////////////////// type_list_size
+///////////////////////////////////////////// size
 
 template <typename LIST>
-struct type_list_size;
+struct size;
 
 template <template <typename...> typename LIST, typename... Pack>
-struct type_list_size<LIST<Pack...>>
-    : ::supl::index_constant<sizeof...(Pack)> {};
+struct size<LIST<Pack...>> : ::supl::index_constant<sizeof...(Pack)> {};
 
 template <typename LIST>
-constexpr inline std::size_t type_list_size_v =
-    ::supl::type_list_size<LIST>::value;
+constexpr inline std::size_t size_v = ::supl::tl::size<LIST>::value;
 
-///////////////////////////////////////////// type_list_concat
+///////////////////////////////////////////// concat
 
 template <typename LIST1, typename LIST2>
-struct type_list_concat;
+struct concat;
 
 template <template <typename...> typename LIST, typename... Pack1,
           typename... Pack2>
-struct type_list_concat<LIST<Pack1...>, LIST<Pack2...>>
+struct concat<LIST<Pack1...>, LIST<Pack2...>>
     : ::supl::type_identity<LIST<Pack1..., Pack2...>> {};
 
 template <typename LIST1, typename LIST2>
-using type_list_concat_t =
-    typename ::supl::type_list_concat<LIST1, LIST2>::type;
+using concat_t = typename ::supl::tl::concat<LIST1, LIST2>::type;
 
-///////////////////////////////////////////// type_at_index
+/////////////////////////////////////////////
+
+///////////////////////////////////////////// at_index
 
 template <std::size_t Idx, typename LIST, std::size_t Current = 0>
-struct type_at_index;
+struct at_index;
 
 template <std::size_t Idx, template <typename...> typename LIST,
           typename T, typename... Pack, std::size_t Current>
-struct type_at_index<Idx, LIST<T, Pack...>, Current>
+struct at_index<Idx, LIST<T, Pack...>, Current>
     : std::conditional_t<
           Idx == Current, ::supl::type_identity<T>,
-          ::supl::type_at_index<Idx, LIST<Pack...>, Current + 1>> {
+          ::supl::tl::at_index<Idx, LIST<Pack...>, Current + 1>> {
   static_assert(Idx - Current <= sizeof...(Pack), "Index out of bounds");
 };
 
 template <std::size_t Idx, typename LIST, std::size_t Current = 0>
-using type_at_index_t = typename ::supl::type_at_index<Idx, LIST>::type;
+using at_index_t = typename ::supl::tl::at_index<Idx, LIST>::type;
 
 ///////////////////////////////////////////// push_back
 
@@ -83,7 +80,7 @@ struct push_back<LIST<Pack...>, T>
     : ::supl::type_identity<LIST<Pack..., T>> {};
 
 template <typename LIST, typename T>
-using push_back_t = typename ::supl::push_back<LIST, T>::type;
+using push_back_t = typename ::supl::tl::push_back<LIST, T>::type;
 
 ///////////////////////////////////////////// push_front
 
@@ -96,7 +93,7 @@ struct push_front<LIST<Pack...>, T>
     : ::supl::type_identity<LIST<T, Pack...>> {};
 
 template <typename LIST, typename T>
-using push_front_t = typename ::supl::push_front<LIST, T>::type;
+using push_front_t = typename ::supl::tl::push_front<LIST, T>::type;
 
 ///////////////////////////////////////////// front_n
 
@@ -105,26 +102,26 @@ namespace impl {
 template <template <typename...> typename LIST, typename... Pack,
           std::size_t... Idxs>
 auto front_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>)
-    -> LIST<::supl::type_at_index_t<Idxs, LIST<Pack...>>...>;
+    -> LIST<::supl::tl::at_index_t<Idxs, LIST<Pack...>>...>;
 
 } // namespace impl
 
 template <typename LIST, std::size_t N>
 struct front_n
-    : ::supl::type_identity<decltype(::supl::impl::front_n_impl(
+    : ::supl::type_identity<decltype(::supl::tl::impl::front_n_impl(
           std::declval<LIST>(), std::make_index_sequence<N> {}))> {};
 
 template <typename LIST, std::size_t N>
-using front_n_t = typename ::supl::front_n<LIST, N>::type;
+using front_n_t = typename ::supl::tl::front_n<LIST, N>::type;
 
 ///////////////////////////////////////////// pop_back
 
 template <typename LIST>
-struct pop_back
-    : ::supl::front_n<LIST, ::supl::type_list_size_v<LIST> - 1> {};
+struct pop_back : ::supl::tl::front_n<LIST, ::supl::tl::size_v<LIST> - 1> {
+};
 
 template <typename LIST>
-using pop_back_t = typename ::supl::pop_back<LIST>::type;
+using pop_back_t = typename ::supl::tl::pop_back<LIST>::type;
 
 ///////////////////////////////////////////// pop_front
 
@@ -139,6 +136,6 @@ struct pop_front<LIST<Popped, Remaining...>>
 template <typename LIST>
 using pop_front_t = typename pop_front<LIST>::type;
 
-} // namespace supl
+} // namespace supl::tl
 
 #endif

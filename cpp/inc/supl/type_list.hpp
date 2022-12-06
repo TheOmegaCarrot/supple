@@ -62,8 +62,6 @@ struct front<LIST<Front, Pack...>> : ::supl::type_identity<Front> {};
 template <typename LIST>
 using front_t = typename ::supl::tl::front<LIST>::type;
 
-///////////////////////////////////////////// back
-
 ///////////////////////////////////////////// at_index
 
 template <std::size_t Idx, typename LIST, std::size_t Current = 0>
@@ -80,6 +78,14 @@ struct at_index<Idx, LIST<T, Pack...>, Current>
 
 template <std::size_t Idx, typename LIST, std::size_t Current = 0>
 using at_index_t = typename ::supl::tl::at_index<Idx, LIST>::type;
+
+///////////////////////////////////////////// back
+
+template <typename LIST>
+struct back : ::supl::tl::at_index<size_v<LIST> - 1, LIST> {};
+
+template <typename LIST>
+using back_t = typename ::supl::tl::back<LIST>::type;
 
 ///////////////////////////////////////////// push_back
 

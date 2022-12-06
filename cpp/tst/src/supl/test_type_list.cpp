@@ -112,6 +112,20 @@ static_assert(
 
 static_assert(std::is_same_v<supl::tl::front_t<std::tuple<int>>, int>);
 
+///////////////////////////////////////////// back
+
+static_assert(
+    std::is_same_v<supl::tl::back_t<supl::tl::type_list<int, bool, char>>,
+                   char>);
+
+static_assert(
+    std::is_same_v<supl::tl::back_t<supl::tl::type_list<int>>, int>);
+
+static_assert(
+    std::is_same_v<supl::tl::back_t<std::tuple<int, bool, char>>, char>);
+
+static_assert(std::is_same_v<supl::tl::back_t<std::tuple<int>>, int>);
+
 ///////////////////////////////////////////// at_index
 
 static_assert(

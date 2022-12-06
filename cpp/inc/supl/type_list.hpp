@@ -84,8 +84,33 @@ struct push_front<LIST<Pack...>, T>
 template <typename LIST, typename T>
 using push_front_t = typename ::supl::push_front<LIST, T>::type;
 
+///////////////////////////////////////////// front_n
+
+namespace impl {
+
+template <template <typename...> typename LIST, typename... Pack,
+          std::size_t... Idxs>
+auto front_n_impl(const LIST<Pack...>&, std::index_sequence<Idxs...>)
+    -> LIST<::supl::type_at_index_t<Idxs, LIST<Pack...>>...>;
+
+} // namespace impl
+
+template <typename LIST, std::size_t N>
+struct front_n
+    : ::supl::type_identity<decltype(::supl::impl::front_n_impl(
+          std::declval<LIST>(), std::make_index_sequence<N> {}))> {};
+
+template <typename LIST, std::size_t N>
+using front_n_t = typename ::supl::front_n<LIST, N>::type;
+
 ///////////////////////////////////////////// pop_back
-/// oh boy...
+
+template <typename LIST>
+struct pop_back
+    : ::supl::front_n<LIST, ::supl::type_list_size_v<LIST> - 1> {};
+
+template <typename LIST>
+using pop_back_t = typename ::supl::pop_back<LIST>::type;
 
 ///////////////////////////////////////////// pop_front
 

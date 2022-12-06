@@ -89,16 +89,16 @@ using push_front_t = typename ::supl::push_front<LIST, T>::type;
 
 ///////////////////////////////////////////// pop_front
 
-/* template <typename LIST> */
-/* struct pop_front; */
+template <typename LIST>
+struct pop_front;
 
-/* template <template <typename, typename...> typename LIST, typename Popped, */
-/*           typename... Remaining> */
-/* struct pop_front<LIST<Popped, Remaining...>> */
-/*     : ::supl::type_identity<LIST<Remaining...>> {}; */
+template <template <typename...> typename LIST, typename Popped,
+          typename... Remaining>
+struct pop_front<LIST<Popped, Remaining...>>
+    : ::supl::type_identity<LIST<Remaining...>> {};
 
-/* template <typename LIST> */
-/* using pop_front_t = typename pop_front<LIST>::type; */
+template <typename LIST>
+using pop_front_t = typename pop_front<LIST>::type;
 
 } // namespace supl
 

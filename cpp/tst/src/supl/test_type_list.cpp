@@ -14,9 +14,10 @@ void test_type_list()
 
   ehanc::run_test("supl::tl::contains", &pass);
   ehanc::run_test("supl::tl::size", &pass);
+  ehanc::run_test("supl::tl::empty", &pass);
   ehanc::run_test("supl::tl::concat", &pass);
   ehanc::run_test("supl::tl::front", &pass);
-  /* ehanc::run_test("supl::tl::back" &pass); */
+  ehanc::run_test("supl::tl::back", &pass);
   ehanc::run_test("supl::tl::at_index", &pass);
   ehanc::run_test("supl::tl::push_back", &pass);
   ehanc::run_test("supl::tl::push_front", &pass);
@@ -57,6 +58,14 @@ static_assert(supl::tl::size_v<
 
 static_assert(
     supl::tl::size_v<std::tuple<bool, int, char, float, bool>> == 5);
+
+///////////////////////////////////////////// empty
+
+static_assert(supl::tl::empty_v<supl::tl::type_list<>>);
+
+static_assert(not supl::tl::empty_v<supl::tl::type_list<int>>);
+
+static_assert(not supl::tl::empty_v<supl::tl::type_list<int, bool, char>>);
 
 ///////////////////////////////////////////// concat
 

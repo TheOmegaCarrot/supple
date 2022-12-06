@@ -37,6 +37,15 @@ struct size<LIST<Pack...>> : ::supl::index_constant<sizeof...(Pack)> {};
 template <typename LIST>
 constexpr inline std::size_t size_v = ::supl::tl::size<LIST>::value;
 
+///////////////////////////////////////////// empty
+
+template <typename LIST>
+struct empty : std::conditional_t<::supl::tl::size_v<LIST> == 0,
+                                  std::true_type, std::false_type> {};
+
+template <typename LIST>
+constexpr inline bool empty_v = ::supl::tl::empty<LIST>::value;
+
 ///////////////////////////////////////////// concat
 
 template <typename LIST1, typename LIST2>

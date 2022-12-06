@@ -1,4 +1,5 @@
 #include "supl/test_type_list.h"
+#include "supl/type_list.hpp"
 #include "test_utils.hpp"
 
 static auto pass() -> ehanc::test
@@ -24,6 +25,9 @@ void test_type_list()
   ehanc::run_test("supl::tl::front_n", &pass);
   ehanc::run_test("supl::tl::pop_back", &pass);
   ehanc::run_test("supl::tl::pop_front", &pass);
+  ehanc::run_test("supl::tl::sublist", &pass);
+  /* ehanc::run_test("supl::tl::insert", &pass); */
+  /* ehanc::run_test("supl::tl::erase", &pass); */
 }
 
 ///////////////////////////////////////////// contains
@@ -284,3 +288,57 @@ static_assert(
 static_assert(
     std::is_same_v<supl::tl::pop_front_t<std::tuple<bool, int, char>>,
                    std::tuple<int, char>>);
+
+///////////////////////////////////////////// sublist
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<0, 3,
+                            supl::tl::type_list<int, char, bool, float,
+                                                double, std::size_t>>,
+        supl::tl::type_list<int, char, bool>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<0, 0,
+                            supl::tl::type_list<int, char, bool, float,
+                                                double, std::size_t>>,
+        supl::tl::type_list<>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<1, 5,
+                            supl::tl::type_list<int, char, bool, float,
+                                                double, std::size_t>>,
+        supl::tl::type_list<char, bool, float, double>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<0, 6,
+                            supl::tl::type_list<int, char, bool, float,
+                                                double, std::size_t>>,
+        supl::tl::type_list<int, char, bool, float, double, std::size_t>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<
+            0, 3, std::tuple<int, char, bool, float, double, std::size_t>>,
+        std::tuple<int, char, bool>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<
+            0, 0, std::tuple<int, char, bool, float, double, std::size_t>>,
+        std::tuple<>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<
+            1, 5, std::tuple<int, char, bool, float, double, std::size_t>>,
+        std::tuple<char, bool, float, double>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::sublist_t<
+            0, 6, std::tuple<int, char, bool, float, double, std::size_t>>,
+        std::tuple<int, char, bool, float, double, std::size_t>>);

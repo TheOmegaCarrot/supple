@@ -163,6 +163,35 @@ struct pop_front<LIST<Popped, Remaining...>>
 template <typename LIST>
 using pop_front_t = typename pop_front<LIST>::type;
 
+///////////////////////////////////////////// sublist
+
+namespace impl {
+
+template <template <typename...> typename LIST, std::size_t... Idxs,
+          std::size_t Begin, typename... Pack>
+auto sublist_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
+                  ::supl::index_constant<Begin>)
+    -> LIST<::supl::tl::at_index_t<Idxs + Begin, LIST<Pack...>>...>;
+
+} // namespace impl
+
+template <std::size_t Begin, std::size_t End, typename LIST>
+struct sublist
+    : ::supl::type_identity<decltype(::supl::tl::impl::sublist_impl(
+          std::declval<LIST>(), std::make_index_sequence<End - Begin> {},
+          ::supl::index_constant<Begin> {}))> {
+  static_assert(Begin <= End, "Illegal index range");
+  static_assert(Begin <= ::supl::tl::size_v<LIST>, "Index out of bounds");
+  static_assert(End <= ::supl::tl::size_v<LIST>, "Index out of bounds");
+};
+
+template <std::size_t Begin, std::size_t End, typename LIST>
+using sublist_t = typename ::supl::tl::sublist<Begin, End, LIST>::type;
+
+///////////////////////////////////////////// insert
+
+///////////////////////////////////////////// erase
+
 } // namespace supl::tl
 
 #endif

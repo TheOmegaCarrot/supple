@@ -85,7 +85,7 @@ struct at_index<Idx, LIST<T, Pack...>, Current>
   static_assert(Idx - Current <= sizeof...(Pack), "Index out of bounds");
 };
 
-template <std::size_t Idx, typename LIST, std::size_t Current = 0>
+template <std::size_t Idx, typename LIST>
 using at_index_t = typename ::supl::tl::at_index<Idx, LIST>::type;
 
 ///////////////////////////////////////////// back

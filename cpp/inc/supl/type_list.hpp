@@ -175,7 +175,7 @@ auto sublist_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
 
 } // namespace impl
 
-template <std::size_t Begin, std::size_t End, typename LIST>
+template <typename LIST, std::size_t Begin, std::size_t End>
 struct sublist
     : ::supl::type_identity<decltype(::supl::tl::impl::sublist_impl(
           std::declval<LIST>(), std::make_index_sequence<End - Begin> {},
@@ -185,8 +185,8 @@ struct sublist
   static_assert(End <= ::supl::tl::size_v<LIST>, "Index out of bounds");
 };
 
-template <std::size_t Begin, std::size_t End, typename LIST>
-using sublist_t = typename ::supl::tl::sublist<Begin, End, LIST>::type;
+template <typename LIST, std::size_t Begin, std::size_t End>
+using sublist_t = typename ::supl::tl::sublist<LIST, Begin, End>::type;
 
 ///////////////////////////////////////////// insert
 

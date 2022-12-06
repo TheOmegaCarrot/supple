@@ -105,12 +105,12 @@ static_assert(
 
 ///////////////////////////////////////////// pop_front
 
-static_assert(
-    std::is_same_v<supl::pop_front_t<supl::type_list<bool, int, char>>,
-                   supl::type_list<int, char>>);
+/* static_assert( */
+/*     std::is_same_v<supl::pop_front_t<supl::type_list<bool, int, char>>, */
+/*                    supl::type_list<int, char>>); */
 
-static_assert(std::is_same_v<supl::pop_front_t<supl::type_list<bool>>,
-                             supl::type_list<>>);
-static_assert(
-    std::is_same_v<supl::pop_front_t<std::tuple<bool, int, char>>,
-                   std::tuple<int, char>>);
+/* static_assert(std::is_same_v<supl::pop_front_t<supl::type_list<bool>>, */
+/*                              supl::type_list<>>); */
+/* static_assert( */
+/*     std::is_same_v<supl::pop_front_t<std::tuple<bool, int, char>>, */
+/*                    std::tuple<int, char>>); */

@@ -50,7 +50,19 @@ struct concat<LIST<Pack1...>, LIST<Pack2...>>
 template <typename LIST1, typename LIST2>
 using concat_t = typename ::supl::tl::concat<LIST1, LIST2>::type;
 
-/////////////////////////////////////////////
+///////////////////////////////////////////// front
+
+template <typename LIST>
+struct front;
+
+template <template <typename...> typename LIST, typename Front,
+          typename... Pack>
+struct front<LIST<Front, Pack...>> : ::supl::type_identity<Front> {};
+
+template <typename LIST>
+using front_t = typename ::supl::tl::front<LIST>::type;
+
+///////////////////////////////////////////// back
 
 ///////////////////////////////////////////// at_index
 

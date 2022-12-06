@@ -46,7 +46,7 @@ static_assert(supl::tl::contains_v<int, std::tuple<char, int, bool>>);
 static_assert(
     not supl::tl::contains_v<int, std::tuple<char, bool, float>>);
 
-///////////////////////////////////////////// type_list_size
+///////////////////////////////////////////// size
 
 static_assert(supl::tl::size_v<supl::tl::type_list<>> == 0);
 
@@ -56,7 +56,7 @@ static_assert(supl::tl::size_v<
 static_assert(
     supl::tl::size_v<std::tuple<bool, int, char, float, bool>> == 5);
 
-///////////////////////////////////////////// type_list_concat
+///////////////////////////////////////////// concat
 
 static_assert(std::is_same_v<
               supl::tl::concat_t<supl::tl::type_list<int, bool, char>,
@@ -96,7 +96,21 @@ static_assert(
     std::is_same_v<supl::tl::concat_t<std::tuple<>, std::tuple<>>,
                    std::tuple<>>);
 
-///////////////////////////////////////////// type_at_index
+///////////////////////////////////////////// front
+
+static_assert(
+    std::is_same_v<supl::tl::front_t<supl::tl::type_list<int, bool, char>>,
+                   int>);
+
+static_assert(
+    std::is_same_v<supl::tl::front_t<supl::tl::type_list<int>>, int>);
+
+static_assert(
+    std::is_same_v<supl::tl::front_t<std::tuple<int, bool, char>>, int>);
+
+static_assert(std::is_same_v<supl::tl::front_t<std::tuple<int>>, int>);
+
+///////////////////////////////////////////// at_index
 
 static_assert(
     std::is_same_v<

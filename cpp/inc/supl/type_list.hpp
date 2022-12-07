@@ -151,10 +151,35 @@ auto front_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>)
 template <typename LIST, std::size_t N>
 struct front_n
     : ::supl::type_identity<decltype(::supl::tl::impl::front_n_impl(
-          std::declval<LIST>(), std::make_index_sequence<N> {}))> {};
+          std::declval<LIST>(), std::make_index_sequence<N> {}))> {
+  static_assert(N <= ::supl::tl::size_v<LIST>);
+};
 
 template <typename LIST, std::size_t N>
 using front_n_t = typename ::supl::tl::front_n<LIST, N>::type;
+
+///////////////////////////////////////////// back_n
+
+namespace impl {
+
+template <template <typename...> typename LIST, typename... Pack,
+          std::size_t... Idxs, std::size_t Offset>
+auto back_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
+                 ::supl::index_constant<Offset>)
+    -> LIST<::supl::tl::at_index_t<Idxs + Offset, LIST<Pack...>>...>;
+
+} // namespace impl
+
+template <typename LIST, std::size_t N>
+struct back_n
+    : ::supl::type_identity<decltype(::supl::tl::impl::back_n_impl(
+          std::declval<LIST>(), std::make_index_sequence<N> {},
+          ::supl::index_constant<::supl::tl::size_v<LIST> - N> {}))> {
+  static_assert(N <= ::supl::tl::size_v<LIST>);
+};
+
+template <typename LIST, std::size_t N>
+using back_n_t = typename back_n<LIST, N>::type;
 
 ///////////////////////////////////////////// pop_back
 

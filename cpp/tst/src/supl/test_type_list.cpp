@@ -23,6 +23,7 @@ void test_type_list()
   ehanc::run_test("supl::tl::push_back", &pass);
   ehanc::run_test("supl::tl::push_front", &pass);
   ehanc::run_test("supl::tl::front_n", &pass);
+  ehanc::run_test("supl::tl::back_n", &pass);
   ehanc::run_test("supl::tl::pop_back", &pass);
   ehanc::run_test("supl::tl::pop_front", &pass);
   ehanc::run_test("supl::tl::sublist", &pass);
@@ -253,6 +254,10 @@ static_assert(std::is_same_v<
               supl::tl::type_list<bool, int>>);
 
 static_assert(std::is_same_v<
+              supl::tl::front_n_t<supl::tl::type_list<bool, int, char>, 1>,
+              supl::tl::type_list<bool>>);
+
+static_assert(std::is_same_v<
               supl::tl::front_n_t<supl::tl::type_list<bool, int, char>, 3>,
               supl::tl::type_list<bool, int, char>>);
 
@@ -271,6 +276,24 @@ static_assert(
 static_assert(
     std::is_same_v<supl::tl::front_n_t<std::tuple<bool, int, char>, 0>,
                    std::tuple<>>);
+
+///////////////////////////////////////////// back_n
+
+static_assert(std::is_same_v<
+              supl::tl::back_n_t<supl::tl::type_list<bool, int, char>, 2>,
+              supl::tl::type_list<int, char>>);
+
+static_assert(std::is_same_v<
+              supl::tl::back_n_t<supl::tl::type_list<bool, int, char>, 1>,
+              supl::tl::type_list<char>>);
+
+static_assert(std::is_same_v<
+              supl::tl::back_n_t<supl::tl::type_list<bool, int, char>, 3>,
+              supl::tl::type_list<bool, int, char>>);
+
+static_assert(std::is_same_v<
+              supl::tl::back_n_t<supl::tl::type_list<bool, int, char>, 0>,
+              supl::tl::type_list<>>);
 
 ///////////////////////////////////////////// pop_back
 

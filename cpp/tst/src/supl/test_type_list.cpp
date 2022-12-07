@@ -96,9 +96,6 @@ static_assert(std::is_same_v<supl::tl::concat_t<supl::tl::type_list<>,
                                                 supl::tl::type_list<>>,
                              supl::tl::type_list<>>);
 
-// Can I make concat variadic?
-// I can sure try!
-
 static_assert(
     std::is_same_v<
         supl::tl::concat_t<supl::tl::type_list<int, char>,

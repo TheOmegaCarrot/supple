@@ -225,6 +225,19 @@ constexpr inline bool any_of_v = ::supl::tl::any_of<LIST, PRED>::value;
 
 ///////////////////////////////////////////// none_of
 
+template <typename LIST, template <typename> typename PRED>
+struct none_of
+    : std::conditional_t<
+          PRED<::supl::tl::front_t<LIST>>::value, std::false_type,
+          ::supl::tl::none_of<::supl::tl::pop_front_t<LIST>, PRED>> {};
+
+template <template <typename...> typename LIST,
+          template <typename> typename PRED>
+struct none_of<LIST<>, PRED> : std::true_type {};
+
+template <typename LIST, template <typename> typename PRED>
+constexpr inline bool none_of_v = ::supl::tl::none_of<LIST, PRED>::value;
+
 } // namespace supl::tl
 
 #endif

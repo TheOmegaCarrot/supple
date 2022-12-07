@@ -405,3 +405,21 @@ static_assert(
 
 ///////////////////////////////////////////// none_of
 
+static_assert(!supl::tl::none_of_v<supl::tl::type_list<int, char, bool>,
+                                   std::is_integral>);
+
+static_assert(!supl::tl::none_of_v<supl::tl::type_list<int, float, bool>,
+                                   std::is_integral>);
+
+static_assert(!supl::tl::none_of_v<
+              supl::tl::type_list<double, float, bool>, std::is_integral>);
+
+static_assert(!supl::tl::none_of_v<supl::tl::type_list<int, float, double>,
+                                   std::is_integral>);
+
+static_assert(!supl::tl::none_of_v<supl::tl::type_list<float, double, int>,
+                                   std::is_integral>);
+
+static_assert(
+    supl::tl::none_of_v<supl::tl::type_list<float, double, float>,
+                        std::is_integral>);

@@ -96,24 +96,14 @@ static_assert(std::is_same_v<supl::tl::concat_t<supl::tl::type_list<>,
                                                 supl::tl::type_list<>>,
                              supl::tl::type_list<>>);
 
-static_assert(
-    std::is_same_v<supl::tl::concat_t<std::tuple<int, bool, char>,
-                                      std::tuple<float, std::size_t>>,
-                   std::tuple<int, bool, char, float, std::size_t>>);
-
-static_assert(
-    std::is_same_v<
-        supl::tl::concat_t<std::tuple<int, bool, char>, std::tuple<>>,
-        std::tuple<int, bool, char>>);
-
-static_assert(
-    std::is_same_v<
-        supl::tl::concat_t<std::tuple<>, std::tuple<int, bool, char>>,
-        std::tuple<int, bool, char>>);
-
-static_assert(
-    std::is_same_v<supl::tl::concat_t<std::tuple<>, std::tuple<>>,
-                   std::tuple<>>);
+// Can I make concat variadic?
+// I can sure try!
+/* static_assert(std::is_same_v< */
+/*       supl::tl::concat_t<supl::tl::type_list<int, char>, */
+/*       supl::tl::type_list<bool, float>, */
+/*       supl::tl::type_list<unsigned, void>>, */
+/*       supl::tl::type_list<int, char,bool, float, unsigned, void> */
+/*     >); */
 
 ///////////////////////////////////////////// front
 

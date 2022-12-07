@@ -98,12 +98,31 @@ static_assert(std::is_same_v<supl::tl::concat_t<supl::tl::type_list<>,
 
 // Can I make concat variadic?
 // I can sure try!
-/* static_assert(std::is_same_v< */
-/*       supl::tl::concat_t<supl::tl::type_list<int, char>, */
-/*       supl::tl::type_list<bool, float>, */
-/*       supl::tl::type_list<unsigned, void>>, */
-/*       supl::tl::type_list<int, char,bool, float, unsigned, void> */
-/*     >); */
+
+static_assert(
+    std::is_same_v<
+        supl::tl::concat_t<supl::tl::type_list<int, char>,
+                           supl::tl::type_list<bool, float>,
+                           supl::tl::type_list<unsigned, void>>,
+        supl::tl::type_list<int, char, bool, float, unsigned, void>>);
+
+static_assert(std::is_same_v<
+              supl::tl::concat_t<
+                  supl::tl::type_list<int, char>,
+                  supl::tl::type_list<bool, float>,
+                  supl::tl::type_list<unsigned, void>,
+                  supl::tl::type_list<const int, int&&>,
+                  supl::tl::type_list<const volatile void*, const bool>,
+                  supl::tl::type_list<void, void>,
+                  supl::tl::type_list<double, std::nullptr_t>>,
+              supl::tl::type_list<int, char, bool, float, unsigned, void,
+                                  const int, int&&, const volatile void*,
+                                  const bool, void, void, double,
+                                  std::nullptr_t>>);
+
+static_assert(std::is_same_v<
+              supl::tl::concat_t<supl::tl::type_list<int, char, bool>>,
+              supl::tl::type_list<int, char, bool>>);
 
 ///////////////////////////////////////////// front
 

@@ -54,7 +54,7 @@ constexpr inline bool empty_v = ::supl::tl::empty<LIST>::value;
 
 ///////////////////////////////////////////// concat
 
-template <typename LIST1, typename LIST2>
+template <typename... LISTS>
 struct concat;
 
 template <template <typename...> typename LIST, typename... Pack1,
@@ -62,8 +62,17 @@ template <template <typename...> typename LIST, typename... Pack1,
 struct concat<LIST<Pack1...>, LIST<Pack2...>>
     : ::supl::type_identity<LIST<Pack1..., Pack2...>> {};
 
-template <typename LIST1, typename LIST2>
-using concat_t = typename ::supl::tl::concat<LIST1, LIST2>::type;
+template <typename LIST1, typename LIST2, typename LIST3,
+          typename... LISTS>
+struct concat<LIST1, LIST2, LIST3, LISTS...>
+    : ::supl::tl::concat<typename ::supl::tl::concat<LIST1, LIST2>::type,
+                         LIST3, LISTS...> {};
+
+template <typename LIST>
+struct concat<LIST> : ::supl::type_identity<LIST> {};
+
+template <typename... LISTS>
+using concat_t = typename ::supl::tl::concat<LISTS...>::type;
 
 ///////////////////////////////////////////// front
 

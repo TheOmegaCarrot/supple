@@ -1,8 +1,6 @@
 #ifndef SUPPLEMENTARIES_TYPE_LIST_HPP
 #define SUPPLEMENTARIES_TYPE_LIST_HPP
 
-// Still a work in progress
-
 #include <type_traits>
 
 #include "metaprogramming.hpp"
@@ -287,6 +285,8 @@ template <typename LIST>
 using rotate_right_t = typename rotate_right<LIST>::type;
 
 ///////////////////////////////////////////// reorder
+
+///////////////////////////////////////////// split
 
 } // namespace supl::tl
 

@@ -28,6 +28,9 @@ void test_type_list()
   ehanc::run_test("supl::tl::sublist", &pass);
   /* ehanc::run_test("supl::tl::insert", &pass); */
   /* ehanc::run_test("supl::tl::erase", &pass); */
+  ehanc::run_test("supl::tl::all_of", &pass);
+  /* ehanc::run_test("supl::tl::any_of", &pass); */
+  /* ehanc::run_test("supl::tl::none_of", &pass); */
 }
 
 ///////////////////////////////////////////// contains
@@ -345,10 +348,60 @@ static_assert(
 
 ///////////////////////////////////////////// insert
 
-/* static_assert(std::is_same_v< */
-/*               supl::tl::insert<supl::tl::type_list<int, char, bool, float>, */
-/*                                2, double, std::size_t>, */
-/*               supl::tl::type_list<int, char, double, std::size_t>>); */
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::insert<supl::tl::type_list<int, char, bool, float>, 2, */
+/*                          double, std::size_t>, */
+/*         supl::tl::type_list<int, char, double, std::size_t, bool, float>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::insert<supl::tl::type_list<int, char, bool, float>, 0, */
+/*                          double, std::size_t>, */
+/*         supl::tl::type_list<double, std::size_t, int, char, bool, float>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::insert<supl::tl::type_list<int, char, bool, float>, 5, */
+/*                          double, std::size_t>, */
+/*         supl::tl::type_list<int, char, bool, float, double, std::size_t>>); */
 
 ///////////////////////////////////////////// erase
+
+///////////////////////////////////////////// all_of
+
+static_assert(supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
+                                 std::is_integral>);
+
+static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, float, bool>,
+                                  std::is_integral>);
+
+static_assert(!supl::tl::all_of_v<supl::tl::type_list<double, float, bool>,
+                                  std::is_integral>);
+
+static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, float, double>,
+                                  std::is_integral>);
+
+///////////////////////////////////////////// any_of
+
+/* static_assert(supl::tl::any_of_v<supl::tl::type_list<int, char, bool>, */
+/*                                  std::is_integral>); */
+
+/* static_assert(supl::tl::any_of_v<supl::tl::type_list<int, float, bool>, */
+/*                                  std::is_integral>); */
+
+/* static_assert(supl::tl::any_of_v<supl::tl::type_list<double, float, bool>, */
+/*                                  std::is_integral>); */
+
+/* static_assert(supl::tl::any_of_v<supl::tl::type_list<int, float, double>, */
+/*                                  std::is_integral>); */
+
+/* static_assert(supl::tl::any_of_v<supl::tl::type_list<float, double, int>, */
+/*                                  std::is_integral>); */
+
+/* static_assert( */
+/*     !supl::tl::any_of_v<supl::tl::type_list<float, double, float>, */
+/*                         std::is_integral>); */
+
+///////////////////////////////////////////// none_of
 

@@ -192,6 +192,26 @@ using sublist_t = typename ::supl::tl::sublist<LIST, Begin, End>::type;
 
 ///////////////////////////////////////////// erase
 
+///////////////////////////////////////////// all_of
+
+template <typename LIST, template <typename> typename PRED>
+struct all_of
+    : std::conditional_t<
+          PRED<::supl::tl::front_t<LIST>>::value,
+          ::supl::tl::all_of<::supl::tl::pop_front_t<LIST>, PRED>,
+          std::false_type> {};
+
+template <template <typename...> typename LIST,
+          template <typename> typename PRED>
+struct all_of<LIST<>, PRED> : std::true_type {};
+
+template <typename LIST, template <typename> typename PRED>
+constexpr inline bool all_of_v = all_of<LIST, PRED>::value;
+
+///////////////////////////////////////////// any_of
+
+///////////////////////////////////////////// none_of
+
 } // namespace supl::tl
 
 #endif

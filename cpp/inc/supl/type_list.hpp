@@ -261,7 +261,30 @@ using transform_t = typename ::supl::tl::transform<LIST, PRED>::type;
 
 ///////////////////////////////////////////// rotate_left
 
+template <typename LIST>
+struct rotate_left;
+
+template <template <typename...> typename LIST, typename Front,
+          typename... Pack>
+struct rotate_left<LIST<Front, Pack...>>
+    : ::supl::type_identity<LIST<Pack..., Front>> {};
+
+template <typename LIST>
+using rotate_left_t = typename rotate_left<LIST>::type;
+
 ///////////////////////////////////////////// rotate_right
+
+template <typename LIST>
+struct rotate_right;
+
+template <template <typename...> typename LIST, typename... Pack>
+struct rotate_right<LIST<Pack...>>
+    : ::supl::type_identity<
+          ::supl::tl::concat_t<LIST<::supl::tl::back_t<LIST<Pack...>>>,
+                               ::supl::tl::pop_back_t<LIST<Pack...>>>> {};
+
+template <typename LIST>
+using rotate_right_t = typename rotate_right<LIST>::type;
 
 ///////////////////////////////////////////// reorder
 

@@ -451,21 +451,17 @@ static_assert(std::is_same_v<
 
 ///////////////////////////////////////////// rotate_left
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*     supl::tl::rotate_left<supl::tl::type_list<int, char, bool>>, */
-/*     supl::tl::type_list<char, bool, int> */
-/*     > */
-/*     ); */
+static_assert(
+    std::is_same_v<
+        supl::tl::rotate_left_t<supl::tl::type_list<int, char, bool>>,
+        supl::tl::type_list<char, bool, int>>);
 
 ///////////////////////////////////////////// rotate_right
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*     supl::tl::rotate_right<supl::tl::type_list<int, char, bool>>, */
-/*     supl::tl::type_list<bool, int, char> */
-/*     > */
-/*     ); */
+static_assert(
+    std::is_same_v<
+        supl::tl::rotate_right_t<supl::tl::type_list<int, char, bool>>,
+        supl::tl::type_list<bool, int, char>>);
 
 ///////////////////////////////////////////// reorder
 

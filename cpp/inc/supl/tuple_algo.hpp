@@ -241,13 +241,14 @@ template <typename Tuple, typename Pred>
 
 namespace impl {
 
-template <typename Tuple, typename T, std::size_t... Inds>
+template <template <typename...> typename Tuple, typename T,
+          typename... Pack, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_push_back_impl(const Tuple& tup, T&& data,
+tuple_push_back_impl(const Tuple<Pack...>& tup, T&& data,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple<::supl::tl::at_index_t<Inds, Tuple>..., T> {
-      std::get<Inds>(tup)..., std::forward<T>(data)};
+  return std::tuple<Pack..., std::decay_t<T>> {std::get<Inds>(tup)...,
+                                               std::forward<T>(data)};
 }
 
 } // namespace impl
@@ -311,13 +312,14 @@ template <typename Tuple>
 
 namespace impl {
 
-template <typename Tuple, typename T, std::size_t... Inds>
+template <template <typename...> typename Tuple, typename T,
+          typename... Pack, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_push_front_impl(const Tuple& tup, T&& data,
+tuple_push_front_impl(const Tuple<Pack...>& tup, T&& data,
                       std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple<T, ::supl::tl::at_index_t<Inds, Tuple>...> {
-      std::forward<T>(data), std::get<Inds>(tup)...};
+  return std::tuple<std::decay_t<T>, Pack...> {std::forward<T>(data),
+                                               std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -348,13 +350,13 @@ template <typename Tuple, typename T>
 
 namespace impl {
 
-template <typename Tuple, std::size_t... Inds>
+template <template <typename...> typename Tuple, typename Front,
+          typename... Pack, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_pop_front_impl(const Tuple& tup,
+tuple_pop_front_impl(const Tuple<Front, Pack...>& tup,
                      std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple<::supl::tl::at_index_t<Inds + 1, Tuple>...> {
-      std::get<Inds + 1>(tup)...};
+  return std::tuple<Pack...> {std::get<Inds + 1>(tup)...};
 }
 
 } // namespace impl
@@ -380,14 +382,14 @@ template <typename Tuple>
 
 namespace impl {
 
-template <typename Tuple, std::size_t... Idxs>
+template <template <typename...> typename Tuple, typename Front,
+          typename... Pack, std::size_t... Idxs>
 [[nodiscard]] constexpr auto
-tuple_rotate_left_impl(const Tuple& tup,
+tuple_rotate_left_impl(const Tuple<Front, Pack...>& tup,
                        std::index_sequence<Idxs...>) noexcept
 {
-  return std::tuple<::supl::tl::at_index_t<Idxs + 1, Tuple>...,
-                    ::supl::tl::at_index_t<0, Tuple>> {
-      std::get<Idxs + 1>(tup)..., std::get<0>(tup)};
+  return std::tuple<Pack..., Front> {std::get<Idxs + 1>(tup)...,
+                                     std::get<0>(tup)};
 }
 
 } // namespace impl

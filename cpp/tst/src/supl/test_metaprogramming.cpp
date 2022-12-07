@@ -38,6 +38,7 @@ void test_metaprogramming()
   ehanc::run_test("supl::are_less_eq_comparable", &pass);
   ehanc::run_test("supl::are_greater_comparable", &pass);
   ehanc::run_test("supl::are_greater_eq_comparable", &pass);
+  ehanc::run_test("supl::make_const_ref", &pass);
 }
 
 ///////////////////////////////////////////// sum_type
@@ -320,3 +321,27 @@ static_assert(supl::are_greater_eq_comparable_v<int, bool>);
 static_assert(supl::are_greater_eq_comparable_v<int, char>);
 static_assert(
     not supl::are_greater_eq_comparable_v<int, std::vector<int>>);
+
+///////////////////////////////////////////// make_const_ref
+
+static_assert(std::is_same_v<supl::make_const_ref_t<int>, const int&>);
+static_assert(
+    std::is_same_v<supl::make_const_ref_t<const int>, const int&>);
+static_assert(
+    std::is_same_v<supl::make_const_ref_t<volatile int>, const int&>);
+static_assert(std::is_same_v<supl::make_const_ref_t<const volatile int>,
+                             const int&>);
+static_assert(std::is_same_v<supl::make_const_ref_t<int&>, const int&>);
+static_assert(
+    std::is_same_v<supl::make_const_ref_t<const int&>, const int&>);
+static_assert(
+    std::is_same_v<supl::make_const_ref_t<volatile int&>, const int&>);
+static_assert(std::is_same_v<supl::make_const_ref_t<const volatile int&>,
+                             const int&>);
+static_assert(std::is_same_v<supl::make_const_ref_t<int&&>, const int&>);
+static_assert(
+    std::is_same_v<supl::make_const_ref_t<const int&&>, const int&>);
+static_assert(
+    std::is_same_v<supl::make_const_ref_t<volatile int&&>, const int&>);
+static_assert(std::is_same_v<supl::make_const_ref_t<const volatile int&&>,
+                             const int&>);

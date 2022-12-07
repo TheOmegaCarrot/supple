@@ -647,6 +647,16 @@ template <typename T, typename U>
 constexpr inline bool are_greater_eq_comparable_v =
     ::supl::are_greater_eq_comparable<T, U>::value;
 
+///////////////////////////////////////////// make_const_ref
+
+template <typename T>
+struct make_const_ref : ::supl::type_identity<std::add_lvalue_reference_t<
+                            std::add_const_t<::supl::remove_cvref_t<T>>>> {
+};
+
+template <typename T>
+using make_const_ref_t = typename ::supl::make_const_ref<T>::type;
+
 } // namespace supl
 
 #endif

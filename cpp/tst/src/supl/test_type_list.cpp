@@ -29,8 +29,9 @@ void test_type_list()
   /* ehanc::run_test("supl::tl::insert", &pass); */
   /* ehanc::run_test("supl::tl::erase", &pass); */
   ehanc::run_test("supl::tl::all_of", &pass);
-  /* ehanc::run_test("supl::tl::any_of", &pass); */
-  /* ehanc::run_test("supl::tl::none_of", &pass); */
+  ehanc::run_test("supl::tl::any_of", &pass);
+  ehanc::run_test("supl::tl::none_of", &pass);
+  ehanc::run_test("supl::tl::transform", &pass);
 }
 
 ///////////////////////////////////////////// contains
@@ -423,3 +424,15 @@ static_assert(!supl::tl::none_of_v<supl::tl::type_list<float, double, int>,
 static_assert(
     supl::tl::none_of_v<supl::tl::type_list<float, double, float>,
                         std::is_integral>);
+
+///////////////////////////////////////////// transform
+
+static_assert(
+    std::is_same_v<
+        supl::tl::transform_t<supl::tl::type_list<int>, std::add_const>,
+        supl::tl::type_list<const int>>);
+
+static_assert(std::is_same_v<
+              supl::tl::transform_t<supl::tl::type_list<int, char, bool>,
+                                    std::add_const>,
+              supl::tl::type_list<const int, const char, const bool>>);

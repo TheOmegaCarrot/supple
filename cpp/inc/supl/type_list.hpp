@@ -238,6 +238,19 @@ struct none_of<LIST<>, PRED> : std::true_type {};
 template <typename LIST, template <typename> typename PRED>
 constexpr inline bool none_of_v = ::supl::tl::none_of<LIST, PRED>::value;
 
+///////////////////////////////////////////// transform
+
+template <typename LIST, template <typename> typename PRED>
+struct transform;
+
+template <template <typename...> typename LIST,
+          template <typename> typename PRED, typename... Pack>
+struct transform<LIST<Pack...>, PRED>
+    : ::supl::type_identity<LIST<typename PRED<Pack>::type...>> {};
+
+template <typename LIST, template <typename> typename PRED>
+using transform_t = typename ::supl::tl::transform<LIST, PRED>::type;
+
 } // namespace supl::tl
 
 #endif

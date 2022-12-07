@@ -369,6 +369,18 @@ static_assert(
 
 ///////////////////////////////////////////// erase
 
+/* static_assert(std::is_same_v< */
+/*               supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 1>, */
+/*               supl::tl::type_list<int, bool>>); */
+
+/* static_assert(std::is_same_v< */
+/*               supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 0>, */
+/*               supl::tl::type_list<char, bool>>); */
+
+/* static_assert(std::is_same_v< */
+/*               supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 2>, */
+/*               supl::tl::type_list<int, char>>); */
+
 ///////////////////////////////////////////// all_of
 
 static_assert(supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
@@ -436,3 +448,39 @@ static_assert(std::is_same_v<
               supl::tl::transform_t<supl::tl::type_list<int, char, bool>,
                                     std::add_const>,
               supl::tl::type_list<const int, const char, const bool>>);
+
+///////////////////////////////////////////// rotate_left
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*     supl::tl::rotate_left<supl::tl::type_list<int, char, bool>>, */
+/*     supl::tl::type_list<char, bool, int> */
+/*     > */
+/*     ); */
+
+///////////////////////////////////////////// rotate_right
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*     supl::tl::rotate_right<supl::tl::type_list<int, char, bool>>, */
+/*     supl::tl::type_list<bool, int, char> */
+/*     > */
+/*     ); */
+
+///////////////////////////////////////////// reorder
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::reorder_t<supl::tl::type_list<int, char, bool, float>, 3, */
+/*                           1, 2, 1, 0>, */
+/*         supl::tl::type_list<float, char, bool, char, int>>); */
+
+///////////////////////////////////////////// split
+
+/* static_assert(std::is_same_v< */
+/*               supl::tl::split_t<supl::tl::type_list<int, char, bool, float, */
+/*                                                     double, unsigned>, */
+/*                                 3>, */
+/*               supl::tl::type_pair< */
+/*                   supl::tl::type_list<int, char, bool>, */
+/*                   supl::tl::type_list<float, double, unsigned>>>); */

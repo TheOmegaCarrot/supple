@@ -14,6 +14,14 @@ namespace supl::tl {
 template <typename... Pack>
 struct type_list {};
 
+///////////////////////////////////////////// type pair
+
+template <typename First, typename Second>
+struct type_pair {
+  using first  = First;
+  using second = Second;
+};
+
 ///////////////////////////////////////////// contains
 
 template <typename T, typename LIST>
@@ -250,6 +258,12 @@ struct transform<LIST<Pack...>, PRED>
 
 template <typename LIST, template <typename> typename PRED>
 using transform_t = typename ::supl::tl::transform<LIST, PRED>::type;
+
+///////////////////////////////////////////// rotate_left
+
+///////////////////////////////////////////// rotate_right
+
+///////////////////////////////////////////// reorder
 
 } // namespace supl::tl
 

@@ -345,12 +345,26 @@ template <template <typename...> typename LIST, std::size_t... Idxs,
           typename... Pack>
 struct reorder<LIST<Pack...>, Idxs...>
     : ::supl::type_identity<
-          LIST<::supl::tl::at_index_t<Idxs, LIST<Pack...>>...>> {};
+          LIST<::supl::tl::at_index_t<Idxs, LIST<Pack...>>...>> {
+  static_assert(((Idxs < ::supl::tl::size_v<LIST<Pack...>>)&&...),
+                "Index out of bounds");
+};
 
 template <typename LIST, std::size_t... Idxs>
 using reorder_t = typename ::supl::tl::reorder<LIST, Idxs...>::type;
 
 ///////////////////////////////////////////// split
+
+template <typename LIST, std::size_t Idx>
+struct split
+    : ::supl::type_identity<
+          ::supl::tl::type_pair<::supl::tl::front_n_t<LIST, Idx>,
+                                ::supl::tl::drop_front_n_t<LIST, Idx>>> {
+  static_assert(Idx <= ::supl::tl::size_v<LIST>, "Index out of bounds");
+};
+
+template <typename LIST, std::size_t Idx>
+using split_t = typename ::supl::tl::split<LIST, Idx>::type;
 
 } // namespace supl::tl
 

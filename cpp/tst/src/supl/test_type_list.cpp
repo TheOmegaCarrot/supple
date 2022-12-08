@@ -25,6 +25,7 @@ void test_type_list()
   ehanc::run_test("supl::tl::front_n", &pass);
   ehanc::run_test("supl::tl::back_n", &pass);
   ehanc::run_test("supl::tl::drop_front_n", &pass);
+  ehanc::run_test("supl::tl::drop_back_n", &pass);
   ehanc::run_test("supl::tl::pop_back", &pass);
   ehanc::run_test("supl::tl::pop_front", &pass);
   ehanc::run_test("supl::tl::sublist", &pass);
@@ -34,8 +35,10 @@ void test_type_list()
   ehanc::run_test("supl::tl::any_of", &pass);
   ehanc::run_test("supl::tl::none_of", &pass);
   ehanc::run_test("supl::tl::transform", &pass);
+  ehanc::run_test("supl::tl::rotate_left", &pass);
+  ehanc::run_test("supl::tl::rotate_right", &pass);
   ehanc::run_test("supl::tl::reorder", &pass);
-  /* ehanc::run_test("supl::tl::split", &pass); */
+  ehanc::run_test("supl::tl::split", &pass);
 }
 
 ///////////////////////////////////////////// contains
@@ -563,10 +566,44 @@ static_assert(
 
 ///////////////////////////////////////////// split
 
-/* static_assert(std::is_same_v< */
-/*               supl::tl::split_t<supl::tl::type_list<int, char, bool, float, */
-/*                                                     double, unsigned>, */
-/*                                 3>, */
-/*               supl::tl::type_pair< */
-/*                   supl::tl::type_list<int, char, bool>, */
-/*                   supl::tl::type_list<float, double, unsigned>>>); */
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool, float,
+                                                    double, unsigned>,
+                                3>,
+              supl::tl::type_pair<
+                  supl::tl::type_list<int, char, bool>,
+                  supl::tl::type_list<float, double, unsigned>>>);
+
+static_assert(
+    std::is_same_v<supl::tl::split_t<supl::tl::type_list<int>, 1>,
+                   supl::tl::type_pair<supl::tl::type_list<int>,
+                                       supl::tl::type_list<>>>);
+
+static_assert(
+    std::is_same_v<supl::tl::split_t<supl::tl::type_list<int>, 0>,
+                   supl::tl::type_pair<supl::tl::type_list<>,
+                                       supl::tl::type_list<int>>>);
+
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 0>,
+              supl::tl::type_pair<supl::tl::type_list<>,
+                                  supl::tl::type_list<int, char, bool>>>);
+
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 3>,
+              supl::tl::type_pair<supl::tl::type_list<int, char, bool>,
+                                  supl::tl::type_list<>>>);
+
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 1>,
+              supl::tl::type_pair<supl::tl::type_list<int>,
+                                  supl::tl::type_list<char, bool>>>);
+
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool, float,
+                                                    double, unsigned>,
+                                5>,
+              supl::tl::type_pair<
+                  supl::tl::type_list<int, char, bool, float, double>,
+                  supl::tl::type_list<unsigned>>>);
+

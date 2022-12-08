@@ -29,8 +29,8 @@ void test_type_list()
   ehanc::run_test("supl::tl::pop_back", &pass);
   ehanc::run_test("supl::tl::pop_front", &pass);
   ehanc::run_test("supl::tl::sublist", &pass);
-  /* ehanc::run_test("supl::tl::insert", &pass); */
-  /* ehanc::run_test("supl::tl::erase", &pass); */
+  ehanc::run_test("supl::tl::insert", &pass);
+  ehanc::run_test("supl::tl::erase", &pass);
   ehanc::run_test("supl::tl::all_of", &pass);
   ehanc::run_test("supl::tl::any_of", &pass);
   ehanc::run_test("supl::tl::none_of", &pass);

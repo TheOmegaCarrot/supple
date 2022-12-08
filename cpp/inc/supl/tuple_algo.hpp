@@ -238,12 +238,11 @@ template <typename Tuple, typename Pred>
 
 namespace impl {
 
-template <template <typename...> typename Tuple, typename... Ts,
-          typename... Pack, std::size_t... Inds>
+template <typename Tuple, typename... Ts, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_push_back_impl(const Tuple<Pack...>& tup,
-                     std::index_sequence<Inds...>, Ts&&... data) noexcept
-    -> tl::push_back_t<Tuple<Pack...>, remove_cvref_t<Ts>...>
+tuple_push_back_impl(const Tuple& tup, std::index_sequence<Inds...>,
+                     Ts&&... data) noexcept
+    -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
 {
   return {std::get<Inds>(tup)..., std::forward<Ts>(data)...};
 }
@@ -281,9 +280,9 @@ template <typename Tuple, std::size_t... Inds>
 [[nodiscard]] constexpr auto
 tuple_pop_back_impl(const Tuple& tup,
                     std::index_sequence<Inds...>) noexcept
+    -> tl::pop_back_t<Tuple>
 {
-  return std::tuple<tl::at_index_t<Inds, Tuple>...> {
-      std::get<Inds>(tup)...};
+  return {std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -302,6 +301,7 @@ tuple_pop_back_impl(const Tuple& tup,
 /* }}} */
 template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_pop_back(const Tuple& tup) noexcept
+    -> tl::pop_back_t<Tuple>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return impl::tuple_pop_back_impl(tup, seq);
@@ -314,9 +314,9 @@ template <template <typename...> typename Tuple, typename... Ts,
 [[nodiscard]] constexpr auto
 tuple_push_front_impl(const Tuple<Pack...>& tup,
                       std::index_sequence<Inds...>, Ts&&... data) noexcept
+    -> tl::push_front_t<Tuple<Pack...>, remove_cvref_t<Ts>...>
 {
-  return std::tuple<remove_cvref_t<Ts>..., Pack...> {
-      std::forward<Ts>(data)..., std::get<Inds>(tup)...};
+  return {std::forward<Ts>(data)..., std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -339,6 +339,7 @@ tuple_push_front_impl(const Tuple<Pack...>& tup,
 template <typename Tuple, typename... Ts>
 [[nodiscard]] constexpr auto tuple_push_front(const Tuple& tup,
                                               Ts&&... data) noexcept
+    -> tl::push_front_t<Tuple, remove_cvref_t<Ts>...>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return impl::tuple_push_front_impl(tup, seq, std::forward<Ts>(data)...);
@@ -346,13 +347,13 @@ template <typename Tuple, typename... Ts>
 
 namespace impl {
 
-template <template <typename...> typename Tuple, typename Front,
-          typename... Pack, std::size_t... Inds>
+template <typename Tuple, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_pop_front_impl(const Tuple<Front, Pack...>& tup,
+tuple_pop_front_impl(const Tuple& tup,
                      std::index_sequence<Inds...>) noexcept
+    -> tl::pop_front_t<Tuple>
 {
-  return std::tuple<Pack...> {std::get<Inds + 1>(tup)...};
+  return {std::get<Inds + 1>(tup)...};
 }
 
 } // namespace impl
@@ -378,20 +379,20 @@ template <typename Tuple>
 
 namespace impl {
 
-template <template <typename...> typename Tuple, typename Front,
-          typename... Pack, std::size_t... Idxs>
+template <typename Tuple, std::size_t... Idxs>
 [[nodiscard]] constexpr auto
-tuple_rotate_left_impl(const Tuple<Front, Pack...>& tup,
+tuple_rotate_left_impl(const Tuple& tup,
                        std::index_sequence<Idxs...>) noexcept
+    -> tl::rotate_left_t<Tuple>
 {
-  return std::tuple<Pack..., Front> {std::get<Idxs + 1>(tup)...,
-                                     std::get<0>(tup)};
+  return {std::get<Idxs + 1>(tup)..., std::get<0>(tup)};
 }
 
 } // namespace impl
 
 template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_rotate_left(const Tuple& tup) noexcept
+    -> tl::rotate_left_t<Tuple>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return impl::tuple_rotate_left_impl(tup, seq);
@@ -403,16 +404,17 @@ template <typename Tuple, std::size_t... Idxs>
 [[nodiscard]] constexpr auto
 tuple_rotate_right_impl(const Tuple& tup,
                         std::index_sequence<Idxs...>) noexcept
+    -> tl::rotate_right_t<Tuple>
 {
-  return std::tuple<tl::at_index_t<std::tuple_size_v<Tuple> - 1, Tuple>,
-                    tl::at_index_t<Idxs, Tuple>...> {
-      std::get<std::tuple_size_v<Tuple> - 1>(tup), std::get<Idxs>(tup)...};
+  return {std::get<std::tuple_size_v<Tuple> - 1>(tup),
+          std::get<Idxs>(tup)...};
 }
 
 } // namespace impl
 
 template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_rotate_right(const Tuple& tup) noexcept
+    -> tl::rotate_right_t<Tuple>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return impl::tuple_rotate_right_impl(tup, seq);
@@ -523,11 +525,11 @@ tuple_erase(const Tuple& tup,
 template <typename Tuple, std::size_t... Idxs>
 [[nodiscard]] constexpr auto
 tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...>) noexcept
+    -> tl::reorder_t<Tuple, Idxs...>
 {
   static_assert(((Idxs < std::tuple_size_v<Tuple>)&&...));
 
-  return std::tuple<tl::at_index_t<Idxs, Tuple>...> {
-      std::get<Idxs>(tup)...};
+  return {std::get<Idxs>(tup)...};
 }
 
 namespace impl {
@@ -535,12 +537,11 @@ template <typename Tuple, std::size_t... Pre_Idxs,
           std::size_t... Post_Idxs, std::size_t Idx>
 [[nodiscard]] constexpr auto
 tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
-                 std::index_sequence<Post_Idxs...>, index_constant<Idx>)
+                 std::index_sequence<Post_Idxs...>,
+                 index_constant<Idx>) noexcept -> tl::split_t<Tuple, Idx>
 {
-  return std::pair {std::tuple<tl::at_index_t<Pre_Idxs, Tuple>...> {
-                        std::get<Pre_Idxs>(tup)...},
-                    std::tuple<tl::at_index_t<Post_Idxs + Idx, Tuple>...> {
-                        std::get<Post_Idxs + Idx>(tup)...}};
+  return {{std::get<Pre_Idxs>(tup)...},
+          {std::get<Post_Idxs + Idx>(tup)...}};
 }
 
 } // namespace impl
@@ -568,6 +569,7 @@ tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
 template <typename Tuple, std::size_t Idx>
 [[nodiscard]] constexpr auto tuple_split(const Tuple& tup,
                                          index_constant<Idx> idx) noexcept
+    -> tl::split_t<Tuple, Idx>
 {
   static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
 
@@ -580,14 +582,14 @@ template <typename Tuple, std::size_t Idx>
 
 namespace impl {
 
-template <typename Tuple, std::size_t... Inds, std::size_t begin>
+template <typename Tuple, std::size_t... Inds, std::size_t Begin,
+          std::size_t End>
 [[nodiscard]] constexpr auto
-subtuple_impl(const Tuple& tup,
-              [[maybe_unused]] std::index_sequence<Inds...>,
-              [[maybe_unused]] index_constant<begin>)
+subtuple_impl(const Tuple& tup, std::index_sequence<Inds...>,
+              index_constant<Begin>, index_constant<End>) noexcept
+    -> tl::sublist_t<Tuple, Begin, End>
 {
-  return std::tuple<tl::at_index_t<Inds + begin, Tuple>...> {
-      std::get<Inds + begin>(tup)...};
+  return {std::get<Inds + Begin>(tup)...};
 }
 
 } // namespace impl
@@ -610,17 +612,18 @@ subtuple_impl(const Tuple& tup,
  * @param end_deduct_help Provides deduction for `end`
  */
 /* }}} */
-template <typename Tuple, std::size_t begin, std::size_t end>
+template <typename Tuple, std::size_t Begin, std::size_t End>
 [[nodiscard]] constexpr auto
-subtuple(const Tuple& tup, index_constant<begin> begin_deduct_help,
-         [[maybe_unused]] index_constant<end> end_deduct_help)
+subtuple(const Tuple& tup, index_constant<Begin> begin_deduct_help,
+         [[maybe_unused]] index_constant<End> end_deduct_help)
+    -> tl::sublist_t<Tuple, Begin, End>
 {
-  static_assert(begin < std::tuple_size_v<Tuple>, "Begin out of bounds");
-  static_assert(end <= std::tuple_size_v<Tuple>, "Begin out of bounds");
+  static_assert(Begin < std::tuple_size_v<Tuple>, "Begin out of bounds");
+  static_assert(End <= std::tuple_size_v<Tuple>, "Begin out of bounds");
 
-  auto seq {std::make_index_sequence<end - begin> {}};
+  auto seq {std::make_index_sequence<End - Begin> {}};
 
-  return impl::subtuple_impl(tup, seq, begin_deduct_help);
+  return impl::subtuple_impl(tup, seq, begin_deduct_help, end_deduct_help);
 }
 
 /* {{{ doc */
@@ -639,12 +642,13 @@ subtuple(const Tuple& tup, index_constant<begin> begin_deduct_help,
  * @param deduction_helper Provides deduction for `begin` and `end`
  */
 /* }}} */
-template <typename Tuple, std::size_t begin, std::size_t end>
+template <typename Tuple, std::size_t Begin, std::size_t End>
 [[nodiscard]] constexpr auto
 subtuple(const Tuple& tup,
-         [[maybe_unused]] index_pair<begin, end> deduction_helper) noexcept
+         [[maybe_unused]] index_pair<Begin, End> deduction_helper) noexcept
+    -> tl::sublist_t<Tuple, Begin, End>
 {
-  return subtuple(tup, index_constant<begin> {}, index_constant<end> {});
+  return subtuple(tup, index_constant<Begin> {}, index_constant<End> {});
 }
 
 /* {{{ doc */
@@ -661,10 +665,11 @@ subtuple(const Tuple& tup,
  * @param tup Tuple to extract a subtuple from
  */
 /* }}} */
-template <typename Tuple, std::size_t begin, std::size_t end>
+template <typename Tuple, std::size_t Begin, std::size_t End>
 [[nodiscard]] constexpr auto subtuple(const Tuple& tup) noexcept
+    -> tl::sublist_t<Tuple, Begin, End>
 {
-  return subtuple(tup, index_constant<begin> {}, index_constant<end> {});
+  return subtuple(tup, index_constant<Begin> {}, index_constant<End> {});
 }
 
 namespace impl {

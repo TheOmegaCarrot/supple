@@ -482,12 +482,12 @@ template <typename Tuple, std::size_t... pre_idxs,
 [[nodiscard]] constexpr auto
 tuple_erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
                  std::index_sequence<post_idxs...>) noexcept
+    -> tl::erase_t<Tuple, sizeof...(pre_idxs)>
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-  return std::tuple<tl::at_index_t<pre_idxs, Tuple>...,
-                    tl::at_index_t<post_idxs + idx + 1, Tuple>...> {
-      std::get<pre_idxs>(tup)..., std::get<post_idxs + idx + 1>(tup)...};
+  return {std::get<pre_idxs>(tup)...,
+          std::get<post_idxs + idx + 1>(tup)...};
 }
 
 } // namespace impl
@@ -511,6 +511,7 @@ template <typename Tuple, std::size_t Idx>
 [[nodiscard]] constexpr auto
 tuple_erase(const Tuple& tup,
             [[maybe_unused]] index_constant<Idx> deduction_helper) noexcept
+    -> tl::erase_t<Tuple, Idx>
 {
   static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
 

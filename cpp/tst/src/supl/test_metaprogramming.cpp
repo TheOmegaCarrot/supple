@@ -9,37 +9,10 @@
 #include "supl/test_metaprogramming.h"
 #include "test_utils.hpp"
 
-static auto pass() -> ehanc::test
-{
-  return ehanc::test {};
-}
-
 // all tests happen at compile time anyway
 // if this TU compiles, all tests pass
 void test_metaprogramming()
-{
-  ehanc::run_test("supl::sum_type", &pass);
-  ehanc::run_test("supl::remove_cvref", &pass);
-  ehanc::run_test("supl::is_type_in_pack", &pass);
-  ehanc::run_test("supl::peel_first", &pass);
-  ehanc::run_test("supl::peel_last", &pass);
-  ehanc::run_test("supl::is_pack_uniform", &pass);
-  ehanc::run_test("supl::is_pack_only", &pass);
-  ehanc::run_test("supl::is_iterable", &pass);
-  ehanc::run_test("supl::is_iterator", &pass);
-  ehanc::run_test("supl::is_bidirectional", &pass);
-  ehanc::run_test("supl::is_random_access", &pass);
-  ehanc::run_test("supl::is_tuple", &pass);
-  ehanc::run_test("supl::is_pair", &pass);
-  ehanc::run_test("supl::is_printable", &pass);
-  ehanc::run_test("supl::are_equality_comparable", &pass);
-  ehanc::run_test("supl::are_inequality_comparable", &pass);
-  ehanc::run_test("supl::are_less_comparable", &pass);
-  ehanc::run_test("supl::are_less_eq_comparable", &pass);
-  ehanc::run_test("supl::are_greater_comparable", &pass);
-  ehanc::run_test("supl::are_greater_eq_comparable", &pass);
-  ehanc::run_test("supl::make_const_ref", &pass);
-}
+{}
 
 ///////////////////////////////////////////// sum_type
 

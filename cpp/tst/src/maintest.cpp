@@ -22,10 +22,6 @@ auto main() -> int
 
   ehanc::test_section("Iterators", &test_iterators);
 
-  ehanc::test_section("Metaprogramming", &test_metaprogramming);
-
-  ehanc::test_section("Type List", &test_type_list);
-
   ehanc::test_section("Utility", &test_utility);
 
   return 0;

@@ -1,6 +1,7 @@
 #ifndef SUPPLEMENTARIES_TYPE_LIST_HPP
 #define SUPPLEMENTARIES_TYPE_LIST_HPP
 
+#include <cstddef>
 #include <type_traits>
 #include <utility>
 
@@ -12,6 +13,14 @@ namespace supl::tl {
 
 template <typename... Pack>
 struct type_list {};
+
+///////////////////////////////////////////// make_list
+
+template <template <typename...> typename LIST, typename... Pack>
+struct make_list : type_identity<LIST<Pack...>> {};
+
+template <template <typename...> typename LIST, typename... Pack>
+using make_list_t = typename make_list<LIST, Pack...>::type;
 
 ///////////////////////////////////////////// contains
 
@@ -375,6 +384,33 @@ struct split
 
 template <typename LIST, std::size_t Idx>
 using split_t = typename split<LIST, Idx>::type;
+
+///////////////////////////////////////////// swap
+
+// Not yet working
+
+/* template <typename LIST, std::size_t Idx1, std::size_t Idx2> */
+/* struct swap */
+/*     : concat< */
+/*           // Unaltered first subrange */
+/*           front_n_t<LIST, std::min(Idx1, Idx2)>, */
+/*           // Swap */
+/*           reorder_t<LIST, std::max(Idx1, Idx2)>, */
+/*           // Unaltered second subrange */
+/*           sublist_t<LIST, std::min(Idx1, Idx2) + 1, std::max(Idx1, Idx2)>, */
+/*           // Swap */
+/*           reorder_t<LIST, std::min(Idx1, Idx2)>, */
+/*           // Unaltered third subrange */
+/*           drop_front_n_t<LIST, std::max(Idx1, Idx2)> */
+/*           // end concat */
+/*           > {}; */
+
+/* // No-op specialization */
+/* template <typename LIST, std::size_t Idx> */
+/* struct swap<LIST, Idx, Idx> : type_identity<LIST> {}; */
+
+/* template <typename LIST, std::size_t Idx1, std::size_t Idx2> */
+/* using swap_t = typename swap<LIST, Idx1, Idx2>::type; */
 
 } // namespace supl::tl
 

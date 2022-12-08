@@ -2,44 +2,16 @@
 #include "supl/type_list.hpp"
 #include "test_utils.hpp"
 
-static auto pass() -> ehanc::test
-{
-  return ehanc::test {};
-}
-
 void test_type_list()
-{
-  // All the testing is done at compile time
-  // If this TU compiles, all tests pass
-  // Test results here just for seratonin
+{}
 
-  ehanc::run_test("supl::tl::contains", &pass);
-  ehanc::run_test("supl::tl::size", &pass);
-  ehanc::run_test("supl::tl::empty", &pass);
-  ehanc::run_test("supl::tl::concat", &pass);
-  ehanc::run_test("supl::tl::front", &pass);
-  ehanc::run_test("supl::tl::back", &pass);
-  ehanc::run_test("supl::tl::at_index", &pass);
-  ehanc::run_test("supl::tl::push_back", &pass);
-  ehanc::run_test("supl::tl::push_front", &pass);
-  ehanc::run_test("supl::tl::front_n", &pass);
-  ehanc::run_test("supl::tl::back_n", &pass);
-  ehanc::run_test("supl::tl::drop_front_n", &pass);
-  ehanc::run_test("supl::tl::drop_back_n", &pass);
-  ehanc::run_test("supl::tl::pop_back", &pass);
-  ehanc::run_test("supl::tl::pop_front", &pass);
-  ehanc::run_test("supl::tl::sublist", &pass);
-  ehanc::run_test("supl::tl::insert", &pass);
-  ehanc::run_test("supl::tl::erase", &pass);
-  ehanc::run_test("supl::tl::all_of", &pass);
-  ehanc::run_test("supl::tl::any_of", &pass);
-  ehanc::run_test("supl::tl::none_of", &pass);
-  ehanc::run_test("supl::tl::transform", &pass);
-  ehanc::run_test("supl::tl::rotate_left", &pass);
-  ehanc::run_test("supl::tl::rotate_right", &pass);
-  ehanc::run_test("supl::tl::reorder", &pass);
-  ehanc::run_test("supl::tl::split", &pass);
-}
+///////////////////////////////////////////// make_list
+
+static_assert(std::is_same_v<
+              supl::tl::make_list_t<supl::tl::type_list, int, char, bool,
+                                    void*, const int, std::nullptr_t>,
+              supl::tl::type_list<int, char, bool, void*, const int,
+                                  std::nullptr_t>>);
 
 ///////////////////////////////////////////// contains
 
@@ -616,3 +588,90 @@ static_assert(
         std::pair<supl::tl::type_list<int, char, bool, float, double>,
                   supl::tl::type_list<unsigned>>>);
 
+///////////////////////////////////////////// swap
+
+/* static_assert( */
+/*     std::is_same_v<supl::tl::swap_t<supl::tl::type_list<int, bool>, 0, 1>, */
+/*                    supl::tl::type_list<bool, int>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 1, 3>, */
+/*         supl::tl::type_list<int, unsigned, void, char, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 0, 3>, */
+/*         supl::tl::type_list<unsigned, char, void, int, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 1, 4>, */
+/*         supl::tl::type_list<int, bool, void, unsigned, char>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 1, 2>, */
+/*         supl::tl::type_list<int, void, char, unsigned, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 2, 3>, */
+/*         supl::tl::type_list<int, char, unsigned, void, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v<supl::tl::swap_t<supl::tl::type_list<int, bool>, 1, 0>, */
+/*                    supl::tl::type_list<bool, int>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 1>, */
+/*         supl::tl::type_list<int, unsigned, void, char, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 0>, */
+/*         supl::tl::type_list<unsigned, char, void, int, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 4, 1>, */
+/*         supl::tl::type_list<int, bool, void, unsigned, char>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 2, 1>, */
+/*         supl::tl::type_list<int, void, char, unsigned, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 2>, */
+/*         supl::tl::type_list<int, char, unsigned, void, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 3>, */
+/*         supl::tl::type_list<int, char, void, unsigned, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 0, 0>, */
+/*         supl::tl::type_list<int, char, void, unsigned, bool>>); */
+
+/* static_assert( */
+/*     std::is_same_v< */
+/*         supl::tl::swap_t< */
+/*             supl::tl::type_list<int, char, void, unsigned, bool>, 4, 4>, */
+/*         supl::tl::type_list<int, char, void, unsigned, bool>>); */

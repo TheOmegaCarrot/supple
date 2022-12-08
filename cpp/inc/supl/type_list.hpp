@@ -2,6 +2,7 @@
 #define SUPPLEMENTARIES_TYPE_LIST_HPP
 
 #include <type_traits>
+#include <utility>
 
 #include "metaprogramming.hpp"
 
@@ -11,14 +12,6 @@ namespace supl::tl {
 
 template <typename... Pack>
 struct type_list {};
-
-///////////////////////////////////////////// type pair
-
-template <typename First, typename Second>
-struct type_pair {
-  using first  = First;
-  using second = Second;
-};
 
 ///////////////////////////////////////////// contains
 
@@ -346,7 +339,7 @@ using reorder_t = typename reorder<LIST, Idxs...>::type;
 template <typename LIST, std::size_t Idx>
 struct split
     : type_identity<
-          type_pair<front_n_t<LIST, Idx>, drop_front_n_t<LIST, Idx>>> {
+          std::pair<front_n_t<LIST, Idx>, drop_front_n_t<LIST, Idx>>> {
   static_assert(Idx <= size_v<LIST>, "Index out of bounds");
 };
 

@@ -385,17 +385,6 @@ struct split
 template <typename LIST, std::size_t Idx>
 using split_t = typename split<LIST, Idx>::type;
 
-///////////////////////////////////////////// is_same_as
-
-template <typename T>
-struct is_same_as {
-  template <typename U>
-  struct func : std::is_same<T, U> {};
-
-  template <typename U>
-  constexpr inline static bool func_v = func<U>::value;
-};
-
 ///////////////////////////////////////////// swap
 
 // Not yet working

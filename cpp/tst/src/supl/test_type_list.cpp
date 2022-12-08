@@ -583,17 +583,6 @@ static_assert(
         std::pair<supl::tl::type_list<int, char, bool, float, double>,
                   supl::tl::type_list<unsigned>>>);
 
-///////////////////////////////////////////// is_same_as
-
-static_assert(supl::tl::none_of_v<supl::tl::type_list<int, char, bool>,
-                                  supl::tl::is_same_as<void>::func>);
-
-static_assert(supl::tl::any_of_v<supl::tl::type_list<int, char, bool>,
-                                 supl::tl::is_same_as<char>::func>);
-
-static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
-                                  supl::tl::is_same_as<char>::func>);
-
 ///////////////////////////////////////////// swap
 
 /* static_assert( */

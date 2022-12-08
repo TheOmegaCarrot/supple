@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "supl/metaprogramming.hpp"
+#include "supl/type_list.hpp"
 
 // all tests happen at compile time anyway
 // if this TU compiles, all tests pass
@@ -315,3 +316,15 @@ static_assert(
     std::is_same_v<supl::make_const_ref_t<volatile int&&>, const int&>);
 static_assert(std::is_same_v<supl::make_const_ref_t<const volatile int&&>,
                              const int&>);
+
+///////////////////////////////////////////// is_same_as
+
+static_assert(supl::tl::none_of_v<supl::tl::type_list<int, char, bool>,
+                                  supl::is_same_as<void>::func>);
+
+static_assert(supl::tl::any_of_v<supl::tl::type_list<int, char, bool>,
+                                 supl::is_same_as<char>::func>);
+
+static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
+                                  supl::is_same_as<char>::func>);
+

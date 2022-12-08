@@ -651,6 +651,17 @@ struct make_const_ref : type_identity<std::add_lvalue_reference_t<
 template <typename T>
 using make_const_ref_t = typename make_const_ref<T>::type;
 
+///////////////////////////////////////////// is_same_as
+
+template <typename T>
+struct is_same_as {
+  template <typename U>
+  struct func : std::is_same<T, U> {};
+
+  template <typename U>
+  constexpr inline static bool func_v = func<U>::value;
+};
+
 } // namespace supl
 
 #endif

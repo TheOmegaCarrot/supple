@@ -246,9 +246,9 @@ template <template <typename...> typename Tuple, typename... Ts,
 [[nodiscard]] constexpr auto
 tuple_push_back_impl(const Tuple<Pack...>& tup,
                      std::index_sequence<Inds...>, Ts&&... data) noexcept
+    -> tl::push_back_t<Tuple<Pack...>, remove_cvref_t<Ts>...>
 {
-  return std::tuple<Pack..., ::supl::remove_cvref_t<Ts>...> {
-      std::get<Inds>(tup)..., std::forward<Ts>(data)...};
+  return {std::get<Inds>(tup)..., std::forward<Ts>(data)...};
 }
 
 } // namespace impl
@@ -272,6 +272,7 @@ tuple_push_back_impl(const Tuple<Pack...>& tup,
 template <typename Tuple, typename... Ts>
 [[nodiscard]] constexpr auto tuple_push_back(const Tuple& tup,
                                              Ts&&... data) noexcept
+    -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return ::supl::impl::tuple_push_back_impl(tup, seq,

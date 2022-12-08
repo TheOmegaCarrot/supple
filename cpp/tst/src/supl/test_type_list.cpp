@@ -34,6 +34,8 @@ void test_type_list()
   ehanc::run_test("supl::tl::any_of", &pass);
   ehanc::run_test("supl::tl::none_of", &pass);
   ehanc::run_test("supl::tl::transform", &pass);
+  ehanc::run_test("supl::tl::reorder", &pass);
+  /* ehanc::run_test("supl::tl::split", &pass); */
 }
 
 ///////////////////////////////////////////// contains
@@ -539,11 +541,25 @@ static_assert(
 
 ///////////////////////////////////////////// reorder
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::reorder_t<supl::tl::type_list<int, char, bool, float>, 3, */
-/*                           1, 2, 1, 0>, */
-/*         supl::tl::type_list<float, char, bool, char, int>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::reorder_t<supl::tl::type_list<int, char, bool, float>, 3,
+                            1, 2, 1, 0>,
+        supl::tl::type_list<float, char, bool, char, int>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::reorder_t<supl::tl::type_list<int, char, bool, float>>,
+        supl::tl::type_list<>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::reorder_t<supl::tl::type_list<int, char, const int,
+                                                void*, double, bool, char>,
+                            0, 4, 3, 6, 6, 5, 2, 1, 3, 5, 3, 6, 3>,
+        supl::tl::type_list<int, double, void*, char, char, bool,
+                            const int, char, void*, bool, void*, char,
+                            void*>>);
 
 ///////////////////////////////////////////// split
 

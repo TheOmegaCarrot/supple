@@ -338,6 +338,18 @@ using rotate_right_t = typename rotate_right<LIST>::type;
 
 ///////////////////////////////////////////// reorder
 
+template <typename LIST, std::size_t... Idxs>
+struct reorder;
+
+template <template <typename...> typename LIST, std::size_t... Idxs,
+          typename... Pack>
+struct reorder<LIST<Pack...>, Idxs...>
+    : ::supl::type_identity<
+          LIST<::supl::tl::at_index_t<Idxs, LIST<Pack...>>...>> {};
+
+template <typename LIST, std::size_t... Idxs>
+using reorder_t = typename ::supl::tl::reorder<LIST, Idxs...>::type;
+
 ///////////////////////////////////////////// split
 
 } // namespace supl::tl

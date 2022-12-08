@@ -427,6 +427,7 @@ template <typename Tuple, typename... Ts, std::size_t... pre_idxs,
 [[nodiscard]] constexpr auto
 tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
                   std::index_sequence<post_idxs...>, Ts&&... data) noexcept
+    -> tl::insert_t<Tuple, sizeof...(pre_idxs), remove_cvref_t<Ts>...>
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
@@ -460,11 +461,12 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
  * @return New tuple with `data` inserted at index `Idx`
  */
 /* }}} */
-template <typename Tuple, typename... T, std::size_t Idx>
+template <typename Tuple, typename... Ts, std::size_t Idx>
 [[nodiscard]] constexpr auto
 tuple_insert(const Tuple& tup,
              [[maybe_unused]] index_constant<Idx> deduction_helper,
-             T&&... data) noexcept
+             Ts&&... data) noexcept
+    -> tl::insert_t<Tuple, Idx, remove_cvref_t<Ts>...>
 {
   static_assert(Idx <= std::tuple_size_v<Tuple>, "Index out of bounds");
 
@@ -473,7 +475,7 @@ tuple_insert(const Tuple& tup,
       std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
 
   return impl::tuple_insert_impl(tup, pre_seq, post_seq,
-                                 std::forward<T>(data)...);
+                                 std::forward<Ts>(data)...);
 }
 
 namespace impl {

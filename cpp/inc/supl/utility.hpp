@@ -52,7 +52,7 @@ template <typename T>
 auto to_string(const T& value) noexcept -> std::string
 {
 
-  using decayT = std::decay_t<T>;
+  using decayT = ::supl::remove_cvref_t<T>;
 
   static_assert(
       std::disjunction_v<::supl::is_printable<decayT>,

@@ -381,7 +381,7 @@ struct is_tuple_impl<std::tuple<Ts...>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_tuple : ::supl::impl::is_tuple_impl<std::decay_t<T>> {};
+struct is_tuple : ::supl::impl::is_tuple_impl<::supl::remove_cvref_t<T>> {};
 
 /* {{{ doc */
 /**
@@ -420,7 +420,7 @@ struct is_pair_impl<std::pair<First, Second>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_pair : ::supl::impl::is_pair_impl<std::decay_t<T>> {};
+struct is_pair : ::supl::impl::is_pair_impl<::supl::remove_cvref_t<T>> {};
 
 /* {{{ doc */
 /**

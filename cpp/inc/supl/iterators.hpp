@@ -231,10 +231,10 @@ public:
 }; // class sequence_iterator
 
 template <typename T, typename F>
-sequence_iterator(T, F) -> sequence_iterator<std::decay_t<T>>;
+sequence_iterator(T, F) -> sequence_iterator<::supl::remove_cvref_t<T>>;
 
 template <typename T>
-sequence_iterator(T) -> sequence_iterator<std::decay_t<T>>;
+sequence_iterator(T) -> sequence_iterator<::supl::remove_cvref_t<T>>;
 
 /* {{{ doc */
 /**
@@ -363,10 +363,10 @@ public:
 }; // class sequence
 
 template <typename T, typename F>
-sequence(T, T, F) -> sequence<std::decay_t<T>>;
+sequence(T, T, F) -> sequence<::supl::remove_cvref_t<T>>;
 
 template <typename T>
-sequence(T, T) -> sequence<std::decay_t<T>>;
+sequence(T, T) -> sequence<::supl::remove_cvref_t<T>>;
 
 /* {{{ doc */
 /**

@@ -247,7 +247,7 @@ template <template <typename...> typename Tuple, typename... Ts,
 tuple_push_back_impl(const Tuple<Pack...>& tup,
                      std::index_sequence<Inds...>, Ts&&... data) noexcept
 {
-  return std::tuple<Pack..., std::decay_t<Ts>...> {
+  return std::tuple<Pack..., ::supl::remove_cvref_t<Ts>...> {
       std::get<Inds>(tup)..., std::forward<Ts>(data)...};
 }
 
@@ -318,7 +318,7 @@ template <template <typename...> typename Tuple, typename... Ts,
 tuple_push_front_impl(const Tuple<Pack...>& tup,
                       std::index_sequence<Inds...>, Ts&&... data) noexcept
 {
-  return std::tuple<std::decay_t<Ts>..., Pack...> {
+  return std::tuple<::supl::remove_cvref_t<Ts>..., Pack...> {
       std::forward<Ts>(data)..., std::get<Inds>(tup)...};
 }
 
@@ -434,7 +434,7 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
   constexpr std::size_t idx {sizeof...(pre_idxs)};
 
   return std::tuple<::supl::tl::at_index_t<pre_idxs, Tuple>...,
-                    std::decay_t<Ts>...,
+                    ::supl::remove_cvref_t<Ts>...,
                     ::supl::tl::at_index_t<post_idxs + idx, Tuple>...> {
       std::get<pre_idxs>(tup)..., std::forward<Ts>(data)...,
       std::get<post_idxs + idx>(tup)...};

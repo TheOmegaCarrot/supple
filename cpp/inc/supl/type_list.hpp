@@ -181,13 +181,23 @@ struct back_n
 template <typename LIST, std::size_t N>
 using back_n_t = typename back_n<LIST, N>::type;
 
-///////////////////////////////////////////// drop_n
+///////////////////////////////////////////// drop_front_n
 
 template <typename LIST, std::size_t N>
-struct drop_n : ::supl::tl::back_n<LIST, ::supl::tl::size_v<LIST> - N> {};
+struct drop_front_n
+    : ::supl::tl::back_n<LIST, ::supl::tl::size_v<LIST> - N> {};
 
 template <typename LIST, std::size_t N>
-using drop_n_t = typename drop_n<LIST, N>::type;
+using drop_front_n_t = typename drop_front_n<LIST, N>::type;
+
+///////////////////////////////////////////// drop_back_n
+
+template <typename LIST, std::size_t N>
+struct drop_back_n
+    : ::supl::tl::front_n<LIST, ::supl::tl::size_v<LIST> - N> {};
+
+template <typename LIST, std::size_t N>
+using drop_back_n_t = typename drop_back_n<LIST, N>::type;
 
 ///////////////////////////////////////////// pop_back
 

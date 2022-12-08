@@ -1,9 +1,4 @@
-#include "supl/test_type_list.h"
 #include "supl/type_list.hpp"
-#include "test_utils.hpp"
-
-void test_type_list()
-{}
 
 ///////////////////////////////////////////// make_list
 

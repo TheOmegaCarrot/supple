@@ -6,9 +6,7 @@
 #include "supl/test_algorithm.h"
 #include "supl/test_fake_ranges.h"
 #include "supl/test_iterators.h"
-#include "supl/test_metaprogramming.h"
 #include "supl/test_tuple_algo.h"
-#include "supl/test_type_list.h"
 #include "supl/test_utility.h"
 
 auto main() -> int

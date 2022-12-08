@@ -1,18 +1,15 @@
 #include <array>
 #include <forward_list>
+#include <iostream>
 #include <list>
 #include <queue>
 #include <type_traits>
 #include <vector>
 
 #include "supl/metaprogramming.hpp"
-#include "supl/test_metaprogramming.h"
-#include "test_utils.hpp"
 
 // all tests happen at compile time anyway
 // if this TU compiles, all tests pass
-void test_metaprogramming()
-{}
 
 ///////////////////////////////////////////// sum_type
 

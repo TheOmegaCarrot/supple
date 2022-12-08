@@ -235,6 +235,25 @@ using sublist_t = typename sublist<LIST, Begin, End>::type;
 
 ///////////////////////////////////////////// insert
 
+template <typename LIST, std::size_t Idx, typename... Inserted>
+struct insert;
+
+template <template <typename...> typename LIST, std::size_t Idx,
+          typename... Inserted, typename... Pack>
+struct insert<LIST<Pack...>, Idx, Inserted...>
+    : concat<
+          // [0, Idx - 1) of input
+          front_n_t<LIST<Pack...>, Idx>,
+          // New elements
+          LIST<Inserted...>,
+          // [Idx, <END>) of input
+          drop_front_n_t<LIST<Pack...>, Idx>> {
+  static_assert(Idx <= sizeof...(Pack), "Index out of bounds");
+};
+
+template <typename LIST, std::size_t Idx, typename... Inserted>
+using insert_t = typename insert<LIST, Idx, Inserted...>::type;
+
 ///////////////////////////////////////////// erase
 
 ///////////////////////////////////////////// all_of
@@ -327,8 +346,7 @@ template <template <typename...> typename LIST, std::size_t... Idxs,
           typename... Pack>
 struct reorder<LIST<Pack...>, Idxs...>
     : type_identity<LIST<at_index_t<Idxs, LIST<Pack...>>...>> {
-  static_assert(((Idxs < size_v<LIST<Pack...>>)&&...),
-                "Index out of bounds");
+  static_assert(((Idxs < sizeof...(Pack)) && ...), "Index out of bounds");
 };
 
 template <typename LIST, std::size_t... Idxs>

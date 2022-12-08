@@ -125,6 +125,18 @@ static_assert(std::is_same_v<
                                   std::nullptr_t>>);
 
 static_assert(std::is_same_v<
+              supl::tl::concat_t<
+                  supl::tl::type_list<int, char>,
+                  supl::tl::type_list<bool, float>, supl::tl::type_list<>,
+                  supl::tl::type_list<const int, int&&>,
+                  supl::tl::type_list<const volatile void*, const bool>,
+                  supl::tl::type_list<>,
+                  supl::tl::type_list<double, std::nullptr_t>>,
+              supl::tl::type_list<int, char, bool, float, const int, int&&,
+                                  const volatile void*, const bool, double,
+                                  std::nullptr_t>>);
+
+static_assert(std::is_same_v<
               supl::tl::concat_t<supl::tl::type_list<int, char, bool>>,
               supl::tl::type_list<int, char, bool>>);
 
@@ -428,23 +440,23 @@ static_assert(
 
 ///////////////////////////////////////////// insert
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::insert<supl::tl::type_list<int, char, bool, float>, 2, */
-/*                          double, std::size_t>, */
-/*         supl::tl::type_list<int, char, double, std::size_t, bool, float>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::insert_t<supl::tl::type_list<int, char, bool, float>, 2,
+                           double, std::size_t>,
+        supl::tl::type_list<int, char, double, std::size_t, bool, float>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::insert<supl::tl::type_list<int, char, bool, float>, 0, */
-/*                          double, std::size_t>, */
-/*         supl::tl::type_list<double, std::size_t, int, char, bool, float>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::insert_t<supl::tl::type_list<int, char, bool, float>, 0,
+                           double, std::size_t>,
+        supl::tl::type_list<double, std::size_t, int, char, bool, float>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::insert<supl::tl::type_list<int, char, bool, float>, 5, */
-/*                          double, std::size_t>, */
-/*         supl::tl::type_list<int, char, bool, float, double, std::size_t>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::insert_t<supl::tl::type_list<int, char, bool, float>, 4,
+                           double, std::size_t>,
+        supl::tl::type_list<int, char, bool, float, double, std::size_t>>);
 
 ///////////////////////////////////////////// erase
 

@@ -33,7 +33,7 @@ template <typename Iterable>
     return begin;
   }
 
-  if constexpr ( ::supl::is_bidirectional_v<decltype(end)> ) {
+  if constexpr ( is_bidirectional_v<decltype(end)> ) {
     return --end;
   } else {
 
@@ -125,7 +125,7 @@ public:
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
   explicit constexpr sequence_iterator(
-      U init, Incr func = ::supl::increment<value_type>)
+      U init, Incr func = increment<value_type>)
       // clang-format off
       noexcept(std::conjunction_v<
                std::is_nothrow_constructible<T>,
@@ -231,10 +231,10 @@ public:
 }; // class sequence_iterator
 
 template <typename T, typename F>
-sequence_iterator(T, F) -> sequence_iterator<::supl::remove_cvref_t<T>>;
+sequence_iterator(T, F) -> sequence_iterator<remove_cvref_t<T>>;
 
 template <typename T>
-sequence_iterator(T) -> sequence_iterator<::supl::remove_cvref_t<T>>;
+sequence_iterator(T) -> sequence_iterator<remove_cvref_t<T>>;
 
 /* {{{ doc */
 /**
@@ -280,7 +280,7 @@ public:
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
   explicit sequence(U&& begin, U&& end,
-                    Incr&& func = ::supl::increment<value_type>)
+                    Incr&& func = increment<value_type>)
       // clang-format off
                     noexcept(std::conjunction_v<
                              std::is_nothrow_constructible<T>,
@@ -317,9 +317,9 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto begin() const noexcept
-      -> ::supl::sequence_iterator<value_type>
+      -> sequence_iterator<value_type>
   {
-    return ::supl::sequence_iterator(m_begin, m_inc);
+    return sequence_iterator(m_begin, m_inc);
   }
 
   /* {{{ doc */
@@ -328,7 +328,7 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto cbegin() const noexcept
-      -> ::supl::sequence_iterator<value_type>
+      -> sequence_iterator<value_type>
   {
     return this->begin();
   }
@@ -339,9 +339,9 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto end() const noexcept
-      -> ::supl::sequence_iterator<value_type>
+      -> sequence_iterator<value_type>
   {
-    return ::supl::sequence_iterator(m_end, m_inc);
+    return sequence_iterator(m_end, m_inc);
   }
 
   /* {{{ doc */
@@ -350,7 +350,7 @@ public:
    */
   /* }}} */
   [[nodiscard]] constexpr auto cend() const noexcept
-      -> ::supl::sequence_iterator<value_type>
+      -> sequence_iterator<value_type>
   {
     return this->end();
   }
@@ -363,10 +363,10 @@ public:
 }; // class sequence
 
 template <typename T, typename F>
-sequence(T, T, F) -> sequence<::supl::remove_cvref_t<T>>;
+sequence(T, T, F) -> sequence<remove_cvref_t<T>>;
 
 template <typename T>
-sequence(T, T) -> sequence<::supl::remove_cvref_t<T>>;
+sequence(T, T) -> sequence<remove_cvref_t<T>>;
 
 /* {{{ doc */
 /**
@@ -648,23 +648,23 @@ public:
       -> generative_sequence& = default;
 
   constexpr auto begin() noexcept
-      -> ::supl::generative_iterator<value_type>
+      -> generative_iterator<value_type>
   {
-    return ::supl::generative_iterator(m_gen);
+    return generative_iterator(m_gen);
   }
 
   constexpr auto cbegin() noexcept
-      -> ::supl::generative_iterator<value_type>
+      -> generative_iterator<value_type>
   {
     return this->begin();
   }
 
-  constexpr auto end() noexcept -> ::supl::generative_iterator<value_type>
+  constexpr auto end() noexcept -> generative_iterator<value_type>
   {
-    return ::supl::generative_iterator<value_type>(m_max);
+    return generative_iterator<value_type>(m_max);
   }
 
-  constexpr auto cend() noexcept -> ::supl::generative_iterator<value_type>
+  constexpr auto cend() noexcept -> generative_iterator<value_type>
   {
     return this->end();
   }

@@ -52,42 +52,40 @@ template <typename T>
 auto to_string(const T& value) noexcept -> std::string
 {
 
-  using decayT = ::supl::remove_cvref_t<T>;
+  using decayT = remove_cvref_t<T>;
 
   static_assert(
-      std::disjunction_v<::supl::is_printable<decayT>,
-                         ::supl::is_tuple<decayT>, ::supl::is_pair<decayT>,
-                         ::supl::is_iterable<decayT>>,
+      std::disjunction_v<is_printable<decayT>, is_tuple<decayT>,
+                         is_pair<decayT>, is_iterable<decayT>>,
       "Attempting to call supl::to_string with an unsupported type");
 
   std::stringstream out;
   out << std::boolalpha;
 
-  if constexpr ( ::supl::is_printable_v<T> ) {
+  if constexpr ( is_printable_v<T> ) {
 
     out << value;
 
-  } else if constexpr ( ::supl::is_tuple_v<T> ) {
+  } else if constexpr ( is_tuple_v<T> ) {
 
     if constexpr ( std::tuple_size_v<T> == 0 ) {
       return "( )";
     }
 
     out << "( ";
-    ::supl::for_each_in_tuple(value, [&out](const auto& i) {
-      out << supl::to_string(i) << ", ";
-    });
+    for_each_in_tuple(
+        value, [&out](const auto& i) { out << to_string(i) << ", "; });
     // Move "write head" 2 characters before the end, and overwrite from
     // there Much less jank way of removing trailing ", "
     out.seekp(-2, std::ios_base::end);
     out << " )";
 
-  } else if constexpr ( ::supl::is_pair_v<T> ) {
+  } else if constexpr ( is_pair_v<T> ) {
 
-    out << "( " << ::supl::to_string(value.first) << ", "
-        << ::supl::to_string(value.second) << " )";
+    out << "( " << to_string(value.first) << ", "
+        << to_string(value.second) << " )";
 
-  } else if constexpr ( ::supl::is_iterable_v<T> ) {
+  } else if constexpr ( is_iterable_v<T> ) {
 
     if ( value.empty() ) {
       return "[ ]";
@@ -95,7 +93,7 @@ auto to_string(const T& value) noexcept -> std::string
       out << "[ ";
       std::for_each(
           std::begin(value), std::end(value),
-          [&out](const auto& i) { out << ::supl::to_string(i) << ", "; });
+          [&out](const auto& i) { out << to_string(i) << ", "; });
       out.seekp(-2, std::ios_base::end);
       out << " ]";
     }

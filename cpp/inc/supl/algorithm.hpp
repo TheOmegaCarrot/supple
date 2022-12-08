@@ -56,7 +56,7 @@ template <typename Container, typename... Containers>
 constexpr auto min_size(const Container& cont,
                         const Containers&... conts) noexcept -> std::size_t
 {
-  return std::min(::supl::min_size(cont), ::supl::min_size(conts...));
+  return std::min(min_size(cont), min_size(conts...));
 }
 
 /* {{{ doc */
@@ -105,7 +105,7 @@ template <typename Container, typename... Containers>
 constexpr auto max_size(const Container& cont,
                         const Containers&... conts) noexcept -> std::size_t
 {
-  return std::max(::supl::max_size(cont), ::supl::max_size(conts...));
+  return std::max(max_size(cont), max_size(conts...));
 }
 
 template <typename Itr>
@@ -440,12 +440,12 @@ constexpr void for_each_all_n(
 template <typename VarFunc, typename... Containers>
 constexpr void
 for_each_all(VarFunc&& func, Containers&... containers) noexcept(
-    noexcept(::supl::for_each_all_n(std::forward<VarFunc>(func),
-                                    ::supl::min_size(containers...),
+    noexcept(for_each_all_n(std::forward<VarFunc>(func),
+                                    min_size(containers...),
                                     std::begin(containers)...)))
 {
-  ::supl::for_each_all_n(std::forward<VarFunc>(func),
-                         ::supl::min_size(containers...),
+  for_each_all_n(std::forward<VarFunc>(func),
+                         min_size(containers...),
                          std::begin(containers)...);
 }
 
@@ -472,11 +472,11 @@ template <typename VarFunc, typename... Containers>
 constexpr void
 for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
     noexcept(for_each_all_n(std::forward<VarFunc>(func),
-                            ::supl::min_size(containers...),
+                            min_size(containers...),
                             std::cbegin(containers)...)))
 {
-  ::supl::for_each_all_n(std::forward<VarFunc>(func),
-                         ::supl::min_size(containers...),
+  for_each_all_n(std::forward<VarFunc>(func),
+                         min_size(containers...),
                          std::cbegin(containers)...);
 }
 

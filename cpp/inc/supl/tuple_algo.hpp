@@ -241,14 +241,14 @@ template <typename Tuple, typename Pred>
 
 namespace impl {
 
-template <template <typename...> typename Tuple, typename T,
+template <template <typename...> typename Tuple, typename... Ts,
           typename... Pack, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_push_back_impl(const Tuple<Pack...>& tup, T&& data,
-                     std::index_sequence<Inds...>) noexcept
+tuple_push_back_impl(const Tuple<Pack...>& tup,
+                     std::index_sequence<Inds...>, Ts&&... data) noexcept
 {
-  return std::tuple<Pack..., std::decay_t<T>> {std::get<Inds>(tup)...,
-                                               std::forward<T>(data)};
+  return std::tuple<Pack..., std::decay_t<Ts>...> {
+      std::get<Inds>(tup)..., std::forward<Ts>(data)...};
 }
 
 } // namespace impl
@@ -269,13 +269,13 @@ tuple_push_back_impl(const Tuple<Pack...>& tup, T&& data,
  * @return New tuple with `data` appended
  */
 /* }}} */
-template <typename Tuple, typename T>
+template <typename Tuple, typename... Ts>
 [[nodiscard]] constexpr auto tuple_push_back(const Tuple& tup,
-                                             T&& data) noexcept
+                                             Ts&&... data) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::supl::impl::tuple_push_back_impl(tup, std::forward<T>(data),
-                                            seq);
+  return ::supl::impl::tuple_push_back_impl(tup, seq,
+                                            std::forward<Ts>(data)...);
 }
 
 namespace impl {
@@ -312,14 +312,14 @@ template <typename Tuple>
 
 namespace impl {
 
-template <template <typename...> typename Tuple, typename T,
+template <template <typename...> typename Tuple, typename... Ts,
           typename... Pack, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_push_front_impl(const Tuple<Pack...>& tup, T&& data,
-                      std::index_sequence<Inds...>) noexcept
+tuple_push_front_impl(const Tuple<Pack...>& tup,
+                      std::index_sequence<Inds...>, Ts&&... data) noexcept
 {
-  return std::tuple<std::decay_t<T>, Pack...> {std::forward<T>(data),
-                                               std::get<Inds>(tup)...};
+  return std::tuple<std::decay_t<Ts>..., Pack...> {
+      std::forward<Ts>(data)..., std::get<Inds>(tup)...};
 }
 
 } // namespace impl
@@ -339,13 +339,13 @@ tuple_push_front_impl(const Tuple<Pack...>& tup, T&& data,
  * @return New tuple with `data` prepended
  */
 /* }}} */
-template <typename Tuple, typename T>
+template <typename Tuple, typename... Ts>
 [[nodiscard]] constexpr auto tuple_push_front(const Tuple& tup,
-                                              T&& data) noexcept
+                                              Ts&&... data) noexcept
 {
   auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
-  return ::supl::impl::tuple_push_front_impl(tup, std::forward<T>(data),
-                                             seq);
+  return ::supl::impl::tuple_push_front_impl(tup, seq,
+                                             std::forward<Ts>(data)...);
 }
 
 namespace impl {

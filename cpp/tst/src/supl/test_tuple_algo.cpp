@@ -174,6 +174,11 @@ static auto test_tuple_push_back() -> ehanc::test
 
   results.add_case(result2, expected2);
 
+  std::tuple expected3 {3, 3.14, 'd', true, 42, nullptr};
+  auto result3 {supl::tuple_push_back(test1, true, 42, nullptr)};
+
+  results.add_case(result3, expected3);
+
   return results;
 }
 
@@ -218,6 +223,11 @@ static auto test_tuple_push_front() -> ehanc::test
   auto result2 {supl::tuple_push_front(test2, 3.14)};
 
   results.add_case(result2, expected2);
+
+  std::tuple expected3 {true, 42, nullptr, 3, 3.14, 'd'};
+  auto result3 {supl::tuple_push_front(test1, true, 42, nullptr)};
+
+  results.add_case(result3, expected3);
 
   return results;
 }

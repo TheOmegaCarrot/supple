@@ -14,11 +14,6 @@ macro(sanitize)
   add_link_options(-fsanitize=${SANITIZERS})
 endmacro()
 
-macro(optimize opt)
-  message("-- Using -O${opt}")
-  add_compile_options(-O${opt})
-endmacro()
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   message("-- Using GCC")
   add_compile_options(
@@ -68,12 +63,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
                                            "Clang")
   if(CMAKE_BUILD_TYPE STREQUAL Debug)
     message("-- Build type: Debug")
-    optimize(0)
     sanitize()
-    add_compile_options(-g)
   elseif(CMAKE_BUILD_TYPE STREQUAL Release)
     message("-- Build type: Release")
-    optimize(3)
   endif()
 endif()
 

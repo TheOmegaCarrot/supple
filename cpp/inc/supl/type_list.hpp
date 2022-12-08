@@ -256,6 +256,18 @@ using insert_t = typename insert<LIST, Idx, Inserted...>::type;
 
 ///////////////////////////////////////////// erase
 
+template <typename LIST, std::size_t Idx>
+struct erase;
+
+template <template <typename...> typename LIST, std::size_t Idx,
+          typename... Pack>
+struct erase<LIST<Pack...>, Idx>
+    : concat<front_n_t<LIST<Pack...>, Idx>,
+             drop_front_n_t<LIST<Pack...>, Idx + 1>> {};
+
+template <typename LIST, std::size_t Idx>
+using erase_t = typename erase<LIST, Idx>::type;
+
 ///////////////////////////////////////////// all_of
 
 template <typename LIST, template <typename> typename PRED>

@@ -460,17 +460,17 @@ static_assert(
 
 ///////////////////////////////////////////// erase
 
-/* static_assert(std::is_same_v< */
-/*               supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 1>, */
-/*               supl::tl::type_list<int, bool>>); */
+static_assert(std::is_same_v<
+              supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 1>,
+              supl::tl::type_list<int, bool>>);
 
-/* static_assert(std::is_same_v< */
-/*               supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 0>, */
-/*               supl::tl::type_list<char, bool>>); */
+static_assert(std::is_same_v<
+              supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 0>,
+              supl::tl::type_list<char, bool>>);
 
-/* static_assert(std::is_same_v< */
-/*               supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 2>, */
-/*               supl::tl::type_list<int, char>>); */
+static_assert(std::is_same_v<
+              supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 2>,
+              supl::tl::type_list<int, char>>);
 
 ///////////////////////////////////////////// all_of
 

@@ -124,8 +124,8 @@ public:
    */
   /* }}} */
   template <typename U, typename Incr = std::function<void(value_type&)>>
-  explicit constexpr sequence_iterator(
-      U init, Incr func = increment<value_type>)
+  explicit constexpr sequence_iterator(U init,
+                                       Incr func = increment<value_type>)
       // clang-format off
       noexcept(std::conjunction_v<
                std::is_nothrow_constructible<T>,
@@ -647,14 +647,12 @@ public:
       std::is_nothrow_move_assignable_v<value_type>)
       -> generative_sequence& = default;
 
-  constexpr auto begin() noexcept
-      -> generative_iterator<value_type>
+  constexpr auto begin() noexcept -> generative_iterator<value_type>
   {
     return generative_iterator(m_gen);
   }
 
-  constexpr auto cbegin() noexcept
-      -> generative_iterator<value_type>
+  constexpr auto cbegin() noexcept -> generative_iterator<value_type>
   {
     return this->begin();
   }

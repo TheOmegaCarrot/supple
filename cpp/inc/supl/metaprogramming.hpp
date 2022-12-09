@@ -684,6 +684,17 @@ struct is_same_as {
   constexpr inline static bool func_v = func<U>::value;
 };
 
+///////////////////////////////////////////// conjunction_compose
+
+template <template <typename> typename... PREDS>
+struct conjunction_compose {
+  template <typename T>
+  struct func : std::conjunction<PREDS<T>...> {};
+
+  template <typename T>
+  constexpr inline static bool func_v = func<T>::value;
+};
+
 } // namespace supl
 
 #endif

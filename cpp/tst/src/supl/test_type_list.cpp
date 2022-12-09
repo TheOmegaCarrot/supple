@@ -444,14 +444,14 @@ static_assert(std::is_same_v<
 static_assert(supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
                                  std::is_integral>);
 
-static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, float, bool>,
-                                  std::is_integral>);
+static_assert(not supl::tl::all_of_v<supl::tl::type_list<int, float, bool>,
+                                     std::is_integral>);
 
-static_assert(!supl::tl::all_of_v<supl::tl::type_list<double, float, bool>,
-                                  std::is_integral>);
+static_assert(not supl::tl::all_of_v<
+              supl::tl::type_list<double, float, bool>, std::is_integral>);
 
-static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, float, double>,
-                                  std::is_integral>);
+static_assert(not supl::tl::all_of_v<
+              supl::tl::type_list<int, float, double>, std::is_integral>);
 
 ///////////////////////////////////////////// any_of
 
@@ -471,25 +471,25 @@ static_assert(supl::tl::any_of_v<supl::tl::type_list<float, double, int>,
                                  std::is_integral>);
 
 static_assert(
-    !supl::tl::any_of_v<supl::tl::type_list<float, double, float>,
-                        std::is_integral>);
+    not supl::tl::any_of_v<supl::tl::type_list<float, double, float>,
+                           std::is_integral>);
 
 ///////////////////////////////////////////// none_of
 
-static_assert(!supl::tl::none_of_v<supl::tl::type_list<int, char, bool>,
-                                   std::is_integral>);
+static_assert(not supl::tl::none_of_v<supl::tl::type_list<int, char, bool>,
+                                      std::is_integral>);
 
-static_assert(!supl::tl::none_of_v<supl::tl::type_list<int, float, bool>,
-                                   std::is_integral>);
+static_assert(not supl::tl::none_of_v<
+              supl::tl::type_list<int, float, bool>, std::is_integral>);
 
-static_assert(!supl::tl::none_of_v<
+static_assert(not supl::tl::none_of_v<
               supl::tl::type_list<double, float, bool>, std::is_integral>);
 
-static_assert(!supl::tl::none_of_v<supl::tl::type_list<int, float, double>,
-                                   std::is_integral>);
+static_assert(not supl::tl::none_of_v<
+              supl::tl::type_list<int, float, double>, std::is_integral>);
 
-static_assert(!supl::tl::none_of_v<supl::tl::type_list<float, double, int>,
-                                   std::is_integral>);
+static_assert(not supl::tl::none_of_v<
+              supl::tl::type_list<float, double, int>, std::is_integral>);
 
 static_assert(
     supl::tl::none_of_v<supl::tl::type_list<float, double, float>,

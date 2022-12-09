@@ -325,12 +325,34 @@ static_assert(supl::tl::none_of_v<supl::tl::type_list<int, char, bool>,
 static_assert(supl::tl::any_of_v<supl::tl::type_list<int, char, bool>,
                                  supl::is_same_as<char>::func>);
 
-static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
-                                  supl::is_same_as<char>::func>);
+static_assert(not supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
+                                     supl::is_same_as<char>::func>);
 
 static_assert(supl::is_same_as<int>::template func<int>::value);
 static_assert(supl::is_same_as<int>::template func_v<int>);
-static_assert(!supl::is_same_as<void>::template func<int>::value);
-static_assert(!supl::is_same_as<void>::template func_v<int>);
-static_assert(!supl::is_same_as<int>::template func<void>::value);
-static_assert(!supl::is_same_as<int>::template func_v<void>);
+static_assert(not supl::is_same_as<void>::template func<int>::value);
+static_assert(not supl::is_same_as<void>::template func_v<int>);
+static_assert(not supl::is_same_as<int>::template func<void>::value);
+static_assert(not supl::is_same_as<int>::template func_v<void>);
+
+///////////////////////////////////////////// conjunction_compose
+
+static_assert(
+    supl::tl::any_of_v<
+        supl::tl::type_list<int, char, const bool>,
+        supl::conjunction_compose<std::is_integral, std::is_const>::func>);
+
+static_assert(
+    not supl::tl::any_of_v<
+        supl::tl::type_list<int, char, bool, const double>,
+        supl::conjunction_compose<std::is_integral, std::is_const>::func>);
+
+static_assert(
+    not supl::tl::all_of_v<
+        supl::tl::type_list<int, char, const bool>,
+        supl::conjunction_compose<std::is_integral, std::is_const>::func>);
+
+static_assert(
+    supl::tl::all_of_v<
+        supl::tl::type_list<const int, const char, const bool>,
+        supl::conjunction_compose<std::is_integral, std::is_const>::func>);

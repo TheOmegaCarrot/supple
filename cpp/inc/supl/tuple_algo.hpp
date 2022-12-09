@@ -58,7 +58,8 @@ for_each_in_tuple_impl(Tuple&& tup, Func&& func,
 template <typename Tuple, typename Func>
 constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   impl::for_each_in_tuple_impl(tup, std::forward<Func>(func), seq);
 }
 
@@ -115,7 +116,8 @@ template <typename Tuple, typename Func>
 [[nodiscard]] constexpr auto tuple_transform(const Tuple& tup,
                                              Func&& func) noexcept
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return impl::tuple_transform_impl(tup, std::forward<Func>(func), seq);
 }
 
@@ -160,7 +162,8 @@ template <typename Tuple, typename Pred>
 [[nodiscard]] constexpr auto tuple_any_of(const Tuple& tup,
                                           Pred&& pred) noexcept -> bool
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return impl::tuple_any_of_impl(tup, std::forward<Pred>(pred), seq);
 }
 
@@ -205,7 +208,8 @@ template <typename Tuple, typename Pred>
 [[nodiscard]] constexpr auto tuple_all_of(const Tuple& tup,
                                           Pred&& pred) noexcept -> bool
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return impl::tuple_all_of_impl(tup, std::forward<Pred>(pred), seq);
 }
 
@@ -270,7 +274,8 @@ template <typename Tuple, typename... Ts>
                                              Ts&&... data) noexcept
     -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return impl::tuple_push_back_impl(tup, seq, std::forward<Ts>(data)...);
 }
 
@@ -303,7 +308,8 @@ template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_pop_back(const Tuple& tup) noexcept
     -> tl::pop_back_t<Tuple>
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return impl::tuple_pop_back_impl(tup, seq);
 }
 
@@ -341,7 +347,8 @@ template <typename Tuple, typename... Ts>
                                               Ts&&... data) noexcept
     -> tl::push_front_t<Tuple, remove_cvref_t<Ts>...>
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return impl::tuple_push_front_impl(tup, seq, std::forward<Ts>(data)...);
 }
 
@@ -373,7 +380,8 @@ tuple_pop_front_impl(const Tuple& tup,
 template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_pop_front(const Tuple& tup) noexcept
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return impl::tuple_pop_front_impl(tup, seq);
 }
 
@@ -394,7 +402,8 @@ template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_rotate_left(const Tuple& tup) noexcept
     -> tl::rotate_left_t<Tuple>
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return impl::tuple_rotate_left_impl(tup, seq);
 }
 
@@ -416,7 +425,8 @@ template <typename Tuple>
 [[nodiscard]] constexpr auto tuple_rotate_right(const Tuple& tup) noexcept
     -> tl::rotate_right_t<Tuple>
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - 1> {}};
   return impl::tuple_rotate_right_impl(tup, seq);
 }
 
@@ -467,8 +477,8 @@ tuple_insert(const Tuple& tup,
 {
   static_assert(Idx <= std::tuple_size_v<Tuple>, "Index out of bounds");
 
-  auto pre_seq {std::make_index_sequence<Idx> {}};
-  auto post_seq {
+  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+  constexpr auto post_seq {
       std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
 
   return impl::tuple_insert_impl(tup, pre_seq, post_seq,
@@ -515,8 +525,8 @@ tuple_erase(const Tuple& tup,
 {
   static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
 
-  auto pre_seq {std::make_index_sequence<Idx> {}};
-  auto post_seq {
+  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+  constexpr auto post_seq {
       std::make_index_sequence<std::tuple_size_v<Tuple> - Idx - 1> {}};
 
   return impl::tuple_erase_impl(tup, pre_seq, post_seq);
@@ -573,8 +583,8 @@ template <typename Tuple, std::size_t Idx>
 {
   static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
 
-  auto pre_seq {std::make_index_sequence<Idx> {}};
-  auto post_seq {
+  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+  constexpr auto post_seq {
       std::make_index_sequence<std::tuple_size_v<Tuple> - Idx> {}};
 
   return impl::tuple_split_impl(tup, pre_seq, post_seq, idx);
@@ -621,7 +631,7 @@ subtuple(const Tuple& tup, index_constant<Begin> begin_deduct_help,
   static_assert(Begin < std::tuple_size_v<Tuple>, "Begin out of bounds");
   static_assert(End <= std::tuple_size_v<Tuple>, "Begin out of bounds");
 
-  auto seq {std::make_index_sequence<End - Begin> {}};
+  constexpr auto seq {std::make_index_sequence<End - Begin> {}};
 
   return impl::subtuple_impl(tup, seq, begin_deduct_help, end_deduct_help);
 }
@@ -706,8 +716,52 @@ template <typename Tuple, typename Pred>
                                             Pred&& pred) noexcept
     -> std::size_t
 {
-  auto seq {std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   return impl::tuple_count_if_impl(tup, std::forward<Pred>(pred), seq);
+}
+
+namespace impl {
+
+template <typename Tuple1, typename Tuple2, std::size_t... Idxs>
+constexpr auto tuple_interleave_impl(const Tuple1& tup1,
+                                     const Tuple2& tup2,
+                                     std::index_sequence<Idxs...>) noexcept
+    -> tl::interleave_t<Tuple1, Tuple2>
+{
+  return {std::tuple_cat(
+      std::tuple {std::get<Idxs>(tup1), std::get<Idxs>(tup2)}...)};
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Interleaves two tuples of the same length.
+ *
+ * ex. `tuple_interleave(std::tuple{3, true, 3.14},
+ * std::tuple{'g', "neat"s, 42}) ==
+ * std::tuple{3, 'g', true, "neat"s, 3.14, 42}`
+ *
+ * @param tup1 First tuple
+ *
+ * @param tup2 Second tuple
+ *
+ * @pre Both tuples must be of exactly the same length.
+ * Failure to meet this precondition is a compile-time error.
+ */
+/* }}} */
+template <typename Tuple1, typename Tuple2>
+[[nodiscard]] constexpr auto tuple_interleave(const Tuple1& tup1,
+                                              const Tuple2& tup2) noexcept
+    -> tl::interleave_t<Tuple1, Tuple2>
+{
+  static_assert(std::tuple_size_v<Tuple1> == std::tuple_size_v<Tuple2>,
+                "Tuples must be of the same length");
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple1>> {}};
+
+  return impl::tuple_interleave_impl(tup1, tup2, seq);
 }
 
 } // namespace supl

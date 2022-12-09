@@ -517,6 +517,36 @@ static auto test_tuple_count_if() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_interleave() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1_1 {42, 'g', 3.14};
+  std::tuple test1_2 {2.6F, true, 8L};
+
+  std::tuple expected1 {42, 2.6F, 'g', true, 3.14, 8L};
+  auto result1 {supl::tuple_interleave(test1_1, test1_2)};
+
+  results.add_case(result1, expected1);
+
+  using std::string_literals::operator""s;
+
+  std::tuple test2_1 {42, 'g', 3.14, 81, 5.31F, 4UL, false, '7'};
+  std::tuple test2_2 {
+      2.6F, true, 8L, 8.3F, 2U, 'u', "yes"s, std::vector {3, 5, 7}
+  };
+
+  std::tuple expected2 {
+      42,    2.6F, 'g', true, 3.14,  8L,     81,  8.3F,
+      5.31F, 2U,   4UL, 'u',  false, "yes"s, '7', std::vector {3, 5, 7}
+  };
+  auto result2 {supl::tuple_interleave(test2_1, test2_2)};
+
+  results.add_case(result2, expected2);
+
+  return results;
+}
+
 void test_tuple_algo()
 {
   ehanc::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
@@ -536,4 +566,5 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_split", &test_tuple_split);
   ehanc::run_test("supl::subtuple", &test_subtuple);
   ehanc::run_test("supl::tuple_count_if", &test_tuple_count_if);
+  ehanc::run_test("supl::tuple_interleave", &test_tuple_interleave);
 }

@@ -674,7 +674,7 @@ using make_const_ref_t = typename make_const_ref<T>::type;
  * The result of calling the inner `func` with type `U` provided by
  * `is_same_as<T>` is equivalent to calling `std::is_same<T, U>`.
  *
- * ex. is_same_as<T>::template func_v<U> == std::is_same_v<T, U>
+ * ex. `is_same_as<T>::template func_v<U> == std::is_same_v<T, U>`
  *
  * Indended to be used to produce a predicate for another metafunction.
  */
@@ -698,8 +698,8 @@ struct is_same_as {
  * `conjunction_compose<Ts...>`  is equivalent to calling
  * `std::conjunction<Ts<U>...>`.
  *
- * ex. conjunction_compose<std::is_integral, std::is_const>::template func_v<const void>
- * == std::conjunction_v<std::is_integral<const void>, std::is_const<const void>>
+ * ex. `conjunction_compose<std::is_integral, std::is_const>::template func_v<const void>
+ * == std::conjunction_v<std::is_integral<const void>, std::is_const<const void>>`
  *
  * Indended to be used to produce a predicate for another metafunction.
  */
@@ -723,8 +723,8 @@ struct conjunction_compose {
  * `disjunction_compose<Ts...>`  is equivalent to calling
  * `std::disjunction<Ts<U>...>`.
  *
- * ex. disjunction_compose<std::is_integral, std::is_const>::template func_v<const void>
- * == std::disjunction_v<std::is_integral<const void>, std::is_const<const void>>
+ * ex. `disjunction_compose<std::is_integral, std::is_const>::template func_v<const void>
+ * == std::disjunction_v<std::is_integral<const void>, std::is_const<const void>>`
  *
  * Indended to be used to produce a predicate for another metafunction.
  */
@@ -736,6 +736,32 @@ struct disjunction_compose {
 
   template <typename T>
   constexpr inline static bool func_v = func<T>::value;
+};
+
+///////////////////////////////////////////// binary_partial_apply
+
+/* {{{ doc */
+/**
+ * @brief Partially applies binary metafunction `FUNC`, passing
+ * `First` as the first parameter of `FUNC`. Exposes an inner
+ * unary metafunction `func` which passes `Second` as the
+ * second parameter to `FUNC`.
+ *
+ * ex. `binary_partial_apply<std::is_same, int>::template func_v<int> == true`
+ *
+ * ex. `binary_partial_apply<std::is_same, int>::template func_v<void> == false`
+ */
+/* }}} */
+template <template <typename, typename> typename FUNC, typename First>
+struct binary_partial_apply {
+  template <typename Second>
+  struct func : FUNC<First, Second> {};
+
+  template <typename Second>
+  using func_t = typename func<Second>::type;
+
+  template <typename Second>
+  constexpr inline static auto func_v = func<Second>::value;
 };
 
 } // namespace supl

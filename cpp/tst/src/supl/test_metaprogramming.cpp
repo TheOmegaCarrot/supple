@@ -378,3 +378,49 @@ static_assert(
     supl::tl::all_of_v<
         supl::tl::type_list<const int, char, bool, const void>,
         supl::disjunction_compose<std::is_integral, std::is_const>::func>);
+
+///////////////////////////////////////////// binary_partial_apply
+
+static_assert(
+    supl::binary_partial_apply<std::is_same, int>::template func_v<int>);
+
+static_assert(supl::binary_partial_apply<std::is_same,
+                                         int>::template func<int>::value);
+
+static_assert(not supl::binary_partial_apply<std::is_same,
+                                             void>::template func_v<int>);
+
+static_assert(not supl::binary_partial_apply<
+              std::is_same, void>::template func<int>::value);
+
+static_assert(not supl::binary_partial_apply<std::is_same,
+                                             int>::template func_v<void>);
+
+static_assert(not supl::binary_partial_apply<
+              std::is_same, int>::template func<void>::value);
+
+template <typename T, typename U>
+struct identity_or_void : supl::type_identity<void> {};
+
+template <typename T>
+struct identity_or_void<T, T> : supl::type_identity<T> {};
+
+static_assert(
+    std::is_same_v<supl::binary_partial_apply<
+                       identity_or_void, int>::template func<int>::type,
+                   int>);
+
+static_assert(
+    std::is_same_v<supl::binary_partial_apply<identity_or_void,
+                                              int>::template func_t<int>,
+                   int>);
+
+static_assert(
+    std::is_same_v<supl::binary_partial_apply<
+                       identity_or_void, char>::template func<int>::type,
+                   void>);
+
+static_assert(
+    std::is_same_v<supl::binary_partial_apply<identity_or_void,
+                                              char>::template func_t<int>,
+                   void>);

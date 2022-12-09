@@ -577,6 +577,33 @@ using split_t = typename split<LIST, Idx>::type;
 /* template <typename LIST, std::size_t Idx1, std::size_t Idx2> */
 /* using swap_t = typename swap<LIST, Idx1, Idx2>::type; */
 
+///////////////////////////////////////////// interleave
+
+/* {{{ doc */
+/**
+ * @brief Interleaves two type lists. New type list will
+ * alternate between elements of the first and second arguments.
+ *
+ * ex. `interleave_t<type_list<int, char, bool>, type_list<void, float, long>>
+ * -> type_list<int, void, char, float, bool, long>`
+ *
+ * @pre The two type lists must be of the same lenth.
+ */
+/* }}} */
+template <typename LIST1, typename LIST2>
+struct interleave;
+
+template <template <typename...> typename LIST, typename... Pack1,
+          typename... Pack2>
+struct interleave<LIST<Pack1...>, LIST<Pack2...>>
+    : concat<LIST<Pack1, Pack2>...> {
+  static_assert(sizeof...(Pack1) == sizeof...(Pack2),
+                "Lists must be of the same length");
+};
+
+template <typename LIST1, typename LIST2>
+using interleave_t = typename interleave<LIST1, LIST2>::type;
+
 } // namespace supl::tl
 
 #endif

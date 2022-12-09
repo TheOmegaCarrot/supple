@@ -554,28 +554,28 @@ using split_t = typename split<LIST, Idx>::type;
 
 // Not yet working
 
-/* template <typename LIST, std::size_t Idx1, std::size_t Idx2> */
-/* struct swap */
-/*     : concat< */
-/*           // Unaltered first subrange */
-/*           front_n_t<LIST, std::min(Idx1, Idx2)>, */
-/*           // Swap */
-/*           reorder_t<LIST, std::max(Idx1, Idx2)>, */
-/*           // Unaltered second subrange */
-/*           sublist_t<LIST, std::min(Idx1, Idx2) + 1, std::max(Idx1, Idx2)>, */
-/*           // Swap */
-/*           reorder_t<LIST, std::min(Idx1, Idx2)>, */
-/*           // Unaltered third subrange */
-/*           drop_front_n_t<LIST, std::max(Idx1, Idx2)> */
-/*           // end concat */
-/*           > {}; */
+template <typename LIST, std::size_t Idx1, std::size_t Idx2>
+struct swap
+    : concat<
+          // Unaltered first subrange
+          front_n_t<LIST, std::min(Idx1, Idx2)>,
+          // Swap
+          reorder_t<LIST, std::max(Idx1, Idx2)>,
+          // Unaltered second subrange
+          sublist_t<LIST, std::min(Idx1, Idx2) + 1, std::max(Idx1, Idx2)>,
+          // Swap
+          reorder_t<LIST, std::min(Idx1, Idx2)>,
+          // Unaltered third subrange
+          drop_front_n_t<LIST, std::max(Idx1, Idx2) + 1>
+          // end concat
+          > {};
 
-/* // No-op specialization */
-/* template <typename LIST, std::size_t Idx> */
-/* struct swap<LIST, Idx, Idx> : type_identity<LIST> {}; */
+// No-op specialization
+template <typename LIST, std::size_t Idx>
+struct swap<LIST, Idx, Idx> : type_identity<LIST> {};
 
-/* template <typename LIST, std::size_t Idx1, std::size_t Idx2> */
-/* using swap_t = typename swap<LIST, Idx1, Idx2>::type; */
+template <typename LIST, std::size_t Idx1, std::size_t Idx2>
+using swap_t = typename swap<LIST, Idx1, Idx2>::type;
 
 ///////////////////////////////////////////// interleave
 

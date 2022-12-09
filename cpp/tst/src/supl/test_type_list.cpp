@@ -587,91 +587,91 @@ static_assert(
 
 ///////////////////////////////////////////// swap
 
-/* static_assert( */
-/*     std::is_same_v<supl::tl::swap_t<supl::tl::type_list<int, bool>, 0, 1>, */
-/*                    supl::tl::type_list<bool, int>>); */
+static_assert(
+    std::is_same_v<supl::tl::swap_t<supl::tl::type_list<int, bool>, 0, 1>,
+                   supl::tl::type_list<bool, int>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 1, 3>, */
-/*         supl::tl::type_list<int, unsigned, void, char, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 1, 3>,
+        supl::tl::type_list<int, unsigned, void, char, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 0, 3>, */
-/*         supl::tl::type_list<unsigned, char, void, int, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 0, 3>,
+        supl::tl::type_list<unsigned, char, void, int, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 1, 4>, */
-/*         supl::tl::type_list<int, bool, void, unsigned, char>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 1, 4>,
+        supl::tl::type_list<int, bool, void, unsigned, char>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 1, 2>, */
-/*         supl::tl::type_list<int, void, char, unsigned, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 1, 2>,
+        supl::tl::type_list<int, void, char, unsigned, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 2, 3>, */
-/*         supl::tl::type_list<int, char, unsigned, void, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 2, 3>,
+        supl::tl::type_list<int, char, unsigned, void, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v<supl::tl::swap_t<supl::tl::type_list<int, bool>, 1, 0>, */
-/*                    supl::tl::type_list<bool, int>>); */
+static_assert(
+    std::is_same_v<supl::tl::swap_t<supl::tl::type_list<int, bool>, 1, 0>,
+                   supl::tl::type_list<bool, int>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 1>, */
-/*         supl::tl::type_list<int, unsigned, void, char, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 3, 1>,
+        supl::tl::type_list<int, unsigned, void, char, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 0>, */
-/*         supl::tl::type_list<unsigned, char, void, int, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 3, 0>,
+        supl::tl::type_list<unsigned, char, void, int, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 4, 1>, */
-/*         supl::tl::type_list<int, bool, void, unsigned, char>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 4, 1>,
+        supl::tl::type_list<int, bool, void, unsigned, char>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 2, 1>, */
-/*         supl::tl::type_list<int, void, char, unsigned, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 2, 1>,
+        supl::tl::type_list<int, void, char, unsigned, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 2>, */
-/*         supl::tl::type_list<int, char, unsigned, void, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 3, 2>,
+        supl::tl::type_list<int, char, unsigned, void, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 3, 3>, */
-/*         supl::tl::type_list<int, char, void, unsigned, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 3, 3>,
+        supl::tl::type_list<int, char, void, unsigned, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 0, 0>, */
-/*         supl::tl::type_list<int, char, void, unsigned, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 0, 0>,
+        supl::tl::type_list<int, char, void, unsigned, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::swap_t< */
-/*             supl::tl::type_list<int, char, void, unsigned, bool>, 4, 4>, */
-/*         supl::tl::type_list<int, char, void, unsigned, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::swap_t<
+            supl::tl::type_list<int, char, void, unsigned, bool>, 4, 4>,
+        supl::tl::type_list<int, char, void, unsigned, bool>>);
 
 ///////////////////////////////////////////// interleave
 

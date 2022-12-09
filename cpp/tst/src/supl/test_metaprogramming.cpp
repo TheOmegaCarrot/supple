@@ -356,3 +356,25 @@ static_assert(
     supl::tl::all_of_v<
         supl::tl::type_list<const int, const char, const bool>,
         supl::conjunction_compose<std::is_integral, std::is_const>::func>);
+
+///////////////////////////////////////////// disjunction_compose
+
+static_assert(
+    supl::tl::any_of_v<
+        supl::tl::type_list<int, char, const bool>,
+        supl::disjunction_compose<std::is_integral, std::is_const>::func>);
+
+static_assert(
+    supl::tl::any_of_v<
+        supl::tl::type_list<const double, void, std::nullptr_t>,
+        supl::disjunction_compose<std::is_integral, std::is_const>::func>);
+
+static_assert(
+    supl::tl::all_of_v<
+        supl::tl::type_list<int, const double>,
+        supl::disjunction_compose<std::is_integral, std::is_const>::func>);
+
+static_assert(
+    supl::tl::all_of_v<
+        supl::tl::type_list<const int, char, bool, const void>,
+        supl::disjunction_compose<std::is_integral, std::is_const>::func>);

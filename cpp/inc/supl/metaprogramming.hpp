@@ -671,6 +671,10 @@ using make_const_ref_t = typename make_const_ref<T>::type;
 /**
  * @brief Provides a unary metafunction `is_same_as<T>::template func<U>`,
  * and a helper variable template `is_same_as<T>::template func_v<U>`.
+ * The result of calling the inner `func` with type `U` provided by
+ * `is_same_as<T>` is equivalent to calling `std::is_same<T, U>`.
+ *
+ * ex. is_same_as<T>::template func_v<U> == std::is_same_v<T, U>
  *
  * Indended to be used to produce a predicate for another metafunction.
  */
@@ -686,10 +690,49 @@ struct is_same_as {
 
 ///////////////////////////////////////////// conjunction_compose
 
+/* {{{ doc */
+/**
+ * @brief Provides a unary metafunction `conjunction_compose<Ts...>::template func<U>`,
+ * and a helper variable template conjunction_compose<Ts...>::template func_v<U>.
+ * The result of calling the inner `func` with type `U` provided by
+ * `conjunction_compose<Ts...>`  is equivalent to calling
+ * `std::conjunction<Ts<U>...>`.
+ *
+ * ex. conjunction_compose<std::is_integral, std::is_const>::template func_v<const void>
+ * == std::conjunction_v<std::is_integral<const void>, std::is_const<const void>>
+ *
+ * Indended to be used to produce a predicate for another metafunction.
+ */
+/* }}} */
 template <template <typename> typename... PREDS>
 struct conjunction_compose {
   template <typename T>
   struct func : std::conjunction<PREDS<T>...> {};
+
+  template <typename T>
+  constexpr inline static bool func_v = func<T>::value;
+};
+
+///////////////////////////////////////////// disjunction_compose
+
+/* {{{ doc */
+/**
+ * @brief Provides a unary metafunction `disjunction_compose<Ts...>::template func<U>`,
+ * and a helper variable template disjunction_compose<Ts...>::template func_v<U>.
+ * The result of calling the inner `func` with type `U` provided by
+ * `disjunction_compose<Ts...>`  is equivalent to calling
+ * `std::disjunction<Ts<U>...>`.
+ *
+ * ex. disjunction_compose<std::is_integral, std::is_const>::template func_v<const void>
+ * == std::disjunction_v<std::is_integral<const void>, std::is_const<const void>>
+ *
+ * Indended to be used to produce a predicate for another metafunction.
+ */
+/* }}} */
+template <template <typename> typename... PREDS>
+struct disjunction_compose {
+  template <typename T>
+  struct func : std::disjunction<PREDS<T>...> {};
 
   template <typename T>
   constexpr inline static bool func_v = func<T>::value;

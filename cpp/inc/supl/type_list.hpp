@@ -554,6 +554,11 @@ using split_t = typename split<LIST, Idx>::type;
 
 // Not yet working
 
+/* {{{ doc */
+/**
+ * @brief Swaps type list elements at index `Idx1` and `Idx2`
+ */
+/* }}} */
 template <typename LIST, std::size_t Idx1, std::size_t Idx2>
 struct swap
     : concat<

@@ -11,11 +11,21 @@ namespace supl::tl {
 
 ///////////////////////////////////////////// Type List
 
+/* {{{ doc */
+/**
+ * @brief A list of types
+ */
+/* }}} */
 template <typename... Pack>
 struct type_list {};
 
 ///////////////////////////////////////////// make_list
 
+/* {{{ doc */
+/**
+ * @brief Creates a type list of the specified type
+ */
+/* }}} */
 template <template <typename...> typename LIST, typename... Pack>
 struct make_list : type_identity<LIST<Pack...>> {};
 
@@ -24,6 +34,11 @@ using make_list_t = typename make_list<LIST, Pack...>::type;
 
 ///////////////////////////////////////////// contains
 
+/* {{{ doc */
+/**
+ * @brief Determines if type `T` is contained within type list `LIST`
+ */
+/* }}} */
 template <typename T, typename LIST>
 struct contains;
 
@@ -36,6 +51,11 @@ constexpr inline bool contains_v = contains<T, LIST>::value;
 
 ///////////////////////////////////////////// size
 
+/* {{{ doc */
+/**
+ * @brief Computes the size of a type list
+ */
+/* }}} */
 template <typename LIST>
 struct size;
 
@@ -47,6 +67,11 @@ constexpr inline std::size_t size_v = size<LIST>::value;
 
 ///////////////////////////////////////////// empty
 
+/* {{{ doc */
+/**
+ * @brief Determines if a type list is empty
+ */
+/* }}} */
 template <typename LIST>
 struct empty : std::conditional_t<size_v<LIST> == 0, std::true_type,
                                   std::false_type> {};
@@ -56,6 +81,11 @@ constexpr inline bool empty_v = empty<LIST>::value;
 
 ///////////////////////////////////////////// concat
 
+/* {{{ doc */
+/**
+ * @brief Concatonates an arbitrary number of type lists
+ */
+/* }}} */
 template <typename... LISTS>
 struct concat;
 
@@ -77,6 +107,11 @@ using concat_t = typename concat<LISTS...>::type;
 
 ///////////////////////////////////////////// front
 
+/* {{{ doc */
+/**
+ * @brief Retrieves to first element of a type list
+ */
+/* }}} */
 template <typename LIST>
 struct front;
 
@@ -89,6 +124,12 @@ using front_t = typename front<LIST>::type;
 
 ///////////////////////////////////////////// at_index
 
+/* {{{ doc */
+/**
+ * @brief Retrieves type at index `Idx` within type list `LIST`.
+ * Result is unspecified if parameter `Current` is specified.
+ */
+/* }}} */
 template <std::size_t Idx, typename LIST, std::size_t Current = 0>
 struct at_index;
 
@@ -105,6 +146,11 @@ using at_index_t = typename at_index<Idx, LIST>::type;
 
 ///////////////////////////////////////////// back
 
+/* {{{ doc */
+/**
+ * @brief Retrieves the last element of a type list
+ */
+/* }}} */
 template <typename LIST>
 struct back : at_index<size_v<LIST> - 1, LIST> {};
 
@@ -113,6 +159,12 @@ using back_t = typename back<LIST>::type;
 
 ///////////////////////////////////////////// push_back
 
+/* {{{ doc */
+/**
+ * @brief Appends an arbitrary number of types to the end
+ * of a type list
+ */
+/* }}} */
 template <typename LIST, typename... T>
 struct push_back;
 
@@ -126,6 +178,12 @@ using push_back_t = typename push_back<LIST, T...>::type;
 
 ///////////////////////////////////////////// push_front
 
+/* {{{ doc */
+/**
+ * @brief Prepends an arbitrary number of types to the beginning
+ * of a type list
+ */
+/* }}} */
 template <typename LIST, typename... T>
 struct push_front;
 
@@ -148,6 +206,12 @@ auto front_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>)
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Creates a type list containing the first `N` elements
+ * of `LIST`, in the same order
+ */
+/* }}} */
 template <typename LIST, std::size_t N>
 struct front_n
     : type_identity<decltype(impl::front_n_impl(
@@ -170,6 +234,12 @@ auto back_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Creates a type list containing the last `N` elements
+ * of `LIST`, in the same order
+ */
+/* }}} */
 template <typename LIST, std::size_t N>
 struct back_n : type_identity<decltype(impl::back_n_impl(
                     std::declval<LIST>(), std::make_index_sequence<N> {},
@@ -182,6 +252,12 @@ using back_n_t = typename back_n<LIST, N>::type;
 
 ///////////////////////////////////////////// drop_front_n
 
+/* {{{ doc */
+/**
+ * @brief Creates a new type list containing all except the first `N`
+ * elements of `LIST`, in the same order
+ */
+/* }}} */
 template <typename LIST, std::size_t N>
 struct drop_front_n : back_n<LIST, size_v<LIST> - N> {};
 
@@ -190,6 +266,12 @@ using drop_front_n_t = typename drop_front_n<LIST, N>::type;
 
 ///////////////////////////////////////////// drop_back_n
 
+/* {{{ doc */
+/**
+ * @brief Creates a new type list containing all except the last `N`
+ * elements of `LIST`, in the same order
+ */
+/* }}} */
 template <typename LIST, std::size_t N>
 struct drop_back_n : front_n<LIST, size_v<LIST> - N> {};
 
@@ -198,6 +280,11 @@ using drop_back_n_t = typename drop_back_n<LIST, N>::type;
 
 ///////////////////////////////////////////// pop_back
 
+/* {{{ doc */
+/**
+ * @brief Removes the last element of a type list
+ */
+/* }}} */
 template <typename LIST>
 struct pop_back : front_n<LIST, size_v<LIST> - 1> {};
 
@@ -206,6 +293,11 @@ using pop_back_t = typename pop_back<LIST>::type;
 
 ///////////////////////////////////////////// pop_front
 
+/* {{{ doc */
+/**
+ * @brief Removes the front element of a type list
+ */
+/* }}} */
 template <typename LIST>
 struct pop_front;
 
@@ -229,6 +321,12 @@ auto sublist_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Creates a type list made up of the elements of `LIST`
+ * from the half-open range [Begin, End)
+ */
+/* }}} */
 template <typename LIST, std::size_t Begin, std::size_t End>
 struct sublist
     : type_identity<decltype(impl::sublist_impl(
@@ -244,6 +342,14 @@ using sublist_t = typename sublist<LIST, Begin, End>::type;
 
 ///////////////////////////////////////////// insert
 
+/* {{{ doc */
+/**
+ * @brief Inserts an arbitrary number of types into an arbitrary
+ * index of an existing type list.
+ *
+ * @tparam Idx The index at which the first inserted element will appear
+ */
+/* }}} */
 template <typename LIST, std::size_t Idx, typename... Inserted>
 struct insert;
 
@@ -265,6 +371,11 @@ using insert_t = typename insert<LIST, Idx, Inserted...>::type;
 
 ///////////////////////////////////////////// erase
 
+/* {{{ doc */
+/**
+ * @brief Erases element of `LIST` at index `Idx`
+ */
+/* }}} */
 template <typename LIST, std::size_t Idx>
 struct erase;
 
@@ -279,6 +390,11 @@ using erase_t = typename erase<LIST, Idx>::type;
 
 ///////////////////////////////////////////// all_of
 
+/* {{{ doc */
+/**
+ * @brief Determines if all types in `LIST` satisfy predicate `PRED`
+ */
+/* }}} */
 template <typename LIST, template <typename> typename PRED>
 struct all_of : std::conditional_t<PRED<front_t<LIST>>::value,
                                    all_of<pop_front_t<LIST>, PRED>,
@@ -293,6 +409,11 @@ constexpr inline bool all_of_v = all_of<LIST, PRED>::value;
 
 ///////////////////////////////////////////// any_of
 
+/* {{{ doc */
+/**
+ * @brief Determines if any types in `LIST` satisfy predicate `PRED`
+ */
+/* }}} */
 template <typename LIST, template <typename> typename PRED>
 struct any_of
     : std::conditional_t<PRED<front_t<LIST>>::value, std::true_type,
@@ -307,6 +428,11 @@ constexpr inline bool any_of_v = any_of<LIST, PRED>::value;
 
 ///////////////////////////////////////////// none_of
 
+/* {{{ doc */
+/**
+ * @brief Determines if no types in `LIST` satisfy predicate `PRED`
+ */
+/* }}} */
 template <typename LIST, template <typename> typename PRED>
 struct none_of
     : std::conditional_t<PRED<front_t<LIST>>::value, std::false_type,
@@ -321,6 +447,14 @@ constexpr inline bool none_of_v = none_of<LIST, PRED>::value;
 
 ///////////////////////////////////////////// transform
 
+/* {{{ doc */
+/**
+ * @brief Produces a type list by applying `PRED` to each element of `LIST`
+ *
+ * ex. transform_t<type_list<int, char, bool>, std::add_const>
+ * -> type_list<const int, const char, const bool>
+ */
+/* }}} */
 template <typename LIST, template <typename> typename PRED>
 struct transform;
 
@@ -334,6 +468,12 @@ using transform_t = typename transform<LIST, PRED>::type;
 
 ///////////////////////////////////////////// rotate_left
 
+/* {{{ doc */
+/**
+ * @brief Rotates a type list left.
+ * In other words, the first element is moved to the end.
+ */
+/* }}} */
 template <typename LIST>
 struct rotate_left;
 
@@ -347,6 +487,12 @@ using rotate_left_t = typename rotate_left<LIST>::type;
 
 ///////////////////////////////////////////// rotate_right
 
+/* {{{ doc */
+/**
+ * @brief Rotates a type list right.
+ * In other words, the last element is moved to the beginning.
+ */
+/* }}} */
 template <typename LIST>
 struct rotate_right;
 
@@ -360,6 +506,15 @@ using rotate_right_t = typename rotate_right<LIST>::type;
 
 ///////////////////////////////////////////// reorder
 
+/* {{{ doc */
+/**
+ * @brief Arbitrarily reorders a type list. Duplication of elements
+ * and omitting of elements are permitted.
+ *
+ * ex. reorder_t<type_list<int, char, bool, void>, 2, 3, 1, 0, 2, 3, 1, 0>
+ * -> type_list<bool, void, char, int, bool, void, char, int>
+ */
+/* }}} */
 template <typename LIST, std::size_t... Idxs>
 struct reorder;
 
@@ -375,6 +530,16 @@ using reorder_t = typename reorder<LIST, Idxs...>::type;
 
 ///////////////////////////////////////////// split
 
+/* {{{ doc */
+/**
+ * @brief Splits a type list into a `std::pair` of two type lists
+ *
+ * @tparam Idx Index of the element just after the split point
+ *
+ * ex. split_t<type_list<int, char, bool, void>, 3>
+ * -> std::pair<type_list<int, char, bool>, type_list<void>>
+ */
+/* }}} */
 template <typename LIST, std::size_t Idx>
 struct split
     : type_identity<

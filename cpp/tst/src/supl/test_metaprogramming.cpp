@@ -328,3 +328,9 @@ static_assert(supl::tl::any_of_v<supl::tl::type_list<int, char, bool>,
 static_assert(!supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,
                                   supl::is_same_as<char>::func>);
 
+static_assert(supl::is_same_as<int>::template func<int>::value);
+static_assert(supl::is_same_as<int>::template func_v<int>);
+static_assert(!supl::is_same_as<void>::template func<int>::value);
+static_assert(!supl::is_same_as<void>::template func_v<int>);
+static_assert(!supl::is_same_as<int>::template func<void>::value);
+static_assert(!supl::is_same_as<int>::template func_v<void>);

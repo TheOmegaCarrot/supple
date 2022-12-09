@@ -644,15 +644,37 @@ constexpr inline bool are_greater_eq_comparable_v =
 
 ///////////////////////////////////////////// make_const_ref
 
+/* {{{ doc */
+/**
+ * @brief Strips all cv-qualifiers and reference-ness,
+ * and adds `const` and lvalue reference.
+ *
+ * ex. volatile int&& -> const int&
+ */
+/* }}} */
 template <typename T>
 struct make_const_ref : type_identity<std::add_lvalue_reference_t<
                             std::add_const_t<remove_cvref_t<T>>>> {};
 
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `make_const_ref`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
 template <typename T>
 using make_const_ref_t = typename make_const_ref<T>::type;
 
 ///////////////////////////////////////////// is_same_as
 
+/* {{{ doc */
+/**
+ * @brief Provides a unary metafunction `is_same_as<T>::template func<U>`,
+ * and a helper variable template `is_same_as<T>::template func_v<U>`.
+ *
+ * Indended to be used to produce a predicate for another metafunction.
+ */
+/* }}} */
 template <typename T>
 struct is_same_as {
   template <typename U>

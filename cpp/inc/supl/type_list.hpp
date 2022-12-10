@@ -27,7 +27,7 @@ struct type_list {};
  */
 /* }}} */
 template <template <typename...> typename LIST, typename... Pack>
-struct make_list : type_identity<LIST<Pack...>> {};
+using make_list = type_identity<LIST<Pack...>>;
 
 template <template <typename...> typename LIST, typename... Pack>
 using make_list_t = typename make_list<LIST, Pack...>::type;
@@ -73,8 +73,8 @@ constexpr inline std::size_t size_v = size<LIST>::value;
  */
 /* }}} */
 template <typename LIST>
-struct empty : std::conditional_t<size_v<LIST> == 0, std::true_type,
-                                  std::false_type> {};
+using empty =
+    std::conditional_t<size_v<LIST> == 0, std::true_type, std::false_type>;
 
 template <typename LIST>
 constexpr inline bool empty_v = empty<LIST>::value;
@@ -152,7 +152,7 @@ using at_index_t = typename at_index<Idx, LIST>::type;
  */
 /* }}} */
 template <typename LIST>
-struct back : at_index<size_v<LIST> - 1, LIST> {};
+using back = at_index<size_v<LIST> - 1, LIST>;
 
 template <typename LIST>
 using back_t = typename back<LIST>::type;
@@ -259,7 +259,7 @@ using back_n_t = typename back_n<LIST, N>::type;
  */
 /* }}} */
 template <typename LIST, std::size_t N>
-struct drop_front_n : back_n<LIST, size_v<LIST> - N> {};
+using drop_front_n = back_n<LIST, size_v<LIST> - N>;
 
 template <typename LIST, std::size_t N>
 using drop_front_n_t = typename drop_front_n<LIST, N>::type;
@@ -273,7 +273,7 @@ using drop_front_n_t = typename drop_front_n<LIST, N>::type;
  */
 /* }}} */
 template <typename LIST, std::size_t N>
-struct drop_back_n : front_n<LIST, size_v<LIST> - N> {};
+using drop_back_n = front_n<LIST, size_v<LIST> - N>;
 
 template <typename LIST, std::size_t N>
 using drop_back_n_t = typename drop_back_n<LIST, N>::type;
@@ -286,7 +286,7 @@ using drop_back_n_t = typename drop_back_n<LIST, N>::type;
  */
 /* }}} */
 template <typename LIST>
-struct pop_back : front_n<LIST, size_v<LIST> - 1> {};
+using pop_back = front_n<LIST, size_v<LIST> - 1>;
 
 template <typename LIST>
 using pop_back_t = typename pop_back<LIST>::type;

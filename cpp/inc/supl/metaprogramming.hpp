@@ -24,7 +24,7 @@ struct type_identity {
 ///////////////////////////////////////////// index_constant
 
 template <std::size_t idx>
-struct index_constant : std::integral_constant<std::size_t, idx> {};
+using index_constant = std::integral_constant<std::size_t, idx>;
 
 ///////////////////////////////////////////// index_pair
 
@@ -43,7 +43,7 @@ struct index_pair {
  */
 /* }}} */
 template <typename... Ts>
-struct sum_type : type_identity<decltype((... + std::declval<Ts>()))> {};
+using sum_type = type_identity<decltype((... + std::declval<Ts>()))>;
 
 /* {{{ doc */
 /**
@@ -57,7 +57,7 @@ using sum_type_t = typename sum_type<Ts...>::type;
 ///////////////////////////////////////////// remove_cvref
 
 template <typename T>
-struct remove_cvref : std::remove_cv<std::remove_reference_t<T>> {};
+using remove_cvref = std::remove_cv<std::remove_reference_t<T>>;
 
 template <typename T>
 using remove_cvref_t = typename remove_cvref<T>::type;
@@ -170,10 +170,9 @@ using peel_last_t = typename peel_last<Pack...>::type;
  */
 /* }}} */
 template <typename... Pack>
-struct is_pack_uniform
-    : std::conditional_t<
-          (std::is_same_v<peel_first_t<Pack...>, Pack> && ...),
-          std::true_type, std::false_type> {};
+using is_pack_uniform = std::conditional_t<
+    (std::is_same_v<peel_first_t<Pack...>, Pack> && ...), std::true_type,
+    std::false_type>;
 
 /* {{{ doc */
 /**

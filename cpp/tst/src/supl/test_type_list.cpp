@@ -682,3 +682,16 @@ static_assert(std::is_same_v<
                                       unsigned, const char>>,
               supl::tl::type_list<int, std::nullptr_t, char, std::size_t,
                                   bool, unsigned, void, const char>>);
+
+///////////////////////////////////////////// has_duplicates
+
+static_assert(
+    not supl::tl::has_duplicates_v<
+        supl::tl::type_list<int, char, bool, const char, void, const int,
+                            int*, const int*, const volatile int*&>>);
+
+static_assert(
+    supl::tl::has_duplicates_v<
+        supl::tl::type_list<int, char, bool, const char, void, const int,
+                            int, const int*, const volatile int*&>>);
+

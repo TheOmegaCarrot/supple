@@ -609,6 +609,36 @@ struct interleave<LIST<Pack1...>, LIST<Pack2...>>
 template <typename LIST1, typename LIST2>
 using interleave_t = typename interleave<LIST1, LIST2>::type;
 
+///////////////////////////////////////////// has_duplicates
+
+/* {{{ doc */
+/**
+ * @brief Determines if a type list contains duplicate types anywhere.
+ *
+ * ex. `type_list<int, char, bool, int> -> true`
+ *
+ * ex. `type_list<int, char, bool, const int> -> false`
+ *
+ * ex. `type_list<int, char, bool> -> false`
+ */
+/* }}} */
+template <typename LIST>
+struct has_duplicates;
+
+template <template <typename...> typename LIST, typename First,
+          typename... Pack>
+struct has_duplicates<LIST<First, Pack...>>
+    : std::conditional_t<is_type_in_pack_v<First, Pack...>, std::true_type,
+                         has_duplicates<LIST<Pack...>>> {};
+
+template <template <typename...> typename LIST, typename Almost_Last,
+          typename Last>
+struct has_duplicates<LIST<Almost_Last, Last>>
+    : std::is_same<Almost_Last, Last> {};
+
+template <typename LIST>
+constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
+
 } // namespace supl::tl
 
 #endif

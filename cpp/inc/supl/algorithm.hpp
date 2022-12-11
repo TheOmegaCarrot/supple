@@ -501,7 +501,7 @@ generate(Itr begin, const Itr end,
          Gen&& gen) noexcept(noexcept(gen()) && noexcept(*begin))
 {
   while ( begin != end ) {
-    *begin = std::invoke(gen);
+    *begin = gen();
     ++begin;
   }
 }

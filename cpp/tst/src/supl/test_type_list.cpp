@@ -675,13 +675,17 @@ static_assert(
 
 ///////////////////////////////////////////// interleave
 
-static_assert(std::is_same_v<
-              supl::tl::interleave_t<
-                  supl::tl::type_list<int, char, bool, void>,
-                  supl::tl::type_list<std::nullptr_t, std::size_t,
-                                      unsigned, const char>>,
-              supl::tl::type_list<int, std::nullptr_t, char, std::size_t,
-                                  bool, unsigned, void, const char>>);
+static_assert(
+    std::is_same_v<
+        supl::tl::interleave_t<
+            supl::tl::type_list<int, char, bool, bool(int, char), void>,
+            supl::tl::type_list<std::nullptr_t, std::size_t,
+                                volatile void*, unsigned, const char>>,
+        supl::tl::type_list<int, std::nullptr_t, char, std::size_t, bool,
+                            volatile void*, bool(int, char), unsigned,
+                            void,
+
+                            const char>>);
 
 ///////////////////////////////////////////// has_duplicates
 

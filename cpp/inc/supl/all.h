@@ -2,6 +2,7 @@
 #define SUPPLEMENTARIES_ALL_H
 
 #include "algorithm.hpp"
+#include "comparison.hpp"
 #include "iterators.hpp"
 #include "metaprogramming.hpp"
 #include "term_colors.h"

@@ -4,6 +4,7 @@
 #include "test_utils.hpp"
 
 #include "supl/test_algorithm.h"
+#include "supl/test_comparison.h"
 #include "supl/test_fake_ranges.h"
 #include "supl/test_iterators.h"
 #include "supl/test_tuple_algo.h"
@@ -21,6 +22,8 @@ auto main() -> int
   ehanc::test_section("Iterators", &test_iterators);
 
   ehanc::test_section("Utility", &test_utility);
+
+  ehanc::test_section("Comparison", &test_comparison);
 
   return 0;
 }

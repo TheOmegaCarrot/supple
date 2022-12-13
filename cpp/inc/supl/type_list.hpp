@@ -552,8 +552,6 @@ using split_t = typename split<LIST, Idx>::type;
 
 ///////////////////////////////////////////// swap
 
-// Not yet working
-
 /* {{{ doc */
 /**
  * @brief Swaps type list elements at index `Idx1` and `Idx2`

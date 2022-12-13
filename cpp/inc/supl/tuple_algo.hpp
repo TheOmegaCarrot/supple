@@ -764,6 +764,14 @@ template <typename Tuple1, typename Tuple2>
   return impl::tuple_interleave_impl(tup1, tup2, seq);
 }
 
+/* template <typename Tuple, std::size_t Idx1, std::size_t Idx2> */
+/* [[nodiscard]] constexpr auto tuple_elem_swap(const Tuple& tup, */
+/*                                              supl::index_pair<Idx1, Idx2>) */
+/*     -> supl::tl::swap_t<Tuple, Idx1, Idx2> */
+/* { */
+
+/* } */
+
 } // namespace supl
 
 #endif

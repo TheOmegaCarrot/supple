@@ -547,6 +547,21 @@ static auto test_tuple_interleave() -> ehanc::test
   return results;
 }
 
+/* static auto test_tuple_elem_swap() -> ehanc::test */
+/* { */
+/*   ehanc::test results; */
+
+/*   std::tuple test_input {42, 'g', 3.14, true, 18UL, 2.7F}; */
+
+/*   std::tuple expected1 {42, 18UL, 3.14, true, 'g', 2.7F}; */
+/*   auto result1 { */
+/*       supl::tuple_elem_swap(test_input, supl::index_pair<1, 4> {})}; */
+
+/*   results.add_case(result1, expected1); */
+
+/*   return results; */
+/* } */
+
 void test_tuple_algo()
 {
   ehanc::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
@@ -567,4 +582,5 @@ void test_tuple_algo()
   ehanc::run_test("supl::subtuple", &test_subtuple);
   ehanc::run_test("supl::tuple_count_if", &test_tuple_count_if);
   ehanc::run_test("supl::tuple_interleave", &test_tuple_interleave);
+  /* ehanc::run_test("supl::tuple_elem_swap", &test_tuple_elem_swap); */
 }

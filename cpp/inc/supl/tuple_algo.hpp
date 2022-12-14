@@ -518,10 +518,14 @@ tuple_erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
  */
 /* }}} */
 template <typename Tuple, std::size_t Idx>
-[[nodiscard]] constexpr auto
-tuple_erase(const Tuple& tup,
-            [[maybe_unused]] index_constant<Idx> deduction_helper) noexcept
-    -> tl::erase_t<Tuple, Idx>
+[[nodiscard]] constexpr auto tuple_erase(
+    const Tuple& tup,
+    [[maybe_unused]] index_constant<Idx> deduction_helper = {}) noexcept
+/* -> tl::erase_t<Tuple, Idx> */
+// Commented ^ out because of a very weird "no matching function call"
+// error when default param is defaulted,
+// but this was redundant since return type can be perfectly deduced
+// from the impl function
 {
   static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
 
@@ -534,7 +538,7 @@ tuple_erase(const Tuple& tup,
 
 template <typename Tuple, std::size_t... Idxs>
 [[nodiscard]] constexpr auto
-tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...>) noexcept
+tuple_reorder(const Tuple& tup, std::index_sequence<Idxs...> = {}) noexcept
     -> tl::reorder_t<Tuple, Idxs...>
 {
   static_assert(((Idxs < std::tuple_size_v<Tuple>)&&...));
@@ -577,8 +581,8 @@ tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
  */
 /* }}} */
 template <typename Tuple, std::size_t Idx>
-[[nodiscard]] constexpr auto tuple_split(const Tuple& tup,
-                                         index_constant<Idx> idx) noexcept
+[[nodiscard]] constexpr auto
+tuple_split(const Tuple& tup, index_constant<Idx> idx = {}) noexcept
     -> tl::split_t<Tuple, Idx>
 {
   static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
@@ -624,8 +628,8 @@ subtuple_impl(const Tuple& tup, std::index_sequence<Inds...>,
 /* }}} */
 template <typename Tuple, std::size_t Begin, std::size_t End>
 [[nodiscard]] constexpr auto
-subtuple(const Tuple& tup, index_constant<Begin> begin_deduct_help,
-         [[maybe_unused]] index_constant<End> end_deduct_help)
+subtuple(const Tuple& tup, index_constant<Begin> begin_deduct_help = {},
+         [[maybe_unused]] index_constant<End> end_deduct_help = {})
     -> tl::sublist_t<Tuple, Begin, End>
 {
   static_assert(Begin < std::tuple_size_v<Tuple>, "Begin out of bounds");
@@ -656,27 +660,6 @@ template <typename Tuple, std::size_t Begin, std::size_t End>
 [[nodiscard]] constexpr auto
 subtuple(const Tuple& tup,
          [[maybe_unused]] index_pair<Begin, End> deduction_helper) noexcept
-    -> tl::sublist_t<Tuple, Begin, End>
-{
-  return subtuple(tup, index_constant<Begin> {}, index_constant<End> {});
-}
-
-/* {{{ doc */
-/**
- * @brief Creates a subtuple from a range of indices.
- * Returned tuple will be created from the half-open range [begin, end).
- *
- * @tparam Tuple Tuple type
- *
- * @tparam begin Beginning index
- *
- * @tparam end Ending index
- *
- * @param tup Tuple to extract a subtuple from
- */
-/* }}} */
-template <typename Tuple, std::size_t Begin, std::size_t End>
-[[nodiscard]] constexpr auto subtuple(const Tuple& tup) noexcept
     -> tl::sublist_t<Tuple, Begin, End>
 {
   return subtuple(tup, index_constant<Begin> {}, index_constant<End> {});

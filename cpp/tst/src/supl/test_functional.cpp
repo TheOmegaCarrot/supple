@@ -4,7 +4,7 @@
 #include "supl/test_functional.h"
 #include "test_utils.hpp"
 
-auto test_equal_to() -> ehanc::test
+static auto test_equal_to() -> ehanc::test
 {
   ehanc::test results;
 
@@ -17,7 +17,7 @@ auto test_equal_to() -> ehanc::test
   return results;
 }
 
-auto test_not_equal_to() -> ehanc::test
+static auto test_not_equal_to() -> ehanc::test
 {
   ehanc::test results;
 
@@ -30,7 +30,7 @@ auto test_not_equal_to() -> ehanc::test
   return results;
 }
 
-auto test_greater_than() -> ehanc::test
+static auto test_greater_than() -> ehanc::test
 {
   ehanc::test results;
 
@@ -43,7 +43,7 @@ auto test_greater_than() -> ehanc::test
   return results;
 }
 
-auto test_greater_eq_than() -> ehanc::test
+static auto test_greater_eq_than() -> ehanc::test
 {
   ehanc::test results;
 
@@ -56,7 +56,7 @@ auto test_greater_eq_than() -> ehanc::test
   return results;
 }
 
-auto test_less_than() -> ehanc::test
+static auto test_less_than() -> ehanc::test
 {
   ehanc::test results;
 
@@ -69,7 +69,7 @@ auto test_less_than() -> ehanc::test
   return results;
 }
 
-auto test_less_eq_than() -> ehanc::test
+static auto test_less_eq_than() -> ehanc::test
 {
   ehanc::test results;
 

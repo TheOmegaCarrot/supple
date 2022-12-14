@@ -56,6 +56,9 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 elseif(MSVC)
   message("-- Using MSVC")
+  message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
+  message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
+  message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
   # Untested, unsupported
 endif()
 
@@ -74,6 +77,5 @@ set(test_exe_name run_tests)
 file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 add_executable(${test_exe_name} ${source_files} ${test_files})
 target_include_directories(${test_exe_name} PRIVATE inc)
-target_include_directories(${test_exe_name}
-                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
-set_property(TARGET ${test_exe_name} PROPERTY CXX_STANDARD ${standard})
+target_include_directories(${test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
+target_compile_features(${test_exe_name} PUBLIC cxx_std_17)

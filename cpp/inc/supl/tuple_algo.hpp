@@ -450,12 +450,12 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
 /* {{{ doc */
 /**
  * @brief Inserts value(s) into an arbitrary index of a tuple.
- * ex. tuple_insert(std::tuple{3, true}, supl::index_constant<1>, 5.8) 
+ * ex. tuple_insert(std::tuple{3, true}, supl::index_constant<1>, 5.8)
  * == std::tuple{3, 5.8, true}
  *
  * @tparam Tuple Tuple type
  *
- * @tparam T Type(s) of data to insert
+ * @tparam Ts Type(s) of data to insert
  *
  * @tparam Idx Index to insert at
  *
@@ -468,7 +468,7 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
  * @return New tuple with `data` inserted at index `Idx`
  */
 /* }}} */
-template <typename Tuple, typename... Ts, std::size_t Idx>
+template <std::size_t Idx, typename Tuple, typename... Ts>
 [[nodiscard]] constexpr auto
 tuple_insert(const Tuple& tup,
              [[maybe_unused]] index_constant<Idx> deduction_helper,
@@ -483,6 +483,34 @@ tuple_insert(const Tuple& tup,
 
   return impl::tuple_insert_impl(tup, pre_seq, post_seq,
                                  std::forward<Ts>(data)...);
+}
+
+/* {{{ doc */
+/**
+ * @brief Inserts value(s) into an arbitrary index of a tuple.
+ * ex. tuple_insert(std::tuple{3, true}, supl::index_constant<1>, 5.8)
+ * == std::tuple{3, 5.8, true}
+ *
+ * @tparam Tuple Tuple type
+ *
+ * @tparam Ts Type(s) of data to insert
+ *
+ * @tparam Idx Index to insert at
+ *
+ * @param tup Tuple to insert into
+ *
+ * @param data Value(s) to insert
+ *
+ * @return New tuple with `data` inserted at index `Idx`
+ */
+/* }}} */
+template <std::size_t Idx, typename Tuple, typename... Ts>
+[[nodiscard]] constexpr auto tuple_insert(const Tuple& tup,
+                                          Ts&&... data) noexcept
+    -> tl::insert_t<Tuple, Idx, remove_cvref_t<Ts>...>
+{
+  return tuple_insert<Idx, Tuple, Ts...>(tup, index_constant<Idx> {},
+                                         std::forward<Ts>(data)...);
 }
 
 namespace impl {

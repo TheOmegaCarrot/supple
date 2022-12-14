@@ -328,6 +328,11 @@ static auto test_tuple_insert() -> ehanc::test
 
   results.add_case(result5, expected5);
 
+  std::tuple expected6 {3, 42069, neat, vec, 3.14};
+  auto result6 {supl::tuple_insert<1>(test_input, 42069, neat, vec)};
+
+  results.add_case(result6, expected6);
+
   return results;
 }
 

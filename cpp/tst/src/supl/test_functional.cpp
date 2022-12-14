@@ -1,7 +1,8 @@
-#include "supl/test_comparison.h"
-#include "supl/comparison.hpp"
-#include "test_utils.hpp"
 #include <functional>
+
+#include "supl/functional.hpp"
+#include "supl/test_functional.h"
+#include "test_utils.hpp"
 
 auto test_equal_to() -> ehanc::test
 {
@@ -81,7 +82,7 @@ auto test_less_eq_than() -> ehanc::test
   return results;
 }
 
-void test_comparison()
+void test_functional()
 {
   ehanc::run_test("supl::equal_to", &test_equal_to);
   ehanc::run_test("supl::not_equal_to", &test_not_equal_to);

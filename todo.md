@@ -9,3 +9,7 @@ Write `constexpr` versions of math functions where needed and possible.
 # Functional
 
 Constexpr `invoke`
+
+# Tuple Algorithms
+
+tuple_elem_swap

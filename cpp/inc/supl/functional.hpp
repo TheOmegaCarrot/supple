@@ -2,6 +2,7 @@
 #define SUPPLEMENTARIES_FUNCTIONAL_HPP
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace supl {

@@ -46,9 +46,9 @@ static auto test_tuple_transform() -> ehanc::test
 
   ehanc::test results;
 
-  std::tuple<int, char, bool> test1 {42, 'c', false};
+  /*constexpr static*/ std::tuple<int, char, bool> test1 {42, 'c', false};
 
-  auto out1 {supl::tuple_transform(
+  /*constexpr static*/ auto out1 {supl::tuple_transform(
       test1,
       overload {[](int a) { return 2 * a; },
                 [](char b) { return static_cast<char>(std::toupper(b)); },

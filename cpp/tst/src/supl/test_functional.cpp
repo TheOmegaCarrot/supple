@@ -82,6 +82,46 @@ static auto test_less_eq_than() -> ehanc::test
   return results;
 }
 
+/* static auto test_invoke() -> ehanc::test */
+/* { */
+/*   ehanc::test results; */
+
+/*   int result1 {supl::invoke([]() { return 5; })}; */
+/*   results.add_case(result1, 5); */
+
+/*   results.add_case(result1, 5); */
+
+/*   int result2 {supl::invoke([](int x) { return x; }, 5)}; */
+
+/*   results.add_case(result2, 5); */
+
+/*   struct Foo { */
+/*     int m_value; */
+
+/*     [[nodiscard]] constexpr auto value() const noexcept -> int */
+/*     { */
+/*       return m_value; */
+/*     } */
+
+/*     [[nodiscard]] constexpr auto value_plus(int arg) const noexcept -> int */
+/*     { */
+/*       return m_value + arg; */
+/*     } */
+/*   }; */
+
+/*   constexpr static Foo foo {5}; */
+
+/*   int result3 {supl::invoke(&Foo::value, &foo)}; */
+
+/*   results.add_case(result3, 5); */
+
+/*   int result4 {supl::invoke(&Foo::value_plus, &foo, 2)}; */
+
+/*   results.add_case(result4, 7); */
+
+/*   return results; */
+/* } */
+
 void test_functional()
 {
   ehanc::run_test("supl::equal_to", &test_equal_to);
@@ -90,4 +130,5 @@ void test_functional()
   ehanc::run_test("supl::greater_eq_than", &test_greater_eq_than);
   ehanc::run_test("supl::less_than", &test_less_than);
   ehanc::run_test("supl::less_eq_than", &test_less_eq_than);
+  /* ehanc::run_test("supl::invoke", &test_invoke); */
 }

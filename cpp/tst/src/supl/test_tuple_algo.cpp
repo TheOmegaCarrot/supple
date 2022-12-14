@@ -382,8 +382,7 @@ static auto test_tuple_erase() -> ehanc::test
 
   constexpr static std::tuple expected7 {3, 3.14};
 
-  constexpr static auto result7 {
-      supl::tuple_erase<decltype(test_input), 1>(test_input)};
+  constexpr static auto result7 {supl::tuple_erase<1>(test_input)};
 
   results.add_case(result7, expected7);
 
@@ -426,7 +425,7 @@ static auto test_tuple_split() -> ehanc::test
 
   std::tuple expected4_first {3, 3.14, vec};
   std::tuple expected4_second {true, 'f', split};
-  auto result4 {supl::tuple_split<decltype(test_input), 3>(test_input)};
+  auto result4 {supl::tuple_split<3>(test_input)};
 
   results.add_case(result4.first, expected4_first);
   results.add_case(result4.second, expected4_second);
@@ -509,7 +508,7 @@ static auto test_subtuple() -> ehanc::test
   results.add_case(result5, expected5);
 
   std::tuple expected6 {str, 3.14, vec};
-  auto result6 {supl::subtuple<decltype(test_input), 2, 5>(test_input)};
+  auto result6 {supl::subtuple<2, 5>(test_input)};
 
   results.add_case(result6, expected6);
 
@@ -522,7 +521,7 @@ static auto test_subtuple() -> ehanc::test
   results.add_case(result7, expected7);
 
   std::tuple expected8 {3, true, str};
-  auto result8 {supl::subtuple<decltype(test_input), 0, 3>(test_input)};
+  auto result8 {supl::subtuple<0, 3>(test_input)};
 
   results.add_case(result8, expected8);
 

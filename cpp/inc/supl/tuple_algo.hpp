@@ -517,15 +517,11 @@ tuple_erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
  * @return New tuple with element at index `Idx` erased.
  */
 /* }}} */
-template <typename Tuple, std::size_t Idx>
+template <std::size_t Idx, typename Tuple>
 [[nodiscard]] constexpr auto tuple_erase(
     const Tuple& tup,
     [[maybe_unused]] index_constant<Idx> deduction_helper = {}) noexcept
-/* -> tl::erase_t<Tuple, Idx> */
-// Commented ^ out because of a very weird "no matching function call"
-// error when default param is defaulted,
-// but this was redundant since return type can be perfectly deduced
-// from the impl function
+    -> tl::erase_t<Tuple, Idx>
 {
   static_assert(Idx < std::tuple_size_v<Tuple>, "Index out of bounds");
 
@@ -580,7 +576,7 @@ tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
  * std::pair{std::tuple{1}, std::tuple{true, 'g'}}
  */
 /* }}} */
-template <typename Tuple, std::size_t Idx>
+template <std::size_t Idx, typename Tuple>
 [[nodiscard]] constexpr auto
 tuple_split(const Tuple& tup, index_constant<Idx> idx = {}) noexcept
     -> tl::split_t<Tuple, Idx>
@@ -626,7 +622,7 @@ subtuple_impl(const Tuple& tup, std::index_sequence<Inds...>,
  * @param end_deduct_help Provides deduction for `end`
  */
 /* }}} */
-template <typename Tuple, std::size_t Begin, std::size_t End>
+template <std::size_t Begin, std::size_t End, typename Tuple>
 [[nodiscard]] constexpr auto
 subtuple(const Tuple& tup, index_constant<Begin> begin_deduct_help = {},
          [[maybe_unused]] index_constant<End> end_deduct_help = {})

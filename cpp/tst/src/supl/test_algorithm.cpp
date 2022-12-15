@@ -269,5 +269,5 @@ void test_algorithm()
   ehanc::run_test("supl::for_each_all_c", &test_for_each_all_c);
   ehanc::run_test("supl::for_each_both", &test_for_each_both);
   ehanc::run_test("supl::for_each_both_n", &test_for_each_both_n);
-  ehanc::run_test("supl::::generate", &test_generate);
+  ehanc::run_test("supl::generate", &test_generate);
 }

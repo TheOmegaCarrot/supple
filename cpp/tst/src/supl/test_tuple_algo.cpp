@@ -590,6 +590,35 @@ static auto test_tuple_front_n() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_back_n() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test_input {42, '&', 3.14};
+
+  std::tuple<> expected0 {};
+  auto result0 {supl::tuple_back_n<0>(test_input)};
+
+  results.add_case(result0, expected0);
+
+  std::tuple expected1 {3.14};
+  auto result1 {supl::tuple_back_n<1>(test_input)};
+
+  results.add_case(result1, expected1);
+
+  std::tuple expected2 {'&', 3.14};
+  auto result2 {supl::tuple_back_n<2>(test_input)};
+
+  results.add_case(result2, expected2);
+
+  std::tuple expected3 {42, '&', 3.14};
+  auto result3 {supl::tuple_back_n<3>(test_input)};
+
+  results.add_case(result3, expected3);
+
+  return results;
+}
+
 static auto test_tuple_elem_swap() -> ehanc::test
 {
   ehanc::test results;
@@ -633,5 +662,6 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_count_if", &test_tuple_count_if);
   ehanc::run_test("supl::tuple_interleave", &test_tuple_interleave);
   ehanc::run_test("supl::tuple_front_n", &test_tuple_front_n);
+  ehanc::run_test("supl::tuple_back_n", &test_tuple_back_n);
   ehanc::run_test("supl::tuple_elem_swap", &test_tuple_elem_swap);
 }

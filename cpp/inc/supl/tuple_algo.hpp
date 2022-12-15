@@ -725,6 +725,32 @@ template <std::size_t Count, typename Tuple>
   return impl::tuple_front_n_impl(tup, seq);
 }
 
+namespace impl {
+
+template <typename Tuple, std::size_t... Idxs, std::size_t Offset>
+[[nodiscard]] constexpr auto
+tuple_back_n_impl(const Tuple& tup, std::index_sequence<Idxs...>,
+                  supl::index_constant<Offset>)
+    -> tl::back_n_t<Tuple, sizeof...(Idxs)>
+{
+  return {std::get<Idxs + Offset>(tup)...};
+}
+
+} // namespace impl
+
+template <std::size_t Count, typename Tuple>
+[[nodiscard]] constexpr auto tuple_back_n(const Tuple& tup) noexcept
+    -> tl::back_n_t<Tuple, Count>
+{
+  static_assert(Count <= std::tuple_size_v<Tuple>);
+
+  constexpr auto seq {std::make_index_sequence<Count> {}};
+  constexpr auto offset {
+      supl::index_constant<std::tuple_size_v<Tuple> - Count> {}};
+
+  return impl::tuple_back_n_impl(tup, seq, offset);
+}
+
 /* {{{ doc */
 /**
  * @brief Swaps two elements of a tuple. `Idx1 < Idx2` or `Idx2 < Idx1`,

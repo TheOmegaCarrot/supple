@@ -702,6 +702,29 @@ template <typename Tuple1, typename Tuple2>
   return impl::tuple_interleave_impl(tup1, tup2, seq);
 }
 
+namespace impl {
+
+template <typename Tuple, std::size_t... Idxs>
+[[nodiscard]] constexpr auto
+tuple_front_n_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+    -> tl::front_n_t<Tuple, sizeof...(Idxs)>
+{
+  return {std::get<Idxs>(tup)...};
+}
+
+} // namespace impl
+
+template <std::size_t Count, typename Tuple>
+[[nodiscard]] constexpr auto tuple_front_n(const Tuple& tup) noexcept
+    -> tl::front_n_t<Tuple, Count>
+{
+  static_assert(Count <= std::tuple_size_v<Tuple>);
+
+  constexpr auto seq {std::make_index_sequence<Count> {}};
+
+  return impl::tuple_front_n_impl(tup, seq);
+}
+
 /* {{{ doc */
 /**
  * @brief Swaps two elements of a tuple. `Idx1 < Idx2` or `Idx2 < Idx1`,

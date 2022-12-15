@@ -477,8 +477,6 @@ for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
                  std::cbegin(containers)...);
 }
 
-inline namespace bkprt {
-
 /* {{{ doc */
 /**
  * @brief Re-implementation of std::generate usable in a constexpr context.
@@ -505,8 +503,6 @@ generate(Itr begin, const Itr end,
     ++begin;
   }
 }
-
-} // namespace bkprt
 
 } // namespace supl
 

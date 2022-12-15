@@ -229,15 +229,15 @@ static auto test_for_each_both_n() -> ehanc::test
   return results;
 }
 
-static auto test_bkprt_generate() -> ehanc::test
+static auto test_generate() -> ehanc::test
 {
   ehanc::test results;
 
   std::vector<int> test(10);
   std::vector<int> ref(10);
 
-  supl::bkprt::generate(test.begin(), test.end(),
-                        [i {0}]() mutable { return ++i; });
+  supl::generate(test.begin(), test.end(),
+                 [i {0}]() mutable { return ++i; });
   std::generate(ref.begin(), ref.end(), [i {0}]() mutable { return ++i; });
 
   supl::for_each_both(
@@ -269,5 +269,5 @@ void test_algorithm()
   ehanc::run_test("supl::for_each_all_c", &test_for_each_all_c);
   ehanc::run_test("supl::for_each_both", &test_for_each_both);
   ehanc::run_test("supl::for_each_both_n", &test_for_each_both_n);
-  ehanc::run_test("supl::bkprt::generate", &test_bkprt_generate);
+  ehanc::run_test("supl::::generate", &test_generate);
 }

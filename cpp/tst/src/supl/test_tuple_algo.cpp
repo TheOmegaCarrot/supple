@@ -331,13 +331,6 @@ static auto test_tuple_insert() -> ehanc::test
   return results;
 }
 
-/* static auto test_tuple_insert_as() -> ehanc::test */
-/* { */
-/*   ehanc::test results; */
-
-/*   return results; */
-/* } */
-
 static auto test_tuple_erase() -> ehanc::test
 {
   ehanc::test results;
@@ -597,7 +590,6 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_rotate_left", &test_tuple_rotate_left);
   ehanc::run_test("supl::tuple_rotate_right", &test_tuple_rotate_right);
   ehanc::run_test("supl::tuple_insert", &test_tuple_insert);
-  /* ehanc::run_test("supl::tuple_insert_as", &test_tuple_insert_as); */
   ehanc::run_test("supl::tuple_erase", &test_tuple_erase);
   ehanc::run_test("supl::tuple_reorder", &test_tuple_reorder);
   ehanc::run_test("supl::tuple_split", &test_tuple_split);

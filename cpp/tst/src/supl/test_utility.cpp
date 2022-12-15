@@ -1,6 +1,8 @@
 #include <array>
 #include <cstddef>
 #include <list>
+#include <map>
+#include <sstream>
 #include <type_traits>
 #include <vector>
 
@@ -180,11 +182,66 @@ static auto test_size_t_literals() -> ehanc::test
   return results;
 }
 
+struct uncopiable {
+  int m_value;
+  uncopiable() = delete;
+  explicit uncopiable(int value)
+      : m_value(value) {};
+  uncopiable(const uncopiable&)                        = delete;
+  uncopiable(uncopiable&&) noexcept                    = default;
+  auto operator=(const uncopiable&)                    = delete;
+  auto operator=(uncopiable&&) noexcept -> uncopiable& = default;
+  ~uncopiable()                                        = default;
+
+  friend inline auto operator<<(std::ostream& out,
+                                const uncopiable& rhs) noexcept
+      -> std::ostream&
+  {
+    out << rhs.m_value;
+    return out;
+  }
+};
+
+static auto test_stream_adapter() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::vector test_input_vec {4, 8, 3};
+  std::map<char, int> test_input_map {
+      {'a', 1},
+      {'b', 2},
+      {'c', 3},
+      {'d', 4}
+  };
+
+  std::string beans {"Beans"};
+
+  uncopiable neat {7};
+
+  std::tuple test_input_tup {
+      true, test_input_vec,
+ /* std::move(neat), */
+      42, std::tuple {81, 3.14, false},
+        test_input_map, 'u', beans
+  };
+
+  std::string expected1 {supl::to_string(test_input_tup)};
+
+  std::stringstream test_stream;
+  test_stream << supl::stream_adapter(test_input_tup);
+  std::string result1 {test_stream.str()};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
 void test_utility()
 {
   ehanc::run_test("supl::explicit_copy", &test_explicit_copy);
   ehanc::run_test("supl::to_stream", &test_to_stream);
   ehanc::run_test("supl::to_string", &test_to_string);
+  ehanc::run_test("supl::stream_adapter", &test_stream_adapter);
   ehanc::run_test("supl::literals::size_t_literal::operator\"\"_z",
                   &test_size_t_literals);
 }

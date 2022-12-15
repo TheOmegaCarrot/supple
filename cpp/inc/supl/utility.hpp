@@ -136,6 +136,38 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
 /* {{{ doc */
 /**
+ * @brief Allows for outputting many types to ostreams.
+ * Makes no copies.
+ * Safe to use as a prvalue.
+ * Contains a reference to its constructor argument.
+ * 
+ * ex. `an_ostream << supl::stream_adapter(a_vector)` << '\n';
+ */
+/* }}} */
+template <typename T>
+class stream_adapter
+{
+private:
+
+  const T& m_value;
+
+public:
+
+  explicit stream_adapter(const T& t)
+      : m_value {t}
+  {}
+
+  friend inline auto operator<<(std::ostream& out,
+                                const stream_adapter<T>& rhs) noexcept
+      -> std::ostream&
+  {
+    to_stream(out, rhs.m_value);
+    return out;
+  }
+};
+
+/* {{{ doc */
+/**
  * @brief A singular function to convert many things to strings.
  *
  * @pre A parameter type `T` is valid if any of the below are true:

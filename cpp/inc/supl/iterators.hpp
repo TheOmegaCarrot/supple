@@ -68,25 +68,116 @@ template <typename Iterable>
 
 /* {{{ doc */
 /**
- * @brief Simple wrapper around increment operator. Modifies in-place.
+ * @brief Container-like class which wraps a sequence of values.
+ * The range is [begin, end]. Note this is not a half-open range.
+ * Values are created on-the-fly by the iterators.
+ *
+ * @tparam T Type of the sequence. Must support pre-increment and equality comparison.
+ * It is strongly advised that `T` be cheap to copy.
  */
 /* }}} */
 template <typename T>
-constexpr void increment(T& t)
-{
-  ++t;
-}
+struct iota {
 
-/* {{{ doc */
-/**
- * @brief Simple wrapper around decrement operator. Modifies in-place.
- */
-/* }}} */
-template <typename T>
-constexpr void decrement(T& t)
-{
-  --t;
-}
+  const T begin_value;
+  const T end_value;
+
+  /* {{{ iterator_base */
+  template <bool is_const>
+  struct iterator_base {
+
+    using value_type        = std::conditional_t<is_const, const T, T>;
+    using difference_type   = std::ptrdiff_t;
+    using pointer           = std::conditional_t<is_const, const T*, T*>;
+    using reference         = std::conditional_t<is_const, const T&, T&>;
+    using iterator_category = std::bidirectional_iterator_tag;
+
+    value_type value;
+
+    constexpr auto operator++() noexcept -> iterator_base&
+    {
+      ++value;
+      return *this;
+    }
+
+    [[nodiscard]] constexpr auto operator++(int) noexcept -> iterator_base
+    {
+      iterator_base copy {value};
+      this->operator++();
+      return copy;
+    }
+
+    constexpr auto operator--() noexcept -> iterator_base&
+    {
+      --value;
+      return *this;
+    }
+
+    [[nodiscard]] constexpr auto operator--(int) noexcept -> iterator_base
+    {
+      iterator_base copy {value};
+      this->operator--();
+      return copy;
+    }
+
+    [[nodiscard]] constexpr auto operator*() noexcept -> reference
+    {
+      return value;
+    }
+
+    [[nodiscard]] constexpr auto
+    operator==(const iterator_base& rhs) noexcept -> bool
+    {
+      return this->value == rhs.value;
+    }
+
+    [[nodiscard]] constexpr auto
+    operator!=(const iterator_base& rhs) noexcept -> bool
+    {
+      return this->value != rhs.value;
+    }
+
+    [[nodiscard]] constexpr auto operator->() noexcept -> pointer
+    {
+      return &value;
+    }
+  };
+
+  /* }}} */
+
+  using iterator       = iterator_base<false>;
+  using const_iterator = iterator_base<true>;
+
+  [[nodiscard]] constexpr auto begin() -> iterator
+  {
+    return iterator {begin_value};
+  }
+
+  [[nodiscard]] constexpr auto begin() const -> iterator
+  {
+    return const_iterator {begin_value};
+  }
+
+  [[nodiscard]] constexpr auto cbegin() const -> iterator
+  {
+    return const_iterator {begin_value};
+  }
+
+  [[nodiscard]] constexpr auto end() -> iterator
+  {
+    return iterator {end_value + 1};
+  }
+
+  [[nodiscard]] constexpr auto end() const -> iterator
+  {
+    return const_iterator {end_value + 1};
+  }
+
+  [[nodiscard]] constexpr auto cend() const -> iterator
+  {
+    return const_iterator {end_value + 1};
+  }
+};
 
 } // namespace supl
 

@@ -44,8 +44,38 @@ static auto test_clast() -> ehanc::test
   return results;
 }
 
+static auto test_iota() -> ehanc::test
+{
+  ehanc::test results;
+
+  constexpr static std::array<std::size_t, 10> expected1 {1, 2, 3, 4, 5,
+                                                          6, 7, 8, 9, 10};
+  constexpr static auto result1 {[]() {
+    std::array<std::size_t, 10> retval {};
+    for ( std::size_t i : supl::iota<std::size_t> {1, 10} ) {
+      retval.at(i - 1) = i;
+    }
+    return retval;
+  }()}; // IILE
+
+  results.add_case(result1, expected1);
+
+  std::array<std::size_t, 10> expected2 {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  auto result2 {[]() {
+    std::array<std::size_t, 10> retval {};
+    std::copy(supl::iota<std::size_t>::iterator {1},
+              supl::iota<std::size_t>::iterator {11}, retval.begin());
+    return retval;
+  }()}; // IILE
+
+  results.add_case(result2, expected2);
+
+  return results;
+}
+
 void test_iterators()
 {
   ehanc::run_test("supl::last", &test_last);
   ehanc::run_test("supl::clast", &test_clast);
+  ehanc::run_test("supl::iota", &test_iota);
 }

@@ -461,8 +461,6 @@ tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
  *
  * @param tup Tuple to insert into
  *
- * @param deduction_helper Only exists so that `Idx` can be deduced
- *
  * @param data Value(s) to insert
  *
  * @return New tuple with `data` inserted at index `Idx`
@@ -509,8 +507,6 @@ tuple_erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
  * @tparam Idx Index at which to erase.
  *
  * @param tup Input tuple
- *
- * @param deduction_helper Only exists so `Idx` can be deduced
  *
  * @return New tuple with element at index `Idx` erased.
  */
@@ -564,8 +560,6 @@ tuple_split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>,
  *
  * @param tup Tuple to split.
  *
- * @param idx Deduction helper.
- *
  * @return Pair of tuples split from `tup` at index `Idx`.
  * ex. tuple_split(std::tuple{1, true, 'g'}, index_constant<1>) ==
  * std::pair{std::tuple{1}, std::tuple{true, 'g'}}
@@ -611,10 +605,6 @@ subtuple_impl(const Tuple& tup, std::index_sequence<Inds...>,
  * @tparam end Ending index
  *
  * @param tup Tuple to extract a subtuple from
- *
- * @param begin_deduct_help Provides deduction for `begin`
- *
- * @param end_deduct_help Provides deduction for `end`
  */
 /* }}} */
 template <std::size_t Begin, std::size_t End, typename Tuple>

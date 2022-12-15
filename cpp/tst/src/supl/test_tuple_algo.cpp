@@ -635,8 +635,15 @@ static auto test_tuple_elem_swap() -> ehanc::test
 
   results.add_case(result2, expected2);
 
-  /* std::tuple expected3 {2.7F, 'g', 3.14, true, 18UL, 42}; */
-  /* auto result3 {supl::tuple_elem_swap<0, 5>(test_input)}; */
+  std::tuple expected3 {2.7F, 'g', 3.14, true, 18UL, 42};
+  auto result3 {supl::tuple_elem_swap<0, 5>(test_input)};
+
+  results.add_case(result3, expected3);
+
+  std::tuple expected4 {42, 18UL, 3.14, true, 'g', 2.7F};
+  auto result4 {supl::tuple_elem_swap<4, 1>(test_input)};
+
+  results.add_case(result4, expected4);
 
   return results;
 }

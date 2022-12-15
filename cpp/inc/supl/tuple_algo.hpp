@@ -767,21 +767,22 @@ template <std::size_t Count, typename Tuple>
  */
 /* }}} */
 template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
-[[nodiscard]] constexpr auto
-tuple_elem_swap(const Tuple& tup) // not yet working right
+[[nodiscard]] constexpr auto tuple_elem_swap(const Tuple& tup)
     -> supl::tl::swap_t<Tuple, Idx1, Idx2>
 {
-  if constexpr ( Idx1 == Idx2 ) {
-    return tup;
-  } else {
+  constexpr std::size_t min_idx {std::min(Idx1, Idx2)};
+  constexpr std::size_t max_idx {std::max(Idx1, Idx2)};
+  constexpr std::size_t tup_size {std::tuple_size_v<Tuple>};
 
-    constexpr std::size_t min_idx {std::min(Idx1, Idx2)};
-    constexpr std::size_t max_idx {std::max(Idx1, Idx2)};
-    constexpr std::size_t tup_size {std::tuple_size_v<Tuple>};
+  if constexpr ( Idx1 == Idx2 ) {
+
+    return tup;
+
+  } else if constexpr ( max_idx != tup_size - 1 ) {
 
     return std::tuple_cat(
         // [0, <first swap point>)
-        subtuple<0, min_idx>(tup), // Needs replacing with tuple_front_n
+        tuple_front_n<min_idx>(tup),
         // <first swap point>
         std::tuple {std::get<max_idx>(tup)},
         // (first swap point, second swap point)
@@ -789,8 +790,19 @@ tuple_elem_swap(const Tuple& tup) // not yet working right
         // <second swap point>
         std::tuple {std::get<min_idx>(tup)},
         // (second swap point, max index]
-        subtuple<max_idx + 1, tup_size>(
-            tup)); // Needs replacing with tuple_back_n
+        tuple_back_n<tup_size - max_idx - 1>(tup));
+
+  } else if constexpr ( max_idx == tup_size - 1 ) {
+
+    return std::tuple_cat(
+        // [0, <first swap point>)
+        tuple_front_n<min_idx>(tup),
+        // <first swap point>
+        std::tuple {std::get<max_idx>(tup)},
+        // (first swap point, second swap point)
+        subtuple<min_idx + 1, max_idx>(tup),
+        // <second swap point> (aka end)
+        std::tuple {std::get<min_idx>(tup)});
   }
 }
 

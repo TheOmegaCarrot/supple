@@ -62,7 +62,8 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
     explicit ostream_state_RAII(std::ostream& stream)
         : m_stream {stream}
-        , m_flags {stream.flags()} {};
+        , m_flags {stream.flags()}
+    {}
 
     ostream_state_RAII(const ostream_state_RAII&) = delete;
     ostream_state_RAII(ostream_state_RAII&&)      = delete;

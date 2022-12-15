@@ -40,6 +40,30 @@ static auto test_for_each_in_tuple() -> ehanc::test
   return results;
 }
 
+static auto test_for_each_in_subtuple() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple<int, char, bool> test {42, 'c', false};
+
+  supl::for_each_in_subtuple<0, 1>(
+      test, [&results, index {0}](const auto& i) mutable {
+        using I = std::decay_t<decltype(i)>;
+
+        if constexpr ( std::is_same_v<I, int> ) {
+          results.add_case(static_cast<int>(i), 42);
+          results.add_case(index, 0);
+
+        } else if constexpr ( std::is_same_v<I, char> ) {
+          results.add_case(static_cast<char>(i), 'c');
+          results.add_case(index, 1);
+        }
+        ++index;
+      });
+
+  return results;
+}
+
 static auto test_tuple_transform() -> ehanc::test
 {
   using supl::literals::size_t_literal::operator""_z;
@@ -651,6 +675,8 @@ static auto test_tuple_elem_swap() -> ehanc::test
 void test_tuple_algo()
 {
   ehanc::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
+  ehanc::run_test("supl::for_each_in_subtuple",
+                  &test_for_each_in_subtuple);
   ehanc::run_test("supl::tuple_transform", &test_tuple_transform);
   ehanc::run_test("supl::tuple_any_of", &test_tuple_any_of);
   ehanc::run_test("supl::tuple_all_of", &test_tuple_all_of);

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "supl/term_colors.h"
+#include "supl/utility.hpp"
 #include "test_utils.hpp"
 
 #include "supl/test_algorithm.h"

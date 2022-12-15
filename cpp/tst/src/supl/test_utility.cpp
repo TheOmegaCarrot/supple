@@ -185,8 +185,11 @@ static auto test_size_t_literals() -> ehanc::test
 struct uncopiable {
   int m_value;
   uncopiable() = delete;
+
   explicit uncopiable(int value)
-      : m_value(value) {};
+      : m_value(value)
+  {}
+
   uncopiable(const uncopiable&)                        = delete;
   uncopiable(uncopiable&&) noexcept                    = default;
   auto operator=(const uncopiable&)                    = delete;

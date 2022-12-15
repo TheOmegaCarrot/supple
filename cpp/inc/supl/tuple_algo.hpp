@@ -53,6 +53,9 @@ for_each_in_tuple_impl(Tuple&& tup, Func&& func,
  * @param tup Tuple to apply a visitor function to every element of.
  *
  * @param func Visitor function.
+ *
+ * @pre `Func` must be invocable with every element of `tup`.
+ * Failure to meet this precondition is a compile-time error.
  */
 /* }}} */
 template <typename Tuple, typename Func>
@@ -61,6 +64,51 @@ constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept
   constexpr auto seq {
       std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
   impl::for_each_in_tuple_impl(tup, std::forward<Func>(func), seq);
+}
+
+namespace impl {
+
+template <typename Tuple, typename Func, std::size_t... Idxs,
+          std::size_t Begin>
+constexpr void for_each_in_subtuple_impl(const Tuple& tup, Func&& func,
+                                         std::index_sequence<Idxs...>,
+                                         index_constant<Begin>)
+{
+  (std::invoke(func, std::get<Idxs + Begin>(tup)), ...);
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Applies a visitor function to every member of a subtuple.
+ * Function is applied to all elements in the half-open range [Begin, End).
+ *
+ * @tparam Begin Begin of half-open range of inputs
+ *
+ * @tparam End End of half-open range of inputs
+ *
+ * @tparam Tuple Input tuple type
+ *
+ * @param func Visitor function
+ *
+ * @pre `Func` must be invocable with every element of `tup`
+ * in the half-open range [Begin, End).
+ * Failure to meet this precondition is a compile-time error.
+ */
+/* }}} */
+template <std::size_t Begin, std::size_t End, typename Tuple,
+          typename Func>
+constexpr void for_each_in_subtuple(const Tuple& tup, Func&& func)
+{
+
+  static_assert(Begin < std::tuple_size_v<Tuple>, "Begin out of bounds");
+  static_assert(End <= std::tuple_size_v<Tuple>, "Begin out of bounds");
+
+  constexpr auto seq {std::make_index_sequence<End - Begin> {}};
+
+  impl::for_each_in_subtuple_impl(tup, std::forward<Func>(func), seq,
+                                  index_constant<Begin> {});
 }
 
 namespace impl {

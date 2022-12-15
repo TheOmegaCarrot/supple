@@ -6,6 +6,7 @@
 #include <iterator>
 #include <sstream>
 
+#include "iterators.hpp"
 #include "metaprogramming.hpp"
 #include "tuple_algo.hpp"
 
@@ -92,22 +93,42 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
     out << value;
 
+    /* } else if constexpr ( std::conjunction_v< */
+    /*                           is_tuple<T>, */
+    /*                           equals<std::tuple_size<T>::value, 0>> ) { */
+    /*   out << "(  )"; */
+    /*   return; */
+
+    /* } else if constexpr ( std::conjunction_v< */
+    /*                           is_tuple<T>, */
+    /*                           equals<std::tuple_size_v<T>, 1>> ) { */
+    /*   out << "( "; */
+    /*   to_stream(out, std::get<0>(value)); */
+    /*   out << " )"; */
+    /*   return; */
+
   } else if constexpr ( is_tuple_v<T> ) {
 
-    if constexpr ( std::tuple_size_v<T> == 0 ) {
-      out << "( )";
-      return;
-    }
+    // clang-format off
+    if constexpr ( std::tuple_size_v <T> > 1 ) {
+      // clang-format on
 
-    out << "( ";
-    for_each_in_tuple(value, [&out](const auto& i) {
-      to_stream(out, i);
-      out << ", ";
-    });
-    // Move "write head" 2 characters before the end, and overwrite from
-    // there Much less jank way of removing trailing ", "
-    out.seekp(-2, std::ios_base::end);
-    out << " )";
+      out << "( ";
+      for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
+          value, [&out](const auto& i) {
+            to_stream(out, i);
+            out << ", ";
+          });
+      to_stream(out, std::get<std::tuple_size_v<T> - 1>(value));
+      out << " )";
+
+    } else if constexpr ( std::tuple_size_v<T> == 1 ) {
+      out << "( ";
+      to_stream(out, std::get<0>(value));
+      out << " )";
+    } else if constexpr ( std::tuple_size_v<T> == 0 ) {
+      out << "( )";
+    }
 
   } else if constexpr ( is_pair_v<T> ) {
 
@@ -123,12 +144,12 @@ void to_stream(std::ostream& out, const T& value) noexcept
       out << "[ ]";
     } else {
       out << "[ ";
-      std::for_each(std::begin(value), std::end(value),
+      std::for_each(std::begin(value), supl::last(value),
                     [&out](const auto& i) {
                       to_stream(out, i);
                       out << ", ";
                     });
-      out.seekp(-2, std::ios_base::end);
+      to_stream(out, *supl::last(value));
       out << " ]";
     }
   }

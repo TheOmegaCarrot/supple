@@ -258,7 +258,7 @@ static auto test_generate() -> ehanc::test
     supl::generate(retval.begin(), retval.end(),
                    [i = 0]() mutable { return ++i; });
     return retval;
-  }()};
+  }()}; // IILE
 
   constexpr static std::array expected_cexpr_arr {1, 2, 3, 4, 5,
                                                   6, 7, 8, 9, 10};
@@ -271,6 +271,28 @@ static auto test_generate() -> ehanc::test
 static auto test_copy() -> ehanc::test
 {
   ehanc::test results;
+
+  constexpr static std::array from_arr {1, 2, 3, 4, 5, 6};
+
+  constexpr static std::array expected1 {1, 2, 3, 4};
+  constexpr static std::array result1 {[&]() {
+    std::array<int, 4> retval {};
+    supl::copy(from_arr.begin(), from_arr.begin() + 4, retval.begin());
+    return retval;
+  }()}; // IILE
+
+  results.add_case(result1, expected1);
+
+  std::array expected2 {1, 2, 3, 4};
+  std::array result2 {[&]() {
+    std::array<int, 4> retval {};
+    auto* oitr {supl::copy(from_arr.begin(), from_arr.begin() + 4,
+                           retval.begin())};
+    results.add_case(oitr, retval.end(), "Returned iterator not correct");
+    return retval;
+  }()}; // IILE
+
+  results.add_case(result2, expected2);
 
   return results;
 }

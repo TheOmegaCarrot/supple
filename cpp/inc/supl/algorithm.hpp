@@ -504,6 +504,18 @@ generate(Itr begin, const Itr end,
   }
 }
 
+template <typename InItr, typename OutItr>
+constexpr auto copy(InItr begin, const InItr end, OutItr out) noexcept(
+    std::is_nothrow_copy_constructible_v<
+        typename std::iterator_traits<InItr>::value_type>) -> OutItr
+{
+  for ( ; begin != end; ++out, ++begin ) {
+    *out = *begin;
+  }
+
+  return out;
+}
+
 } // namespace supl
 
 #endif

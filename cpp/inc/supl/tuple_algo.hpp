@@ -702,12 +702,48 @@ template <typename Tuple1, typename Tuple2>
   return impl::tuple_interleave_impl(tup1, tup2, seq);
 }
 
-/* template <std::size_t Idx1, std::size_t Idx2, typename Tuple> */
-/* [[nodiscard]] constexpr auto tuple_elem_swap(const Tuple& tup) */
-/*     -> supl::tl::swap_t<Tuple, Idx1, Idx2> */
-/* { */
+/* {{{ doc */
+/**
+ * @brief Swaps two elements of a tuple. `Idx1 < Idx2` or `Idx2 < Idx1`,
+ * or `Idx1 == Idx2` all work.
+ * Swapping `Idx1` and `Idx2` does not change the result.
+ *
+ * @tparam Idx1 Index of element to swap with element at index Idx2
+ *
+ * @tparam Idx2 Index of element to swap with element at index Idx1
+ *
+ * @tparam Tuple Type of input tuple
+ *
+ * @param tup Input tuple
+ */
+/* }}} */
+template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
+[[nodiscard]] constexpr auto
+tuple_elem_swap(const Tuple& tup) // not yet working right
+    -> supl::tl::swap_t<Tuple, Idx1, Idx2>
+{
+  if constexpr ( Idx1 == Idx2 ) {
+    return tup;
+  } else {
 
-/* } */
+    constexpr std::size_t min_idx {std::min(Idx1, Idx2)};
+    constexpr std::size_t max_idx {std::max(Idx1, Idx2)};
+    constexpr std::size_t tup_size {std::tuple_size_v<Tuple>};
+
+    return std::tuple_cat(
+        // [0, <first swap point>)
+        subtuple<0, min_idx>(tup), // Needs replacing with tuple_front_n
+        // <first swap point>
+        std::tuple {std::get<max_idx>(tup)},
+        // (first swap point, second swap point)
+        subtuple<min_idx + 1, max_idx>(tup),
+        // <second swap point>
+        std::tuple {std::get<min_idx>(tup)},
+        // (second swap point, max index]
+        subtuple<max_idx + 1, tup_size>(
+            tup)); // Needs replacing with tuple_back_n
+  }
+}
 
 } // namespace supl
 

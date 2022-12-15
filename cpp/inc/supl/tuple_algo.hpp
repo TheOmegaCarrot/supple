@@ -687,6 +687,9 @@ constexpr auto tuple_interleave_impl(const Tuple1& tup1,
  *
  * @pre Both tuples must be of exactly the same length.
  * Failure to meet this precondition is a compile-time error.
+ *
+ * @return New tuple created by interleaving the two input tuples.
+ * See example.
  */
 /* }}} */
 template <typename Tuple1, typename Tuple2>
@@ -714,6 +717,20 @@ tuple_front_n_impl(const Tuple& tup, std::index_sequence<Idxs...>)
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Returns a new tuple consisting only of the first `Count` elements
+ * of `tup`
+ *
+ * @tparam Count Number of elements in output tuple
+ *
+ * @tparam Tuple Type of input tuple
+ *
+ * @param tup Input tuple
+ *
+ * @return New tuple consisting of the first `Count` elements of `tup`
+ */
+/* }}} */
 template <std::size_t Count, typename Tuple>
 [[nodiscard]] constexpr auto tuple_front_n(const Tuple& tup) noexcept
     -> tl::front_n_t<Tuple, Count>
@@ -738,6 +755,20 @@ tuple_back_n_impl(const Tuple& tup, std::index_sequence<Idxs...>,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Returns a new tuple consisting only of the last `Count` elements
+ * of `tup`
+ *
+ * @tparam Count Number of elements in output tuple
+ *
+ * @tparam Tuple Type of input tuple
+ *
+ * @param tup Input tuple
+ *
+ * @return New tuple consisting of the last `Count` elements of `tup`
+ */
+/* }}} */
 template <std::size_t Count, typename Tuple>
 [[nodiscard]] constexpr auto tuple_back_n(const Tuple& tup) noexcept
     -> tl::back_n_t<Tuple, Count>
@@ -764,12 +795,16 @@ template <std::size_t Count, typename Tuple>
  * @tparam Tuple Type of input tuple
  *
  * @param tup Input tuple
+ *
+ * @return Tuple with elements at `Idx1` and `Idx2` swapped
+ * compared to input tuple
  */
 /* }}} */
 template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
 [[nodiscard]] constexpr auto tuple_elem_swap(const Tuple& tup)
     -> supl::tl::swap_t<Tuple, Idx1, Idx2>
 {
+
   constexpr std::size_t min_idx {std::min(Idx1, Idx2)};
   constexpr std::size_t max_idx {std::max(Idx1, Idx2)};
   constexpr std::size_t tup_size {std::tuple_size_v<Tuple>};
@@ -780,29 +815,18 @@ template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
 
   } else if constexpr ( max_idx != tup_size - 1 ) {
 
-    return std::tuple_cat(
-        // [0, <first swap point>)
-        tuple_front_n<min_idx>(tup),
-        // <first swap point>
-        std::tuple {std::get<max_idx>(tup)},
-        // (first swap point, second swap point)
-        subtuple<min_idx + 1, max_idx>(tup),
-        // <second swap point>
-        std::tuple {std::get<min_idx>(tup)},
-        // (second swap point, max index]
-        tuple_back_n<tup_size - max_idx - 1>(tup));
+    return std::tuple_cat(tuple_front_n<min_idx>(tup),
+                          std::tuple {std::get<max_idx>(tup)},
+                          subtuple<min_idx + 1, max_idx>(tup),
+                          std::tuple {std::get<min_idx>(tup)},
+                          tuple_back_n<tup_size - max_idx - 1>(tup));
 
   } else if constexpr ( max_idx == tup_size - 1 ) {
 
-    return std::tuple_cat(
-        // [0, <first swap point>)
-        tuple_front_n<min_idx>(tup),
-        // <first swap point>
-        std::tuple {std::get<max_idx>(tup)},
-        // (first swap point, second swap point)
-        subtuple<min_idx + 1, max_idx>(tup),
-        // <second swap point> (aka end)
-        std::tuple {std::get<min_idx>(tup)});
+    return std::tuple_cat(tuple_front_n<min_idx>(tup),
+                          std::tuple {std::get<max_idx>(tup)},
+                          subtuple<min_idx + 1, max_idx>(tup),
+                          std::tuple {std::get<min_idx>(tup)});
   }
 }
 

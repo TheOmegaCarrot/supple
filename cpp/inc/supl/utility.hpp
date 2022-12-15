@@ -31,6 +31,69 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
   return t;
 }
 
+template <typename T>
+void to_stream(std::ostream& out, const T& value) noexcept
+{
+
+  using decayT = remove_cvref_t<T>;
+
+  static_assert(
+      std::disjunction_v<is_printable<decayT>, is_tuple<decayT>,
+                         is_pair<decayT>, is_iterable<decayT>>,
+      "Attempting to call supl::to_string with an unsupported type");
+
+  auto flags {out.flags()};
+  out << std::boolalpha;
+
+  if constexpr ( is_printable_v<T> ) {
+
+    out << value;
+
+  } else if constexpr ( is_tuple_v<T> ) {
+
+    if constexpr ( std::tuple_size_v<T> == 0 ) {
+      out << "( )";
+      out.setf(flags);
+      return;
+    }
+
+    out << "( ";
+    for_each_in_tuple(value, [&out](const auto& i) {
+      to_stream(out, i);
+      out << ", ";
+    });
+    // Move "write head" 2 characters before the end, and overwrite from
+    // there Much less jank way of removing trailing ", "
+    out.seekp(-2, std::ios_base::end);
+    out << " )";
+
+  } else if constexpr ( is_pair_v<T> ) {
+
+    out << "( ";
+    to_stream(out, value.first);
+    out << ", ";
+    to_stream(out, value.second);
+    out << " )";
+
+  } else if constexpr ( is_iterable_v<T> ) {
+
+    if ( value.empty() ) {
+      out << "[ ]";
+    } else {
+      out << "[ ";
+      std::for_each(std::begin(value), std::end(value),
+                    [&out](const auto& i) {
+                      to_stream(out, i);
+                      out << ", ";
+                    });
+      out.seekp(-2, std::ios_base::end);
+      out << " ]";
+    }
+  }
+
+  out.setf(flags);
+}
+
 /* {{{ doc */
 /**
  * @brief A singular function to convert many things to strings.
@@ -49,56 +112,10 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
  */
 /* }}} */
 template <typename T>
-auto to_string(const T& value) noexcept -> std::string
+[[nodiscard]] auto to_string(const T& value) -> std::string
 {
-
-  using decayT = remove_cvref_t<T>;
-
-  static_assert(
-      std::disjunction_v<is_printable<decayT>, is_tuple<decayT>,
-                         is_pair<decayT>, is_iterable<decayT>>,
-      "Attempting to call supl::to_string with an unsupported type");
-
   std::stringstream out;
-  out << std::boolalpha;
-
-  if constexpr ( is_printable_v<T> ) {
-
-    out << value;
-
-  } else if constexpr ( is_tuple_v<T> ) {
-
-    if constexpr ( std::tuple_size_v<T> == 0 ) {
-      return "( )";
-    }
-
-    out << "( ";
-    for_each_in_tuple(
-        value, [&out](const auto& i) { out << to_string(i) << ", "; });
-    // Move "write head" 2 characters before the end, and overwrite from
-    // there Much less jank way of removing trailing ", "
-    out.seekp(-2, std::ios_base::end);
-    out << " )";
-
-  } else if constexpr ( is_pair_v<T> ) {
-
-    out << "( " << to_string(value.first) << ", "
-        << to_string(value.second) << " )";
-
-  } else if constexpr ( is_iterable_v<T> ) {
-
-    if ( value.empty() ) {
-      return "[ ]";
-    } else {
-      out << "[ ";
-      std::for_each(
-          std::begin(value), std::end(value),
-          [&out](const auto& i) { out << to_string(i) << ", "; });
-      out.seekp(-2, std::ios_base::end);
-      out << " ]";
-    }
-  }
-
+  to_stream(out, value);
   return out.str();
 }
 

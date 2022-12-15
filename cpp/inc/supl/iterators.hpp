@@ -69,8 +69,11 @@ template <typename Iterable>
 /* {{{ doc */
 /**
  * @brief Container-like class which wraps a sequence of values.
- * The range is [begin, end]. Note this is not a half-open range.
+ * The range is [begin, end).
  * Values are created on-the-fly by the iterators.
+ * Safe to use as a prvalue.
+ * Usable at compile-time.
+ * Iterators can be created directly.
  *
  * @tparam T Type of the sequence. Must support pre-increment and equality comparison.
  * It is strongly advised that `T` be cheap to copy.
@@ -165,17 +168,17 @@ struct iota {
 
   [[nodiscard]] constexpr auto end() -> iterator
   {
-    return iterator {end_value + 1};
+    return iterator {end_value};
   }
 
   [[nodiscard]] constexpr auto end() const -> iterator
   {
-    return const_iterator {end_value + 1};
+    return const_iterator {end_value};
   }
 
   [[nodiscard]] constexpr auto cend() const -> iterator
   {
-    return const_iterator {end_value + 1};
+    return const_iterator {end_value};
   }
 };
 

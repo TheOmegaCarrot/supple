@@ -52,7 +52,7 @@ static auto test_iota() -> ehanc::test
                                                           6, 7, 8, 9, 10};
   constexpr static auto result1 {[]() {
     std::array<std::size_t, 10> retval {};
-    for ( std::size_t i : supl::iota<std::size_t> {1, 10} ) {
+    for ( std::size_t i : supl::iota<std::size_t> {1, 11} ) {
       retval.at(i - 1) = i;
     }
     return retval;

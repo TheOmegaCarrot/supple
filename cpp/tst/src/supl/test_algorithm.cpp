@@ -253,6 +253,25 @@ static auto test_generate() -> ehanc::test
         results.add_case(t, r, case_string);
       });
 
+  constexpr static std::array cexpr_arr {[]() {
+    std::array<int, 10> retval {};
+    supl::generate(retval.begin(), retval.end(),
+                   [i = 0]() mutable { return ++i; });
+    return retval;
+  }()};
+
+  constexpr static std::array expected_cexpr_arr {1, 2, 3, 4, 5,
+                                                  6, 7, 8, 9, 10};
+
+  results.add_case(cexpr_arr, expected_cexpr_arr);
+
+  return results;
+}
+
+static auto test_copy() -> ehanc::test
+{
+  ehanc::test results;
+
   return results;
 }
 
@@ -270,4 +289,5 @@ void test_algorithm()
   ehanc::run_test("supl::for_each_both", &test_for_each_both);
   ehanc::run_test("supl::for_each_both_n", &test_for_each_both_n);
   ehanc::run_test("supl::generate", &test_generate);
+  ehanc::run_test("supl::copy", &test_copy);
 }

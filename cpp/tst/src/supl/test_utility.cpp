@@ -58,6 +58,70 @@ static auto test_explicit_copy() -> ehanc::test
   return results;
 }
 
+static auto test_to_stream() -> ehanc::test
+{
+  ehanc::test results;
+
+  using namespace std::literals;
+
+  std::stringstream str1;
+  std::tuple test1 {1, "hello", true};
+  supl::to_stream(str1, test1);
+  results.add_case(str1.str(), "( 1, hello, true )"s, "tuple");
+
+  std::stringstream str2;
+  std::pair test2 {42, "Neat"s};
+  supl::to_stream(str2, test2);
+  results.add_case(str2.str(), "( 42, Neat )"s, "pair");
+
+  std::stringstream str3;
+  std::vector test3 {1, 2, 42, 81};
+  supl::to_stream(str3, test3);
+  results.add_case(str3.str(), "[ 1, 2, 42, 81 ]"s, "vector");
+
+  std::stringstream str4;
+  std::list<std::pair<int, bool>> test4 {
+      {1,  true},
+      {2, false},
+      {5,  true}
+  };
+  supl::to_stream(str4, test4);
+  results.add_case(str4.str(),
+                   "[ ( 1, true ), ( 2, false ), ( 5, true ) ]"s,
+                   "List of tuples");
+
+  std::stringstream str5;
+  supl::to_stream(str5, 1);
+  results.add_case(str5.str(), "1"s, "int");
+
+  std::stringstream str6;
+  supl::to_stream(str6, std::vector<int> {});
+  results.add_case(str6.str(), "[ ]"s, "empty vector");
+
+  std::stringstream str7;
+  supl::to_stream(str7, std::tuple<> {});
+  results.add_case(str7.str(), "( )"s);
+
+  supl::to_stream(str7, true);
+  results.add_case(str7.str(), "( )true"s);
+
+  str7 << true;
+  results.add_case(str7.str(), "( )true1"s);
+
+  std::stringstream str8;
+  supl::to_stream(str8, std::tuple<int> {5});
+  results.add_case(str8.str(), "( 5 )"s);
+
+  std::stringstream str9;
+  std::tuple test9 {test1, test3, false};
+  supl::to_stream(str9, test9);
+
+  results.add_case(str9.str(),
+                   "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s);
+
+  return results;
+}
+
 static auto test_to_string() -> ehanc::test
 {
   ehanc::test results;
@@ -119,6 +183,7 @@ static auto test_size_t_literals() -> ehanc::test
 void test_utility()
 {
   ehanc::run_test("supl::explicit_copy", &test_explicit_copy);
+  ehanc::run_test("supl::to_stream", &test_to_stream);
   ehanc::run_test("supl::to_string", &test_to_string);
   ehanc::run_test("supl::literals::size_t_literal::operator\"\"_z",
                   &test_size_t_literals);

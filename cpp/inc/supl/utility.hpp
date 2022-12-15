@@ -31,9 +31,50 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
   return t;
 }
 
+/* {{{ doc */
+/**
+ * @brief A singular function to output many things to streams.
+ *
+ * @pre A parameter type `T` is valid if any of the below are true:
+ * - `operator<<(std::ostream&, T)` is defined
+ * - `T` is a tuple or pair of only valid types
+ * - `T` provides an iterator pair which dereference to a valid type
+ * If this precondition is not satisfied, it is a compile-time error.
+ *
+ * @tparam T Type to be formatted to a stream
+ *
+ * @param out `ostream` to output to
+ *
+ * @param value Value to be formatted to a stream
+ */
+/* }}} */
 template <typename T>
 void to_stream(std::ostream& out, const T& value) noexcept
 {
+  class ostream_state_RAII
+  {
+  private:
+
+    std::ostream& m_stream;
+    std::ios_base::fmtflags m_flags;
+
+  public:
+
+    explicit ostream_state_RAII(std::ostream& stream)
+        : m_stream {stream}
+        , m_flags {stream.flags()} {};
+
+    ostream_state_RAII(const ostream_state_RAII&) = delete;
+    ostream_state_RAII(ostream_state_RAII&&)      = delete;
+    auto operator=(const ostream_state_RAII&)
+        -> ostream_state_RAII&                                  = delete;
+    auto operator=(ostream_state_RAII&&) -> ostream_state_RAII& = delete;
+
+    ~ostream_state_RAII()
+    {
+      m_stream.flags(m_flags);
+    }
+  };
 
   using decayT = remove_cvref_t<T>;
 
@@ -42,7 +83,8 @@ void to_stream(std::ostream& out, const T& value) noexcept
                          is_pair<decayT>, is_iterable<decayT>>,
       "Attempting to call supl::to_string with an unsupported type");
 
-  auto flags {out.flags()};
+  ostream_state_RAII restorer(out);
+
   out << std::boolalpha;
 
   if constexpr ( is_printable_v<T> ) {
@@ -53,7 +95,6 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
     if constexpr ( std::tuple_size_v<T> == 0 ) {
       out << "( )";
-      out.setf(flags);
       return;
     }
 
@@ -90,8 +131,6 @@ void to_stream(std::ostream& out, const T& value) noexcept
       out << " ]";
     }
   }
-
-  out.setf(flags);
 }
 
 /* {{{ doc */

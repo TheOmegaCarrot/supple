@@ -672,6 +672,39 @@ static auto test_tuple_elem_swap() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_type_transform() -> ehanc::test
+{
+  ehanc::test results;
+
+  const std::tuple test_input {42, 3.14, true};
+
+  const std::tuple<const int&, const double&, const bool&> expected1 {
+      std::get<0>(test_input), std::get<1>(test_input),
+      std::get<2>(test_input)};
+
+  const auto result1 {
+      supl::tuple_type_transform<supl::make_const_ref>(test_input)};
+
+  results.add_case(result1, expected1);
+
+  results.add_case<const int*>(&std::get<0>(test_input),
+                               &std::get<0>(result1));
+
+  results.add_case<const double*>(&std::get<1>(test_input),
+                                  &std::get<1>(result1));
+
+  results.add_case<const bool*>(&std::get<2>(test_input),
+                                &std::get<2>(result1));
+
+  const auto& test_input_2 {expected1};
+  const auto& expected2 {test_input};
+  const auto result2 {
+      supl::tuple_type_transform<std::decay>(test_input_2)};
+  results.add_case(result2, expected2);
+
+  return results;
+}
+
 void test_tuple_algo()
 {
   ehanc::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
@@ -697,4 +730,6 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_front_n", &test_tuple_front_n);
   ehanc::run_test("supl::tuple_back_n", &test_tuple_back_n);
   ehanc::run_test("supl::tuple_elem_swap", &test_tuple_elem_swap);
+  ehanc::run_test("supl::tuple_type_transform",
+                  &test_tuple_type_transform);
 }

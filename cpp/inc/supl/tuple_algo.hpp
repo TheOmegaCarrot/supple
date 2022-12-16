@@ -866,7 +866,7 @@ template <std::size_t Count, typename Tuple>
  */
 /* }}} */
 template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
-[[nodiscard]] constexpr auto tuple_elem_swap(const Tuple& tup)
+[[nodiscard]] constexpr auto tuple_elem_swap(const Tuple& tup) noexcept
     -> supl::tl::swap_t<Tuple, Idx1, Idx2>
 {
 
@@ -893,6 +893,55 @@ template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
                           subtuple<min_idx + 1, max_idx>(tup),
                           std::tuple {std::get<min_idx>(tup)});
   }
+}
+
+namespace impl {
+
+template <template <typename> typename Transform, typename Tuple,
+          std::size_t... Idxs>
+[[nodiscard]] constexpr auto
+tuple_type_transform_impl(const Tuple& tup,
+                          std::index_sequence<Idxs...>) noexcept
+    -> tl::transform_t<Tuple, Transform>
+{
+  return {
+      static_cast<typename Transform<tl::at_index_t<Idxs, Tuple>>::type>(
+          std::get<Idxs>(tup))...};
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Transform types in tuple with unary type -> type metafunction.
+ *
+ * @details Suggested use: use with `supl::make_const_ref`to create a tuple
+ * of const lvalue references to use before applying a tuple algorithm
+ * to avoid expensive copies.
+ * 
+ * @pre For every type `T` in the input tuple,
+ * `T` must be convertible to `Transform<T>::type` via `static_cast`.
+ * Failure to meet this precondition is a compile-time error.
+ *
+ * @pre For every type `T` in the input tuple,
+ * `Transform<T>::type` must be well formed.
+ * Failure to meet this precondition is a compile-time error.
+ *
+ * @tparam Transform Unary type -> type metafunction used to transform
+ * types in input tuple.
+ *
+ * @param tup Input tuple
+ */
+/* }}} */
+template <template <typename> typename Transform, typename Tuple>
+[[nodiscard]] constexpr auto
+tuple_type_transform(const Tuple& tup) noexcept
+    -> tl::transform_t<Tuple, Transform>
+{
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+
+  return impl::tuple_type_transform_impl<Transform>(tup, seq);
 }
 
 } // namespace supl

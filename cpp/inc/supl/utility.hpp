@@ -89,7 +89,7 @@ public:
  * @brief A singular function to output many things to streams.
  *
  * @pre A parameter type `T` is valid if any of the below are true:
- * - `operator<<(std::ostream&, T)` is defined
+ * - `operator<<(std::ostream&, const T&)` is defined
  * - `T` is a tuple or pair of only valid types
  * - `T` provides an iterator pair which dereference to a valid type
  * If this precondition is not satisfied, it is a compile-time error.
@@ -170,6 +170,8 @@ void to_stream(std::ostream& out, const T& value) noexcept
 /* {{{ doc */
 /**
  * @brief Allows for outputting many types to ostreams.
+ *
+ * @details Supports any type supported by `supl::to_stream`.
  * Makes no copies.
  * Safe to use as a prvalue.
  * Contains a reference to its constructor argument.

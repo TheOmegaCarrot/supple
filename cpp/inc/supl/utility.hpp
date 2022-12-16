@@ -34,6 +34,42 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 
 /* {{{ doc */
 /**
+ * @brief When passed a `std::ostream`, its `fmtflags` are saved.
+ * When an object of this type goes out of scope,
+ * the `ostream`'s `fmtflags` which were saved are restored.
+ */
+/* }}} */
+class ostream_state_restorer
+// Tested by functioning properly in to_stream
+// as a function-local class
+{
+private:
+
+  std::ostream& m_stream;
+  std::ios_base::fmtflags m_flags;
+
+public:
+
+  explicit ostream_state_restorer(std::ostream& stream)
+      : m_stream {stream}
+      , m_flags {stream.flags()}
+  {}
+
+  ostream_state_restorer(const ostream_state_restorer&) = delete;
+  ostream_state_restorer(ostream_state_restorer&&)      = delete;
+  auto operator=(const ostream_state_restorer&)
+      -> ostream_state_restorer& = delete;
+  auto operator=(ostream_state_restorer&&)
+      -> ostream_state_restorer& = delete;
+
+  ~ostream_state_restorer()
+  {
+    m_stream.flags(m_flags);
+  }
+};
+
+/* {{{ doc */
+/**
  * @brief A singular function to output many things to streams.
  *
  * @pre A parameter type `T` is valid if any of the below are true:
@@ -52,32 +88,6 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 template <typename T>
 void to_stream(std::ostream& out, const T& value) noexcept
 {
-  class ostream_state_RAII
-  {
-  private:
-
-    std::ostream& m_stream;
-    std::ios_base::fmtflags m_flags;
-
-  public:
-
-    explicit ostream_state_RAII(std::ostream& stream)
-        : m_stream {stream}
-        , m_flags {stream.flags()}
-    {}
-
-    ostream_state_RAII(const ostream_state_RAII&) = delete;
-    ostream_state_RAII(ostream_state_RAII&&)      = delete;
-    auto operator=(const ostream_state_RAII&)
-        -> ostream_state_RAII&                                  = delete;
-    auto operator=(ostream_state_RAII&&) -> ostream_state_RAII& = delete;
-
-    ~ostream_state_RAII()
-    {
-      m_stream.flags(m_flags);
-    }
-  };
-
   using decayT = remove_cvref_t<T>;
 
   static_assert(
@@ -85,27 +95,13 @@ void to_stream(std::ostream& out, const T& value) noexcept
                          is_pair<decayT>, is_iterable<decayT>>,
       "Attempting to call supl::to_string with an unsupported type");
 
-  ostream_state_RAII restorer(out);
+  ostream_state_restorer restorer(out);
 
   out << std::boolalpha;
 
   if constexpr ( is_printable_v<T> ) {
 
     out << value;
-
-    /* } else if constexpr ( std::conjunction_v< */
-    /*                           is_tuple<T>, */
-    /*                           equals<std::tuple_size<T>::value, 0>> ) { */
-    /*   out << "(  )"; */
-    /*   return; */
-
-    /* } else if constexpr ( std::conjunction_v< */
-    /*                           is_tuple<T>, */
-    /*                           equals<std::tuple_size_v<T>, 1>> ) { */
-    /*   out << "( "; */
-    /*   to_stream(out, std::get<0>(value)); */
-    /*   out << " )"; */
-    /*   return; */
 
   } else if constexpr ( is_tuple_v<T> ) {
 

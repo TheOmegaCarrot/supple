@@ -105,8 +105,12 @@ auto count_if(Container&& container, Pred&& pred) noexcept(
  * Usable at compile-time.
  * Iterators can be created directly.
  *
- * @tparam T Type of the sequence. Must support pre-increment and equality comparison.
+ * @tparam T Type of the sequence.
+ * Must support pre-increment and equality comparison.
  * It is strongly advised that `T` be cheap to copy.
+ *
+ * @pre `begin_value` must be greater than `end_value`.
+ * If `T` is an unsigned integral type, behavior will be undefined.
  */
 /* }}} */
 template <typename T>

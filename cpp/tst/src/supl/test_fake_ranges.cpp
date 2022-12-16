@@ -3,76 +3,76 @@
 #include "supl/test_fake_ranges.h"
 #include "test_utils.hpp"
 
-static auto test_all_of() -> ehanc::test
-{
-  ehanc::test results;
+/* static auto test_all_of() -> ehanc::test */
+/* { */
+/*   ehanc::test results; */
 
-  const std::vector cvec {2, 3, 4, 5, 2};
-  std::vector vec {2, 3, 4, 5, 2};
+/*   const std::vector cvec {2, 3, 4, 5, 2}; */
+/*   std::vector vec {2, 3, 4, 5, 2}; */
 
-  results.add_case(supl::fr::all_of(vec, [](auto&& i) { return i > 1; }),
-                   true);
-  results.add_case(supl::fr::all_of(cvec, [](auto&& i) { return i > 1; }),
-                   true);
-  results.add_case(supl::fr::all_of(vec, [](auto&& i) { return i > 3; }),
-                   false);
-  results.add_case(supl::fr::all_of(cvec, [](auto&& i) { return i > 3; }),
-                   false);
+/*   results.add_case(supl::fr::all_of(vec, [](auto&& i) { return i > 1; }), */
+/*                    true); */
+/*   results.add_case(supl::fr::all_of(cvec, [](auto&& i) { return i > 1; }), */
+/*                    true); */
+/*   results.add_case(supl::fr::all_of(vec, [](auto&& i) { return i > 3; }), */
+/*                    false); */
+/*   results.add_case(supl::fr::all_of(cvec, [](auto&& i) { return i > 3; }), */
+/*                    false); */
 
-  return results;
-}
+/*   return results; */
+/* } */
 
-static auto test_any_of() -> ehanc::test
-{
-  ehanc::test results;
+/* static auto test_any_of() -> ehanc::test */
+/* { */
+/*   ehanc::test results; */
 
-  const std::vector cvec {2, 3, 4, 5, 2};
-  std::vector vec {2, 3, 4, 5, 2};
+/*   const std::vector cvec {2, 3, 4, 5, 2}; */
+/*   std::vector vec {2, 3, 4, 5, 2}; */
 
-  results.add_case(supl::fr::any_of(vec, [](auto&& i) { return i > 1; }),
-                   true);
-  results.add_case(supl::fr::any_of(cvec, [](auto&& i) { return i > 1; }),
-                   true);
-  results.add_case(supl::fr::any_of(vec, [](auto&& i) { return i > 9; }),
-                   false);
-  results.add_case(supl::fr::any_of(cvec, [](auto&& i) { return i > 9; }),
-                   false);
+/*   results.add_case(supl::fr::any_of(vec, [](auto&& i) { return i > 1; }), */
+/*                    true); */
+/*   results.add_case(supl::fr::any_of(cvec, [](auto&& i) { return i > 1; }), */
+/*                    true); */
+/*   results.add_case(supl::fr::any_of(vec, [](auto&& i) { return i > 9; }), */
+/*                    false); */
+/*   results.add_case(supl::fr::any_of(cvec, [](auto&& i) { return i > 9; }), */
+/*                    false); */
 
-  return results;
-}
+/*   return results; */
+/* } */
 
-static auto test_none_of() -> ehanc::test
-{
-  ehanc::test results;
+/* static auto test_none_of() -> ehanc::test */
+/* { */
+/*   ehanc::test results; */
 
-  const std::vector cvec {2, 3, 4, 5, 2};
-  std::vector vec {2, 3, 4, 5, 2};
+/*   const std::vector cvec {2, 3, 4, 5, 2}; */
+/*   std::vector vec {2, 3, 4, 5, 2}; */
 
-  results.add_case(supl::fr::none_of(vec, [](auto&& i) { return i < 1; }),
-                   true);
-  results.add_case(supl::fr::none_of(cvec, [](auto&& i) { return i < 1; }),
-                   true);
-  results.add_case(supl::fr::none_of(vec, [](auto&& i) { return i < 9; }),
-                   false);
-  results.add_case(supl::fr::none_of(cvec, [](auto&& i) { return i < 9; }),
-                   false);
+/*   results.add_case(supl::fr::none_of(vec, [](auto&& i) { return i < 1; }), */
+/*                    true); */
+/*   results.add_case(supl::fr::none_of(cvec, [](auto&& i) { return i < 1; }), */
+/*                    true); */
+/*   results.add_case(supl::fr::none_of(vec, [](auto&& i) { return i < 9; }), */
+/*                    false); */
+/*   results.add_case(supl::fr::none_of(cvec, [](auto&& i) { return i < 9; }), */
+/*                    false); */
 
-  return results;
-}
+/*   return results; */
+/* } */
 
-static auto test_count() -> ehanc::test
-{
-  ehanc::test results;
+/* static auto test_count() -> ehanc::test */
+/* { */
+/*   ehanc::test results; */
 
-  const std::vector cvec {2, 3, 4, 5, 5};
+/*   const std::vector cvec {2, 3, 4, 5, 5}; */
 
-  auto count {supl::fr::count(cvec, 5)};
-  auto correct {static_cast<decltype(count)>(2)};
+/*   auto count {supl::fr::count(cvec, 5)}; */
+/*   auto correct {static_cast<decltype(count)>(2)}; */
 
-  results.add_case(count, correct);
+/*   results.add_case(count, correct); */
 
-  return results;
-}
+/*   return results; */
+/* } */
 
 static auto test_iota() -> ehanc::test
 {
@@ -105,12 +105,14 @@ static auto test_iota() -> ehanc::test
 
 void test_fake_ranges()
 {
-  ehanc::run_test("supl::fr::all_of", &test_all_of);
-  ehanc::run_test("supl::fr::any_of", &test_any_of);
-  ehanc::run_test("supl::fr::none_of", &test_none_of);
+  // Do the algorithms *really* need rigorous testing?
+  // Literally just forwarding arguments
+  /* ehanc::run_test("supl::fr::all_of", &test_all_of); */
+  /* ehanc::run_test("supl::fr::any_of", &test_any_of); */
+  /* ehanc::run_test("supl::fr::none_of", &test_none_of); */
   /* ehanc::run_test("supl::fr::for_each", &test_for_each); */
   /* ehanc::run_test("supl::fr::for_each_n", &test_for_each_n); */
-  ehanc::run_test("supl::fr::count", &test_count);
+  /* ehanc::run_test("supl::fr::count", &test_count); */
   /* ehanc::run_test("supl::fr::count_if", &test_count_if); */
   ehanc::run_test("supl::fr::iota", &test_iota);
 }

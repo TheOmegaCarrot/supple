@@ -917,7 +917,8 @@ tuple_type_transform_impl(const Tuple& tup,
  *
  * @details Suggested use: use with `supl::make_const_ref`to create a tuple
  * of const lvalue references to use before applying a tuple algorithm
- * to avoid expensive copies.
+ * to avoid expensive copies. Then use with `std::decay` to resolve the
+ * references to only perform one copy.
  * 
  * @pre For every type `T` in the input tuple,
  * `T` must be convertible to `Transform<T>::type` via `static_cast`.

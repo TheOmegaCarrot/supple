@@ -1,3 +1,20 @@
+/* {{{ doc */
+/**
+ * @file tuple_algo.hpp
+ *
+ * @brief Tuple operations
+ *
+ * @details This header contains functions for operations on tuples.
+ * It is worth noting that the algorithms which both take and return a tuple
+ * do copy elements from the input. Therefore it is not recommended to use
+ * them for tuples which contain elements which are expensive to copy.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_TUPLE_ALGO_HPP
 #define SUPPLEMENTARIES_TUPLE_ALGO_HPP
 

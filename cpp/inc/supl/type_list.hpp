@@ -1,3 +1,18 @@
+/* {{{ doc */
+/**
+ * @file type_list.hpp
+ *
+ * @brief Type list operations
+ *
+ * @details This header contains various metafunctions for operations
+ * on type lists.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_TYPE_LIST_HPP
 #define SUPPLEMENTARIES_TYPE_LIST_HPP
 

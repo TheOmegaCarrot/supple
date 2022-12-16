@@ -1,3 +1,15 @@
+/* {{{ doc */
+/**
+ * @file metaprogramming.hpp
+ *
+ * @brief This header contains numerous metafunctions.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_METAPROGRAMMING_HPP
 #define SUPPLEMENTARIES_METAPROGRAMMING_HPP
 

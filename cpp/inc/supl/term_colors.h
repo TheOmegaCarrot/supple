@@ -1,3 +1,13 @@
+/* {{{ doc */
+/**
+ * @file term_colors.h
+ *
+ * @brief Aliases to ANSI color codes
+ *
+ * @details This is not portable.
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_TERMCOLORS_H
 #define SUPPLEMENTARIES_TERMCOLORS_H
 

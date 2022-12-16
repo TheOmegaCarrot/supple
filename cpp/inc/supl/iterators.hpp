@@ -1,3 +1,15 @@
+/* {{{ doc */
+/**
+ * @file iterators.hpp
+ *
+ * @details This header contains functions relating to iterators.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_ITERATORS_HPP
 #define SUPPLEMENTARIES_ITERATORS_HPP
 

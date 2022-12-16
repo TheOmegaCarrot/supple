@@ -1,3 +1,19 @@
+/* {{{ doc */
+/**
+ * @file utility.hpp
+ *
+ * @brief Uncategorized utilities
+ *
+ * @details This header contains various utilities
+ * which do not make sense to put in other headers,
+ * but did not warrant being placed in their own header.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public Licence
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_UTILITY_HPP
 #define SUPPLEMENTARIES_UTILITY_HPP
 

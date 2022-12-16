@@ -1,3 +1,19 @@
+/* {{{ doc */
+/**
+ * @file algorithm.hpp
+ *
+ * @brief Various algorithms
+ *
+ * @details This header contains various free functions intended
+ * to sit alongside the standard `<algorithm>` header.
+ * It has been the goal to adhere to similar API design and naming conventions.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_ALGORITHM_HPP
 #define SUPPLEMENTARIES_ALGORITHM_HPP
 

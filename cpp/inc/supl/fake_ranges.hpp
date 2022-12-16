@@ -1,3 +1,21 @@
+/* {{{ doc */
+/**
+ * @file fake_ranges.hpp
+ *
+ * @brief Fake ranges
+ *
+ * @details This header contains algorithms which take a whole container
+ * type, and call the algorithm of the same name, calling `begin`
+ * and `end` on the container. Inspired by C++20 ranges,
+ * though that has far more capabilities, and thus this is dubbed
+ * "fake ranges"
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_FAKE_RANGES_HPP
 #define SUPPLEMENTARIES_FAKE_RANGES_HPP
 

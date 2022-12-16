@@ -1,3 +1,20 @@
+/* {{{ doc */
+/**
+ * @file functional.hpp
+ *
+ * @brief Functional utilities
+ *
+ * @details This header contains higher-order functions to
+ * facilitate functional-like programming techniques,
+ * excluding those which fit better into other headers
+ * (algorithms, tuple algorithms, etc)
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_FUNCTIONAL_HPP
 #define SUPPLEMENTARIES_FUNCTIONAL_HPP
 

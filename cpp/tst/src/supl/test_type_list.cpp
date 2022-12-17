@@ -441,6 +441,23 @@ static_assert(std::is_same_v<
               supl::tl::erase_t<supl::tl::type_list<int, char, bool>, 2>,
               supl::tl::type_list<int, char>>);
 
+///////////////////////////////////////////// replace
+
+static_assert(
+    std::is_same_v<supl::tl::replace_t<
+                       supl::tl::type_list<int, char, bool>, 0, double>,
+                   supl::tl::type_list<double, char, bool>>);
+
+static_assert(
+    std::is_same_v<supl::tl::replace_t<
+                       supl::tl::type_list<int, char, bool>, 1, double>,
+                   supl::tl::type_list<int, double, bool>>);
+
+static_assert(
+    std::is_same_v<supl::tl::replace_t<
+                       supl::tl::type_list<int, char, bool>, 2, double>,
+                   supl::tl::type_list<int, char, double>>);
+
 ///////////////////////////////////////////// all_of
 
 static_assert(supl::tl::all_of_v<supl::tl::type_list<int, char, bool>,

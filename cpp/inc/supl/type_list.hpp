@@ -398,10 +398,28 @@ template <template <typename...> typename LIST, std::size_t Idx,
           typename... Pack>
 struct erase<LIST<Pack...>, Idx>
     : concat<front_n_t<LIST<Pack...>, Idx>,
-             drop_front_n_t<LIST<Pack...>, Idx + 1>> {};
+             drop_front_n_t<LIST<Pack...>, Idx + 1>> {
+  static_assert(Idx <= sizeof...(Pack), "Index out of bounds");
+};
 
 template <typename LIST, std::size_t Idx>
 using erase_t = typename erase<LIST, Idx>::type;
+
+///////////////////////////////////////////// replace
+
+template <typename LIST, std::size_t Idx, typename T>
+struct replace;
+
+template <template <typename...> typename LIST, std::size_t Idx,
+          typename T, typename... Pack>
+struct replace<LIST<Pack...>, Idx, T>
+    : concat<front_n_t<LIST<Pack...>, Idx>, LIST<T>,
+             drop_front_n_t<LIST<Pack...>, Idx + 1>> {
+  static_assert(Idx <= sizeof...(Pack), "Index out of bounds");
+};
+
+template <typename LIST, std::size_t Idx, typename T>
+using replace_t = typename replace<LIST, Idx, T>::type;
 
 ///////////////////////////////////////////// all_of
 

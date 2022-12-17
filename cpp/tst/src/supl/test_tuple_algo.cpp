@@ -409,6 +409,29 @@ static auto test_tuple_erase() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_replace() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test_input {42, true, 3.14};
+  std::tuple expected1 {42, 'B', 3.14};
+  auto result1 {supl::tuple_replace<1>(test_input, 'B')};
+
+  results.add_case(result1, expected1);
+
+  std::tuple expected2 {'B', true, 3.14};
+  auto result2 {supl::tuple_replace<0>(test_input, 'B')};
+
+  results.add_case(result2, expected2);
+
+  std::tuple expected3 {42, true, 'B'};
+  auto result3 {supl::tuple_replace<2>(test_input, 'B')};
+
+  results.add_case(result3, expected3);
+
+  return results;
+}
+
 static auto test_tuple_split() -> ehanc::test
 {
   ehanc::test results;
@@ -722,6 +745,7 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_rotate_right", &test_tuple_rotate_right);
   ehanc::run_test("supl::tuple_insert", &test_tuple_insert);
   ehanc::run_test("supl::tuple_erase", &test_tuple_erase);
+  ehanc::run_test("supl::tuple_replace", &test_tuple_replace);
   ehanc::run_test("supl::tuple_reorder", &test_tuple_reorder);
   ehanc::run_test("supl::tuple_split", &test_tuple_split);
   ehanc::run_test("supl::subtuple", &test_subtuple);

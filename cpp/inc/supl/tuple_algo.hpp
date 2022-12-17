@@ -589,6 +589,35 @@ template <std::size_t Idx, typename Tuple>
   return impl::tuple_erase_impl(tup, pre_seq, post_seq);
 }
 
+namespace impl {
+
+template <typename Tuple, typename T, std::size_t... Pre_Idxs,
+          std::size_t... Post_Idxs, std::size_t Idx>
+[[nodiscard]] constexpr auto
+tuple_replace_impl(const Tuple& tup, T&& data,
+                   std::index_sequence<Pre_Idxs...>,
+                   std::index_sequence<Post_Idxs...>, index_constant<Idx>)
+    -> tl::replace_t<Tuple, Idx, remove_cvref_t<T>>
+{
+  return {std::get<Pre_Idxs>(tup)..., std::forward<T>(data),
+          std::get<Post_Idxs + Idx + 1>(tup)...};
+}
+
+} // namespace impl
+
+template <std::size_t Idx, typename T, typename Tuple>
+[[nodiscard]] constexpr auto tuple_replace(const Tuple& tup,
+                                           T&& data) noexcept
+    -> tl::replace_t<Tuple, Idx, remove_cvref_t<T>>
+{
+  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+  constexpr auto post_seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple> - Idx - 1> {}};
+
+  return impl::tuple_replace_impl(tup, std::forward<T>(data), pre_seq,
+                                  post_seq, index_constant<Idx> {});
+}
+
 template <std::size_t... Idxs, typename Tuple>
 [[nodiscard]] constexpr auto tuple_reorder(const Tuple& tup) noexcept
     -> tl::reorder_t<Tuple, Idxs...>

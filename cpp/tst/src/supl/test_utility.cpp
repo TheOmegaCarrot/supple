@@ -165,23 +165,6 @@ static auto test_to_string() -> ehanc::test
   return results;
 }
 
-static auto test_size_t_literals() -> ehanc::test
-{
-  ehanc::test results;
-
-  using supl::size_t_literal::operator""_z;
-  /* using namespace supl::literals::size_t_literal; */ // also works
-  /* using namespace supl::literals; */                 // also works
-  std::size_t i {500};
-  auto j {500_z};
-
-  results.add_case(std::is_same_v<decltype(j), std::size_t>, true,
-                   "Type is not std::size_t");
-  results.add_case(i, j, "Value is not as expected");
-
-  return results;
-}
-
 struct uncopiable {
   int m_value;
   uncopiable() = delete;
@@ -235,6 +218,23 @@ static auto test_stream_adapter() -> ehanc::test
   std::string result1 {test_stream.str()};
 
   results.add_case(result1, expected1);
+
+  return results;
+}
+
+static auto test_size_t_literals() -> ehanc::test
+{
+  ehanc::test results;
+
+  using supl::size_t_literal::operator""_z;
+  /* using namespace supl::literals::size_t_literal; */ // also works
+  /* using namespace supl::literals; */                 // also works
+  std::size_t i {500};
+  auto j {500_z};
+
+  results.add_case(std::is_same_v<decltype(j), std::size_t>, true,
+                   "Type is not std::size_t");
+  results.add_case(i, j, "Value is not as expected");
 
   return results;
 }

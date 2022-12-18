@@ -693,7 +693,7 @@ using make_const_ref_t = typename make_const_ref<T>::type;
 template <typename T>
 struct is_same_as {
   template <typename U>
-  struct func : std::is_same<T, U> {};
+  using func = std::is_same<T, U>;
 
   template <typename U>
   constexpr inline static bool func_v = func<U>::value;
@@ -718,7 +718,7 @@ struct is_same_as {
 template <template <typename> typename... PREDS>
 struct conjunction_compose {
   template <typename T>
-  struct func : std::conjunction<PREDS<T>...> {};
+  using func = std::conjunction<PREDS<T>...>;
 
   template <typename T>
   constexpr inline static bool func_v = func<T>::value;
@@ -743,7 +743,7 @@ struct conjunction_compose {
 template <template <typename> typename... PREDS>
 struct disjunction_compose {
   template <typename T>
-  struct func : std::disjunction<PREDS<T>...> {};
+  using func = std::disjunction<PREDS<T>...>;
 
   template <typename T>
   constexpr inline static bool func_v = func<T>::value;
@@ -766,7 +766,7 @@ struct disjunction_compose {
 template <template <typename, typename> typename FUNC, typename First>
 struct binary_partial_apply {
   template <typename Second>
-  struct func : FUNC<First, Second> {};
+  using func = FUNC<First, Second>;
 
   template <typename Second>
   using func_t = typename func<Second>::type;

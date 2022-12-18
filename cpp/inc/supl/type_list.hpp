@@ -34,6 +34,27 @@ namespace supl::tl {
 template <typename... Pack>
 struct type_list {};
 
+///////////////////////////////////////////// func_wrapper
+
+/* {{{ doc */
+/**
+ * @brief Wraps a unary metafunction in a concrete type.
+ *
+ * @details This exists to allow for a `type_list` of metafunctions.
+ */
+/* }}} */
+template <template <typename> typename Func>
+struct func_wrapper {
+  template <typename T>
+  using func = Func<T>;
+
+  template <typename T>
+  using func_t = typename Func<T>::type;
+
+  template <typename T>
+  constexpr inline static auto func_v = Func<T>::value;
+};
+
 ///////////////////////////////////////////// make_list
 
 /* {{{ doc */
@@ -669,6 +690,25 @@ struct has_duplicates<LIST<Almost_Last, Last>>
 
 template <typename LIST>
 constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
+
+///////////////////////////////////////////// multi_apply
+
+/* {{{ doc */
+/**
+ * @brief Applies a series of type -> type metafunctions,
+ * and returns a `type_list` of the results of calling each
+ * metafunction on `T`
+ *
+ * ex. `multi_apply_t<int, std::add_const, std::add_lvalue_reference>
+ * -> type_list<const int, int&>`
+ */
+/* }}} */
+template <typename T, template <typename> typename... Funcs>
+using multi_apply =
+    type_identity<tl::type_list<typename Funcs<T>::type...>>;
+
+template <typename T, template <typename> typename... Funcs>
+using multi_apply_t = typename multi_apply<T, Funcs...>::type;
 
 } // namespace supl::tl
 

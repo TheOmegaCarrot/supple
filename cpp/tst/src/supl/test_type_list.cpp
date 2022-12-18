@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <type_traits>
 
 #include "supl/type_list.hpp"
 
@@ -716,3 +717,30 @@ static_assert(
         supl::tl::type_list<int, char, bool, const char, void, const int,
                             int, const int*, const volatile int*&>>);
 
+///////////////////////////////////////////// multi_apply
+
+static_assert(
+    std::is_same_v<supl::tl::multi_apply_t<
+                       int, std::add_const, std::add_lvalue_reference,
+                       std::add_rvalue_reference, std::make_unsigned>,
+                   supl::tl::type_list<const int, int&, int&&, unsigned>>);
+
+///////////////////////////////////////////// func_wrapper
+
+using func_wrapper_value_test = supl::tl::func_wrapper<std::is_const>;
+using func_wrapper_type_test  = supl::tl::func_wrapper<std::add_const>;
+
+static_assert(not func_wrapper_value_test::template func<int>::value);
+
+static_assert(func_wrapper_value_test::template func<const int>::value);
+
+static_assert(not func_wrapper_value_test::template func_v<int>);
+
+static_assert(func_wrapper_value_test::template func_v<const int>);
+
+static_assert(
+    std::is_same_v<typename func_wrapper_type_test::func<int>::type,
+                   const int>);
+
+static_assert(
+    std::is_same_v<func_wrapper_type_test::func_t<int>, const int>);

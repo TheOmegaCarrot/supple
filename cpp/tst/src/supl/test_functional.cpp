@@ -82,45 +82,53 @@ static auto test_less_eq_than() -> ehanc::test
   return results;
 }
 
-/* static auto test_invoke() -> ehanc::test */
-/* { */
-/*   ehanc::test results; */
+static auto test_invoke() -> ehanc::test
+{
+  ehanc::test results;
 
-/*   int result1 {supl::invoke([]() { return 5; })}; */
-/*   results.add_case(result1, 5); */
+  constexpr static int result1 {supl::invoke([]() { return 5; })};
+  results.add_case(result1, 5);
 
-/*   results.add_case(result1, 5); */
+  results.add_case(result1, 5);
 
-/*   int result2 {supl::invoke([](int x) { return x; }, 5)}; */
+  constexpr static int result2 {supl::invoke([](int x) { return x; }, 5)};
 
-/*   results.add_case(result2, 5); */
+  results.add_case(result2, 5);
 
-/*   struct Foo { */
-/*     int m_value; */
+  /* struct Foo { */
+  /*   int m_value; */
 
-/*     [[nodiscard]] constexpr auto value() const noexcept -> int */
-/*     { */
-/*       return m_value; */
-/*     } */
+  /*   [[nodiscard]] constexpr auto value() const noexcept -> int */
+  /*   { */
+  /*     return m_value; */
+  /*   } */
 
-/*     [[nodiscard]] constexpr auto value_plus(int arg) const noexcept -> int */
-/*     { */
-/*       return m_value + arg; */
-/*     } */
-/*   }; */
+  /*   [[nodiscard]] constexpr auto value_plus(int arg) const noexcept -> int */
+  /*   { */
+  /*     return m_value + arg; */
+  /*   } */
+  /* }; */
 
-/*   constexpr static Foo foo {5}; */
+  /* constexpr static Foo foo {5}; */
 
-/*   int result3 {supl::invoke(&Foo::value, &foo)}; */
+  /* constexpr static int result3 {supl::invoke(&Foo::value, &foo)}; */
 
-/*   results.add_case(result3, 5); */
+  /* results.add_case(result3, 5); */
 
-/*   int result4 {supl::invoke(&Foo::value_plus, &foo, 2)}; */
+  /* constexpr static int result4 {supl::invoke(&Foo::value_plus, &foo, 2)}; */
 
-/*   results.add_case(result4, 7); */
+  /* results.add_case(result4, 7); */
 
-/*   return results; */
-/* } */
+  /* int result5 {supl::invoke(&Foo::value, foo)}; */
+
+  /* results.add_case(result5, 5); */
+
+  /* int result6 {supl::invoke(&Foo::value_plus, foo, 2)}; */
+
+  /* results.add_case(result6, 7); */
+
+  return results;
+}
 
 void test_functional()
 {
@@ -130,5 +138,5 @@ void test_functional()
   ehanc::run_test("supl::greater_eq_than", &test_greater_eq_than);
   ehanc::run_test("supl::less_than", &test_less_than);
   ehanc::run_test("supl::less_eq_than", &test_less_eq_than);
-  /* ehanc::run_test("supl::invoke", &test_invoke); */
+  ehanc::run_test("supl::invoke", &test_invoke);
 }

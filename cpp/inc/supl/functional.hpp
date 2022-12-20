@@ -150,6 +150,35 @@ template <typename T>
   };
 }
 
+namespace impl {
+
+template <typename Invocable, typename Object, typename... Args>
+constexpr auto invoke_member_pointer(Invocable&& invocable,
+                                     Object&& object, Args&&... args)
+    -> decltype(auto)
+{
+  if constexpr ( std::is_member_function_pointer_v<Invocable> ) {
+    return object->*invocable(std::forward<Args>(args)...);
+  } else {
+    // member object pointer
+    return object->*invocable;
+  }
+}
+
+} // namespace impl
+
+template <typename Invocable, typename... Args>
+constexpr auto invoke(Invocable&& invocable, Args&&... args)
+    -> decltype(auto)
+{
+  if constexpr ( std::is_member_pointer_v<Invocable> ) {
+    impl::invoke_member_pointer(std::forward<Invocable>(invocable),
+                                std::forward<Args>(args)...);
+  } else {
+    return invocable(std::forward<Args>(args)...);
+  }
+}
+
 } // namespace supl
 
 #endif

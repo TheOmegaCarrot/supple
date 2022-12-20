@@ -775,11 +775,11 @@ struct binary_partial_apply {
   constexpr inline static auto func_v = func<Second>::value;
 };
 
-///////////////////////////////////////////// sequential_compose
+///////////////////////////////////////////// sequential_apply
 
 /* {{{ doc */
 /**
- * @brief Compose a series of type -> type metafunctions in one expression
+ * @brief Apply a series of type -> type metafunctions in one expression
  *
  * @details `FUNC` and `FUNC_PACK` must be unary metafunctions taking a single
  * type parameter. `FUNC`, and all elements of `FUNC_PACK` must expose
@@ -796,21 +796,21 @@ struct binary_partial_apply {
 /* }}} */
 template <typename T, template <typename> typename FUNC,
           template <typename> typename... FUNC_PACK>
-struct sequential_compose
-    : sequential_compose<typename FUNC<T>::type, FUNC_PACK...> {};
+struct sequential_apply
+    : sequential_apply<typename FUNC<T>::type, FUNC_PACK...> {};
 
 template <typename T, template <typename> typename FUNC>
-struct sequential_compose<T, FUNC> : FUNC<T> {};
+struct sequential_apply<T, FUNC> : FUNC<T> {};
 
 template <typename T, template <typename> typename FUNC,
           template <typename> typename... FUNC_PACK>
-using sequential_compose_t =
-    typename sequential_compose<T, FUNC, FUNC_PACK...>::type;
+using sequential_apply_t =
+    typename sequential_apply<T, FUNC, FUNC_PACK...>::type;
 
 template <typename T, template <typename> typename FUNC,
           template <typename> typename... FUNC_PACK>
-constexpr inline auto sequential_compose_v =
-    sequential_compose<T, FUNC, FUNC_PACK...>::value;
+constexpr inline auto sequential_apply_v =
+    sequential_apply<T, FUNC, FUNC_PACK...>::value;
 
 } // namespace supl
 

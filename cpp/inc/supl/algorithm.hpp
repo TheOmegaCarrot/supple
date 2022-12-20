@@ -17,6 +17,7 @@
 #ifndef SUPPLEMENTARIES_ALGORITHM_HPP
 #define SUPPLEMENTARIES_ALGORITHM_HPP
 
+#include "supl/metaprogramming.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <functional>
@@ -127,13 +128,8 @@ constexpr auto max_size(const Container& cont,
 template <typename Itr>
 constexpr auto
 contains(const Itr begin, const Itr end,
-         // oh boy
-         std::add_lvalue_reference_t<
-             // ref to
-             std::add_const_t<
-                 //const
-                 typename std::iterator_traits<Itr>::value_type>>
-             // basically: decltype(value) == const Itr::value_type &
+         sequential_apply_t<typename std::iterator_traits<Itr>::value_type,
+                            std::add_const, std::add_lvalue_reference>
              value) noexcept(noexcept(std::find(begin, end, value)))
     -> bool
 {

@@ -17,13 +17,14 @@
 #ifndef SUPPLEMENTARIES_ALGORITHM_HPP
 #define SUPPLEMENTARIES_ALGORITHM_HPP
 
-#include "supl/metaprogramming.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <functional>
 #include <iterator>
 #include <type_traits>
 #include <utility>
+
+#include "metaprogramming.hpp"
 
 namespace supl {
 

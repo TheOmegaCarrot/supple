@@ -424,3 +424,30 @@ static_assert(
     std::is_same_v<supl::binary_partial_apply<identity_or_void,
                                               char>::template func_t<int>,
                    void>);
+
+///////////////////////////////////////////// sequential_compose
+
+static_assert(std::is_same_v<
+              supl::sequential_compose_t<int, std::add_const>, const int>);
+
+static_assert(std::is_same_v<
+              supl::sequential_compose_t<int, std::add_const,
+                                         std::add_pointer, std::add_const>,
+              const int* const>);
+
+static_assert(
+    std::is_same_v<supl::sequential_compose_t<
+                       char, std::add_const, std::add_pointer,
+                       std::add_volatile, std::add_lvalue_reference>,
+                   const char* volatile&>);
+
+static_assert(
+    supl::sequential_compose_v<bool, std::add_const, std::is_const>);
+
+static_assert(supl::sequential_compose_v<
+              int, std::add_const, std::add_lvalue_reference,
+              supl::binary_partial_apply<std::is_same, const int&>::func>);
+
+static_assert(!supl::sequential_compose_v<
+              int, std::add_const,
+              supl::binary_partial_apply<std::is_same, const int&>::func>);

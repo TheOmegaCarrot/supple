@@ -55,7 +55,8 @@ struct index_pair {
  */
 /* }}} */
 template <typename... Ts>
-using sum_type = type_identity<decltype((... + std::declval<Ts>()))>;
+using addition_result =
+    type_identity<decltype((... + std::declval<Ts>()))>;
 
 /* {{{ doc */
 /**
@@ -64,7 +65,7 @@ using sum_type = type_identity<decltype((... + std::declval<Ts>()))>;
  */
 /* }}} */
 template <typename... Ts>
-using sum_type_t = typename sum_type<Ts...>::type;
+using addition_result_t = typename addition_result<Ts...>::type;
 
 ///////////////////////////////////////////// remove_cvref
 

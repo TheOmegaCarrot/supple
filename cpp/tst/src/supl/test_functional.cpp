@@ -1,4 +1,5 @@
 #include <functional>
+#include <memory>
 
 #include "supl/functional.hpp"
 #include "supl/test_functional.h"
@@ -86,6 +87,8 @@ static auto test_invoke() -> ehanc::test
 {
   ehanc::test results;
 
+  // Regular functions
+
   constexpr static int result1 {supl::invoke([]() { return 5; })};
   results.add_case(result1, 5);
 
@@ -94,6 +97,8 @@ static auto test_invoke() -> ehanc::test
   constexpr static int result2 {supl::invoke([](int x) { return x; }, 5)};
 
   results.add_case(result2, 5);
+
+  // Pointer to member
 
   struct Foo {
     int m_value;
@@ -126,6 +131,8 @@ static auto test_invoke() -> ehanc::test
   constexpr static int result6 {supl::invoke(&Foo::value_plus, foo, 2)};
 
   results.add_case(result6, 7);
+
+  // ref-qualification
 
   struct ref_qual {
     int m_value;
@@ -170,6 +177,60 @@ static auto test_invoke() -> ehanc::test
       supl::invoke(&ref_qual::funcr2, ref_qual {5}, 3)};
 
   results.add_case(result10, 13);
+
+  // virtual calls
+
+  class virt_base
+  {
+  protected:
+
+    // NOLINTNEXTLINE(cppcoreguidelines-non-private-member-variables-in-classes)
+    int m_value;
+
+  public:
+
+    virt_base() = delete;
+
+    explicit virt_base(int value)
+        : m_value {value}
+    {}
+
+    virt_base(const virt_base&)                    = default;
+    virt_base(virt_base&&)                         = default;
+    auto operator=(const virt_base&) -> virt_base& = default;
+    auto operator=(virt_base&&) -> virt_base&      = default;
+    virtual ~virt_base()                           = default;
+
+    virtual auto func(int arg) -> int
+    {
+      return m_value + arg;
+    }
+  };
+
+  class virt_derv : public virt_base
+  {
+  public:
+
+    virt_derv() = delete;
+    explicit virt_derv(int value)
+        : virt_base {value} {};
+    virt_derv(const virt_derv&)                    = default;
+    virt_derv(virt_derv&&)                         = default;
+    auto operator=(const virt_derv&) -> virt_derv& = default;
+    auto operator=(virt_derv&&) -> virt_derv&      = default;
+    ~virt_derv() override                          = default;
+
+    auto func(int arg) -> int override
+    {
+      return m_value * arg;
+    }
+  };
+
+  std::unique_ptr<virt_base> vptr {std::make_unique<virt_derv>(5)};
+
+  const int result11 {supl::invoke(&virt_base::func, vptr.get(), 3)};
+
+  results.add_case(result11, 15);
 
   return results;
 }

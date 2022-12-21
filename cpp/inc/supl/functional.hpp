@@ -19,6 +19,7 @@
 #define SUPPLEMENTARIES_FUNCTIONAL_HPP
 
 #include <functional>
+#include <memory>
 #include <type_traits>
 #include <utility>
 
@@ -184,6 +185,18 @@ constexpr auto invoke_member_pointer(
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Constexpr equivalant to `std::invoke`
+ *
+ * @details If this function differs in any way from `std::invoke` other
+ * than being usable in a constexpr context, that is a bug.
+ *
+ * @bug Does not work directly with smart pointers
+ * when using pointer-to-member.
+ *
+ */
+/* }}} */
 template <typename Invocable, typename... Args>
 constexpr auto invoke(Invocable&& invocable, Args&&... args) noexcept(
     std::is_nothrow_invocable_v<Invocable, Args...>) -> decltype(auto)

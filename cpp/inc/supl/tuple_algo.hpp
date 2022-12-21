@@ -19,11 +19,11 @@
 #define SUPPLEMENTARIES_TUPLE_ALGO_HPP
 
 #include <cstddef>
-#include <functional>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
+#include "functional.hpp"
 #include "metaprogramming.hpp"
 #include "type_list.hpp"
 
@@ -52,7 +52,7 @@ constexpr void
 for_each_in_tuple_impl(Tuple&& tup, Func&& func,
                        std::index_sequence<Inds...>) noexcept
 {
-  (std::invoke(func, std::get<Inds>(tup)), ...);
+  (supl::invoke(func, std::get<Inds>(tup)), ...);
 }
 
 } // namespace impl
@@ -91,7 +91,7 @@ constexpr void for_each_in_subtuple_impl(const Tuple& tup, Func&& func,
                                          std::index_sequence<Idxs...>,
                                          index_constant<Begin>)
 {
-  (std::invoke(func, std::get<Idxs + Begin>(tup)), ...);
+  (supl::invoke(func, std::get<Idxs + Begin>(tup)), ...);
 }
 
 } // namespace impl
@@ -153,7 +153,7 @@ template <typename Tuple, typename Func, std::size_t... Inds>
 constexpr auto tuple_transform_impl(const Tuple& tup, Func&& func,
                                     std::index_sequence<Inds...>) noexcept
 {
-  return std::tuple {std::invoke(func, std::get<Inds>(tup))...};
+  return std::tuple {supl::invoke(func, std::get<Inds>(tup))...};
 }
 
 } // namespace impl
@@ -198,7 +198,7 @@ tuple_any_of_impl(const Tuple& tup, Pred&& pred,
                 "Predicate must be invocable returning a bool with every "
                 "type in the tuple");
 
-  return (std::invoke(pred, std::get<Inds>(tup)) || ...);
+  return (supl::invoke(pred, std::get<Inds>(tup)) || ...);
 }
 
 } // namespace impl
@@ -244,7 +244,7 @@ tuple_all_of_impl(const Tuple& tup, Pred&& pred,
                 "Predicate must be invocable returning a bool with every "
                 "type in the tuple");
 
-  return (std::invoke(pred, std::get<Inds>(tup)) && ...);
+  return (supl::invoke(pred, std::get<Inds>(tup)) && ...);
 }
 
 } // namespace impl
@@ -721,7 +721,7 @@ constexpr auto tuple_count_if_impl(const Tuple& tup, Pred&& pred,
                                    std::index_sequence<Inds...>) noexcept
     -> std::size_t
 {
-  return (static_cast<std::size_t>(std::invoke(pred, std::get<Inds>(tup)))
+  return (static_cast<std::size_t>(supl::invoke(pred, std::get<Inds>(tup)))
           + ...);
 }
 

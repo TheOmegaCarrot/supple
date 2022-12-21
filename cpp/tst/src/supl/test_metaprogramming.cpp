@@ -2,6 +2,7 @@
 #include <forward_list>
 #include <iostream>
 #include <list>
+#include <memory>
 #include <queue>
 #include <type_traits>
 #include <vector>
@@ -225,6 +226,15 @@ static_assert(not supl::is_pair_v<const std::tuple<int, char>&&>);
 static_assert(not supl::is_pair_v<volatile std::tuple<int, char>&&>);
 static_assert(not supl::is_pair_v<const volatile std::tuple<int, char>&&>);
 static_assert(not supl::is_pair_v<int>);
+
+///////////////////////////////////////////// is_smart_pointer
+
+static_assert(supl::is_smart_pointer_v<std::unique_ptr<int>>);
+static_assert(supl::is_smart_pointer_v<std::shared_ptr<int>>);
+static_assert(supl::is_smart_pointer_v<std::weak_ptr<int>>);
+static_assert(supl::is_smart_pointer_v<std::unique_ptr<int, void()>>);
+static_assert(not supl::is_smart_pointer_v<int>);
+static_assert(not supl::is_smart_pointer_v<std::vector<int>>);
 
 ///////////////////////////////////////////// is_printable
 

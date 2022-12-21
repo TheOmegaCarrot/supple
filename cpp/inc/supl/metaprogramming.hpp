@@ -14,6 +14,7 @@
 #define SUPPLEMENTARIES_METAPROGRAMMING_HPP
 
 #include <iterator>
+#include <memory>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -437,6 +438,26 @@ struct is_pair : impl::is_pair_impl<remove_cvref_t<T>> {};
 /* }}} */
 template <typename T>
 constexpr inline bool is_pair_v = is_pair<T>::value;
+
+///////////////////////////////////////////// is_smart_pointer
+
+template <typename T>
+struct is_smart_pointer : std::false_type {};
+
+template <typename T>
+struct is_smart_pointer<std::unique_ptr<T>> : std::true_type {};
+
+template <typename T, typename U>
+struct is_smart_pointer<std::unique_ptr<T, U>> : std::true_type {};
+
+template <typename T>
+struct is_smart_pointer<std::shared_ptr<T>> : std::true_type {};
+
+template <typename T>
+struct is_smart_pointer<std::weak_ptr<T>> : std::true_type {};
+
+template <typename T>
+constexpr inline bool is_smart_pointer_v = is_smart_pointer<T>::value;
 
 ///////////////////////////////////////////// is_printable
 

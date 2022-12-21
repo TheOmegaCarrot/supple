@@ -95,37 +95,37 @@ static auto test_invoke() -> ehanc::test
 
   results.add_case(result2, 5);
 
-  /* struct Foo { */
-  /*   int m_value; */
+  struct Foo {
+    int m_value;
 
-  /*   [[nodiscard]] constexpr auto value() const noexcept -> int */
-  /*   { */
-  /*     return m_value; */
-  /*   } */
+    [[nodiscard]] constexpr auto value() const noexcept -> int
+    {
+      return m_value;
+    }
 
-  /*   [[nodiscard]] constexpr auto value_plus(int arg) const noexcept -> int */
-  /*   { */
-  /*     return m_value + arg; */
-  /*   } */
-  /* }; */
+    [[nodiscard]] constexpr auto value_plus(int arg) const noexcept -> int
+    {
+      return m_value + arg;
+    }
+  };
 
-  /* constexpr static Foo foo {5}; */
+  constexpr static Foo foo {5};
 
-  /* constexpr static int result3 {supl::invoke(&Foo::value, &foo)}; */
+  constexpr static int result3 {supl::invoke(&Foo::value, &foo)};
 
-  /* results.add_case(result3, 5); */
+  results.add_case(result3, 5);
 
-  /* constexpr static int result4 {supl::invoke(&Foo::value_plus, &foo, 2)}; */
+  constexpr static int result4 {supl::invoke(&Foo::value_plus, &foo, 2)};
 
-  /* results.add_case(result4, 7); */
+  results.add_case(result4, 7);
 
-  /* int result5 {supl::invoke(&Foo::value, foo)}; */
+  int result5 {supl::invoke(&Foo::value, foo)};
 
-  /* results.add_case(result5, 5); */
+  results.add_case(result5, 5);
 
-  /* int result6 {supl::invoke(&Foo::value_plus, foo, 2)}; */
+  int result6 {supl::invoke(&Foo::value_plus, foo, 2)};
 
-  /* results.add_case(result6, 7); */
+  results.add_case(result6, 7);
 
   return results;
 }

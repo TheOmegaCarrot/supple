@@ -153,27 +153,44 @@ template <typename T>
 namespace impl {
 
 template <typename Invocable, typename Object, typename... Args>
-constexpr auto invoke_member_pointer(Invocable&& invocable,
-                                     Object&& object, Args&&... args)
+constexpr auto invoke_member_pointer(
+    Invocable&& invocable, Object&& object,
+    Args&&... args) noexcept(std::is_nothrow_invocable_v<Invocable,
+                                                         Args...>)
     -> decltype(auto)
 {
   if constexpr ( std::is_member_function_pointer_v<Invocable> ) {
-    return object->*invocable(std::forward<Args>(args)...);
-  } else {
+    if constexpr ( std::is_pointer_v<Object> ) {
+
+      return (std::forward<Object>(object)->*invocable)(
+          std::forward<Args>(args)...);
+    } else {
+      return (std::forward<Object>(object)
+              .*invocable)(std::forward<Args>(args)...);
+    }
+  }
+
+  else {
     // member object pointer
-    return object->*invocable;
+    return (std::forward<Object>(object)->*invocable)();
+    if constexpr ( std::is_pointer_v<Object> ) {
+
+      return (std::forward<Object>(object))->*invocable;
+    } else {
+      return (std::forward<Object>(object)).*invocable;
+    }
   }
 }
 
 } // namespace impl
 
 template <typename Invocable, typename... Args>
-constexpr auto invoke(Invocable&& invocable, Args&&... args)
-    -> decltype(auto)
+constexpr auto invoke(Invocable&& invocable, Args&&... args) noexcept(
+    std::is_nothrow_invocable_v<Invocable, Args...>) -> decltype(auto)
 {
   if constexpr ( std::is_member_pointer_v<Invocable> ) {
-    impl::invoke_member_pointer(std::forward<Invocable>(invocable),
-                                std::forward<Args>(args)...);
+    return impl::invoke_member_pointer(std::forward<Invocable>(invocable),
+                                       std::forward<Args>(args)...);
   } else {
     return invocable(std::forward<Args>(args)...);
   }

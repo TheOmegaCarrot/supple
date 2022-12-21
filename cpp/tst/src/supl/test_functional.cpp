@@ -180,6 +180,7 @@ static auto test_invoke() -> ehanc::test
 
   // virtual calls
 
+  // NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
   class virt_base
   {
   protected:
@@ -195,11 +196,7 @@ static auto test_invoke() -> ehanc::test
         : m_value {value}
     {}
 
-    virt_base(const virt_base&)                    = default;
-    virt_base(virt_base&&)                         = default;
-    auto operator=(const virt_base&) -> virt_base& = default;
-    auto operator=(virt_base&&) -> virt_base&      = default;
-    virtual ~virt_base()                           = default;
+    virtual ~virt_base() = default;
 
     virtual auto func(int arg) -> int
     {
@@ -207,18 +204,18 @@ static auto test_invoke() -> ehanc::test
     }
   };
 
+  // NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
   class virt_derv : public virt_base
   {
   public:
 
     virt_derv() = delete;
+
     explicit virt_derv(int value)
-        : virt_base {value} {};
-    virt_derv(const virt_derv&)                    = default;
-    virt_derv(virt_derv&&)                         = default;
-    auto operator=(const virt_derv&) -> virt_derv& = default;
-    auto operator=(virt_derv&&) -> virt_derv&      = default;
-    ~virt_derv() override                          = default;
+        : virt_base {value}
+    {}
+
+    ~virt_derv() override = default;
 
     auto func(int arg) -> int override
     {

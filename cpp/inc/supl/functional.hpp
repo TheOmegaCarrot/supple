@@ -155,7 +155,7 @@ namespace impl {
 
 template <typename Invocable, typename Object, typename... Args>
 constexpr auto invoke_member_pointer(
-    Invocable&& invocable, Object&& object,
+    Invocable invocable, Object&& object,
     Args&&... args) noexcept(std::is_nothrow_invocable_v<Invocable,
                                                          Args...>)
     -> decltype(auto)
@@ -198,7 +198,7 @@ constexpr auto invoke(Invocable&& invocable, Args&&... args) noexcept(
     std::is_nothrow_invocable_v<Invocable, Args...>) -> decltype(auto)
 {
   if constexpr ( std::is_member_pointer_v<Invocable> ) {
-    return impl::invoke_member_pointer(std::forward<Invocable>(invocable),
+    return impl::invoke_member_pointer(invocable,
                                        std::forward<Args>(args)...);
   } else {
     return invocable(std::forward<Args>(args)...);

@@ -119,13 +119,57 @@ static auto test_invoke() -> ehanc::test
 
   results.add_case(result4, 7);
 
-  int result5 {supl::invoke(&Foo::value, foo)};
+  constexpr static int result5 {supl::invoke(&Foo::value, foo)};
 
   results.add_case(result5, 5);
 
-  int result6 {supl::invoke(&Foo::value_plus, foo, 2)};
+  constexpr static int result6 {supl::invoke(&Foo::value_plus, foo, 2)};
 
   results.add_case(result6, 7);
+
+  struct ref_qual {
+    int m_value;
+
+    [[nodiscard]] constexpr auto funcl() const& noexcept -> int
+    {
+      return m_value;
+    }
+
+    [[nodiscard]] constexpr auto funcr() const&& noexcept -> int
+    {
+      return m_value + 5;
+    }
+
+    [[nodiscard]] constexpr auto funcl2(int arg) const& noexcept -> int
+    {
+      return m_value + arg;
+    }
+
+    [[nodiscard]] constexpr auto funcr2(int arg) const&& noexcept -> int
+    {
+      return m_value + arg + 5;
+    }
+  };
+
+  constexpr static ref_qual qual {5};
+
+  constexpr static int result7 {supl::invoke(&ref_qual::funcl, qual)};
+
+  results.add_case(result7, 5);
+
+  constexpr static int result8 {
+      supl::invoke(&ref_qual::funcr, ref_qual {5})};
+
+  results.add_case(result8, 10);
+
+  constexpr static int result9 {supl::invoke(&ref_qual::funcl2, qual, 3)};
+
+  results.add_case(result9, 8);
+
+  constexpr static int result10 {
+      supl::invoke(&ref_qual::funcr2, ref_qual {5}, 3)};
+
+  results.add_case(result10, 13);
 
   return results;
 }

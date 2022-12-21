@@ -132,6 +132,14 @@ static auto test_invoke() -> ehanc::test
 
   results.add_case(result6, 7);
 
+  constexpr static int result12 {supl::invoke(&Foo::m_value, foo)};
+
+  results.add_case(result12, 5);
+
+  constexpr static int result13 {supl::invoke(&Foo::m_value, &foo)};
+
+  results.add_case(result13, 5);
+
   // ref-qualification
 
   struct ref_qual {

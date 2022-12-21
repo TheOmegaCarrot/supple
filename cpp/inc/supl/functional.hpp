@@ -162,20 +162,14 @@ constexpr auto invoke_member_pointer(
 {
   if constexpr ( std::is_member_function_pointer_v<Invocable> ) {
     if constexpr ( std::is_pointer_v<Object> ) {
-
       return (std::forward<Object>(object)->*invocable)(
           std::forward<Args>(args)...);
     } else {
       return (std::forward<Object>(object)
               .*invocable)(std::forward<Args>(args)...);
     }
-  }
-
-  else {
-    // member object pointer
-    return (std::forward<Object>(object)->*invocable)();
+  } else /* is pointer to object */ {
     if constexpr ( std::is_pointer_v<Object> ) {
-
       return (std::forward<Object>(object))->*invocable;
     } else {
       return (std::forward<Object>(object)).*invocable;

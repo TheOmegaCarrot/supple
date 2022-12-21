@@ -188,6 +188,8 @@ constexpr auto invoke_member_pointer(
  *
  * @bug Does not work directly with smart pointers
  * when using pointer-to-member.
+ * **Non-ideal fix**: call `.get()` on it for the raw pointer,
+ * and it will work.
  *
  */
 /* }}} */

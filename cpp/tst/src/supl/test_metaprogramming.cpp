@@ -15,29 +15,25 @@
 
 ///////////////////////////////////////////// sum_type
 
-static_assert(std::is_same_v<supl::addition_result_t<int, int>, int>,
+static_assert(std::is_same_v<supl::sum_type_t<int, int>, int>,
               "int + int == int");
-static_assert(
-    std::is_same_v<supl::addition_result_t<int16_t, int16_t>, int>,
-    "int16_t + int16_t == int");
-static_assert(
-    std::is_same_v<supl::addition_result_t<double, double>, double>,
-    "double + double == double");
-static_assert(std::is_same_v<supl::addition_result_t<double, int>, double>,
+static_assert(std::is_same_v<supl::sum_type_t<int16_t, int16_t>, int>,
+              "int16_t + int16_t == int");
+static_assert(std::is_same_v<supl::sum_type_t<double, double>, double>,
+              "double + double == double");
+static_assert(std::is_same_v<supl::sum_type_t<double, int>, double>,
               "double + int == double");
-static_assert(
-    std::is_same_v<supl::addition_result_t<double, float>, double>,
-    "double + float == double");
-static_assert(std::is_same_v<supl::addition_result_t<int, int16_t>, int>,
+static_assert(std::is_same_v<supl::sum_type_t<double, float>, double>,
+              "double + float == double");
+static_assert(std::is_same_v<supl::sum_type_t<int, int16_t>, int>,
               "int + int16_t == int");
-static_assert(std::is_same_v<supl::addition_result_t<double, int>, double>,
+static_assert(std::is_same_v<supl::sum_type_t<double, int>, double>,
               "double + int == double");
-static_assert(std::is_same_v<supl::addition_result_t<char, int>, int>,
+static_assert(std::is_same_v<supl::sum_type_t<char, int>, int>,
               "char + int == int");
 static_assert(
     std::is_same_v<
-        supl::addition_result_t<int16_t, int16_t, int16_t, int16_t, int>,
-        int>,
+        supl::sum_type_t<int16_t, int16_t, int16_t, int16_t, int>, int>,
     "int16_t + int16_t + int16_t + int16_t + int == int");
 
 ///////////////////////////////////////////// remove_cvref

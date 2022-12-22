@@ -59,7 +59,6 @@ elseif(MSVC)
   message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
   message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
   message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
-  # Untested, unsupported
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL

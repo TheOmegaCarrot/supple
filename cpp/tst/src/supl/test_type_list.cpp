@@ -3,6 +3,26 @@
 
 #include "supl/type_list.hpp"
 
+///////////////////////////////////////////// func_wrapper
+
+using func_wrapper_value_test = supl::tl::func_wrapper<std::is_const>;
+using func_wrapper_type_test  = supl::tl::func_wrapper<std::add_const>;
+
+static_assert(not func_wrapper_value_test::template func<int>::value);
+
+static_assert(func_wrapper_value_test::template func<const int>::value);
+
+static_assert(not func_wrapper_value_test::template func_v<int>);
+
+static_assert(func_wrapper_value_test::template func_v<const int>);
+
+static_assert(
+    std::is_same_v<typename func_wrapper_type_test::func<int>::type,
+                   const int>);
+
+static_assert(
+    std::is_same_v<func_wrapper_type_test::func_t<int>, const int>);
+
 ///////////////////////////////////////////// make_list
 
 static_assert(std::is_same_v<
@@ -717,6 +737,32 @@ static_assert(
         supl::tl::type_list<int, char, bool, const char, void, const int,
                             int, const int*, const volatile int*&>>);
 
+///////////////////////////////////////////// equal
+
+static_assert(supl::tl::equal_v<supl::tl::type_list<int, char, bool>,
+                                supl::tl::type_list<int, char, bool>>);
+
+static_assert(
+    not supl::tl::equal_v<supl::tl::type_list<int, char, bool, float>,
+                          supl::tl::type_list<int, char, bool>>);
+
+static_assert(
+    not supl::tl::equal_v<supl::tl::type_list<int, char, bool>,
+                          supl::tl::type_list<int, char, bool, float>>);
+
+static_assert(not supl::tl::equal_v<supl::tl::type_list<int, float, bool>,
+                                    supl::tl::type_list<int, char, bool>>);
+
+static_assert(not supl::tl::equal_v<supl::tl::type_list<void, char, bool>,
+                                    supl::tl::type_list<int, char, bool>>);
+
+static_assert(
+    not supl::tl::equal_v<supl::tl::type_list<int, char, bool>,
+                          supl::tl::type_list<int, char, unsigned>>);
+
+static_assert(supl::tl::equal_v<supl::tl::type_list<int, char, bool>,
+                                std::tuple<int, char, bool>>);
+
 ///////////////////////////////////////////// multi_apply
 
 static_assert(
@@ -724,23 +770,3 @@ static_assert(
                        int, std::add_const, std::add_lvalue_reference,
                        std::add_rvalue_reference, std::make_unsigned>,
                    supl::tl::type_list<const int, int&, int&&, unsigned>>);
-
-///////////////////////////////////////////// func_wrapper
-
-using func_wrapper_value_test = supl::tl::func_wrapper<std::is_const>;
-using func_wrapper_type_test  = supl::tl::func_wrapper<std::add_const>;
-
-static_assert(not func_wrapper_value_test::template func<int>::value);
-
-static_assert(func_wrapper_value_test::template func<const int>::value);
-
-static_assert(not func_wrapper_value_test::template func_v<int>);
-
-static_assert(func_wrapper_value_test::template func_v<const int>);
-
-static_assert(
-    std::is_same_v<typename func_wrapper_type_test::func<int>::type,
-                   const int>);
-
-static_assert(
-    std::is_same_v<func_wrapper_type_test::func_t<int>, const int>);

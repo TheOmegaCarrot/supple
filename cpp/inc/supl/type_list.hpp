@@ -691,6 +691,49 @@ struct has_duplicates<LIST<Almost_Last, Last>>
 template <typename LIST>
 constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
 
+///////////////////////////////////////////// equal
+
+namespace impl {
+
+template <typename LIST1, typename LIST2>
+struct equal_size_checked;
+
+template <template <typename...> typename LIST1,
+          template <typename...> typename LIST2, typename... Pack1,
+          typename... Pack2>
+struct equal_size_checked<LIST1<Pack1...>, LIST2<Pack2...>>
+    : std::conditional_t<std::is_same_v<front_t<LIST1<Pack1...>>,
+                                        front_t<LIST2<Pack2...>>>,
+                         equal_size_checked<pop_front_t<LIST1<Pack1...>>,
+                                            pop_front_t<LIST2<Pack2...>>>,
+                         std::false_type> {};
+
+template <template <typename...> typename LIST1,
+          template <typename...> typename LIST2>
+struct equal_size_checked<LIST1<>, LIST2<>> : std::true_type {};
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Determine if two type_list-like types contain the same list.
+ *
+ * @details Can compare two type lists of different templates.
+ * ex. equal_v<type_list<int, char>, std::tuple<int, char>> -> true
+ *
+ * If the template deduced as the list type takes a single pack of types
+ * as its template argument, then it works here, and can be compared to
+ * any other list-like template.
+ */
+/* }}} */
+template <typename LIST1, typename LIST2>
+struct equal : std::conditional_t<size_v<LIST1> == size_v<LIST2>,
+                                  impl::equal_size_checked<LIST1, LIST2>,
+                                  std::false_type> {};
+
+template <typename LIST1, typename LIST2>
+constexpr inline bool equal_v = equal<LIST1, LIST2>::value;
+
 ///////////////////////////////////////////// multi_apply
 
 /* {{{ doc */

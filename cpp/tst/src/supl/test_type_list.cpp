@@ -23,6 +23,31 @@ static_assert(
 static_assert(
     std::is_same_v<func_wrapper_type_test::func_t<int>, const int>);
 
+///////////////////////////////////////////// apply_wrapped
+
+static_assert(
+    not supl::tl::apply_wrapped<func_wrapper_value_test, int>::value);
+
+static_assert(
+    supl::tl::apply_wrapped<func_wrapper_value_test, const int>::value);
+
+static_assert(not supl::tl::apply_wrapped_v<func_wrapper_value_test, int>);
+
+static_assert(
+    supl::tl::apply_wrapped_v<func_wrapper_value_test, const int>);
+
+static_assert(
+    std::is_same_v<typename func_wrapper_type_test::func<int>::type,
+                   const int>);
+
+static_assert(std::is_same_v<typename supl::tl::apply_wrapped<
+                                 func_wrapper_type_test, int>::type,
+                             const int>);
+
+static_assert(
+    std::is_same_v<supl::tl::apply_wrapped_t<func_wrapper_type_test, int>,
+                   const int>);
+
 ///////////////////////////////////////////// make_list
 
 static_assert(std::is_same_v<

@@ -55,6 +55,18 @@ struct func_wrapper {
   constexpr inline static auto func_v = Func<T>::value;
 };
 
+///////////////////////////////////////////// apply_wrapped
+
+template <typename Func, typename... Args>
+struct apply_wrapped : Func::template func<Args...> {};
+
+template <typename Func, typename... Args>
+using apply_wrapped_t = typename apply_wrapped<Func, Args...>::type;
+
+template <typename Func, typename... Args>
+constexpr inline auto apply_wrapped_v =
+    apply_wrapped<Func, Args...>::value;
+
 ///////////////////////////////////////////// make_list
 
 /* {{{ doc */

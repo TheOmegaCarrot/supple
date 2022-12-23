@@ -208,6 +208,38 @@ static auto test_tuple_push_back() -> ehanc::test
   return results;
 }
 
+static auto test_tuple_push_back_as() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test1 {3, 3.14, 'd'};
+  bool test_val_1 {true};
+  std::tuple<int, double, char, const bool&> expected1 {3, 3.14, 'd',
+                                                        test_val_1};
+
+  auto result1 {supl::tuple_push_back_as<const bool&>(test1, test_val_1)};
+
+  results.add_case(result1, expected1);
+
+  int ref_test {5};
+  std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
+  double test_val_2 {3.14};
+  std::tuple<int&, int, char, bool, double&> expected2 {ref_test, 3, 'g',
+                                                        true, test_val_2};
+
+  auto result2 {supl::tuple_push_back_as<double&>(test2, test_val_2)};
+
+  results.add_case(result2, expected2);
+
+  int test_val_3 {81};
+  std::tuple expected3 {3, 3.14, 'd', 81};
+  auto result3 {supl::tuple_push_back_as<int>(test1, test_val_3)};
+
+  results.add_case(result3, expected3);
+
+  return results;
+}
+
 static auto test_tuple_pop_back() -> ehanc::test
 {
   ehanc::test results;
@@ -740,6 +772,7 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_all_of", &test_tuple_all_of);
   ehanc::run_test("supl::tuple_none_of", &test_tuple_none_of);
   ehanc::run_test("supl::tuple_push_back", &test_tuple_push_back);
+  ehanc::run_test("supl::tuple_push_back_as", &test_tuple_push_back_as);
   ehanc::run_test("supl::tuple_pop_front", &test_tuple_pop_front);
   ehanc::run_test("supl::tuple_push_front", &test_tuple_push_front);
   ehanc::run_test("supl::tuple_pop_back", &test_tuple_pop_back);

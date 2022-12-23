@@ -521,6 +521,57 @@ tuple_push_front(const Tuple& tup, Ts&&... data) noexcept(
 }
 
 namespace impl {
+
+template <typename As, typename Param, typename Tuple, std::size_t... Idxs>
+[[nodiscard]] constexpr auto tuple_push_front_as_impl(
+    const Tuple& tup, std::index_sequence<Idxs...>,
+    Param&&
+        data) noexcept(tl::all_of_v<Tuple,
+                                    std::is_nothrow_copy_constructible>&&
+                           std::is_nothrow_constructible_v<As, Param>)
+    -> tl::push_front_t<Tuple, As>
+{
+  return {std::forward<Param>(data), std::get<Idxs>(tup)...};
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Push front with specified data type.
+ *
+ * @details The resulting tuple will contain copies of all input elements,
+ * plus the prepended `data`, which will be converted to the specified type.
+ * The specified type may be a reference type, or may be any type
+ * for which an implicit conversion from `Param` to `As` exists.
+ *
+ * @tparam As Exact type appended to resulting tuple
+ *
+ * @tparam Param Type of supplied parameter.
+ * Must be implicitly convertible to `As`.
+ *
+ * @tparam Tuple Type of input tuple
+ *
+ * @param tup Input tuple
+ *
+ * @param data Input data of type `Param`,
+ * will be used to initialize a value of type `As`.
+ */
+/* }}} */
+template <typename As, typename Param, typename Tuple>
+[[nodiscard]] constexpr auto
+tuple_push_front_as(const Tuple& tup, Param&& data) noexcept(
+    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>&&
+        std::is_nothrow_constructible_v<As, Param>)
+    -> tl::push_front_t<Tuple, As>
+{
+  constexpr auto seq {
+      std::make_index_sequence<std::tuple_size_v<Tuple>> {}};
+  return impl::tuple_push_front_as_impl<As>(tup, seq,
+                                            std::forward<Param>(data));
+}
+
+namespace impl {
 template <typename Tuple, std::size_t... Inds>
 [[nodiscard]] constexpr auto tuple_pop_front_impl(
     const Tuple& tup,

@@ -88,6 +88,9 @@ public:
 /**
  * @brief A singular function to output many things to streams.
  *
+ * @details Sets `std::ios::boolalpha` internally, and resets flags
+ * before returning.
+ *
  * @pre A parameter type `T` is valid if any of the below are true:
  * - `operator<<(std::ostream&, const T&)` is defined
  * - `T` is a tuple or pair of only valid types
@@ -109,7 +112,7 @@ void to_stream(std::ostream& out, const T& value) noexcept
   static_assert(
       std::disjunction_v<is_printable<decayT>, is_tuple<decayT>,
                          is_pair<decayT>, is_iterable<decayT>>,
-      "Attempting to call supl::to_string with an unsupported type");
+      "Attempting to call supl::to_stream with an unsupported type");
 
   ostream_state_restorer restorer(out);
 
@@ -121,9 +124,7 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
   } else if constexpr ( is_tuple_v<T> ) {
 
-    // clang-format off
-    if constexpr ( std::tuple_size_v <T> > 1 ) {
-      // clang-format on
+    if constexpr ( std::tuple_size<T>::value > 1 ) {
 
       out << "( ";
       for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(

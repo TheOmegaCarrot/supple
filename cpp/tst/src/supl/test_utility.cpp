@@ -70,6 +70,9 @@ static auto test_to_stream() -> ehanc::test
   std::tuple test1 {1, "hello", true};
   supl::to_stream(str1, test1);
   results.add_case(str1.str(), "( 1, hello, true )"s, "tuple");
+  str1 << true;
+  results.add_case(str1.str(), "( 1, hello, true )1"s,
+                   "fmtflags not reset correctly");
 
   std::stringstream str2;
   std::pair test2 {42, "Neat"s};

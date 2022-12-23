@@ -734,11 +734,7 @@ constexpr inline std::size_t find_v = find<LIST, Sought, Idx>::value;
 
 ///////////////////////////////////////////// deduplicate
 
-template <typename LIST>
-struct deduplicate;
-
-/* template<template<typename...>typename LIST, typename... Pack> */
-/* struct deduplicate */
+// Oh boy...
 
 ///////////////////////////////////////////// equal
 

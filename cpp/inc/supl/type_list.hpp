@@ -705,6 +705,16 @@ constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
 
 ///////////////////////////////////////////// find
 
+/* {{{ doc */
+/**
+ * @brief Finds a type in a type list.
+ *
+ * @details If the sought type is contained in the list,
+ * the returned size_t will be the index of that type in the list.
+ * If the type is not found, the size of the list will be returned
+ * (as the size is the smallest nonnegative illegal index).
+ */
+/* }}} */
 template <typename LIST, typename Sought, std::size_t Idx = 0>
 struct find;
 

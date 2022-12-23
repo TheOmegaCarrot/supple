@@ -750,7 +750,7 @@ struct deduplicate_impl<LIST<LFront, LPack...>, LIST<Rebuild_Pack...>>
           is_type_in_pack_v<LFront, Rebuild_Pack...>,
           deduplicate_impl<LIST<LPack...>, LIST<Rebuild_Pack...>>,
           deduplicate_impl<LIST<LPack...>,
-                           LIST<Rebuild_Pack..., LFront>>> {};
+                           push_back_t<LIST<Rebuild_Pack...>, LFront>>> {};
 
 // base case- done recursing
 template <template <typename...> typename LIST, typename... Rebuild_Pack>

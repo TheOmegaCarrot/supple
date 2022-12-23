@@ -781,14 +781,39 @@ static_assert(supl::tl::find_v<supl::tl::type_list<int, char, bool, char>,
 
 ///////////////////////////////////////////// deduplicate
 
-/* static_assert(std::is_same_v<supl::tl::deduplicate_t<supl::tl::type_list< */
-/*                                  int, char, bool, int, char, int>>, */
-/*                              supl::tl::type_list<int, char, bool>>); */
+static_assert(std::is_same_v<supl::tl::deduplicate_t<supl::tl::type_list<
+                                 int, char, bool, int, char, int>>,
+                             supl::tl::type_list<int, char, bool>>);
 
-/* static_assert( */
-/*     std::is_same_v< */
-/*         supl::tl::deduplicate_t<supl::tl::type_list<int, char, bool>>, */
-/*         supl::tl::type_list<int, char, bool>>); */
+static_assert(
+    std::is_same_v<
+        supl::tl::deduplicate_t<supl::tl::type_list<
+            int, int, int, int, double, int, int, int, int, int, char>>,
+        supl::tl::type_list<int, double, char>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::deduplicate_t<supl::tl::type_list<int, char, bool>>,
+        supl::tl::type_list<int, char, bool>>);
+
+static_assert(
+    std::is_same_v<supl::tl::deduplicate_t<supl::tl::type_list<int>>,
+                   supl::tl::type_list<int>>);
+
+static_assert(
+    std::is_same_v<supl::tl::deduplicate_t<supl::tl::type_list<int, int>>,
+                   supl::tl::type_list<int>>);
+
+static_assert(
+    std::is_same_v<
+        supl::tl::deduplicate_t<supl::tl::type_list<
+            int, char, int&, int(), int&, int(), int(int), int, int&, char,
+            char, char*, int()>>,
+        supl::tl::type_list<int, char, int&, int(), int(int), char*>>);
+
+static_assert(
+    std::is_same_v<supl::tl::deduplicate_t<supl::tl::type_list<>>,
+                   supl::tl::type_list<>>);
 
 ///////////////////////////////////////////// equal
 

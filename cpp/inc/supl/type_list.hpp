@@ -700,6 +700,10 @@ template <template <typename...> typename LIST, typename Almost_Last,
 struct has_duplicates<LIST<Almost_Last, Last>>
     : std::is_same<Almost_Last, Last> {};
 
+// An empty list has no duplicates
+template <template <typename...> typename LIST>
+struct has_duplicates<LIST<>> : std::false_type {};
+
 template <typename LIST>
 constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
 
@@ -734,7 +738,38 @@ constexpr inline std::size_t find_v = find<LIST, Sought, Idx>::value;
 
 ///////////////////////////////////////////// deduplicate
 
-// Oh boy...
+namespace impl {
+
+template <typename LIST, typename REBUILD>
+struct deduplicate_impl;
+
+template <template <typename...> typename LIST, typename LFront,
+          typename... LPack, typename... Rebuild_Pack>
+struct deduplicate_impl<LIST<LFront, LPack...>, LIST<Rebuild_Pack...>>
+    : std::conditional_t<
+          is_type_in_pack_v<LFront, Rebuild_Pack...>,
+          deduplicate_impl<LIST<LPack...>, LIST<Rebuild_Pack...>>,
+          deduplicate_impl<LIST<LPack...>,
+                           LIST<Rebuild_Pack..., LFront>>> {};
+
+// base case- done recursing
+template <template <typename...> typename LIST, typename... Rebuild_Pack>
+struct deduplicate_impl<LIST<>, LIST<Rebuild_Pack...>>
+    : type_identity<LIST<Rebuild_Pack...>> {};
+
+} // namespace impl
+
+template <typename LIST>
+struct deduplicate;
+
+template <template <typename...> typename LIST, typename... Pack>
+struct deduplicate<LIST<Pack...>>
+    : std::conditional_t<has_duplicates_v<LIST<Pack...>>,
+                         impl::deduplicate_impl<LIST<Pack...>, LIST<>>,
+                         type_identity<LIST<Pack...>>> {};
+
+template <typename LIST>
+using deduplicate_t = typename deduplicate<LIST>::type;
 
 ///////////////////////////////////////////// equal
 

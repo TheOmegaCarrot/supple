@@ -3,6 +3,7 @@
 #include "supl/metaprogramming.hpp"
 #include "supl/test_tuple_algo.h"
 #include "supl/tuple_algo.hpp"
+#include "supl/utility.hpp"
 #include "test_utils.hpp"
 
 template <typename... Ls>
@@ -794,6 +795,48 @@ static auto test_tuple_type_transform() -> ehanc::test
   return results;
 }
 
+struct just_a_bool {
+  // NOLINTNEXTLINE(google-explicit-constructor)
+  just_a_bool(bool arg)
+      : value {arg}
+  {}
+
+  bool value;
+
+  friend inline auto operator<<(std::ostream& out, just_a_bool rhs)
+      -> std::ostream&
+  {
+    out << rhs.value;
+    return out;
+  }
+
+  [[nodiscard]] constexpr auto operator==(const just_a_bool& rhs) const
+      -> bool
+  {
+    return this->value == rhs.value;
+  }
+};
+
+static auto test_tuple_convert() -> ehanc::test
+{
+  using supl::literals::size_t_literal::operator""_z;
+  ehanc::test results;
+
+  constexpr static std::tuple test_input {42, 3.14, true};
+
+  constexpr static std::tuple expected1 {42.0, 3_z, 1};
+  constexpr static auto result1 {
+      supl::tuple_convert<double, std::size_t, int>(test_input)};
+  results.add_case(result1, expected1);
+  std::tuple<char, double, just_a_bool> expected2 {'*', 3.14,
+                                                   just_a_bool {true}};
+  auto result2 {
+      supl::tuple_convert<char, double, just_a_bool>(test_input)};
+  results.add_case(result2, expected2);
+
+  return results;
+}
+
 void test_tuple_algo()
 {
   ehanc::run_test("supl::for_each_in_tuple", &test_for_each_in_tuple);
@@ -824,4 +867,5 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple_elem_swap", &test_tuple_elem_swap);
   ehanc::run_test("supl::tuple_type_transform",
                   &test_tuple_type_transform);
+  ehanc::run_test("supl::tuple_convert", &test_tuple_convert);
 }

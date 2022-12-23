@@ -1200,6 +1200,39 @@ tuple_type_transform(const Tuple& tup) noexcept(
   return impl::tuple_type_transform_impl<Transform>(tup, seq);
 }
 
+namespace impl {
+
+template <typename... New_Types, template <typename...> typename Tuple,
+          typename... Old_Types, std::size_t... Idxs>
+[[nodiscard]] constexpr auto tuple_convert_impl(
+    const Tuple<Old_Types...>& tup,
+    std::index_sequence<Idxs...>) noexcept((std::
+                                                is_nothrow_constructible_v<
+                                                    New_Types,
+                                                    Old_Types> && ...))
+    -> Tuple<New_Types...>
+{
+  return {static_cast<Old_Types>(std::get<Idxs>(tup))...};
+}
+
+} // namespace impl
+
+template <typename... New_Types, template <typename...> typename Tuple,
+          typename... Old_Types>
+[[nodiscard]] constexpr auto
+tuple_convert(const Tuple<Old_Types...>& tup) noexcept(
+    (std::is_nothrow_constructible_v<New_Types, Old_Types> && ...))
+    -> Tuple<New_Types...>
+{
+  static_assert(
+      sizeof...(New_Types) == sizeof...(Old_Types),
+      "Must provide exactly the same number of types as in input tuple");
+
+  constexpr auto seq {std::make_index_sequence<sizeof...(Old_Types)> {}};
+
+  return impl::tuple_convert_impl<New_Types...>(tup, seq);
+}
+
 } // namespace supl
 
 #endif

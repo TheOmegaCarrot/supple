@@ -703,6 +703,33 @@ struct has_duplicates<LIST<Almost_Last, Last>>
 template <typename LIST>
 constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
 
+///////////////////////////////////////////// find
+
+template <typename LIST, typename Sought, std::size_t Idx = 0>
+struct find;
+
+template <template <typename...> typename LIST, typename Front,
+          typename... Pack, typename Sought, std::size_t Idx>
+struct find<LIST<Front, Pack...>, Sought, Idx>
+    : std::conditional_t<std::is_same_v<Front, Sought>,
+                         index_constant<Idx>,
+                         find<LIST<Pack...>, Sought, Idx + 1>> {};
+
+template <template <typename...> typename LIST, typename Sought,
+          std::size_t Idx>
+struct find<LIST<>, Sought, Idx> : index_constant<Idx> {};
+
+template <typename LIST, typename Sought, std::size_t Idx = 0>
+constexpr inline std::size_t find_v = find<LIST, Sought, Idx>::value;
+
+///////////////////////////////////////////// deduplicate
+
+template <typename LIST>
+struct deduplicate;
+
+/* template<template<typename...>typename LIST, typename... Pack> */
+/* struct deduplicate */
+
 ///////////////////////////////////////////// equal
 
 namespace impl {

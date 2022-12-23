@@ -762,6 +762,30 @@ static_assert(
         supl::tl::type_list<int, char, bool, const char, void, const int,
                             int, const int*, const volatile int*&>>);
 
+///////////////////////////////////////////// find
+
+static_assert(
+    supl::tl::find_v<supl::tl::type_list<int, char, bool>, char> == 1);
+
+static_assert(
+    supl::tl::find_v<supl::tl::type_list<int, char, bool>, int> == 0);
+
+static_assert(
+    supl::tl::find_v<supl::tl::type_list<int, char, bool>, bool> == 2);
+
+static_assert(
+    supl::tl::find_v<supl::tl::type_list<int, char, bool>, void> == 3);
+
+static_assert(supl::tl::find_v<supl::tl::type_list<int, char, bool, char>,
+                               char> == 1);
+
+///////////////////////////////////////////// deduplicate
+
+/* static_assert( */
+/*     std::is_same_v<supl::tl::deduplicate_t< */
+/*                        supl::tl::type_list<int, char, bool, int, char>>, */
+/*                    supl::tl::type_list<int, char, bool>>); */
+
 ///////////////////////////////////////////// equal
 
 static_assert(supl::tl::equal_v<supl::tl::type_list<int, char, bool>,

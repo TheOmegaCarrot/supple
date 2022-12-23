@@ -48,12 +48,11 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Func, std::size_t... Inds>
-constexpr void for_each_in_tuple_impl(
-    Tuple&& tup, Func&& func,
-    std::index_sequence<
-        Inds...>) noexcept(noexcept((supl::invoke(func,
-                                                  std::get<Inds>(tup)),
-                                     ...)))
+constexpr void for_each_in_tuple_impl(Tuple&& tup, Func&& func,
+                                      std::index_sequence<Inds...>)
+    // clang-format off
+noexcept(noexcept((supl::invoke(func, std::get<Inds>(tup)), ...)))
+// clang-format on
 {
   (supl::invoke(func, std::get<Inds>(tup)), ...);
 }
@@ -92,13 +91,12 @@ constexpr void for_each_in_tuple(const Tuple& tup, Func&& func) noexcept(
 namespace impl {
 template <typename Tuple, typename Func, std::size_t... Idxs,
           std::size_t Begin>
-constexpr void for_each_in_subtuple_impl(
-    const Tuple& tup, Func&& func, std::index_sequence<Idxs...>,
-    index_constant<
-        Begin>) noexcept(noexcept((supl::invoke(func,
-                                                std::get<Idxs + Begin>(
-                                                    tup)),
-                                   ...)))
+constexpr void for_each_in_subtuple_impl(const Tuple& tup, Func&& func,
+                                         std::index_sequence<Idxs...>,
+                                         index_constant<Begin>)
+    // clang-format off
+noexcept(noexcept((supl::invoke(func, std::get<Idxs + Begin>(tup)), ...)))
+// clang-format on
 {
   (supl::invoke(func, std::get<Idxs + Begin>(tup)), ...);
 }
@@ -210,12 +208,13 @@ tuple_transform(const Tuple& tup, Func&& func) noexcept(
 
 namespace impl {
 template <typename Tuple, typename Pred, std::size_t... Inds>
-[[nodiscard]] constexpr auto tuple_any_of_impl(
-    const Tuple& tup, Pred&& pred,
-    std::index_sequence<
-        Inds...>) noexcept(noexcept((supl::invoke(pred,
-                                                  std::get<Inds>(tup))
-                                     || ...))) -> bool
+[[nodiscard]] constexpr auto
+tuple_any_of_impl(const Tuple& tup, Pred&& pred,
+                  std::index_sequence<Inds...>)
+    // clang-format off
+noexcept(noexcept((supl::invoke(pred, std::get<Inds>(tup)) || ...)))
+    // clang-format on
+    -> bool
 {
   static_assert(std::conjunction_v<std::is_invocable_r<
                     bool, Pred, decltype(std::get<Inds>(tup))>...>,
@@ -261,12 +260,13 @@ tuple_any_of(const Tuple& tup, Pred&& pred) noexcept(
 
 namespace impl {
 template <typename Tuple, typename Pred, std::size_t... Inds>
-[[nodiscard]] constexpr auto tuple_all_of_impl(
-    const Tuple& tup, Pred&& pred,
-    std::index_sequence<
-        Inds...>) noexcept(noexcept((supl::invoke(pred,
-                                                  std::get<Inds>(tup))
-                                     && ...))) -> bool
+[[nodiscard]] constexpr auto
+tuple_all_of_impl(const Tuple& tup, Pred&& pred,
+                  std::index_sequence<Inds...>)
+    // clang-format off
+noexcept(noexcept((supl::invoke(pred, std::get<Inds>(tup)) && ...)))
+    // clang-format on
+    -> bool
 {
   static_assert(std::conjunction_v<std::is_invocable_r<
                     bool, Pred, decltype(std::get<Inds>(tup))>...>,
@@ -342,11 +342,12 @@ namespace impl {
 
 template <typename Tuple, typename... Ts, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_push_back_impl(const Tuple& tup, std::index_sequence<Inds...>, Ts&&... data) noexcept(
-    tl::all_of_v<
-        Tuple,
-        std::
-            is_nothrow_copy_constructible> && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+tuple_push_back_impl(const Tuple& tup, std::index_sequence<Inds...>,
+                     Ts&&... data)
+    // clang-format off
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+      && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+    // clang-format on
     -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
 {
   return {std::get<Inds>(tup)..., std::forward<Ts>(data)...};
@@ -371,12 +372,12 @@ tuple_push_back_impl(const Tuple& tup, std::index_sequence<Inds...>, Ts&&... dat
  */
 /* }}} */
 template <typename Tuple, typename... Ts>
-[[nodiscard]] constexpr auto
-tuple_push_back(const Tuple& tup, Ts&&... data) noexcept(
-    tl::all_of_v<
-        Tuple,
-        std::
-            is_nothrow_copy_constructible> && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+[[nodiscard]] constexpr auto tuple_push_back(const Tuple& tup,
+                                             Ts&&... data)
+    // clang-format off
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+      && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+    // clang-format on
     -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
 {
   constexpr auto seq {
@@ -437,12 +438,11 @@ tuple_push_back_as(const Tuple& tup, Param&& data) noexcept(
 
 namespace impl {
 template <typename Tuple, std::size_t... Inds>
-[[nodiscard]] constexpr auto tuple_pop_back_impl(
-    const Tuple& tup,
-    std::index_sequence<
-        Inds...>) noexcept(tl::all_of_v<Tuple,
-                                        std::
-                                            is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto
+tuple_pop_back_impl(const Tuple& tup, std::index_sequence<Inds...>)
+    // clang-format off
+noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::pop_back_t<Tuple>
 {
   return {std::get<Inds>(tup)...};
@@ -477,11 +477,12 @@ namespace impl {
 template <template <typename...> typename Tuple, typename... Ts,
           typename... Pack, std::size_t... Inds>
 [[nodiscard]] constexpr auto
-tuple_push_front_impl(const Tuple<Pack...>& tup, std::index_sequence<Inds...>, Ts&&... data) noexcept(
-    tl::all_of_v<
-        Tuple<Pack...>,
-        std::
-            is_nothrow_copy_constructible> && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+tuple_push_front_impl(const Tuple<Pack...>& tup,
+                      std::index_sequence<Inds...>, Ts&&... data)
+    // clang-format off
+  noexcept(tl::all_of_v<Tuple<Pack...>, std::is_nothrow_copy_constructible>
+      && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+    // clang-format on
 
     -> tl::push_front_t<Tuple<Pack...>, remove_cvref_t<Ts>...>
 {
@@ -506,12 +507,12 @@ tuple_push_front_impl(const Tuple<Pack...>& tup, std::index_sequence<Inds...>, T
  */
 /* }}} */
 template <typename Tuple, typename... Ts>
-[[nodiscard]] constexpr auto
-tuple_push_front(const Tuple& tup, Ts&&... data) noexcept(
-    tl::all_of_v<
-        Tuple,
-        std::
-            is_nothrow_copy_constructible> && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+[[nodiscard]] constexpr auto tuple_push_front(const Tuple& tup,
+                                              Ts&&... data)
+    // clang-format off
+noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+    && (std::is_nothrow_copy_constructible_v<Ts> && ...))
+    // clang-format on
 
     -> tl::push_front_t<Tuple, remove_cvref_t<Ts>...>
 {
@@ -573,12 +574,11 @@ tuple_push_front_as(const Tuple& tup, Param&& data) noexcept(
 
 namespace impl {
 template <typename Tuple, std::size_t... Inds>
-[[nodiscard]] constexpr auto tuple_pop_front_impl(
-    const Tuple& tup,
-    std::index_sequence<
-        Inds...>) noexcept(tl::all_of_v<tl::pop_front_t<Tuple>,
-                                        std::
-                                            is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto
+tuple_pop_front_impl(const Tuple& tup, std::index_sequence<Inds...>)
+    // clang-format off
+noexcept(tl::all_of_v<tl::pop_front_t<Tuple>, std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::pop_front_t<Tuple>
 {
   return {std::get<Inds + 1>(tup)...};
@@ -611,12 +611,11 @@ template <typename Tuple>
 
 namespace impl {
 template <typename Tuple, std::size_t... Idxs>
-[[nodiscard]] constexpr auto tuple_rotate_left_impl(
-    const Tuple& tup,
-    std::index_sequence<
-        Idxs...>) noexcept(tl::all_of_v<Tuple,
-                                        std::
-                                            is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto
+tuple_rotate_left_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+    // clang-format off
+noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::rotate_left_t<Tuple>
 {
   return {std::get<Idxs + 1>(tup)..., std::get<0>(tup)};
@@ -636,12 +635,11 @@ template <typename Tuple>
 
 namespace impl {
 template <typename Tuple, std::size_t... Idxs>
-[[nodiscard]] constexpr auto tuple_rotate_right_impl(
-    const Tuple& tup,
-    std::index_sequence<
-        Idxs...>) noexcept(tl::all_of_v<Tuple,
-                                        std::
-                                            is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto
+tuple_rotate_right_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+    // clang-format off
+noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::rotate_right_t<Tuple>
 {
   return {std::get<std::tuple_size_v<Tuple> - 1>(tup),
@@ -663,14 +661,13 @@ template <typename Tuple>
 namespace impl {
 template <typename Tuple, typename... Ts, std::size_t... pre_idxs,
           std::size_t... post_idxs>
-[[nodiscard]] constexpr auto tuple_insert_impl(
-    const Tuple& tup, std::index_sequence<pre_idxs...>,
-    std::index_sequence<post_idxs...>,
-    Ts&&... data) noexcept(tl::
-                               all_of_v<
-                                   Tuple,
-                                   std::
-                                       is_nothrow_copy_constructible> && (std::is_nothrow_constructible_v<Ts, Ts> && ...))
+[[nodiscard]] constexpr auto
+tuple_insert_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
+                  std::index_sequence<post_idxs...>, Ts&&... data)
+    // clang-format off
+noexcept(tl:: all_of_v< Tuple, std:: is_nothrow_copy_constructible> 
+    && (std::is_nothrow_constructible_v<Ts, Ts> && ...))
+    // clang-format on
     -> tl::insert_t<Tuple, sizeof...(pre_idxs), remove_cvref_t<Ts>...>
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
@@ -701,12 +698,11 @@ template <typename Tuple, typename... Ts, std::size_t... pre_idxs,
  */
 /* }}} */
 template <std::size_t Idx, typename Tuple, typename... Ts>
-[[nodiscard]] constexpr auto
-tuple_insert(const Tuple& tup, Ts&&... data) noexcept(
-    tl::all_of_v<
-        Tuple,
-        std::
-            is_nothrow_copy_constructible> && (std::is_nothrow_constructible_v<Ts, Ts> && ...))
+[[nodiscard]] constexpr auto tuple_insert(const Tuple& tup, Ts&&... data)
+    // clang-format off
+noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+    && (std::is_nothrow_constructible_v<Ts, Ts> && ...))
+    // clang-format on
     -> tl::insert_t<Tuple, Idx, remove_cvref_t<Ts>...>
 {
   static_assert(Idx <= std::tuple_size_v<Tuple>, "Index out of bounds");
@@ -722,15 +718,12 @@ tuple_insert(const Tuple& tup, Ts&&... data) noexcept(
 namespace impl {
 template <typename Tuple, std::size_t... pre_idxs,
           std::size_t... post_idxs>
-[[nodiscard]] constexpr auto tuple_erase_impl(
-    const Tuple& tup, std::index_sequence<pre_idxs...>,
-    std::index_sequence<
-        post_idxs...>) noexcept(tl::
-                                    all_of_v<
-                                        tl::erase_t<Tuple,
-                                                    sizeof...(pre_idxs)>,
-                                        std::
-                                            is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto
+tuple_erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>,
+                 std::index_sequence<post_idxs...>)
+    // clang-format off
+noexcept(tl::all_of_v<tl::erase_t<Tuple, sizeof...(pre_idxs)>, std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::erase_t<Tuple, sizeof...(pre_idxs)>
 {
   constexpr std::size_t idx {sizeof...(pre_idxs)};
@@ -867,12 +860,14 @@ template <std::size_t Idx, typename Tuple>
 namespace impl {
 template <typename Tuple, std::size_t... Inds, std::size_t Begin,
           std::size_t End>
-[[nodiscard]] constexpr auto subtuple_impl(
-    const Tuple& tup, std::index_sequence<Inds...>, index_constant<Begin>,
-    index_constant<End>) noexcept((std::
-                                       is_nothrow_copy_constructible_v<
-                                           decltype(std::get<Inds + Begin>(
-                                               tup))> && ...))
+[[nodiscard]] constexpr auto
+subtuple_impl(const Tuple& tup, std::index_sequence<Inds...>,
+              index_constant<Begin>, index_constant<End>)
+    // clang-format off
+noexcept((std::is_nothrow_copy_constructible_v<
+      decltype(std::get<Inds + Begin>(tup))
+      > && ...))
+    // clang-format on
     -> tl::sublist_t<Tuple, Begin, End>
 {
   return {std::get<Inds + Begin>(tup)...};
@@ -911,15 +906,15 @@ template <std::size_t Begin, std::size_t End, typename Tuple>
 
 namespace impl {
 template <typename Tuple, typename Pred, std::size_t... Inds>
-constexpr auto tuple_count_if_impl(
-    const Tuple& tup, Pred&& pred,
-    std::index_sequence<
-        Inds...>) noexcept(noexcept((static_cast<std::
-                                                     size_t>(supl::invoke(
-                                         pred, std::get<Inds>(tup)))
-                                     + ...)
-
-                                        )) -> std::size_t
+constexpr auto tuple_count_if_impl(const Tuple& tup, Pred&& pred,
+                                   std::index_sequence<Inds...>)
+    // clang-format off
+noexcept(noexcept((
+  static_cast<std::size_t>(
+    supl::invoke(pred, std::get<Inds>(tup))) + ...)
+      ))
+    // clang-format on
+    -> std::size_t
 {
   return (static_cast<std::size_t>(supl::invoke(pred, std::get<Inds>(tup)))
           + ...);
@@ -958,16 +953,13 @@ tuple_count_if(const Tuple& tup, Pred&& pred) noexcept(
 
 namespace impl {
 template <typename Tuple1, typename Tuple2, std::size_t... Idxs>
-constexpr auto tuple_interleave_impl(
-    const Tuple1& tup1, const Tuple2& tup2,
-    std::index_sequence<
-        Idxs...>) noexcept(tl::
-                               all_of_v<
-                                   Tuple1,
-                                   std::is_nothrow_copy_constructible>&&
-                                   tl::all_of_v<
-                                       Tuple2,
-                                       std::is_nothrow_copy_constructible>)
+constexpr auto tuple_interleave_impl(const Tuple1& tup1,
+                                     const Tuple2& tup2,
+                                     std::index_sequence<Idxs...>)
+    // clang-format off
+noexcept(tl::all_of_v<Tuple1, std::is_nothrow_copy_constructible>
+    && tl::all_of_v<Tuple2, std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::interleave_t<Tuple1, Tuple2>
 {
   return {std::tuple_cat(
@@ -1012,13 +1004,12 @@ tuple_interleave(const Tuple1& tup1, const Tuple2& tup2) noexcept(
 
 namespace impl {
 template <typename Tuple, std::size_t... Idxs>
-[[nodiscard]] constexpr auto tuple_front_n_impl(
-    const Tuple& tup,
-    std::index_sequence<
-        Idxs...>) noexcept(tl::
-                               all_of_v<
-                                   tl::front_n_t<Tuple, sizeof...(Idxs)>,
-                                   std::is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto
+tuple_front_n_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+    // clang-format off
+noexcept(tl::all_of_v<tl::front_n_t<Tuple, sizeof...(Idxs)>,
+    std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::front_n_t<Tuple, sizeof...(Idxs)>
 {
   return {std::get<Idxs>(tup)...};
@@ -1149,12 +1140,12 @@ template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
 namespace impl {
 template <template <typename> typename Transform, typename Tuple,
           std::size_t... Idxs>
-[[nodiscard]] constexpr auto tuple_type_transform_impl(
-    const Tuple& tup,
-    std::index_sequence<
-        Idxs...>) noexcept(tl::all_of_v<tl::transform_t<Tuple, Transform>,
-                                        std::
-                                            is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto
+tuple_type_transform_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+    // clang-format off
+noexcept(tl::all_of_v<tl::transform_t<Tuple, Transform>,
+    std::is_nothrow_copy_constructible>)
+    // clang-format on
     -> tl::transform_t<Tuple, Transform>
 {
   return {
@@ -1204,12 +1195,12 @@ namespace impl {
 
 template <typename... New_Types, template <typename...> typename Tuple,
           typename... Old_Types, std::size_t... Idxs>
-[[nodiscard]] constexpr auto tuple_convert_impl(
-    const Tuple<Old_Types...>& tup,
-    std::index_sequence<Idxs...>) noexcept((std::
-                                                is_nothrow_constructible_v<
-                                                    New_Types,
-                                                    Old_Types> && ...))
+[[nodiscard]] constexpr auto
+tuple_convert_impl(const Tuple<Old_Types...>& tup,
+                   std::index_sequence<Idxs...>)
+    // clang-format off
+noexcept((std::is_nothrow_constructible_v<New_Types, Old_Types> && ...))
+    // clang-format on
     -> Tuple<New_Types...>
 {
   return {static_cast<Old_Types>(std::get<Idxs>(tup))...};

@@ -4,17 +4,9 @@ This is a list of ideas that may or may not be worth implementing.
 
 ---
 
-## Tuple Algorithms
+## fmtflags
 
-### Emplace_{Back,Front}:
+Add an overload to `to_stream` that takes an additional `std::ios::fmtflags` parameter,
+to be applied only for the call to to_stream.
 
-Construct a new element from constructor arguments.
-
-Could be used to save a move.
-
-Perhaps also just a `tuple_emplace` that works like `tuple_insert`?
-
-```cpp
-template<typename Tuple, typename To_Be_Constructed, typename... Args>
-auto tuple_emplace_{back,front}(const Tuple& tup, Args&&... args);
-```
+Likewise, add the same functionality to `stream_adapter`.

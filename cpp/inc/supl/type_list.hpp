@@ -517,8 +517,8 @@ constexpr inline bool none_of_v = none_of<LIST, PRED>::value;
 /**
  * @brief Produces a type list by applying `PRED` to each element of `LIST`
  *
- * ex. transform_t<type_list<int, char, bool>, std::add_const>
- * -> type_list<const int, const char, const bool>
+ * ex. `transform_t<type_list<int, char, bool>, std::add_const>
+ * -> type_list<const int, const char, const bool>`
  */
 /* }}} */
 template <typename LIST, template <typename> typename PRED>
@@ -577,8 +577,8 @@ using rotate_right_t = typename rotate_right<LIST>::type;
  * @brief Arbitrarily reorders a type list. Duplication of elements
  * and omitting of elements are permitted.
  *
- * ex. reorder_t<type_list<int, char, bool, void>, 2, 3, 1, 0, 2, 3, 1, 0>
- * -> type_list<bool, void, char, int, bool, void, char, int>
+ * ex. `reorder_t<type_list<int, char, bool, void>, 2, 3, 1, 0, 2, 3, 1, 0>
+ * -> type_list<bool, void, char, int, bool, void, char, int>`
  */
 /* }}} */
 template <typename LIST, std::size_t... Idxs>
@@ -602,8 +602,8 @@ using reorder_t = typename reorder<LIST, Idxs...>::type;
  *
  * @tparam Idx Index of the element just after the split point
  *
- * ex. split_t<type_list<int, char, bool, void>, 3>
- * -> std::pair<type_list<int, char, bool>, type_list<void>>
+ * ex. `split_t<type_list<int, char, bool, void>, 3>
+ * -> std::pair<type_list<int, char, bool>, type_list<void>>`
  */
 /* }}} */
 template <typename LIST, std::size_t Idx>
@@ -759,6 +759,18 @@ struct deduplicate_impl<LIST<>, LIST<Rebuild_Pack...>>
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Removes duplicate types
+ *
+ * @details Creates a new list based on the input, with
+ * only a single copy of each type in the input list,
+ * preserving ordering.
+ *
+ * ex. `deduplicate_t<type_list<int, char, int, bool, int&, char, char>>
+ * -> type_list<int, char, bool, int&>`
+ */
+/* }}} */
 template <typename LIST>
 struct deduplicate;
 
@@ -799,7 +811,7 @@ struct equal_size_checked<LIST1<>, LIST2<>> : std::true_type {};
  * @brief Determine if two type_list-like types contain the same list.
  *
  * @details Can compare two type lists of different templates.
- * ex. equal_v<type_list<int, char>, std::tuple<int, char>> -> true
+ * ex. `equal_v<type_list<int, char>, std::tuple<int, char>> -> true`
  *
  * If the template deduced as the list type takes a single pack of types
  * as its template argument, then it works here, and can be compared to

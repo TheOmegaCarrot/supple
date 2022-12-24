@@ -594,6 +594,37 @@ struct reorder<LIST<Pack...>, Idxs...>
 template <typename LIST, std::size_t... Idxs>
 using reorder_t = typename reorder<LIST, Idxs...>::type;
 
+///////////////////////////////////////////// reverse
+
+namespace impl {
+
+template <typename OLD_LIST, typename NEW_LIST>
+struct reverse_impl;
+
+template <template <typename...> typename LIST, typename Front,
+          typename... Old_Pack, typename... New_Pack>
+struct reverse_impl<LIST<Front, Old_Pack...>, LIST<New_Pack...>>
+    : reverse_impl<LIST<Old_Pack...>, LIST<Front, New_Pack...>> {};
+
+template <template <typename...> typename LIST, typename... Pack>
+struct reverse_impl<LIST<>, LIST<Pack...>> : type_identity<LIST<Pack...>> {
+};
+
+} // namespace impl
+
+template <typename LIST>
+struct reverse;
+
+template <template <typename...> typename LIST, typename... Pack>
+struct reverse<LIST<Pack...>> : impl::reverse_impl<LIST<Pack...>, LIST<>> {
+};
+
+template <template <typename...> typename LIST>
+struct reverse<LIST<>> : type_identity<LIST<>> {};
+
+template <typename LIST>
+using reverse_t = typename reverse<LIST>::type;
+
 ///////////////////////////////////////////// split
 
 /* {{{ doc */

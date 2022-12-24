@@ -1,6 +1,9 @@
 #ifndef SUPPLEMENTARIES_CRTP_HPP
 #define SUPPLEMENTARIES_CRTP_HPP
 
+#include <sstream>
+#include <string>
+
 namespace supl {
 
 /* {{{ doc */
@@ -26,11 +29,6 @@ namespace supl {
  *   {
  *    // correct implementation
  *   }
- *
- *   using supl::rel_ops<consumer>::operator!=;
- *   using supl::rel_ops<consumer>::operator<=;
- *   using supl::rel_ops<consumer>::operator>;
- *   using supl::rel_ops<consumer>::operator>=;
  * }
  * ```
  */
@@ -56,6 +54,38 @@ struct rel_ops {
   constexpr auto operator>=(const T& rhs) const noexcept -> bool
   {
     return this->operator>(rhs) || !this->operator!=(rhs);
+  }
+};
+
+/* {{{ doc */
+/**
+ * @brief Add a `to_string` const member function
+ *
+ * @details Requires implementing `T::to_stream(std::ostream&) const`
+ * as a non-static member function
+ *
+ * Sample use:
+ *
+ * ```
+ * class consumer : supl::add_to_string<consumer>
+ * {
+ *   // class stuff
+ *
+ *   void to_stream(std::ostream& out) const noexcept
+ *   {
+ *     // implementation
+ *   }
+ * }
+ * ```
+ */
+/* }}} */
+template <typename T>
+struct add_to_string {
+  [[nodiscard]] auto to_string() const noexcept -> std::string
+  {
+    std::stringstream str;
+    static_cast<const T*>(this)->to_stream(str);
+    return str.str();
   }
 };
 

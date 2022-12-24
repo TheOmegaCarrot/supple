@@ -1,3 +1,5 @@
+#include <string>
+
 #include "supl/test_crtp.h"
 #include "test_utils.hpp"
 
@@ -26,11 +28,6 @@ static auto test_rel_ops() -> ehanc::test
     {
       return m_value < rhs.m_value;
     }
-
-    using supl::rel_ops<rel>::operator!=;
-    using supl::rel_ops<rel>::operator<=;
-    using supl::rel_ops<rel>::operator>;
-    using supl::rel_ops<rel>::operator>=;
   };
 
   rel rel_A {5};
@@ -73,11 +70,6 @@ static auto test_rel_ops() -> ehanc::test
     {
       return m_value < rhs.m_value;
     }
-
-    using supl::rel_ops<ct_rel>::operator!=;
-    using supl::rel_ops<ct_rel>::operator<=;
-    using supl::rel_ops<ct_rel>::operator>;
-    using supl::rel_ops<ct_rel>::operator>=;
   };
 
   constexpr static ct_rel ct_rel_A {5};
@@ -113,7 +105,28 @@ static auto test_rel_ops() -> ehanc::test
   return results;
 }
 
+static auto test_add_to_string() -> ehanc::test
+{
+  using std::literals::operator""s;
+
+  ehanc::test results;
+
+  struct consumer : supl::add_to_string<consumer> {
+    int value {42};
+
+    void to_stream(std::ostream& out) const noexcept
+    {
+      out << value;
+    }
+  };
+
+  results.add_case(consumer {}.to_string(), "42"s);
+
+  return results;
+}
+
 void test_crtp()
 {
   ehanc::run_test("supl::rel_ops", &test_rel_ops);
+  ehanc::run_test("supl::add_to_string", &test_add_to_string);
 }

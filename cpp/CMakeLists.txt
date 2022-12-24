@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
 project(supl LANGUAGES CXX)
-set(standard 17)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"

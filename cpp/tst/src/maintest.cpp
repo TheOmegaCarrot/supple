@@ -5,6 +5,7 @@
 #include "test_utils.hpp"
 
 #include "supl/test_algorithm.h"
+#include "supl/test_crtp.h"
 #include "supl/test_fake_ranges.h"
 #include "supl/test_functional.h"
 #include "supl/test_iterators.h"
@@ -25,6 +26,8 @@ auto main() -> int
   ehanc::test_section("Utility", &test_utility);
 
   ehanc::test_section("Functional", &test_functional);
+
+  ehanc::test_section("CRTP", &test_crtp);
 
   return 0;
 }

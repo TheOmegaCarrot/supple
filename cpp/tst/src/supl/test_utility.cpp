@@ -124,6 +124,21 @@ static auto test_to_stream() -> ehanc::test
   results.add_case(str9.str(),
                    "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s);
 
+  struct has_a_to_stream {
+    int value {5};
+
+    void to_stream(std::ostream& out) const noexcept
+    {
+      out << "works: " << value;
+    }
+  };
+
+  std::stringstream str10;
+  has_a_to_stream test10 {};
+  supl::to_stream(str10, test10);
+
+  results.add_case(str10.str(), "works: 5"s);
+
   return results;
 }
 

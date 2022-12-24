@@ -86,12 +86,44 @@ public:
 
 /* {{{ doc */
 /**
+ * @brief Determines if `T` has a `to_stream` const non-static member function
+ */
+/* }}} */
+template <typename T, typename = void>
+struct has_to_stream : std::false_type {};
+
+template <typename T>
+struct has_to_stream<
+    T, std::void_t<decltype(std::declval<const T&>().to_stream(
+           std::declval<std::ostream&>()))>> : std::true_type {};
+
+template <typename T>
+constexpr inline bool has_to_stream_v = has_to_stream<T>::value;
+
+/* {{{ doc */
+/**
+ * @brief Determines if a type can be called with `supl::to_stream`
+ */
+/* }}} */
+template <typename T>
+struct is_to_stream_valid
+    : std::disjunction<
+          has_to_stream<remove_cvref_t<T>>,
+          is_printable<remove_cvref_t<T>>, is_tuple<remove_cvref_t<T>>,
+          is_pair<remove_cvref_t<T>>, is_iterable<remove_cvref_t<T>>> {};
+
+template <typename T>
+constexpr inline bool is_to_stream_valid_v = is_to_stream_valid<T>::value;
+
+/* {{{ doc */
+/**
  * @brief A singular function to output many things to streams.
  *
  * @details Sets `std::ios::boolalpha` internally, and resets flags
  * before returning.
  *
  * @pre A parameter type `T` is valid if any of the below are true:
+ * - `T::to_stream(std::ostream&)` is defined as a const non-static member function
  * - `operator<<(std::ostream&, const T&)` is defined
  * - `T` is a tuple or pair of only valid types
  * - `T` provides an iterator pair which dereference to a valid type
@@ -107,18 +139,19 @@ public:
 template <typename T>
 void to_stream(std::ostream& out, const T& value) noexcept
 {
-  using decayT = remove_cvref_t<T>;
-
   static_assert(
-      std::disjunction_v<is_printable<decayT>, is_tuple<decayT>,
-                         is_pair<decayT>, is_iterable<decayT>>,
+      is_to_stream_valid_v<T>,
       "Attempting to call supl::to_stream with an unsupported type");
 
   ostream_state_restorer restorer(out);
 
   out << std::boolalpha;
 
-  if constexpr ( is_printable_v<T> ) {
+  if constexpr ( has_to_stream_v<T> ) {
+
+    value.to_stream(out);
+
+  } else if constexpr ( is_printable_v<T> ) {
 
     out << value;
 

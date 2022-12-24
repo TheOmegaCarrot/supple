@@ -15,6 +15,7 @@
 #define SUPPLEMENTARIES_ALL_H
 
 #include "algorithm.hpp"
+#include "crtp.hpp"
 #include "functional.hpp"
 #include "iterators.hpp"
 #include "metaprogramming.hpp"

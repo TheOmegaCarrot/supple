@@ -1,9 +1,14 @@
 #include <array>
 #include <cstddef>
+#include <deque>
+#include <forward_list>
 #include <list>
 #include <map>
+#include <set>
 #include <sstream>
 #include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "supl/test_utility.h"
@@ -179,6 +184,30 @@ static auto test_to_string() -> ehanc::test
 
   results.add_case(supl::to_string(test5),
                    "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s);
+
+  const std::string empty_container {"[ ]"};
+  results.add_case(supl::to_string(std::list<int> {}), empty_container);
+  results.add_case(supl::to_string(std::vector<int> {}), empty_container);
+  results.add_case(supl::to_string(std::array<int, 0> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::deque<int> {}), empty_container);
+  results.add_case(supl::to_string(std::forward_list<int> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::map<int, char> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::unordered_map<int, char> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::multimap<int, char> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::unordered_multimap<int, char> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::unordered_set<int> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::set<int> {}), empty_container);
+  results.add_case(supl::to_string(std::unordered_multiset<int> {}),
+                   empty_container);
+  results.add_case(supl::to_string(std::multiset<int> {}),
+                   empty_container);
 
   return results;
 }

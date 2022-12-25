@@ -160,7 +160,7 @@ void to_stream_pair_impl(std::ostream& out, const T& value) noexcept
 template <typename T>
 void to_stream_iterable_impl(std::ostream& out, const T& value) noexcept
 {
-  if ( value.empty() ) {
+  if ( std::begin(value) == std::end(value) ) {
     out << "[ ]";
   } else {
     out << "[ ";

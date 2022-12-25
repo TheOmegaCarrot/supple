@@ -17,6 +17,8 @@
 #include <sstream>
 #include <string>
 
+#include "utility.hpp"
+
 namespace supl {
 
 /* {{{ doc */
@@ -99,6 +101,54 @@ struct add_to_string {
     std::stringstream str;
     static_cast<const T*>(this)->to_stream(str);
     return str.str();
+  }
+};
+
+namespace impl {
+
+template <typename T>
+void to_stream_for_add_ostream_impl(std::ostream& out,
+                                    const T& value) noexcept
+{
+  ostream_state_restorer restorer(out);
+
+  out << std::boolalpha;
+
+  if constexpr ( has_to_stream_v<T> ) {
+
+    value.to_stream(out);
+
+  } else if constexpr ( is_iterable_v<T> ) {
+
+    impl::to_stream_iterable_impl(out, value);
+  }
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Generate ostream insertion operator
+ *
+ * @details If a class either provides iterators, or has a `to_stream`
+ * non-static const member function, CRTP inheriting from this
+ * class will add a hidden friend ostream insertion operator.
+ * If both are provided, the `to_stream` member function
+ * is used.
+ *
+ * A valid `to_stream` member function must have the signature:
+ * `any_return_type to_stream(std::ostream&) const`.
+ * It is permitted to be marked `noexcept`, however, it must not be marked
+ * `[[nodiscard]]`
+ */
+/* }}} */
+template <typename T>
+struct add_ostream {
+  friend inline auto operator<<(std::ostream& out, const T& value) noexcept
+      -> std::ostream&
+  {
+    impl::to_stream_for_add_ostream_impl(out, value);
+    return out;
   }
 };
 

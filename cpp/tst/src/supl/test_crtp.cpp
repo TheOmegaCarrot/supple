@@ -1,3 +1,4 @@
+#include <sstream>
 #include <string>
 
 #include "supl/test_crtp.h"
@@ -125,8 +126,78 @@ static auto test_add_to_string() -> ehanc::test
   return results;
 }
 
+static auto test_add_ostream() -> ehanc::test
+{
+  using std::literals::operator""s;
+
+  ehanc::test results;
+
+  struct consumer_to_stream : supl::add_ostream<consumer_to_stream> {
+    int value {42};
+
+    void to_stream(std::ostream& out) const noexcept
+    {
+      out << value;
+    }
+  };
+
+  consumer_to_stream test1 {};
+
+  std::stringstream str1;
+  str1 << test1;
+  results.add_case(str1.str(), "42"s);
+
+  struct consumer_iterators : supl::add_ostream<consumer_iterators> {
+    std::vector<int> value {1, 2, 42, 18};
+
+    [[nodiscard]] auto begin() const noexcept
+    {
+      return value.begin();
+    }
+
+    [[nodiscard]] auto end() const noexcept
+    {
+      return value.end();
+    }
+  };
+
+  consumer_iterators test2 {};
+
+  std::stringstream str2;
+  str2 << test2;
+  results.add_case(str2.str(), "[ 1, 2, 42, 18 ]"s);
+
+  struct consumer_both : supl::add_ostream<consumer_both> {
+    std::vector<int> value {1, 2, 42, 18};
+
+    [[nodiscard]] auto begin() const noexcept
+    {
+      return value.begin();
+    }
+
+    [[nodiscard]] auto end() const noexcept
+    {
+      return value.end();
+    }
+
+    void to_stream(std::ostream& out) const noexcept
+    {
+      out << value.front();
+    }
+  };
+
+  consumer_both test3 {};
+
+  std::stringstream str3;
+  str3 << test3;
+  results.add_case(str3.str(), "1"s);
+
+  return results;
+}
+
 void test_crtp()
 {
   ehanc::run_test("supl::rel_ops", &test_rel_ops);
   ehanc::run_test("supl::add_to_string", &test_add_to_string);
+  ehanc::run_test("supl::add_ostream", &test_add_ostream);
 }

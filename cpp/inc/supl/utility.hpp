@@ -21,6 +21,7 @@
 #include <cstddef>
 #include <iterator>
 #include <sstream>
+#include <type_traits>
 
 #include "iterators.hpp"
 #include "metaprogramming.hpp"
@@ -102,6 +103,18 @@ struct has_to_stream<
 template <typename T>
 constexpr inline bool has_to_stream_v = has_to_stream<T>::value;
 
+template <typename T, typename = void>
+struct has_empty_member_function : std::false_type {};
+
+template <typename T>
+struct has_empty_member_function<
+    T, std::void_t<decltype(std::declval<const T&>().empty())>>
+    : std::true_type {};
+
+template <typename T>
+constexpr inline bool has_empty_member_function_v =
+    has_empty_member_function<T>::value;
+
 /* {{{ doc */
 /**
  * @brief Determines if a type can be called with `supl::to_stream`
@@ -160,7 +173,15 @@ void to_stream_pair_impl(std::ostream& out, const T& value) noexcept
 template <typename T>
 void to_stream_iterable_impl(std::ostream& out, const T& value) noexcept
 {
-  if ( std::begin(value) == std::end(value) ) {
+  const bool is_empty {[&]() {
+    if constexpr ( has_empty_member_function_v<T> ) {
+      return value.empty();
+    } else {
+      return std::begin(value) == std::end(value);
+    }
+  }()}; // IILE
+
+  if ( is_empty ) {
     out << "[ ]";
   } else {
     out << "[ ";

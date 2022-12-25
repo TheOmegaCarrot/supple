@@ -1,3 +1,16 @@
+/* {{{ doc */
+/**
+ * @file crtp.hpp
+ *
+ * @brief Base classes to be inherited from
+ * in a crtp manner
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public Licence
+ */
+/* }}} */
+
 #ifndef SUPPLEMENTARIES_CRTP_HPP
 #define SUPPLEMENTARIES_CRTP_HPP
 

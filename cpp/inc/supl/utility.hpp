@@ -48,6 +48,8 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
   return t;
 }
 
+///////////////////////////////////////////// to_stream and related
+
 /* {{{ doc */
 /**
  * @brief When passed a `std::ostream`, its `fmtflags` are saved.
@@ -286,6 +288,8 @@ template <typename T>
   to_stream(out, value);
   return out.str();
 }
+
+///////////////////////////////////////////// end to_stream and related
 
 inline namespace literals {
 inline namespace size_t_literal {

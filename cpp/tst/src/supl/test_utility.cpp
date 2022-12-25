@@ -223,10 +223,14 @@ static auto test_stream_adapter() -> ehanc::test
   uncopiable neat {7};
 
   std::tuple test_input_tup {
-      true, test_input_vec,
- /* std::move(neat), */
-      42, std::tuple {81, 3.14, false},
-        test_input_map, 'u', beans
+      true,
+      test_input_vec,
+      std::move(neat),
+      42,
+      std::tuple {81, 3.14, false},
+      test_input_map,
+      'u',
+      beans
   };
 
   std::string expected1 {supl::to_string(test_input_tup)};

@@ -188,6 +188,11 @@ static auto test_add_ostream() -> ehanc::test
 
   consumer_both test3 {};
 
+  std::stringstream discard;
+  test3.to_stream(discard);
+  [[maybe_unused]] auto discard_begin {test3.begin()};
+  [[maybe_unused]] auto discard_end {test3.end()};
+
   std::stringstream str3;
   str3 << test3;
   results.add_case(str3.str(), "1"s);

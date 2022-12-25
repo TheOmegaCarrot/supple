@@ -115,6 +115,65 @@ struct is_to_stream_valid
 template <typename T>
 constexpr inline bool is_to_stream_valid_v = is_to_stream_valid<T>::value;
 
+// forward declaration for the impl functions to recurse into
+// to_stream
+template <typename T>
+void to_stream(std::ostream& out, const T& value) noexcept;
+
+namespace impl {
+
+template <typename T>
+void to_stream_tuple_impl(std::ostream& out, const T& value) noexcept
+{
+  if constexpr ( std::tuple_size<T>::value > 1 ) {
+
+    out << "( ";
+    for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
+        value, [&out](const auto& i) {
+          to_stream(out, i);
+          out << ", ";
+        });
+    to_stream(out, std::get<std::tuple_size_v<T> - 1>(value));
+    out << " )";
+
+  } else if constexpr ( std::tuple_size_v<T> == 1 ) {
+    out << "( ";
+    to_stream(out, std::get<0>(value));
+    out << " )";
+  } else if constexpr ( std::tuple_size_v<T> == 0 ) {
+    out << "( )";
+  }
+}
+
+template <typename T>
+void to_stream_pair_impl(std::ostream& out, const T& value) noexcept
+{
+  out << "( ";
+  to_stream(out, value.first);
+  out << ", ";
+  to_stream(out, value.second);
+  out << " )";
+}
+
+template <typename T>
+void to_stream_iterable_impl(std::ostream& out, const T& value) noexcept
+{
+  if ( value.empty() ) {
+    out << "[ ]";
+  } else {
+    out << "[ ";
+    std::for_each(std::begin(value), supl::last(value),
+                  [&out](const auto& i) {
+                    to_stream(out, i);
+                    out << ", ";
+                  });
+    to_stream(out, *supl::last(value));
+    out << " ]";
+  }
+}
+
+} // namespace impl
+
 /* {{{ doc */
 /**
  * @brief A singular function to output many things to streams.
@@ -157,47 +216,15 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
   } else if constexpr ( is_tuple_v<T> ) {
 
-    if constexpr ( std::tuple_size<T>::value > 1 ) {
-
-      out << "( ";
-      for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
-          value, [&out](const auto& i) {
-            to_stream(out, i);
-            out << ", ";
-          });
-      to_stream(out, std::get<std::tuple_size_v<T> - 1>(value));
-      out << " )";
-
-    } else if constexpr ( std::tuple_size_v<T> == 1 ) {
-      out << "( ";
-      to_stream(out, std::get<0>(value));
-      out << " )";
-    } else if constexpr ( std::tuple_size_v<T> == 0 ) {
-      out << "( )";
-    }
+    impl::to_stream_tuple_impl(out, value);
 
   } else if constexpr ( is_pair_v<T> ) {
 
-    out << "( ";
-    to_stream(out, value.first);
-    out << ", ";
-    to_stream(out, value.second);
-    out << " )";
+    impl::to_stream_pair_impl(out, value);
 
   } else if constexpr ( is_iterable_v<T> ) {
 
-    if ( value.empty() ) {
-      out << "[ ]";
-    } else {
-      out << "[ ";
-      std::for_each(std::begin(value), supl::last(value),
-                    [&out](const auto& i) {
-                      to_stream(out, i);
-                      out << ", ";
-                    });
-      to_stream(out, *supl::last(value));
-      out << " ]";
-    }
+    impl::to_stream_iterable_impl(out, value);
   }
 }
 

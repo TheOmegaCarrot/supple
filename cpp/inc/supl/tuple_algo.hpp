@@ -157,9 +157,10 @@ namespace impl {
  * @return Tuple of values mapped from `tup` through `func`.
  */
 /* }}} */
-template <typename Tuple, typename Func, std::size_t... Inds>
+template <template <typename...> typename Tuple, typename... Elems,
+          typename Func, std::size_t... Inds>
 constexpr auto
-transform_impl(const Tuple& tup, Func&& func, std::index_sequence<Inds...>) noexcept(
+transform_impl(const Tuple<Elems...>& tup, Func&& func, std::index_sequence<Inds...>) noexcept(
     // calls are noexcept
     (noexcept(supl::invoke(func, std::get<Inds>(tup))) && ...)
     // wow
@@ -167,8 +168,9 @@ transform_impl(const Tuple& tup, Func&& func, std::index_sequence<Inds...>) noex
     // return types are nothrow constructable
     (std::is_nothrow_constructible_v<
          decltype(supl::invoke(func, std::get<Inds>(tup)))> && ...))
+    -> Tuple<decltype(func(std::get<Inds>(tup)))...>
 {
-  return std::tuple {supl::invoke(func, std::get<Inds>(tup))...};
+  return {supl::invoke(func, std::get<Inds>(tup))...};
 }
 
 } // namespace impl

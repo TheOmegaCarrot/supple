@@ -323,7 +323,6 @@ inline namespace size_t_literal {
  * @param i Integer literal to be used as a `std::size_t`
  */
 /* }}} */
-// NOLINTNEXTLINE(google-runtime-int)
 [[nodiscard]] constexpr auto operator""_z(unsigned long long i) noexcept
     -> std::size_t
 {
@@ -341,7 +340,6 @@ inline namespace ptrdiff_t_literal {
  * @param i Integer literal to be used as a `std::ptrdiff_t`
  */
 /* }}} */
-// NOLINTNEXTLINE(google-runtime-int)
 [[nodiscard]] constexpr auto operator""_pd(unsigned long long i) noexcept
     -> std::ptrdiff_t
 {

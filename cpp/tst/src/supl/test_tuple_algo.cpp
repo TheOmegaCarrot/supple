@@ -795,30 +795,28 @@ static auto test_tuple_type_transform() -> ehanc::test
   return results;
 }
 
-struct just_a_bool {
-  // NOLINTNEXTLINE(google-explicit-constructor)
-  just_a_bool(bool arg)
-      : value {arg}
-  {}
-
-  bool value;
-
-  friend inline auto operator<<(std::ostream& out, just_a_bool rhs)
-      -> std::ostream&
-  {
-    out << rhs.value;
-    return out;
-  }
-
-  [[nodiscard]] constexpr auto operator==(const just_a_bool& rhs) const
-      -> bool
-  {
-    return this->value == rhs.value;
-  }
-};
-
 static auto test_tuple_convert() -> ehanc::test
 {
+  struct just_a_bool {
+    // NOLINTNEXTLINE(google-explicit-constructor)
+    just_a_bool(bool arg)
+        : value {arg}
+    {}
+
+    bool value;
+
+    void to_stream(std::ostream& out) const noexcept
+    {
+      out << value;
+    }
+
+    [[nodiscard]] constexpr auto operator==(const just_a_bool& rhs) const
+        -> bool
+    {
+      return this->value == rhs.value;
+    }
+  };
+
   using supl::literals::size_t_literal::operator""_z;
   ehanc::test results;
 

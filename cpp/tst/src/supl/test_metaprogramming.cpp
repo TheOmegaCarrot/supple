@@ -136,6 +136,13 @@ static_assert(supl::is_iterator_v<std::array<int, 5>::iterator>);
 static_assert(supl::is_iterator_v<int*>);
 static_assert(supl::is_iterator_v<const int*>);
 
+///////////////////////////////////////////// is_forward
+
+static_assert(supl::is_forward_v<std::forward_list<int>::iterator>);
+static_assert(supl::is_forward_v<std::vector<int>::iterator>);
+static_assert(supl::is_forward_v<std::list<int>::iterator>);
+static_assert(supl::is_forward_v<std::deque<int>::iterator>);
+
 ///////////////////////////////////////////// is_bidirectional
 
 static_assert(

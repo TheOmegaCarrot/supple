@@ -293,6 +293,29 @@ struct is_iterator<T, std::void_t<decltype(*std::declval<T>()),
 template <typename T>
 constexpr inline bool is_iterator_v = is_iterator<T>::value;
 
+///////////////////////////////////////////// is_forward
+
+/* {{{ doc */
+/**
+ * @brief Metafunction to determine if a type supports pre-increment and
+ * pre-decrement operations. Intended for use with iterators.
+ */
+/* }}} */
+template <typename T>
+struct is_forward
+    : std::is_base_of<
+          std::forward_iterator_tag,
+          typename std::iterator_traits<T>::iterator_category> {};
+
+/* {{{ doc */
+/**
+ * @brief Helper variable template to make using the `is_forward`
+ * metafunction less verbose and cumbersome.
+ */
+/* }}} */
+template <typename T>
+constexpr inline bool is_forward_v = is_forward<T>::value;
+
 ///////////////////////////////////////////// is_bidirectional
 
 /* {{{ doc */
@@ -301,20 +324,11 @@ constexpr inline bool is_iterator_v = is_iterator<T>::value;
  * pre-decrement operations. Intended for use with iterators.
  */
 /* }}} */
-template <typename T, typename = void>
-struct is_bidirectional : std::false_type {};
-
-/* {{{ doc */
-/**
- * @brief Metafunction to determine if a type supports pre-increment and
- * pre-decrement operations. Intended for use with iterators.
- * Specialization for true case.
- */
-/* }}} */
 template <typename T>
-struct is_bidirectional<T, std::void_t<decltype(++std::declval<T&>()),
-                                       decltype(--std::declval<T&>())>>
-    : std::true_type {};
+struct is_bidirectional
+    : std::is_base_of<
+          std::bidirectional_iterator_tag,
+          typename std::iterator_traits<T>::iterator_category> {};
 
 /* {{{ doc */
 /**
@@ -333,23 +347,11 @@ constexpr inline bool is_bidirectional_v = is_bidirectional<T>::value;
  * random access iterator.
  */
 /* }}} */
-template <typename T, typename = void>
-struct is_random_access : std::false_type {};
-
-/* {{{ doc */
-/**
- * @brief Metafunction to determine if an iterator is a
- * random access iterator. Specialization for true case.
- */
-/* }}} */
 template <typename T>
-struct is_random_access<
-    T, std::void_t<decltype(std::declval<T&>() += std::declval<int>()),
-                   decltype(std::declval<T&>() -= std::declval<int>()),
-                   decltype(std::declval<T&>() + std::declval<int>()),
-                   decltype(std::declval<T&>() - std::declval<int>()),
-                   decltype(std::declval<T&>() - std::declval<T&>())>>
-    : std::true_type {};
+struct is_random_access
+    : std::is_base_of<
+          std::random_access_iterator_tag,
+          typename std::iterator_traits<T>::iterator_category> {};
 
 /* {{{ doc */
 /**

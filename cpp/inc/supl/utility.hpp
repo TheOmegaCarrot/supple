@@ -143,7 +143,7 @@ void to_stream_tuple_impl(std::ostream& out, const T& value) noexcept
   if constexpr ( std::tuple_size<T>::value > 1 ) {
 
     out << "( ";
-    for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
+    tuple::for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
         value, [&out](const auto& i) {
           to_stream(out, i);
           out << ", ";

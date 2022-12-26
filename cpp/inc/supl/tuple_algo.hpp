@@ -1211,6 +1211,15 @@ convert(const Tuple<Old_Types...>& tup) noexcept(
   return impl::convert_impl<New_Types...>(tup, seq);
 }
 
+template <template <typename...> typename Tuple, typename... Elems>
+[[nodiscard]] constexpr auto
+resolve_refs(const Tuple<Elems...>& tup) noexcept(
+    (std::is_nothrow_constructible_v<remove_cvref_t<Elems>, Elems> && ...))
+    -> tl::transform_t<Tuple<Elems...>, remove_cvref>
+{
+  return type_transform<remove_cvref>(tup);
+}
+
 } // namespace supl::tuple
 
 #endif

@@ -837,6 +837,76 @@ static auto test_convert() -> ehanc::test
   return results;
 }
 
+static auto test_resolve_refs() -> ehanc::test
+{
+  ehanc::test results;
+
+  class copy_counter
+  {
+  private:
+
+    std::size_t m_count {0};
+
+  public:
+
+    copy_counter() = default;
+
+    explicit copy_counter(std::size_t count)
+        : m_count {count}
+    {}
+
+    copy_counter(const copy_counter& src) noexcept
+        : m_count {src.m_count + 1}
+    {}
+
+    copy_counter(copy_counter&& src) = default;
+
+    auto operator=(const copy_counter& rhs) noexcept -> copy_counter&
+    {
+      if ( &rhs != this ) {
+        this->m_count = rhs.m_count + 1;
+      }
+    }
+
+    auto operator=(copy_counter&&) -> copy_counter& = default;
+    ~copy_counter()                                 = default;
+
+    void to_stream(std::ostream& out) const noexcept
+    {
+      out << "Copies: " << m_count;
+    }
+
+    auto operator==(const copy_counter& rhs) const noexcept -> bool
+    {
+      return m_count == rhs.m_count;
+    }
+  };
+
+  std::tuple test_input {42, 3.14, '&', copy_counter {}};
+  std::tuple intermediate1_1 {
+      supl::tuple::type_transform<supl::make_const_ref>(test_input)};
+  int i1 {42};
+  std::tuple intermediate1_2 {
+      supl::tuple::push_back_as<const int&>(intermediate1_1, i1)};
+  double d1 {3.14};
+  std::tuple intermediate1_3 {
+      supl::tuple::push_back_as<const double&>(intermediate1_2, d1)};
+  char c1 {'|'};
+  std::tuple intermediate1_4 {
+      supl::tuple::push_back_as<const char&>(intermediate1_3, c1)};
+  bool b1 {false};
+  std::tuple intermediate1_5 {
+      supl::tuple::push_back_as<const bool&>(intermediate1_4, b1)};
+  std::tuple result1 {supl::tuple::resolve_refs(intermediate1_5)};
+
+  std::tuple<int, double, char, copy_counter, int, double, char, bool>
+      expected1 {42, 3.14, '&', copy_counter {1}, 42, 3.14, '|', false};
+
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
 void test_tuple_algo()
 {
   ehanc::run_test("supl::tuple::for_each", &test_for_each);
@@ -867,4 +937,5 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple::elem_swap", &test_elem_swap);
   ehanc::run_test("supl::tuple::type_transform", &test_type_transform);
   ehanc::run_test("supl::tuple::convert", &test_convert);
+  ehanc::run_test("supl::tuple::resolve_refs", &test_resolve_refs);
 }

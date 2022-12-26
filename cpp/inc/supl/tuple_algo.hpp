@@ -1191,6 +1191,24 @@ noexcept((std::is_nothrow_constructible_v<New_Types, Old_Types> && ...))
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Convert the elements of a tuple
+ *
+ * @details All conversions must be possible via `static_cast`.
+ *
+ * @tparam New_Types Types which elements of input tuple will
+ * be converted to
+ *
+ * @tparam Tuple Input tuple type
+ *
+ * @tparam Old_Types Types of elements of input tuple
+ *
+ * @param tup Input tuple
+ *
+ * @return Tuple of `New_Types`
+ */
+/* }}} */
 template <typename... New_Types, template <typename...> typename Tuple,
           typename... Old_Types>
 [[nodiscard]] constexpr auto

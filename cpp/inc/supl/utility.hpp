@@ -313,6 +313,7 @@ template <typename T>
 ///////////////////////////////////////////// end to_stream and related
 
 inline namespace literals {
+
 inline namespace size_t_literal {
 
 /* {{{ doc */
@@ -330,6 +331,24 @@ inline namespace size_t_literal {
 }
 
 } // namespace size_t_literal
+
+inline namespace ptrdiff_t_literal {
+
+/* {{{ doc */
+/**
+ * @brief Makes it possible to declare a `std::ptrdiff_t` literal.
+ *
+ * @param i Integer literal to be used as a `std::ptrdiff_t`
+ */
+/* }}} */
+// NOLINTNEXTLINE(google-runtime-int)
+[[nodiscard]] constexpr auto operator""_pd(unsigned long long i) noexcept
+    -> std::ptrdiff_t
+{
+  return static_cast<std::ptrdiff_t>(i);
+}
+
+} // namespace ptrdiff_t_literal
 
 } // namespace literals
 

@@ -290,6 +290,23 @@ static auto test_size_t_literals() -> ehanc::test
   return results;
 }
 
+static auto test_ptrdiff_t_literals() -> ehanc::test
+{
+  ehanc::test results;
+
+  using supl::ptrdiff_t_literal::operator""_pd;
+  /* using namespace supl::literals::ptrdiff_t_literal; */ // also works
+  /* using namespace supl::literals; */                    // also works
+  std::ptrdiff_t i {500};
+  auto j {500_pd};
+
+  results.add_case(std::is_same_v<decltype(j), std::ptrdiff_t>, true,
+                   "Type is not std::ptrdiff_t");
+  results.add_case(i, j, "Value is not as expected");
+
+  return results;
+}
+
 void test_utility()
 {
   ehanc::run_test("supl::explicit_copy", &test_explicit_copy);
@@ -298,4 +315,6 @@ void test_utility()
   ehanc::run_test("supl::stream_adapter", &test_stream_adapter);
   ehanc::run_test("supl::literals::size_t_literal::operator\"\"_z",
                   &test_size_t_literals);
+  ehanc::run_test("supl::literals::ptrdiff_t_literal::operator\"\"_pd",
+                  &test_ptrdiff_t_literals);
 }

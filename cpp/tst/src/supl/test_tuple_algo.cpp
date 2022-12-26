@@ -493,7 +493,7 @@ static auto test_replace() -> ehanc::test
   results.add_case(result2, expected2);
 
   std::tuple expected3 {42, true, 'B'};
-  auto result3 {supl::tuple::replace<2>(test_input, 'B')};
+  auto result3 {supl::tuple::replace<2, char>(test_input, 'B')};
 
   results.add_case(result3, expected3);
 

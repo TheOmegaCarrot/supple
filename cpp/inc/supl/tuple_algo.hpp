@@ -704,7 +704,7 @@ noexcept(tl:: all_of_v< Tuple, std:: is_nothrow_copy_constructible>
 /* {{{ doc */
 /**
  * @brief Inserts value(s) into an arbitrary index of a tuple.
- * ex. insert(std::tuple{3, true}, supl::index_constant<1>, 5.8)
+ * ex. insert<1>(std::tuple{3, true}, 5.8)
  * == std::tuple{3, 5.8, true}
  *
  * @tparam Tuple Tuple type
@@ -803,6 +803,29 @@ template <typename Tuple, typename T, std::size_t... Pre_Idxs,
 
 } // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Replace a single element of a tuple
+ *
+ * @tparam Idx Index of element to be replaced.
+ * Must be explicitly specified.
+ *
+ * @tparam T Type to replace element at `Idx` with.
+ * May be explicitly speciefied, or deduced.
+ *
+ * @tparam Tuple Type of input tuple.
+ * May be explicitly speciefied, or deduced, but there is
+ * no clear reason to explicitly specify.
+ *
+ * @param tup Input tuple
+ *
+ * @param data Value to use to replace element of input
+ *
+ * @return New tuple with element `Idx` of `tup`
+ * replaced with `data` of type `T`.
+ * ex. `replace<1>(std::tuple{42, 3.14}, 'k') == std::tuple{42, 'k'}`
+ */
+/* }}} */
 template <std::size_t Idx, typename T, typename Tuple>
 [[nodiscard]] constexpr auto replace(const Tuple& tup, T&& data) noexcept(
     tl::all_of_v<tl::replace_t<Tuple, Idx, remove_cvref_t<T>>,
@@ -817,6 +840,22 @@ template <std::size_t Idx, typename T, typename Tuple>
                             index_constant<Idx> {});
 }
 
+/* {{{ doc */
+/**
+ * @brief Arbitrarily reorder elements of a tuple
+ *
+ * @tparam Idxs Indices to get from input tuple to use to construct a new tuple.
+ * Duplicate indices are permitted. (ex. `3, 2, 1, 0, 2`)
+ * Omitted indices are permitted. (ex. `0, 1, 3, 4`)
+ *
+ * @tparam Tuple Type of input tuple
+ *
+ * @param tup Input tuple
+ *
+ * @return Tuple created from given indices.
+ * ex. `reorder<3,2,3,1>(std::tuple{0,1,2,3}) == std::tuple{3,2,3,1}`
+ */
+/* }}} */
 template <std::size_t... Idxs, typename Tuple>
 [[nodiscard]] constexpr auto reorder(const Tuple& tup) noexcept(
     (std::is_nothrow_copy_constructible_v<
@@ -849,7 +888,7 @@ template <typename Tuple, std::size_t... Pre_Idxs,
 /**
  * @brief Splits a tuple at an arbitrary index.
  * Element at index `Idx` will be the first element of the second tuple.
- * ex. split(std::tuple{1, true, 'g'}, index_constant<1>) ==
+ * ex. split<1>(std::tuple{1, true, 'g'}) ==
  * std::pair{std::tuple{1}, std::tuple{true, 'g'}}
  *
  * @tparam Tuple Input tuple type.
@@ -859,7 +898,7 @@ template <typename Tuple, std::size_t... Pre_Idxs,
  * @param tup Tuple to split.
  *
  * @return Pair of tuples split from `tup` at index `Idx`.
- * ex. split(std::tuple{1, true, 'g'}, index_constant<1>) ==
+ * ex. split<1>(std::tuple{1, true, 'g'}) ==
  * std::pair{std::tuple{1}, std::tuple{true, 'g'}}
  */
 /* }}} */
@@ -1082,7 +1121,7 @@ template <std::size_t Count, typename Tuple>
 template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
 [[nodiscard]] constexpr auto elem_swap(const Tuple& tup) noexcept(
     tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-    -> supl::tl::swap_t<Tuple, Idx1, Idx2>
+    -> tl::swap_t<Tuple, Idx1, Idx2>
 {
   constexpr std::size_t min_idx {std::min(Idx1, Idx2)};
   constexpr std::size_t max_idx {std::max(Idx1, Idx2)};
@@ -1211,11 +1250,20 @@ convert(const Tuple<Old_Types...>& tup) noexcept(
   return impl::convert_impl<New_Types...>(tup, seq);
 }
 
-template <template <typename...> typename Tuple, typename... Elems>
-[[nodiscard]] constexpr auto
-resolve_refs(const Tuple<Elems...>& tup) noexcept(
-    (std::is_nothrow_constructible_v<remove_cvref_t<Elems>, Elems> && ...))
-    -> tl::transform_t<Tuple<Elems...>, remove_cvref>
+/* {{{ doc */
+/**
+ * @brief Create a tuple owning its elements
+ *
+ * @details Any references in the input tuple will correspond to
+ * an unqualified, non-reference value.
+ * This function is equivalent to
+ * `supl::tuple::type_transform<supl::remove_cvref>`
+ */
+/* }}} */
+template <typename Tuple>
+[[nodiscard]] constexpr auto resolve_refs(const Tuple& tup) noexcept(
+    noexcept(type_transform<remove_cvref>(tup)))
+    -> decltype(type_transform<remove_cvref>(tup))
 {
   return type_transform<remove_cvref>(tup);
 }

@@ -330,6 +330,51 @@ template <typename Tuple, typename Pred>
 }
 
 namespace impl {
+template <typename Tuple, typename Pred, std::size_t... Inds>
+constexpr auto count_if_impl(const Tuple& tup, Pred&& pred,
+                             std::index_sequence<Inds...>)
+    // clang-format off
+noexcept(noexcept((
+  static_cast<std::size_t>(
+    supl::invoke(pred, std::get<Inds>(tup))) + ...)
+      ))
+    // clang-format on
+    -> std::size_t
+{
+  return (static_cast<std::size_t>(supl::invoke(pred, std::get<Inds>(tup)))
+          + ...);
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Applies a generic predicate to every element of a tuple,
+ * returning the number of elements for which that predicate is true.
+ *
+ * @tparam Tuple Tuple type.
+ *
+ * @tparam Pred Predicate type
+ *
+ * @param tup Tuple to apply predicate to elements of.
+ *
+ * @param pred Generic predicate to apply.
+ *
+ * @return Number of elements of `tup` such that `pred(tup)` returns `true`.
+ */
+/* }}} */
+template <typename Tuple, typename Pred>
+[[nodiscard]] constexpr auto
+count_if(const Tuple& tup, Pred&& pred) noexcept(noexcept(
+    impl::count_if_impl(tup, std::forward<Pred>(pred),
+                        std::make_index_sequence<tl::size_v<Tuple>> {})))
+    -> std::size_t
+{
+  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+  return impl::count_if_impl(tup, std::forward<Pred>(pred), seq);
+}
+
+namespace impl {
 
 template <typename Tuple, typename... Ts, std::size_t... Inds>
 [[nodiscard]] constexpr auto push_back_impl(const Tuple& tup,
@@ -878,51 +923,6 @@ template <std::size_t Begin, std::size_t End, typename Tuple>
 
   return impl::subtuple_impl(tup, seq, index_constant<Begin> {},
                              index_constant<End> {});
-}
-
-namespace impl {
-template <typename Tuple, typename Pred, std::size_t... Inds>
-constexpr auto count_if_impl(const Tuple& tup, Pred&& pred,
-                             std::index_sequence<Inds...>)
-    // clang-format off
-noexcept(noexcept((
-  static_cast<std::size_t>(
-    supl::invoke(pred, std::get<Inds>(tup))) + ...)
-      ))
-    // clang-format on
-    -> std::size_t
-{
-  return (static_cast<std::size_t>(supl::invoke(pred, std::get<Inds>(tup)))
-          + ...);
-}
-
-} // namespace impl
-
-/* {{{ doc */
-/**
- * @brief Applies a generic predicate to every element of a tuple,
- * returning the number of elements for which that predicate is true.
- *
- * @tparam Tuple Tuple type.
- *
- * @tparam Pred Predicate type
- *
- * @param tup Tuple to apply predicate to elements of.
- *
- * @param pred Generic predicate to apply.
- *
- * @return Number of elements of `tup` such that `pred(tup)` returns `true`.
- */
-/* }}} */
-template <typename Tuple, typename Pred>
-[[nodiscard]] constexpr auto
-count_if(const Tuple& tup, Pred&& pred) noexcept(noexcept(
-    impl::count_if_impl(tup, std::forward<Pred>(pred),
-                        std::make_index_sequence<tl::size_v<Tuple>> {})))
-    -> std::size_t
-{
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::count_if_impl(tup, std::forward<Pred>(pred), seq);
 }
 
 namespace impl {

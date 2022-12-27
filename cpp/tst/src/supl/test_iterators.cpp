@@ -52,7 +52,7 @@ static auto test_iterator() -> ehanc::test
   ehanc::test results;
 
   std::vector test_iterable_1 {1, 2, 3, 4, 5};
-  std::deque test_iterable_2 {1, 2, 3, 4, 5};
+  std::deque test_iterable_2 {6, 7, 8, 9, 10};
 
   supl::iterator test_1 {test_iterable_1.begin()};
   results.add_case(*test_1, 1);
@@ -60,10 +60,23 @@ static auto test_iterator() -> ehanc::test
   results.add_case(*test_1, 2);
   --test_1;
   results.add_case(*test_1, 1);
-  supl::iterator test_tmp {test_1};
-  results.add_case(test_tmp == test_1, true);
+
+  supl::iterator test_2 {test_1++};
+  results.add_case(*test_1, 2);
+  results.add_case(*test_2, 1);
+
+  ++test_2;
+  supl::iterator test_3 {test_2--};
+  results.add_case(*test_2, 1);
+  results.add_case(*test_3, 2);
+
+  test_1 = test_iterable_2.begin();
+  results.add_case(*test_1, 6);
   ++test_1;
-  results.add_case(test_tmp == test_1, false);
+
+  supl::iterator test_4 {test_1};
+  results.add_case(*test_1, 7);
+  results.add_case(*test_4, 7);
 
   return results;
 }

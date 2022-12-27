@@ -107,9 +107,9 @@ private:
     /* virtual auto operator++(int) -> iterator       = 0; */
     virtual void operator--() = 0;
     /* virtual auto operator--(int) -> iterator       = 0; */
-    virtual auto operator*() -> Value_Type&                    = 0;
-    virtual auto operator->() -> Value_Type*                   = 0;
-    virtual auto operator==(const iterator& rhs) const -> bool = 0;
+    virtual auto operator*() -> Value_Type&  = 0;
+    virtual auto operator->() -> Value_Type* = 0;
+    /* virtual auto operator==(const iterator& rhs) const -> bool = 0; */
     /* virtual auto operator!=(const iterator& rhs) const -> bool = 0; */
     virtual auto iterator_impl_clone() const
         -> std::unique_ptr<Iterator_Concept> = 0;
@@ -267,15 +267,15 @@ public:
     return m_value->operator->();
   }
 
-  auto operator==(const iterator& rhs) const -> bool
-  {
-    return this->m_value == rhs.m_value;
-  }
+  /* auto operator==(const iterator& rhs) const -> bool */
+  /* { */
+  /*   return this->m_value == rhs.m_value; */
+  /* } */
 
-  auto operator!=(const iterator& rhs) const -> bool
-  {
-    return !this->operator==(rhs);
-  }
+  /* auto operator!=(const iterator& rhs) const -> bool */
+  /* { */
+  /*   return !this->operator==(rhs); */
+  /* } */
 };
 
 template <typename T>

@@ -2,6 +2,7 @@
 #include "test_utils.hpp"
 
 #include <array>
+#include <deque>
 #include <forward_list>
 #include <iterator>
 #include <numeric>
@@ -46,10 +47,32 @@ static auto test_clast() -> ehanc::test
   return results;
 }
 
+static auto test_iterator() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::vector test_iterable_1 {1, 2, 3, 4, 5};
+  std::deque test_iterable_2 {1, 2, 3, 4, 5};
+
+  supl::iterator test_1 {test_iterable_1.begin()};
+  results.add_case(*test_1, 1);
+  ++test_1;
+  results.add_case(*test_1, 2);
+  --test_1;
+  results.add_case(*test_1, 1);
+  supl::iterator test_tmp {test_1};
+  results.add_case(test_tmp == test_1, true);
+  ++test_1;
+  results.add_case(test_tmp == test_1, false);
+
+  return results;
+}
+
 void test_iterators()
 {
   ehanc::run_test("supl::last", &test_last);
   ehanc::run_test("supl::clast", &test_clast);
+  ehanc::run_test("supl::iterator", &test_iterator);
 }
 
 static_assert(supl::is_iterator_tag_v<std::forward_iterator_tag>);

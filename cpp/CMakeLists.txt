@@ -44,7 +44,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     -Wmisleading-indentation
     -Wzero-as-null-pointer-constant
     -Wsuggest-override
-    -Weffc++
     -Wno-return-type)
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

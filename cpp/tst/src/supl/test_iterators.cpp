@@ -3,9 +3,11 @@
 
 #include <array>
 #include <forward_list>
+#include <iterator>
 #include <numeric>
 #include <vector>
 
+#include "supl/iterators.hpp"
 #include "supl/utility.hpp"
 
 static auto test_last() -> ehanc::test
@@ -49,3 +51,10 @@ void test_iterators()
   ehanc::run_test("supl::last", &test_last);
   ehanc::run_test("supl::clast", &test_clast);
 }
+
+static_assert(supl::is_iterator_tag_v<std::forward_iterator_tag>);
+static_assert(supl::is_iterator_tag_v<std::bidirectional_iterator_tag>);
+static_assert(supl::is_iterator_tag_v<std::random_access_iterator_tag>);
+static_assert(not supl::is_iterator_tag_v<int>);
+static_assert(
+    not supl::is_iterator_tag_v<supl::stream_adapter<std::vector<int>>>);

@@ -114,10 +114,12 @@ auto count_if(Container&& container, Pred&& pred) noexcept(
  */
 /* }}} */
 template <typename T>
-struct iota {
+class iota
+{
+private:
 
-  const T begin_value;
-  const T end_value;
+  T m_begin_value;
+  T m_end_value;
 
   /* {{{ iterator_base */
   template <bool is_const>
@@ -182,37 +184,45 @@ struct iota {
 
   /* }}} */
 
+public:
+
+  // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
+  constexpr explicit iota(const T& begin_value, const T& end_value)
+      : m_begin_value {begin_value}
+      , m_end_value {end_value}
+  {}
+
   using iterator       = iterator_base<false>;
   using const_iterator = iterator_base<true>;
 
   [[nodiscard]] constexpr auto begin() -> iterator
   {
-    return iterator {begin_value};
+    return iterator {m_begin_value};
   }
 
-  [[nodiscard]] constexpr auto begin() const -> iterator
+  [[nodiscard]] constexpr auto begin() const -> const_iterator
   {
-    return const_iterator {begin_value};
+    return const_iterator {m_begin_value};
   }
 
-  [[nodiscard]] constexpr auto cbegin() const -> iterator
+  [[nodiscard]] constexpr auto cbegin() const -> const_iterator
   {
-    return const_iterator {begin_value};
+    return const_iterator {m_begin_value};
   }
 
   [[nodiscard]] constexpr auto end() -> iterator
   {
-    return iterator {end_value};
+    return iterator {m_end_value};
   }
 
-  [[nodiscard]] constexpr auto end() const -> iterator
+  [[nodiscard]] constexpr auto end() const -> const_iterator
   {
-    return const_iterator {end_value};
+    return const_iterator {m_end_value};
   }
 
-  [[nodiscard]] constexpr auto cend() const -> iterator
+  [[nodiscard]] constexpr auto cend() const -> const_iterator
   {
-    return const_iterator {end_value};
+    return const_iterator {m_end_value};
   }
 };
 

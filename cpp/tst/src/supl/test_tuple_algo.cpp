@@ -841,6 +841,7 @@ static auto test_resolve_refs() -> ehanc::test
 {
   ehanc::test results;
 
+  // NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
   class copy_counter
   {
   private:
@@ -866,10 +867,12 @@ static auto test_resolve_refs() -> ehanc::test
       if ( &rhs != this ) {
         this->m_count = rhs.m_count + 1;
       }
+      return *this;
     }
 
     auto operator=(copy_counter&&) -> copy_counter& = default;
-    ~copy_counter()                                 = default;
+
+    /* ~copy_counter()                                 = default; */
 
     void to_stream(std::ostream& out) const noexcept
     {
@@ -881,6 +884,20 @@ static auto test_resolve_refs() -> ehanc::test
       return m_count == rhs.m_count;
     }
   };
+
+  // remove unused warnings
+
+  std::stringstream discard;
+  copy_counter discarded1 {};
+  copy_counter discarded2 {};
+  discarded1.to_stream(discard);
+  if ( !(discarded1 == discarded2) ) {
+    std::cout << "What" << '\n';
+  }
+  copy_counter discarded3 {std::move(discarded1)};
+  discarded2 = std::move(discarded3);
+
+  // </remove unused warnings>
 
   std::tuple test_input {42, 3.14, '&', copy_counter {}};
   std::tuple intermediate1_1 {

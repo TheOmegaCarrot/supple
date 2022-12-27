@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <functional>
 #include <iterator>
+#include <type_traits>
 #include <utility>
 
 #include "metaprogramming.hpp"
@@ -77,6 +78,12 @@ template <typename Iterable>
 {
   return static_cast<decltype(std::cbegin(container))>(last(container));
 }
+
+template <typename T>
+struct is_iterator_tag : std::is_base_of<std::forward_iterator_tag, T> {};
+
+template <typename T>
+constexpr inline bool is_iterator_tag_v = is_iterator_tag<T>::value;
 
 } // namespace supl
 

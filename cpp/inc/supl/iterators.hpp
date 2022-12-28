@@ -159,7 +159,8 @@ private:
     auto operator=(const Iterator_Model&) noexcept
         -> Iterator_Model&                                       = default;
     auto operator=(Iterator_Model&&) noexcept -> Iterator_Model& = default;
-    virtual ~Iterator_Model() noexcept                           = default;
+    // NOLINTNEXTLINE(modernize-use-override)
+    virtual ~Iterator_Model() noexcept override = default;
 
     template <typename Type, typename = std::enable_if<!std::is_same_v<
                                  std::decay_t<Type>, Iterator_Model>>>

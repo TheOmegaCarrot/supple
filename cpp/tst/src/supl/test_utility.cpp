@@ -190,7 +190,7 @@ static auto test_to_string() -> ehanc::test
   results.add_case(supl::to_string(std::vector<int> {}), empty_container);
   results.add_case(supl::to_string(std::array<int, 0> {}),
                    empty_container);
-  results.add_case(supl::to_string(std::deque<int> {}), empty_container);
+  /* results.add_case(supl::to_string(std::deque<int> {}), empty_container); */
   /* results.add_case(supl::to_string(std::forward_list<int> {}), */
   /*                  empty_container); */
   results.add_case(supl::to_string(std::map<int, char> {}),

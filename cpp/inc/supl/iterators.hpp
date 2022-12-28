@@ -98,6 +98,7 @@ namespace experimental {
  *
  * It is templated on the value_type of the erased iterator,
  * and cannot be reassigned to an iterator of a different value_type.
+ * This is checked by a static_assert.
  *
  * At template instatiation time, this wrapper is either a const_iterator
  * or a non-const iterator.

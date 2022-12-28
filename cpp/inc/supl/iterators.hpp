@@ -86,6 +86,29 @@ struct is_iterator_tag : std::is_base_of<std::forward_iterator_tag, T> {};
 template <typename T>
 constexpr inline bool is_iterator_tag_v = is_iterator_tag<T>::value;
 
+namespace experimental {
+
+/* {{{ doc */
+/**
+ * @brief Type erased wrapper for a bidirectional iterator
+ *
+ * @details Should work just like any bidirectional iterator.
+ * Dereference, arrow operator, pre- and post-increment and decrement,
+ * and equality comparison all work as expected.
+ * 
+ * Post-incement and decrement are especially inefficient, as those
+ * operations require heap allocation.
+ *
+ * Equality comparison between two of these type erased iterators
+ * which are contain iterators of different underlying type is guaranteed
+ * to return false and not throw.
+ *
+ * This class is wildly inefficient in comparison to raw iterators,
+ * as type erasure necessitates heap allocation.
+ * This class would seldom be appropriate, and this was written entirely
+ * as an excercise in implementing nontrivial type erasure.
+ */
+/* }}} */
 template <typename Value_Type>
 class iterator
 {
@@ -95,25 +118,26 @@ private:
   {
   public:
 
-    Iterator_Concept()                                           = default;
-    Iterator_Concept(const Iterator_Concept&)                    = default;
-    Iterator_Concept(Iterator_Concept&&) noexcept                = default;
-    auto operator=(const Iterator_Concept&) -> Iterator_Concept& = default;
+    Iterator_Concept() noexcept                        = default;
+    Iterator_Concept(const Iterator_Concept&) noexcept = default;
+    Iterator_Concept(Iterator_Concept&&) noexcept      = default;
+    auto operator=(const Iterator_Concept&) noexcept
+        -> Iterator_Concept& = default;
     auto operator=(Iterator_Concept&&) noexcept
-        -> Iterator_Concept&    = default;
-    virtual ~Iterator_Concept() = default;
+        -> Iterator_Concept&             = default;
+    virtual ~Iterator_Concept() noexcept = default;
 
-    virtual void operator++() = 0;
-    /* virtual auto operator++(int) -> iterator       = 0; */
-    virtual void operator--() = 0;
-    /* virtual auto operator--(int) -> iterator       = 0; */
-    virtual auto operator*() -> Value_Type&                    = 0;
-    virtual auto operator->() -> Value_Type*                   = 0;
-    virtual auto operator==(const iterator& rhs) const -> bool = 0;
-    virtual auto operator!=(const iterator& rhs) const -> bool = 0;
-    [[nodiscard]] virtual auto iterator_impl_clone() const
+    virtual void operator++() noexcept                = 0;
+    virtual void operator--() noexcept                = 0;
+    virtual auto operator*() noexcept -> Value_Type&  = 0;
+    virtual auto operator->() noexcept -> Value_Type* = 0;
+    virtual auto operator==(const iterator& rhs) const noexcept
+        -> bool = 0;
+    virtual auto operator!=(const iterator& rhs) const noexcept
+        -> bool = 0;
+    [[nodiscard]] virtual auto iterator_impl_clone() const noexcept
         -> std::unique_ptr<Iterator_Concept> = 0;
-  };
+  }; // Iterator_Concept
 
   template <typename Erased_Iterator_Type>
   class Iterator_Model : public Iterator_Concept
@@ -124,53 +148,41 @@ private:
 
   public:
 
-    Iterator_Model()                                             = default;
-    Iterator_Model(const Iterator_Model&)                        = default;
-    Iterator_Model(Iterator_Model&&) noexcept                    = default;
-    auto operator=(const Iterator_Model&) -> Iterator_Model&     = default;
+    Iterator_Model() noexcept                      = default;
+    Iterator_Model(const Iterator_Model&) noexcept = default;
+    Iterator_Model(Iterator_Model&&) noexcept      = default;
+    auto operator=(const Iterator_Model&) noexcept
+        -> Iterator_Model&                                       = default;
     auto operator=(Iterator_Model&&) noexcept -> Iterator_Model& = default;
-    virtual ~Iterator_Model()                                    = default;
+    virtual ~Iterator_Model() noexcept                           = default;
 
     template <typename Type, typename = std::enable_if<!std::is_same_v<
                                  std::decay_t<Type>, Iterator_Model>>>
-    explicit Iterator_Model(Type&& value)
+    explicit Iterator_Model(Type&& value) noexcept
         : m_erased {std::forward<Type>(value)}
     {}
 
-    void operator++() override
+    void operator++() noexcept override
     {
       ++m_erased;
     }
 
-    /* auto operator++(int) -> iterator override */
-    /* { */
-    /*   ++m_erased; */
-    /* } */
-
-    void operator--() override
+    void operator--() noexcept override
     {
-      /* return iterator {--m_erased}; */
       --m_erased;
     }
 
-    /* auto operator--(int) -> iterator override */
-    /* { */
-    /*   T tmp = m_erased; */
-    /*   --m_erased; */
-    /*   return iterator {tmp}; */
-    /* } */
-
-    auto operator*() -> Value_Type& override
+    auto operator*() noexcept -> Value_Type& override
     {
       return *m_erased;
     }
 
-    auto operator->() -> Value_Type* override
+    auto operator->() noexcept -> Value_Type* override
     {
       return &*m_erased;
     }
 
-    auto operator==(const iterator& rhs) const -> bool override
+    auto operator==(const iterator& rhs) const noexcept -> bool override
     {
       if ( auto* rhs_cast {
                dynamic_cast<Iterator_Model<Erased_Iterator_Type>*>(
@@ -182,28 +194,23 @@ private:
       }
     }
 
-    auto operator!=(const iterator& rhs) const -> bool override
+    auto operator!=(const iterator& rhs) const noexcept -> bool override
     {
       return !this->operator==(rhs);
     }
 
-    [[nodiscard]] auto iterator_impl_clone() const
+    [[nodiscard]] auto iterator_impl_clone() const noexcept
         -> std::unique_ptr<Iterator_Concept> override
     {
       return std::make_unique<Iterator_Model>(m_erased);
     }
-  };
+  }; // Iterator_Model
 
   std::unique_ptr<Iterator_Concept> m_value;
 
-  template <typename T>
-  explicit iterator(Iterator_Model<T>& src)
-      : m_value {std::make_unique<Iterator_Model<T>>(src)}
-  {}
-
 public:
 
-  iterator() = default;
+  iterator() noexcept = default;
 
   iterator(const iterator& src) noexcept
       : m_value {src.m_value->iterator_impl_clone()}
@@ -211,7 +218,7 @@ public:
 
   iterator(iterator&&) noexcept = default;
 
-  auto operator=(const iterator& rhs) -> iterator&
+  auto operator=(const iterator& rhs) noexcept -> iterator&
   {
     if ( this != &rhs ) {
       m_value = rhs.m_value->iterator_impl_clone();
@@ -224,62 +231,62 @@ public:
 
   template <typename T, typename = std::enable_if_t<
                             !std::is_same_v<std::decay_t<T>, iterator>>>
-  explicit iterator(T&& value)
+  explicit iterator(T&& value) noexcept
       : m_value(std::make_unique<Iterator_Model<std::decay_t<T>>>(
           std::forward<T>(value)))
   {}
 
   template <typename T, typename = std::enable_if_t<
                             !std::is_same_v<std::decay_t<T>, iterator>>>
-  auto operator=(T&& rhs) -> iterator&
+  auto operator=(T&& rhs) noexcept -> iterator&
   {
     m_value = std::make_unique<Iterator_Model<std::decay_t<T>>>(
         std::forward<T>(rhs));
     return *this;
   }
 
-  auto operator++() -> iterator&
+  auto operator++() noexcept -> iterator&
   {
     m_value->operator++();
     return *this;
   }
 
-  auto operator++(int) -> iterator
+  auto operator++(int) noexcept -> iterator
   {
     iterator tmp = *this;
     m_value->operator++();
     return tmp;
   }
 
-  auto operator--() -> iterator&
+  auto operator--() noexcept -> iterator&
   {
     m_value->operator--();
     return *this;
   }
 
-  auto operator--(int) -> iterator
+  auto operator--(int) noexcept -> iterator
   {
     iterator tmp = *this;
     m_value->operator--();
     return tmp;
   }
 
-  auto operator*() -> Value_Type&
+  auto operator*() noexcept -> Value_Type&
   {
     return m_value->operator*();
   }
 
-  auto operator->() -> Value_Type*
+  auto operator->() noexcept -> Value_Type*
   {
     return m_value->operator->();
   }
 
-  auto operator==(const iterator& rhs) const -> bool
+  auto operator==(const iterator& rhs) const noexcept -> bool
   {
     return m_value->operator==(rhs);
   }
 
-  auto operator!=(const iterator& rhs) const -> bool
+  auto operator!=(const iterator& rhs) const noexcept -> bool
   {
     return !this->operator==(rhs);
   }
@@ -287,6 +294,8 @@ public:
 
 template <typename T>
 iterator(T) -> iterator<typename std::iterator_traits<T>::value_type>;
+
+} // namespace experimental
 
 } // namespace supl
 

@@ -96,10 +96,17 @@ namespace experimental {
  * Dereference, arrow operator, pre- and post-increment and decrement,
  * and equality comparison all work as expected.
  *
- * This class can only hold a non-const iterator.
- *
  * It is templated on the value_type of the erased iterator,
- * and cannot be reassigned to an iterator of a different value_type
+ * and cannot be reassigned to an iterator of a different value_type.
+ *
+ * At template instatiation time, this wrapper is either a const_iterator
+ * or a non-const iterator.
+ * This cannot be changed after the fact.
+ * If it is a const_iterator, a non-const iterator may be assigned to it,
+ * however it will remain a const_iterator.
+ * If it is a non-const iterator, a const_iterator may not be assigned to it,
+ * as that would violate const-correctness.
+ * This is checked by a static_assert.
  * 
  * Post-incement and decrement are especially inefficient, as those
  * operations require heap allocation.
@@ -112,6 +119,14 @@ namespace experimental {
  * as type erasure necessitates heap allocation.
  * This class would seldom be appropriate, and this was written entirely
  * as an excercise in implementing nontrivial type erasure.
+ *
+ * @tparam Value_Type Type being iterated over.
+ * If non-const, this wrapper behaves as a non-const iterator.
+ * If const, this wrapper behaves as a const iterator.
+ * If CTAD is performed, the correct type will be deduced.
+ *
+ * `iterator<int>` is the result of initializing with `std::vector<int>::iterator`
+ * `iterator<const int>` is the result of initializing with `std::vector<int>::const_iterator`
  */
 /* }}} */
 template <typename Value_Type>
@@ -216,6 +231,12 @@ private:
 
 public:
 
+  using value_type        = std::remove_const_t<Value_Type>;
+  using difference_type   = std::ptrdiff_t;
+  using pointer           = Value_Type*;
+  using reference         = Value_Type&;
+  using iterator_category = std::bidirectional_iterator_tag;
+
   iterator() noexcept = default;
 
   iterator(const iterator& src) noexcept
@@ -246,6 +267,21 @@ public:
                             !std::is_same_v<std::decay_t<T>, iterator>>>
   auto operator=(T&& rhs) noexcept -> iterator&
   {
+
+    // if behaving as non-const iterator,
+    // disallow reassigning to a const iterator
+    static_assert(
+        std::conditional_t<
+            // if const, reassign is always ok
+            std::is_const_v<Value_Type>, std::true_type,
+            // if non-const, ensure the rhs is a const_iterator
+            std::conditional_t<
+                // true if rhs is a const_iterator
+                std::is_const_v<std::remove_reference_t<
+                    typename std::iterator_traits<T>::reference>>,
+                std::false_type, std::true_type>>::value,
+        "const iterator cannot be assigned to non-const iterator");
+
     m_value = std::make_unique<Iterator_Model<std::decay_t<T>>>(
         std::forward<T>(rhs));
     return *this;
@@ -299,7 +335,8 @@ public:
 };
 
 template <typename T>
-iterator(T) -> iterator<typename std::iterator_traits<T>::value_type>;
+iterator(T) -> iterator<
+    std::remove_reference_t<typename std::iterator_traits<T>::reference>>;
 
 } // namespace experimental
 

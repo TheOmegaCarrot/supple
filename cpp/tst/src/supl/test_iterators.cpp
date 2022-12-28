@@ -62,6 +62,10 @@ static auto test_iterator() -> ehanc::test
   --test_1;
   results.add_case(*test_1, 1);
 
+  static_assert(std::is_same_v<
+                typename std::iterator_traits<decltype(test_1)>::reference,
+                int&>);
+
   supl::experimental::iterator test_2 {test_1++};
   results.add_case(*test_1, 2);
   results.add_case(*test_2, 1);
@@ -108,6 +112,18 @@ static auto test_iterator() -> ehanc::test
 
   supl::experimental::iterator test_foo_itr {test_foo.begin()};
   results.add_case(test_foo_itr->the_thing(), std::string {"foo"});
+
+  // const?
+
+  supl::experimental::iterator const_itr {test_iterable_1.cbegin()};
+
+  static_assert(
+      std::is_same_v<
+          typename std::iterator_traits<decltype(const_itr)>::reference,
+          const int&>);
+
+  const_itr = test_iterable_1.begin();
+  results.add_case(*const_itr, 1);
 
   return results;
 }

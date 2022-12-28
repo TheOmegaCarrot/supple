@@ -107,20 +107,20 @@ private:
     /* virtual auto operator++(int) -> iterator       = 0; */
     virtual void operator--() = 0;
     /* virtual auto operator--(int) -> iterator       = 0; */
-    virtual auto operator*() -> Value_Type&  = 0;
-    virtual auto operator->() -> Value_Type* = 0;
-    /* virtual auto operator==(const iterator& rhs) const -> bool = 0; */
-    /* virtual auto operator!=(const iterator& rhs) const -> bool = 0; */
-    virtual auto iterator_impl_clone() const
+    virtual auto operator*() -> Value_Type&                    = 0;
+    virtual auto operator->() -> Value_Type*                   = 0;
+    virtual auto operator==(const iterator& rhs) const -> bool = 0;
+    virtual auto operator!=(const iterator& rhs) const -> bool = 0;
+    [[nodiscard]] virtual auto iterator_impl_clone() const
         -> std::unique_ptr<Iterator_Concept> = 0;
   };
 
-  template <typename T>
+  template <typename Erased_Iterator_Type>
   class Iterator_Model : public Iterator_Concept
   {
   private:
 
-    T m_erased;
+    Erased_Iterator_Type m_erased;
 
   public:
 
@@ -170,17 +170,24 @@ private:
       return &*m_erased;
     }
 
-    /* auto operator==(const iterator& rhs) const -> bool override */
-    /* { */
-    /*   return m_erased == rhs.m_value->m_erased; */
-    /* } */
+    auto operator==(const iterator& rhs) const -> bool override
+    {
+      if ( auto* rhs_cast {
+               dynamic_cast<Iterator_Model<Erased_Iterator_Type>*>(
+                   rhs.m_value.get())};
+           rhs_cast != nullptr ) {
+        return this->m_erased == rhs_cast->m_erased;
+      } else {
+        return false;
+      }
+    }
 
-    /* auto operator!=(const iterator& rhs) const -> bool override */
-    /* { */
-    /*   return !this->operator==(rhs); */
-    /* } */
+    auto operator!=(const iterator& rhs) const -> bool override
+    {
+      return !this->operator==(rhs);
+    }
 
-    auto iterator_impl_clone() const
+    [[nodiscard]] auto iterator_impl_clone() const
         -> std::unique_ptr<Iterator_Concept> override
     {
       return std::make_unique<Iterator_Model>(m_erased);
@@ -267,15 +274,15 @@ public:
     return m_value->operator->();
   }
 
-  /* auto operator==(const iterator& rhs) const -> bool */
-  /* { */
-  /*   return this->m_value == rhs.m_value; */
-  /* } */
+  auto operator==(const iterator& rhs) const -> bool
+  {
+    return m_value->operator==(rhs);
+  }
 
-  /* auto operator!=(const iterator& rhs) const -> bool */
-  /* { */
-  /*   return !this->operator==(rhs); */
-  /* } */
+  auto operator!=(const iterator& rhs) const -> bool
+  {
+    return !this->operator==(rhs);
+  }
 };
 
 template <typename T>

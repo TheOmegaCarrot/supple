@@ -54,6 +54,7 @@ static auto test_iterator() -> ehanc::test
   std::vector test_iterable_1 {1, 2, 3, 4, 5};
   std::deque test_iterable_2 {6, 7, 8, 9, 10};
 
+  // increment and decrement
   supl::iterator test_1 {test_iterable_1.begin()};
   results.add_case(*test_1, 1);
   ++test_1;
@@ -77,6 +78,18 @@ static auto test_iterator() -> ehanc::test
   supl::iterator test_4 {test_1};
   results.add_case(*test_1, 7);
   results.add_case(*test_4, 7);
+
+  // equality
+  supl::iterator test_a {test_iterable_1.begin()};
+  supl::iterator test_b {test_iterable_1.begin()};
+
+  // same type - good cast
+  results.add_case(test_a == test_b, true);
+  ++test_b;
+
+  // different type - bad cast
+  test_b = test_iterable_2.begin();
+  results.add_case(test_a == test_b, false);
 
   return results;
 }

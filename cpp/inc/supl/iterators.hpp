@@ -282,6 +282,12 @@ public:
                 std::false_type, std::true_type>>::value,
         "const iterator cannot be assigned to non-const iterator");
 
+    // Ensure reassignment is only to an iterator of the same value_type
+    static_assert(
+        std::is_same_v<value_type,
+                       typename std::iterator_traits<T>::value_type>,
+        "Can only assign to iterator of the same value type");
+
     m_value = std::make_unique<Iterator_Model<std::decay_t<T>>>(
         std::forward<T>(rhs));
     return *this;

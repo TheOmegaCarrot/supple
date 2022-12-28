@@ -125,6 +125,14 @@ static auto test_iterator() -> ehanc::test
   const_itr = test_iterable_1.begin();
   results.add_case(*const_itr, 1);
 
+  // useful error message here - bad reassignment due to const incorrectness
+  /* test_1 = test_iterable_1.cbegin(); */
+
+  std::vector test_iterable_3 {1.0, 2.0, 3.0, 4.0, 5.0};
+
+  // useful error message here - bad reassignment due to type mismatch
+  /* test_1 = test_iterable_3.begin(); */
+
   return results;
 }
 

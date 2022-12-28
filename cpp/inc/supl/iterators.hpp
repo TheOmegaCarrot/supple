@@ -92,9 +92,14 @@ namespace experimental {
 /**
  * @brief Type erased wrapper for a bidirectional iterator
  *
- * @details Should work just like any bidirectional iterator.
+ * @details This should work just like any bidirectional iterator.
  * Dereference, arrow operator, pre- and post-increment and decrement,
  * and equality comparison all work as expected.
+ *
+ * This class can only hold a non-const iterator.
+ *
+ * It is templated on the value_type of the erased iterator,
+ * and cannot be reassigned to an iterator of a different value_type
  * 
  * Post-incement and decrement are especially inefficient, as those
  * operations require heap allocation.

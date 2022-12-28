@@ -93,6 +93,22 @@ static auto test_iterator() -> ehanc::test
   results.add_case(test_a == test_b, false);
   results.add_case(test_a != test_b, true);
 
+  // arrow operator
+
+  struct foo {
+    std::string m_foo {"foo"};
+
+    [[nodiscard]] auto the_thing() const noexcept -> const std::string&
+    {
+      return m_foo;
+    }
+  };
+
+  std::vector test_foo {foo {}};
+
+  supl::experimental::iterator test_foo_itr {test_foo.begin()};
+  results.add_case(test_foo_itr->the_thing(), std::string {"foo"});
+
   return results;
 }
 

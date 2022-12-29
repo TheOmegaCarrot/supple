@@ -26,4 +26,4 @@ Currently, there is no difference, however, more modules may be added in the fut
 If and when more modules are added, `supplementaries::all` will include all modules,
 while `supplementaries::core` is only one module.
 
-Alternatively, you can simply copy `cpp/inc/supl` into your project.
+Alternatively, you can simply copy `cpp/inc/supl` into your project, and include headers directly.

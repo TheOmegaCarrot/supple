@@ -55,7 +55,7 @@ static auto test_iterator() -> ehanc::test
   std::deque test_iterable_2 {6, 7, 8, 9, 10};
 
   // increment and decrement
-  supl::experimental::iterator test_1 {test_iterable_1.begin()};
+  supl::iterator test_1 {test_iterable_1.begin()};
   results.add_case(*test_1, 1);
   ++test_1;
   results.add_case(*test_1, 2);
@@ -66,12 +66,12 @@ static auto test_iterator() -> ehanc::test
                 typename std::iterator_traits<decltype(test_1)>::reference,
                 int&>);
 
-  supl::experimental::iterator test_2 {test_1++};
+  supl::iterator test_2 {test_1++};
   results.add_case(*test_1, 2);
   results.add_case(*test_2, 1);
 
   ++test_2;
-  supl::experimental::iterator test_3 {test_2--};
+  supl::iterator test_3 {test_2--};
   results.add_case(*test_2, 1);
   results.add_case(*test_3, 2);
 
@@ -79,13 +79,13 @@ static auto test_iterator() -> ehanc::test
   results.add_case(*test_1, 6);
   ++test_1;
 
-  supl::experimental::iterator test_4 {test_1};
+  supl::iterator test_4 {test_1};
   results.add_case(*test_1, 7);
   results.add_case(*test_4, 7);
 
   // equality
-  supl::experimental::iterator test_a {test_iterable_1.begin()};
-  supl::experimental::iterator test_b {test_iterable_1.begin()};
+  supl::iterator test_a {test_iterable_1.begin()};
+  supl::iterator test_b {test_iterable_1.begin()};
 
   // same type - good cast
   results.add_case(test_a == test_b, true);
@@ -110,12 +110,12 @@ static auto test_iterator() -> ehanc::test
 
   std::vector test_foo {foo {}};
 
-  supl::experimental::iterator test_foo_itr {test_foo.begin()};
+  supl::iterator test_foo_itr {test_foo.begin()};
   results.add_case(test_foo_itr->the_thing(), std::string {"foo"});
 
   // const?
 
-  supl::experimental::iterator const_itr {test_iterable_1.cbegin()};
+  supl::iterator const_itr {test_iterable_1.cbegin()};
 
   static_assert(
       std::is_same_v<

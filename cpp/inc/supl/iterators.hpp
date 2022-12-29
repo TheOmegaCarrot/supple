@@ -86,8 +86,6 @@ struct is_iterator_tag : std::is_base_of<std::forward_iterator_tag, T> {};
 template <typename T>
 constexpr inline bool is_iterator_tag_v = is_iterator_tag<T>::value;
 
-namespace experimental {
-
 /* {{{ doc */
 /**
  * @brief Type erased wrapper for a bidirectional iterator
@@ -344,8 +342,6 @@ public:
 template <typename T>
 iterator(T) -> iterator<
     std::remove_reference_t<typename std::iterator_traits<T>::reference>>;
-
-} // namespace experimental
 
 } // namespace supl
 

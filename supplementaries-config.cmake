@@ -10,7 +10,7 @@ target_include_directories(supplementaries::core
 target_compile_features(supplementaries::core INTERFACE cxx_std_17)
 
 add_library(supplementaries::full INTERFACE IMPORTED)
-target_link_libraries(supplementaries::full PUBLIC supplementaries::core)
+target_link_libraries(supplementaries::full INTERFACE supplementaries::core)
 target_compile_features(supplementaries::full INTERFACE cxx_std_17)
 
 if(NOT DEFINED supplementaries_FIND_QUIETLY)

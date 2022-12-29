@@ -20,7 +20,10 @@ I've made things just as a learning exercise.
 # How do I use this?
 
 You can simply clone this repository into your `CMAKE_PREFIX_PATH`,
-find the package `supplementaries`,
-and link the target `supplementaries::supplementaries`.
+find the package `supplementaries`.
+The package currently defines two targets: `supplementaries::core`, and `supplementaries::all`.
+Currently, there is no difference, however, more modules may be added in the future.
+If and when more modules are added, `supplementaries::all` will include all modules,
+while `supplementaries::core` is only one module.
 
 Alternatively, you can simply copy `cpp/inc/supl` into your project.

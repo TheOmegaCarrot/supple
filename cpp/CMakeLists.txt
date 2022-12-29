@@ -69,11 +69,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
   endif()
 endif()
 
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
+find_package(supplementaries REQUIRED)
+
 # Test executable
 set(test_exe_name run_tests)
 file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 add_executable(${test_exe_name} ${source_files} ${test_files})
-target_include_directories(${test_exe_name} PRIVATE inc/core)
+target_link_libraries(${test_exe_name} supplementaries::full)
 target_include_directories(${test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
 target_include_directories(${test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
 target_compile_features(${test_exe_name} PUBLIC cxx_std_17)

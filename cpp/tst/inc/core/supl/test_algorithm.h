@@ -1,5 +1,5 @@
-#ifndef TEST_ALGORITHM_H
-#define TEST_ALGORITHM_H
+#ifndef TEST_SUPPLEMENTARIES_CORE_ALGORITHM_H
+#define TEST_SUPPLEMENTARIES_CORE_ALGORITHM_H
 
 #include "supl/algorithm.hpp"
 #include "test_utils.hpp"

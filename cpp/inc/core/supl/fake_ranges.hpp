@@ -16,8 +16,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_FAKE_RANGES_HPP
-#define SUPPLEMENTARIES_FAKE_RANGES_HPP
+#ifndef SUPPLEMENTARIES_CORE_FAKE_RANGES_HPP
+#define SUPPLEMENTARIES_CORE_FAKE_RANGES_HPP
 
 // Still a work in progress
 // The goal is to have every STL algorithm and `supl` algorithm

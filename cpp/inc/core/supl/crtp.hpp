@@ -11,8 +11,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_CRTP_HPP
-#define SUPPLEMENTARIES_CRTP_HPP
+#ifndef SUPPLEMENTARIES_CORE_CRTP_HPP
+#define SUPPLEMENTARIES_CORE_CRTP_HPP
 
 #include <sstream>
 #include <string>

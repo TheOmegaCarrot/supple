@@ -13,8 +13,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_TYPE_LIST_HPP
-#define SUPPLEMENTARIES_TYPE_LIST_HPP
+#ifndef SUPPLEMENTARIES_CORE_TYPE_LIST_HPP
+#define SUPPLEMENTARIES_CORE_TYPE_LIST_HPP
 
 #include <cstddef>
 #include <type_traits>

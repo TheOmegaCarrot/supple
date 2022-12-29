@@ -15,8 +15,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_TUPLE_ALGO_HPP
-#define SUPPLEMENTARIES_TUPLE_ALGO_HPP
+#ifndef SUPPLEMENTARIES_CORE_TUPLE_ALGO_HPP
+#define SUPPLEMENTARIES_CORE_TUPLE_ALGO_HPP
 
 #include <cstddef>
 #include <tuple>

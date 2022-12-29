@@ -42,9 +42,9 @@ public:
       detail << std::boolalpha << std::left << std::setw(10)
              << supl::FG_RED << "Case " << m_case_index << '\t' << message
              << "\n\n\tExpected:\n"
-             << supl::RESET << '\t' << supl::to_string(expected)
+             << supl::RESET << '\t' << supl::stream_adapter(expected)
              << supl::FG_RED << "\n\n\tGot:\n"
-             << supl::RESET << '\t' << supl::to_string(result) << '\n'
+             << supl::RESET << '\t' << supl::stream_adapter(result) << '\n'
              << '\n';
 
       m_cases.push_back(detail.str());
@@ -89,12 +89,9 @@ inline void run_test(const std::string_view name, TestFunc&& test_func)
   }
 }
 
-template <typename Func>
 inline void test_section(const std::string_view section_name,
-                         Func&& section_func)
+                         const std::function<void()>& section_func)
 {
-  static_assert(std::is_invocable_r_v<void, Func>);
-
   std::cout << '\n';
   std::cout << HEADER_COLOR << section_name << ':' << supl::RESET << '\n';
   section_func();

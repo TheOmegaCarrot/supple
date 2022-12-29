@@ -65,10 +65,10 @@ public:
 
 }; // class test
 
-template <typename TestFunc>
-inline void run_test(const std::string_view name, TestFunc&& test_func)
+template <typename Test_Func>
+inline void run_test(const std::string_view name, Test_Func&& test_func)
 {
-  static_assert(std::is_invocable_r_v<test, TestFunc>,
+  static_assert(std::is_invocable_r_v<test, Test_Func>,
                 "Test function must have correct signature");
 
   test result = test_func();
@@ -89,9 +89,12 @@ inline void run_test(const std::string_view name, TestFunc&& test_func)
   }
 }
 
+template <typename Section_Func>
 inline void test_section(const std::string_view section_name,
-                         const std::function<void()>& section_func)
+                         Section_Func&& section_func)
 {
+  static_assert(std::is_invocable_r_v<void, Section_Func>);
+
   std::cout << '\n';
   std::cout << HEADER_COLOR << section_name << ':' << supl::RESET << '\n';
   section_func();

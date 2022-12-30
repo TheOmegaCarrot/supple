@@ -318,12 +318,12 @@ public:
     return tmp;
   }
 
-  auto operator*() noexcept -> Value_Type&
+  auto operator*() const noexcept -> Value_Type&
   {
     return m_value->operator*();
   }
 
-  auto operator->() noexcept -> Value_Type*
+  auto operator->() const noexcept -> Value_Type*
   {
     return m_value->operator->();
   }

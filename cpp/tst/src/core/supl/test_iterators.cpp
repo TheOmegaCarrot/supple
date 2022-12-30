@@ -133,6 +133,9 @@ static auto test_iterator() -> ehanc::test
   // useful error message here - bad reassignment due to type mismatch
   /* test_1 = test_iterable_3.begin(); */
 
+  const supl::iterator constify {test_iterable_1.begin()};
+  results.add_case(*constify, 1);
+
   return results;
 }
 

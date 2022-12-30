@@ -21,7 +21,9 @@
 #include <cstddef>
 #include <iterator>
 #include <sstream>
+#include <string_view>
 #include <type_traits>
+#include <variant>
 
 #include "iterators.hpp"
 #include "metaprogramming.hpp"
@@ -115,6 +117,24 @@ template <typename T>
 constexpr inline bool has_empty_member_function_v =
     has_empty_member_function<T>::value;
 
+template <typename T>
+struct is_std_monostate : std::false_type {};
+
+template <>
+struct is_std_monostate<std::monostate> : std::true_type {};
+
+template <typename T>
+constexpr inline bool is_std_monostate_v = is_std_monostate<T>::value;
+
+template <typename T>
+struct is_variant : std::false_type {};
+
+template <typename... Ts>
+struct is_variant<std::variant<Ts...>> : std::true_type {};
+
+template <typename T>
+constexpr inline bool is_variant_v = is_variant<T>::value;
+
 /* {{{ doc */
 /**
  * @brief Determines if a type can be called with `supl::to_stream`
@@ -125,7 +145,9 @@ struct is_to_stream_valid
     : std::disjunction<
           has_to_stream<remove_cvref_t<T>>,
           is_printable<remove_cvref_t<T>>, is_tuple<remove_cvref_t<T>>,
-          is_pair<remove_cvref_t<T>>, is_iterable<remove_cvref_t<T>>> {};
+          is_pair<remove_cvref_t<T>>, is_iterable<remove_cvref_t<T>>,
+          is_std_monostate<remove_cvref_t<T>>,
+          is_variant<remove_cvref_t<T>>> {};
 
 template <typename T>
 constexpr inline bool is_to_stream_valid_v = is_to_stream_valid<T>::value;
@@ -195,6 +217,15 @@ void to_stream_iterable_impl(std::ostream& out, const T& value) noexcept
   }
 }
 
+template <typename... Ts>
+void to_stream_variant_impl(std::ostream& out,
+                            const std::variant<Ts...>& variant) noexcept
+{
+  std::visit(
+      [&out](const auto& alternative) { to_stream(out, alternative); },
+      variant);
+}
+
 } // namespace impl
 
 /* {{{ doc */
@@ -209,6 +240,8 @@ void to_stream_iterable_impl(std::ostream& out, const T& value) noexcept
  * - `operator<<(std::ostream&, const T&)` is defined
  * - `T` is a tuple or pair of only valid types
  * - `T` provides an iterator pair which dereference to a valid type
+ * - `T` is `std::monostate`
+ * - `T` is an `std::variant` where every possible alternative is a valid type
  * If this precondition is not satisfied, it is a compile-time error.
  *
  * @tparam T Type to be formatted to a stream
@@ -224,6 +257,8 @@ void to_stream(std::ostream& out, const T& value) noexcept
   static_assert(
       is_to_stream_valid_v<T>,
       "Attempting to call supl::to_stream with an unsupported type");
+
+  using std::literals::operator""sv;
 
   ostream_state_restorer restorer(out);
 
@@ -248,6 +283,14 @@ void to_stream(std::ostream& out, const T& value) noexcept
   } else if constexpr ( is_iterable_v<T> ) {
 
     impl::to_stream_iterable_impl(out, value);
+
+  } else if constexpr ( is_std_monostate_v<T> ) {
+
+    to_stream(out, "<std::monostate>"sv);
+
+  } else if constexpr ( is_variant_v<T> ) {
+
+    impl::to_stream_variant_impl(out, value);
   }
 }
 

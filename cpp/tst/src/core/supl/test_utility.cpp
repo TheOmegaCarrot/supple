@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
+#include <variant>
 #include <vector>
 
 #include "supl/test_utility.h"
@@ -208,6 +209,28 @@ static auto test_to_string() -> ehanc::test
   /*                  empty_container); */
   results.add_case(supl::to_string(std::multiset<int> {}),
                    empty_container);
+
+  results.add_case(supl::to_string(std::monostate {}),
+                   "<std::monostate>"s);
+
+  /* struct unprintable { */
+  /*   int value {5}; */
+  /* }; */
+
+  std::variant<std::monostate, int, std::vector<int>,
+               std::tuple<int, char, bool> /*, unprintable*/>
+      test_variant {};
+
+  results.add_case(supl::to_string(test_variant), "<std::monostate>"s);
+
+  test_variant = 5;
+  results.add_case(supl::to_string(test_variant), "5"s);
+
+  test_variant = std::vector {1, 2, 3, 42};
+  results.add_case(supl::to_string(test_variant), "[ 1, 2, 3, 42 ]"s);
+
+  test_variant = std::tuple {5, 'g', false};
+  results.add_case(supl::to_string(test_variant), "( 5, g, false )"s);
 
   return results;
 }

@@ -1,8 +1,8 @@
 #include <functional>
 #include <memory>
 
-#include "supl/functional.hpp"
-#include "supl/test_functional.h"
+#include <supl/functional.hpp>
+
 #include "test_utils.hpp"
 
 static auto test_equal_to() -> ehanc::test

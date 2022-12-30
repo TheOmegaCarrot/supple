@@ -1,7 +1,8 @@
 #include <sstream>
 #include <string>
 
-#include "supl/test_crtp.h"
+#include <supl/crtp.hpp>
+
 #include "test_utils.hpp"
 
 static auto test_rel_ops() -> ehanc::test

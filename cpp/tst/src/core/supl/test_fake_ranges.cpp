@@ -1,6 +1,7 @@
 #include <vector>
 
-#include "supl/test_fake_ranges.h"
+#include <supl/fake_ranges.hpp>
+
 #include "test_utils.hpp"
 
 /* static auto test_all_of() -> ehanc::test */

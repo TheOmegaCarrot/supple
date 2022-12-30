@@ -12,9 +12,9 @@
 #include <variant>
 #include <vector>
 
-#include "supl/test_utility.h"
+#include <supl/utility.hpp>
 
-#include "supl/utility.hpp"
+#include "test_utils.hpp"
 
 struct copy_counter {
   copy_counter()                                       = default;

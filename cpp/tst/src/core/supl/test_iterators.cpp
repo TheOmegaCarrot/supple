@@ -1,6 +1,3 @@
-#include "supl/test_iterators.h"
-#include "test_utils.hpp"
-
 #include <array>
 #include <deque>
 #include <forward_list>
@@ -8,8 +5,10 @@
 #include <numeric>
 #include <vector>
 
-#include "supl/iterators.hpp"
-#include "supl/utility.hpp"
+#include <supl/iterators.hpp>
+#include <supl/utility.hpp>
+
+#include "test_utils.hpp"
 
 static auto test_last() -> ehanc::test
 {

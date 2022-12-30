@@ -7,8 +7,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "supl/metaprogramming.hpp"
-#include "supl/type_list.hpp"
+#include <supl/metaprogramming.hpp>
+#include <supl/type_list.hpp>
 
 // all tests happen at compile time anyway
 // if this TU compiles, all tests pass

@@ -213,12 +213,34 @@ static auto test_to_string() -> ehanc::test
   results.add_case(supl::to_string(std::monostate {}),
                    "<std::monostate>"s);
 
-  /* struct unprintable { */
-  /*   int value {5}; */
-  /* }; */
+  // NOLINTNEXTLINE
+  struct force_valueless_by_exception {
+
+    // NOLINTNEXTLINE
+    force_valueless_by_exception()
+    {}
+
+    // std::variant is only guaranteed to be valueless by exception
+    // only if an exception is thrown during the move
+    // initialization of the contained value during
+    // move assignment
+    // source: https://en.cppreference.com/w/cpp/utility/variant/valueless_by_exception
+    // NOLINTNEXTLINE
+    [[noreturn]] force_valueless_by_exception(
+        force_valueless_by_exception&&)
+    {
+      throw 3.14;
+    }
+
+    // NOLINTNEXTLINE
+    static void to_stream(std::ostream& out)
+    {
+      out << "This text should not appear.";
+    }
+  };
 
   std::variant<std::monostate, int, std::vector<int>,
-               std::tuple<int, char, bool> /*, unprintable*/>
+               std::tuple<int, char, bool>, force_valueless_by_exception>
       test_variant {};
 
   results.add_case(supl::to_string(test_variant), "<std::monostate>"s);
@@ -231,6 +253,14 @@ static auto test_to_string() -> ehanc::test
 
   test_variant = std::tuple {5, 'g', false};
   results.add_case(supl::to_string(test_variant), "( 5, g, false )"s);
+
+  try {
+    force_valueless_by_exception forcer {};
+    test_variant.emplace<force_valueless_by_exception>(std::move(forcer));
+  } catch ( ... ) {}
+
+  results.add_case(supl::to_string(test_variant),
+                   "<valueless_by_exception>"s);
 
   return results;
 }

@@ -221,9 +221,13 @@ template <typename... Ts>
 void to_stream_variant_impl(std::ostream& out,
                             const std::variant<Ts...>& variant) noexcept
 {
-  std::visit(
-      [&out](const auto& alternative) { to_stream(out, alternative); },
-      variant);
+  try {
+    std::visit(
+        [&out](const auto& alternative) { to_stream(out, alternative); },
+        variant);
+  } catch ( std::bad_variant_access& ) {
+    out << "<valueless_by_exception>";
+  }
 }
 
 } // namespace impl
@@ -234,9 +238,12 @@ void to_stream_variant_impl(std::ostream& out,
  *
  * @details Sets `std::ios::boolalpha` internally, and resets flags
  * before returning.
+ * The case of an empty container is handled.
+ * The case of an empty tuple is handled.
+ * The case of a variant which is valueless_by_exception is handled.
  *
  * @pre A parameter type `T` is valid if any of the below are true:
- * - `T::to_stream(std::ostream&)` is defined as a const non-static member function
+ * - `T::to_stream(std::ostream&)` is defined as a const member function
  * - `operator<<(std::ostream&, const T&)` is defined
  * - `T` is a tuple or pair of only valid types
  * - `T` provides an iterator pair which dereference to a valid type
@@ -286,7 +293,7 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
   } else if constexpr ( is_std_monostate_v<T> ) {
 
-    to_stream(out, "<std::monostate>"sv);
+    out << "<std::monostate>";
 
   } else if constexpr ( is_variant_v<T> ) {
 

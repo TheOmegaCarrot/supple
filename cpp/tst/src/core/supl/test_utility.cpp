@@ -330,6 +330,7 @@ static auto test_ptrdiff_t_literals() -> ehanc::test
   auto k {-500_pd};
   results.add_case(std::is_same_v<decltype(k), std::ptrdiff_t>, true,
                    "Type is not std::ptrdiff_t");
+  results.add_case(-i, k, "Value is not as expected");
   results.add_case(0 - i, k, "Value is not as expected");
 
   return results;

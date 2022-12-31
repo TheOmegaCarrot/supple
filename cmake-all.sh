@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Compile and test with GCC and Clang
+# in both debug and release configuration
+# building against C++17, C++20, and C++23
+#
+# Library consumers should disregard this file,
+# unless you want to compile and run 12 versions
+# of this library's tests
+
 cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug
 cmake -S cpp -B all/gcc-release -DCMAKE_BUILD_TYPE=Release
 env CXX=/usr/bin/clang++ cmake -S cpp -B all/clang-debug -DCMAKE_BUILD_TYPE=Debug
@@ -15,8 +23,35 @@ cat << EOF
 EOF
 
 cmake --build all/gcc-debug --parallel $(nproc)
+
+cat << EOF
+
+##############################################################################
+#                                C++ 17                                      #
+##############################################################################
+
+EOF
+
 ./all/gcc-debug/run_tests_17
+
+cat << EOF
+
+##############################################################################
+#                                C++ 20                                      #
+##############################################################################
+
+EOF
+
 ./all/gcc-debug/run_tests_20
+
+cat << EOF
+
+##############################################################################
+#                                C++ 23                                      #
+##############################################################################
+
+EOF
+
 ./all/gcc-debug/run_tests_23
 
 
@@ -31,9 +66,36 @@ EOF
 
 
 cmake --build all/gcc-release --parallel $(nproc)
-./all/gcc-release/run_tests_17
-./all/gcc-release/run_tests_20
-./all/gcc-release/run_tests_23
+
+cat << EOF
+
+##############################################################################
+#                                C++ 17                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_17
+
+cat << EOF
+
+##############################################################################
+#                                C++ 20                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_20
+
+cat << EOF
+
+##############################################################################
+#                                C++ 23                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_23
 
 
 
@@ -47,9 +109,35 @@ EOF
 
 
 cmake --build all/clang-debug --parallel $(nproc)
-./all/clang-debug/run_tests_17
-./all/clang-debug/run_tests_20
-./all/clang-debug/run_tests_23
+cat << EOF
+
+##############################################################################
+#                                C++ 17                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_17
+
+cat << EOF
+
+##############################################################################
+#                                C++ 20                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_20
+
+cat << EOF
+
+##############################################################################
+#                                C++ 23                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_23
 
 
 cat << EOF
@@ -62,7 +150,35 @@ EOF
 
 
 cmake --build all/clang-release --parallel $(nproc)
-./all/clang-release/run_tests_17
-./all/clang-release/run_tests_20
-./all/clang-release/run_tests_23
 
+cat << EOF
+
+##############################################################################
+#                                C++ 17                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_17
+
+cat << EOF
+
+##############################################################################
+#                                C++ 20                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_20
+
+cat << EOF
+
+##############################################################################
+#                                C++ 23                                      #
+##############################################################################
+
+EOF
+
+./all/gcc-debug/run_tests_23
+
+cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug

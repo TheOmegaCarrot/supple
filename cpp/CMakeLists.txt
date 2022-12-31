@@ -72,7 +72,9 @@ endif()
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supplementaries REQUIRED)
 
-# Test executable
+# Test executables
+
+file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 
 add_executable(run_tests_17 ${source_files} ${test_files})
 target_link_libraries(run_tests_17 supplementaries::full)

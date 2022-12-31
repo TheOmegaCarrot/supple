@@ -54,8 +54,9 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic)
 
   # Use clang-tidy if not an automated build by cmake-all.sh
-  if(NOT AUTOMATED_BUILD)
-    set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+  if(DO_CLANG_TIDY)
+    message("-- Using clang-tidy")
+    set(CMAKE_CXX_CLANG_TIDY "clang-tidy;--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy")
   endif()
 
 elseif(MSVC)

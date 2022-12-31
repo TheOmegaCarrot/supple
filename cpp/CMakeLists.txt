@@ -2,11 +2,14 @@ cmake_minimum_required(VERSION 3.22.1)
 
 project(supl LANGUAGES CXX)
 
-# compile commands needed for clangd
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# compile_commands needed in source directory
-file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
-     "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR SYMBOLIC)
+if(NOT NO_COMPILE_COMMANDS)
+  message("-- Exporting compile commands")
+  # compile commands needed for clangd
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+  # compile_commands needed in source directory
+  file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
+       "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR SYMBOLIC)
+ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # set warnings for GCC
@@ -88,5 +91,8 @@ macro(test_for numeric_standard)
 endmacro()
 
 test_for(17)
-test_for(20)
-test_for(23)
+if (FULL_TESTS)
+  message("-- Testing C++20 and 23 as well")
+  test_for(20)
+  test_for(23)
+endif()

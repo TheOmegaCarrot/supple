@@ -73,10 +73,21 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supplementaries REQUIRED)
 
 # Test executable
-set(test_exe_name run_tests)
-file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
-add_executable(${test_exe_name} ${source_files} ${test_files})
-target_link_libraries(${test_exe_name} supplementaries::full)
-target_include_directories(${test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
-target_include_directories(${test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
-target_compile_features(${test_exe_name} PUBLIC cxx_std_17)
+
+add_executable(run_tests_17 ${source_files} ${test_files})
+target_link_libraries(run_tests_17 supplementaries::full)
+target_include_directories(run_tests_17 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
+target_include_directories(run_tests_17 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
+target_compile_features(run_tests_17 PUBLIC cxx_std_17)
+
+add_executable(run_tests_20 ${source_files} ${test_files})
+target_link_libraries(run_tests_20 supplementaries::full)
+target_include_directories(run_tests_20 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
+target_include_directories(run_tests_20 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
+target_compile_features(run_tests_20 PUBLIC cxx_std_20)
+
+add_executable(run_tests_23 ${source_files} ${test_files})
+target_link_libraries(run_tests_23 supplementaries::full)
+target_include_directories(run_tests_23 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
+target_include_directories(run_tests_23 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
+target_compile_features(run_tests_23 PUBLIC cxx_std_23)

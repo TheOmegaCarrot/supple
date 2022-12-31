@@ -165,16 +165,18 @@ private:
       return value;
     }
 
-    [[nodiscard]] constexpr auto
-    operator==(const iterator_base& rhs) noexcept -> bool
+    [[nodiscard]] friend constexpr auto
+    operator==(const iterator_base& lhs, const iterator_base& rhs) noexcept
+        -> bool
     {
-      return this->value == rhs.value;
+      return lhs.value == rhs.value;
     }
 
-    [[nodiscard]] constexpr auto
-    operator!=(const iterator_base& rhs) noexcept -> bool
+    [[nodiscard]] friend constexpr auto
+    operator!=(const iterator_base& lhs, const iterator_base& rhs) noexcept
+        -> bool
     {
-      return this->value != rhs.value;
+      return lhs.value != rhs.value;
     }
 
     [[nodiscard]] constexpr auto operator->() noexcept -> pointer

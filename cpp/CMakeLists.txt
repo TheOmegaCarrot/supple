@@ -52,6 +52,9 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     -Weverything -Wno-ctad-maybe-unsupported -Wno-missing-prototypes
     -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic)
 
+  # Use clang-tidy
+  set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+
 elseif(MSVC)
   # I do not have access to MSVC, and thus cannot test it
   message("-- Using MSVC")

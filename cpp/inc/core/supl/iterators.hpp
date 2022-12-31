@@ -86,6 +86,16 @@ struct is_iterator_tag : std::is_base_of<std::forward_iterator_tag, T> {};
 template <typename T>
 constexpr inline bool is_iterator_tag_v = is_iterator_tag<T>::value;
 
+class bad_iterator_access : public std::exception
+{
+public:
+
+  [[nodiscard]] auto what() const noexcept -> const char* override
+  {
+    return "Illegal access to null supl::iterator";
+  }
+};
+
 /* {{{ doc */
 /**
  * @brief Type erased wrapper for a bidirectional iterator
@@ -118,6 +128,11 @@ constexpr inline bool is_iterator_tag_v = is_iterator_tag<T>::value;
  * as type erasure necessitates heap allocation.
  * This class would seldom be appropriate, and this was written entirely
  * as an excercise in implementing nontrivial type erasure.
+ *
+ * If the `supl::iterator` is null, any attempt to access
+ * ( operator++(), operator++(int), operator--(), operator--(int),
+ *   operator*(), operator->(), operator==(), operator!=() ),
+ * will result in throwing a `supl::bad_iterator_access`.
  *
  * @tparam Value_Type Type being iterated over.
  * If non-const, this wrapper behaves as a non-const iterator.
@@ -228,6 +243,13 @@ private:
 
   std::unique_ptr<Iterator_Concept> m_value;
 
+  void p_throw_if_null() const
+  {
+    if ( !m_value ) {
+      throw bad_iterator_access {};
+    }
+  }
+
 public:
 
   using value_type        = std::remove_const_t<Value_Type>;
@@ -292,50 +314,71 @@ public:
     return *this;
   }
 
-  auto operator++() noexcept -> iterator&
+  auto operator++() -> iterator&
   {
+    this->p_throw_if_null();
     m_value->operator++();
     return *this;
   }
 
-  auto operator++(int) noexcept -> iterator
+  auto operator++(int) -> iterator
   {
+    this->p_throw_if_null();
     iterator tmp = *this;
     m_value->operator++();
     return tmp;
   }
 
-  auto operator--() noexcept -> iterator&
+  auto operator--() -> iterator&
   {
+    this->p_throw_if_null();
     m_value->operator--();
     return *this;
   }
 
-  auto operator--(int) noexcept -> iterator
+  auto operator--(int) -> iterator
   {
+    this->p_throw_if_null();
     iterator tmp = *this;
     m_value->operator--();
     return tmp;
   }
 
-  auto operator*() const noexcept -> Value_Type&
+  auto operator*() const -> Value_Type&
   {
+    this->p_throw_if_null();
     return m_value->operator*();
   }
 
-  auto operator->() const noexcept -> Value_Type*
+  auto operator->() const -> Value_Type*
   {
+    this->p_throw_if_null();
     return m_value->operator->();
   }
 
-  auto operator==(const iterator& rhs) const noexcept -> bool
+  auto operator==(const iterator& rhs) const -> bool
   {
+    this->p_throw_if_null();
     return m_value->operator==(rhs);
   }
 
-  auto operator!=(const iterator& rhs) const noexcept -> bool
+  auto operator!=(const iterator& rhs) const -> bool
   {
+    this->p_throw_if_null();
     return !this->operator==(rhs);
+  }
+
+  /* {{{ doc */
+  /**
+   * @brief Determine if an iterator is held
+   *
+   * @return True if `iterator` is null, i.e. does not hold
+   * an iterator. False if an iterator is held.
+   */
+  /* }}} */
+  [[nodiscard]] auto is_null() const noexcept -> bool
+  {
+    return !m_value;
   }
 };
 

@@ -116,6 +116,8 @@ static auto test_iterator() -> ehanc::test
 
   supl::iterator const_itr {test_iterable_1.cbegin()};
 
+  results.add_case(const_itr.is_null(), false, "Should not be null");
+
   static_assert(
       std::is_same_v<
           typename std::iterator_traits<decltype(const_itr)>::reference,
@@ -134,6 +136,22 @@ static auto test_iterator() -> ehanc::test
 
   const supl::iterator constify {test_iterable_1.begin()};
   results.add_case(*constify, 1);
+
+  // Null case
+
+  supl::iterator<int> nulled {};
+
+  results.add_case(nulled.is_null(), true, "Should be null");
+
+  try {
+    [[maybe_unused]] auto illegal {*nulled};
+    results.add_case(true, false, "Should not be reached");
+    throw "This should be unreachable - supl::iterator null cast test";
+  } catch ( supl::bad_iterator_access& e ) {
+    results.add_case<const char*>(e.what(),
+                                  "Illegal access to null supl::iterator",
+                                  "Incorrect error message");
+  }
 
   return results;
 }

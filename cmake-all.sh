@@ -8,10 +8,10 @@
 # unless you want to compile and run 12 versions
 # of this library's tests
 
-cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug
-cmake -S cpp -B all/gcc-release -DCMAKE_BUILD_TYPE=Release
-env CXX=/usr/bin/clang++ cmake -S cpp -B all/clang-debug -DCMAKE_BUILD_TYPE=Debug
-env CXX=/usr/bin/clang++ cmake -S cpp -B all/clang-release -DCMAKE_BUILD_TYPE=Release
+cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug -G Ninja
+cmake -S cpp -B all/gcc-release -DCMAKE_BUILD_TYPE=Release -G Ninja
+env CXX=/usr/bin/clang++ cmake -S cpp -B all/clang-debug -DCMAKE_BUILD_TYPE=Debug -G Ninja
+env CXX=/usr/bin/clang++ cmake -S cpp -B all/clang-release -DCMAKE_BUILD_TYPE=Release -G Ninja
 
 
 cat << EOF

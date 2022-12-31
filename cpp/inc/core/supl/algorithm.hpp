@@ -14,8 +14,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_CORE_ALGORITHM_HPP
-#define SUPPLEMENTARIES_CORE_ALGORITHM_HPP
+#ifndef SUPPLE_CORE_ALGORITHM_HPP
+#define SUPPLE_CORE_ALGORITHM_HPP
 
 #include <algorithm>
 #include <cstddef>

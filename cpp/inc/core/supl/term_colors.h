@@ -8,8 +8,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_CORE_TERMCOLORS_H
-#define SUPPLEMENTARIES_CORE_TERMCOLORS_H
+#ifndef SUPPLE_CORE_TERMCOLORS_H
+#define SUPPLE_CORE_TERMCOLORS_H
 
 #include <string_view>
 

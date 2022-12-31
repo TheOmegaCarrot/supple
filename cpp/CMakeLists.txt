@@ -70,26 +70,26 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
 endif()
 
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
-find_package(supplementaries REQUIRED)
+find_package(supple REQUIRED)
 
 # Test executables
 
 file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 
 add_executable(run_tests_17 ${source_files} ${test_files})
-target_link_libraries(run_tests_17 supplementaries::full)
+target_link_libraries(run_tests_17 supple::full)
 target_include_directories(run_tests_17 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
 target_include_directories(run_tests_17 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
 target_compile_features(run_tests_17 PUBLIC cxx_std_17)
 
 add_executable(run_tests_20 ${source_files} ${test_files})
-target_link_libraries(run_tests_20 supplementaries::full)
+target_link_libraries(run_tests_20 supple::full)
 target_include_directories(run_tests_20 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
 target_include_directories(run_tests_20 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
 target_compile_features(run_tests_20 PUBLIC cxx_std_20)
 
 add_executable(run_tests_23 ${source_files} ${test_files})
-target_link_libraries(run_tests_23 supplementaries::full)
+target_link_libraries(run_tests_23 supple::full)
 target_include_directories(run_tests_23 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
 target_include_directories(run_tests_23 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
 target_compile_features(run_tests_23 PUBLIC cxx_std_23)

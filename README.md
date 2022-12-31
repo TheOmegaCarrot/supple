@@ -1,4 +1,4 @@
-# Supplementaries
+# Supple
 
 # What is this?
 
@@ -20,10 +20,22 @@ I've made things just as a learning exercise.
 # How do I use this?
 
 You can simply clone this repository into your `CMAKE_PREFIX_PATH`,
-find the package `supplementaries`.
-The package currently defines two targets: `supplementaries::core`, and `supplementaries::all`.
+find the package `supple`.
+The package currently defines two targets: `supple::core`, and `supple::full`.
 Currently, there is no difference, however, more modules may be added in the future.
-If and when more modules are added, `supplementaries::all` will include all modules,
-while `supplementaries::core` is only one module.
+If and when more modules are added, `supple::full` will include all modules,
+while `supple::core` is only one module.
 
 Alternatively, you can simply copy `cpp/inc/supl` into your project, and include headers directly.
+
+---
+
+# What's with the name?
+
+This project was formerly known as `supplementaries`,
+but after I became aware of [another software project](https://github.com/MehVahdJukaar/Supplementaries)
+of the same name, I figured I ought to change the name.
+
+"Supple" was didn't require me to change the namespace,
+and "supple" is how I'd been pronouncing the namespace
+anyhow.

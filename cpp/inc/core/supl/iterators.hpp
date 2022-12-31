@@ -10,8 +10,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_CORE_ITERATORS_HPP
-#define SUPPLEMENTARIES_CORE_ITERATORS_HPP
+#ifndef SUPPLE_CORE_ITERATORS_HPP
+#define SUPPLE_CORE_ITERATORS_HPP
 
 #include <cstddef>
 #include <functional>

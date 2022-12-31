@@ -14,8 +14,8 @@
  */
 /* }}} */
 
-#ifndef SUPPLEMENTARIES_CORE_UTILITY_HPP
-#define SUPPLEMENTARIES_CORE_UTILITY_HPP
+#ifndef SUPPLE_CORE_UTILITY_HPP
+#define SUPPLE_CORE_UTILITY_HPP
 
 #include <algorithm>
 #include <cstddef>

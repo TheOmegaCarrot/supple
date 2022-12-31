@@ -2,18 +2,14 @@ cmake_minimum_required(VERSION 3.22.1)
 
 project(supl LANGUAGES CXX)
 
+# compile commands needed for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# compile_commands needed in source directory
 file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
      "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR SYMBOLIC)
 
-macro(sanitize)
-  message("-- Using sanitizers")
-  set(SANITIZERS address,leak,undefined)
-  add_compile_options(-fsanitize=${SANITIZERS})
-  add_link_options(-fsanitize=${SANITIZERS})
-endmacro()
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  # set warnings for GCC
   message("-- Using GCC")
   add_compile_options(
     -Wall
@@ -47,12 +43,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     -Wno-return-type)
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  # set warnings for Clang
   message("-- Using Clang")
   add_compile_options(
     -Weverything -Wno-ctad-maybe-unsupported -Wno-missing-prototypes
     -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic)
 
 elseif(MSVC)
+  # I do not have access to MSVC, and thus cannot test it
   message("-- Using MSVC")
   message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
   message("-- WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
@@ -61,35 +59,34 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
                                            "Clang")
+  # GCC and Clang are the only compilers I have to test against
   if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    # Use sanitizers in debug
     message("-- Build type: Debug")
-    sanitize()
+    message("-- Using sanitizers")
+    set(SANITIZERS address,leak,undefined)
+    add_compile_options(-fsanitize=${SANITIZERS})
+    add_link_options(-fsanitize=${SANITIZERS})
   elseif(CMAKE_BUILD_TYPE STREQUAL Release)
     message("-- Build type: Release")
   endif()
 endif()
 
+# find supple package
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supple REQUIRED)
 
 # Test executables
-
 file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 
-add_executable(run_tests_17 ${source_files} ${test_files})
-target_link_libraries(run_tests_17 supple::full)
-target_include_directories(run_tests_17 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
-target_include_directories(run_tests_17 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
-target_compile_features(run_tests_17 PUBLIC cxx_std_17)
+macro(test_for numeric_standard)
+  add_executable(run_tests_${numeric_standard} ${source_files} ${test_files})
+  target_link_libraries(run_tests_${numeric_standard} supple::full)
+  target_include_directories(run_tests_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
+  target_include_directories(run_tests_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
+  target_compile_features(run_tests_${numeric_standard} PUBLIC cxx_std_${numeric_standard})
+endmacro()
 
-add_executable(run_tests_20 ${source_files} ${test_files})
-target_link_libraries(run_tests_20 supple::full)
-target_include_directories(run_tests_20 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
-target_include_directories(run_tests_20 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
-target_compile_features(run_tests_20 PUBLIC cxx_std_20)
-
-add_executable(run_tests_23 ${source_files} ${test_files})
-target_link_libraries(run_tests_23 supple::full)
-target_include_directories(run_tests_23 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
-target_include_directories(run_tests_23 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
-target_compile_features(run_tests_23 PUBLIC cxx_std_23)
+test_for(17)
+test_for(20)
+test_for(23)

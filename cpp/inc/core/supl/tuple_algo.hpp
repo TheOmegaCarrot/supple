@@ -18,6 +18,7 @@
 #ifndef SUPPLE_CORE_TUPLE_ALGO_HPP
 #define SUPPLE_CORE_TUPLE_ALGO_HPP
 
+#include <bits/utility.h>
 #include <cstddef>
 #include <tuple>
 #include <type_traits>
@@ -400,7 +401,7 @@ template <typename Tuple, typename... Ts, std::size_t... Inds>
  *
  * @tparam Tuple Tuple type
  *
- * @tparam T Type of data to append
+ * @tparam Ts Type of data to append
  *
  * @param tup Tuple to append to
  *
@@ -530,7 +531,7 @@ template <template <typename...> typename Tuple, typename... Ts,
  *
  * @tparam Tuple Tuple type
  *
- * @tparam T Type of data to prepend
+ * @tparam Ts Type of data to prepend
  *
  * @param tup Tuple to prepend to
  *
@@ -870,6 +871,36 @@ template <std::size_t... Idxs, typename Tuple>
 }
 
 namespace impl {
+
+template <typename Tuple, std::size_t... Idxs>
+[[nodiscard]] constexpr auto reverse_impl(const Tuple& tup,
+                                          std::index_sequence<Idxs...>)
+    -> tl::reverse_t<Tuple>
+{
+  return {std::get<tl::size_v<Tuple> - Idxs - 1>(tup)...};
+}
+
+} // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Reverse a tuple
+ *
+ * @details Returns the input tuple, but with the elements in
+ * reverse order.
+ *
+ * ex. `reverse(std::tuple{42, 'g', false}) == std::tuple{false, 'g', 42}`
+ */
+/* }}} */
+template <typename Tuple>
+[[nodiscard]] constexpr auto reverse(const Tuple& tup)
+    -> tl::reverse_t<Tuple>
+{
+  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+  return impl::reverse_impl(tup, seq);
+}
+
+namespace impl {
 template <typename Tuple, std::size_t... Pre_Idxs,
           std::size_t... Post_Idxs, std::size_t Idx>
 [[nodiscard]] constexpr auto split_impl(
@@ -944,9 +975,9 @@ noexcept((std::is_nothrow_copy_constructible_v<
  *
  * @tparam Tuple Tuple type
  *
- * @tparam begin Beginning index
+ * @tparam Begin Beginning index
  *
- * @tparam end Ending index
+ * @tparam End Ending index
  *
  * @param tup Tuple to extract a subtuple from
  */

@@ -575,6 +575,18 @@ static auto test_reorder() -> ehanc::test
   return results;
 }
 
+static auto test_reverse() -> ehanc::test
+{
+  ehanc::test results;
+
+  std::tuple test_input {42, 'g', 3.14, true, 'D'};
+  std::tuple expected1 {'D', true, 3.14, 'g', 42};
+  auto result1 {supl::tuple::reverse(test_input)};
+  results.add_case(result1, expected1);
+
+  return results;
+}
+
 static auto test_subtuple() -> ehanc::test
 {
   ehanc::test results;
@@ -818,6 +830,14 @@ static auto test_convert() -> ehanc::test
     }
   };
 
+  // Stop yelling about unused member functions when
+  // they are in fact used if a test fails
+  std::stringstream trash {};
+  just_a_bool {true}.to_stream(trash);
+  [[maybe_unused]] bool also_trash {just_a_bool {true}
+                                    == just_a_bool {false}};
+  // end of ridiculous workaround
+
   using supl::literals::size_t_literal::operator""_z;
   ehanc::test results;
 
@@ -944,6 +964,7 @@ void test_tuple_algo()
   ehanc::run_test("supl::tuple::erase", &test_erase);
   ehanc::run_test("supl::tuple::replace", &test_replace);
   ehanc::run_test("supl::tuple::reorder", &test_reorder);
+  ehanc::run_test("supl::tuple::reverse", &test_reverse);
   ehanc::run_test("supl::tuple::split", &test_split);
   ehanc::run_test("supl::tuple::subtuple", &test_subtuple);
   ehanc::run_test("supl::tuple::count_if", &test_count_if);

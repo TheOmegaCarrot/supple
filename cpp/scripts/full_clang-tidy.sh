@@ -22,12 +22,12 @@ EOF
 
 find . -type f -name "*.cpp" | xargs -P0 -I{} clang-tidy {} --quiet --header-filter='.*' -- -xc++ -std=c++20 -Iinc/core -Itst/inc -Itst/inc/core 2>/dev/null
 
-cat << EOF
+#cat << EOF
 
-##############################################################################
-#                                C++ 23                                      #
-##############################################################################
+###############################################################################
+##                                C++ 23                                      #
+###############################################################################
 
-EOF
+#EOF
 
-find . -type f -name "*.cpp" | xargs -P0 -I{} clang-tidy {} --quiet --header-filter='.*' -- -xc++ -std=c++2b -Iinc/core -Itst/inc -Itst/inc/core 2>/dev/null
+#find . -type f -name "*.cpp" | xargs -P0 -I{} clang-tidy {} --quiet --header-filter='.*' -- -xc++ -std=c++2b -Iinc/core -Itst/inc -Itst/inc/core 2>/dev/null

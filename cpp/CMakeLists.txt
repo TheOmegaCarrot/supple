@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.22.1)
 
 project(supl LANGUAGES CXX)
 
-if(NOT NO_COMPILE_COMMANDS)
+# Do not export if doing an automated build by cmake-all.sh
+if(NOT AUTOMATED_BUILD)
   message("-- Exporting compile commands")
   # compile commands needed for clangd
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -52,8 +53,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     -Weverything -Wno-ctad-maybe-unsupported -Wno-missing-prototypes
     -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic)
 
-  # Use clang-tidy
-  set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+  # Use clang-tidy if not an automated build by cmake-all.sh
+  if(NOT AUTOMATED_BUILD)
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+  endif()
 
 elseif(MSVC)
   # I do not have access to MSVC, and thus cannot test it

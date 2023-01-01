@@ -13,7 +13,7 @@
 #include "supl/term_colors.h"
 #include "supl/utility.hpp"
 
-constexpr inline int TEST_OUTPUT_WIDTH         = 60;
+constexpr inline int test_output_width         = 60;
 constexpr inline std::string_view HEADER_COLOR = supl::FG_RED;
 
 namespace ehanc {
@@ -74,11 +74,11 @@ inline void run_test(const std::string_view name, Test_Func&& test_func)
   test result = test_func();
 
   if ( result.pass() ) {
-    std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH)
+    std::cout << std::left << std::setw(test_output_width)
               << std::setfill('.') << name << supl::FG_GREEN << "PASS"
               << supl::RESET << '\n';
   } else {
-    std::cout << std::left << std::setw(TEST_OUTPUT_WIDTH)
+    std::cout << std::left << std::setw(test_output_width)
               << std::setfill('.') << name << supl::FG_RED << "FAIL"
               << supl::RESET << '\n'
               << '\n';

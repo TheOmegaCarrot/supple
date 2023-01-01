@@ -14,7 +14,18 @@ supl::section section1()
   return retval;
 }
 
+supl::section section2()
+{
+  supl::section retval;
+  retval.add_test(&testfunc);
+  return retval;
+}
+
 int main()
 {
-  return section1().run() + section2().run();
+  supl::test_runner runner;
+  runner.add_section(section1);
+  runner.add_section(section2);
+
+  return runner.run();
 }

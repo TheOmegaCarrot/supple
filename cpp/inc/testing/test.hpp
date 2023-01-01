@@ -8,6 +8,8 @@
 
 #include <supl/utility.hpp>
 
+namespace supl {
+
 /* {{{ doc */
 /**
  * @brief Type containing data from a single test function.
@@ -74,6 +76,33 @@ public:
       m_case_details.emplace_back();
     }
   }
+
+  /* {{{ doc */
+  /**
+   * @brief Get total number of test cases.
+   */
+  /* }}} */
+  [[nodiscard]] auto case_count() const noexcept -> std::size_t
+  {
+    return m_case_count;
+  }
+
+  /* {{{ doc */
+  /**
+   * @brief Get total number of failed tests
+   */
+  /* }}} */
+  [[nodiscard]] auto fail_count() const noexcept -> std::size_t
+  {
+    return m_fail_count;
+  }
+
+  [[nodiscard]] auto test_passes() const noexcept -> bool
+  {
+    return m_fail_count == 0;
+  }
 };
+
+} // namespace supl
 
 #endif

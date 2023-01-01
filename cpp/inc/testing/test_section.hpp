@@ -9,6 +9,11 @@
 
 namespace supl {
 
+namespace constants {
+constexpr inline int test_output_width {60};
+constexpr inline char fill_char {'.'};
+} // namespace constants
+
 /* {{{ doc */
 /**
  * @brief Type containing a set of related tests
@@ -33,8 +38,6 @@ private:
   };
 
   std::vector<test_function_data_t> m_test_functions {};
-
-  constexpr static inline int test_output_width {60};
 
 public:
 
@@ -63,11 +66,12 @@ public:
   [[nodiscard]] auto run() const noexcept -> std::vector<test_results>
   {
     std::vector<test_results> results;
-    for ( const auto& test_data : m_test_functions ) {
+    for ( auto&& test_data : m_test_functions ) {
       test_results test_result {test_data.function()};
       if ( !test_result.test_passes() ) {
-        std::cout << std::left << std::setw(test_output_width)
-                  << std::setfill('.') << test_data.name << "FAIL" << '\n';
+        std::cout << std::left << std::setw(constants::test_output_width)
+                  << std::setfill(constants::fill_char) << test_data.name
+                  << "FAIL" << '\n';
       }
       results.push_back(test_result);
     }

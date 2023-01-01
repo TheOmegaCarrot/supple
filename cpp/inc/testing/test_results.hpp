@@ -15,12 +15,12 @@ namespace supl {
  * @brief Type containing data from a single test function.
  *
  * @details A test function is defined as a free function with the signature:
- * `supl::test()`. The test function constructs a `test`,
+ * `supl::test_results()`. The test function constructs a `test`,
  * calls `enforce*` member functions to provide it data,
  * and returns that `test` object.
  */
 /* }}} */
-class test
+class test_results
 {
 private:
 
@@ -38,7 +38,7 @@ private:
 
 public:
 
-  test() = default;
+  test_results() = default;
 
   /* {{{ doc */
   /**

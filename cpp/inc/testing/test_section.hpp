@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "test.hpp"
+#include "test_results.hpp"
 
 namespace supl {
 
@@ -21,24 +21,24 @@ namespace supl {
  * and returns that `section` object.
  */
 /* }}} */
-class section
+class test_section
 {
 private:
 
-  using test_function_t = test (*)();
+  using test_function_t = test_results (*)();
 
-  struct test_data_t {
+  struct test_function_data_t {
     std::string_view name;
     test_function_t function;
   };
 
-  std::vector<test_data_t> m_test_functions {};
+  std::vector<test_function_data_t> m_test_functions {};
 
   constexpr static inline int test_output_width {60};
 
 public:
 
-  section() = default;
+  test_section() = default;
 
   /* {{{ doc */
   /**
@@ -55,18 +55,23 @@ public:
     m_test_functions.emplace_back(test_name, test_function);
   }
 
-  [[nodiscard]] auto run() const noexcept -> std::size_t
+  /* {{{ doc */
+  /**
+   * @brief Runs the tests 
+   */
+  /* }}} */
+  [[nodiscard]] auto run() const noexcept -> std::vector<test_results>
   {
-    std::size_t num_fails {0};
+    std::vector<test_results> results;
     for ( const auto& test_data : m_test_functions ) {
-      test test_result {test_data.function()};
+      test_results test_result {test_data.function()};
       if ( !test_result.test_passes() ) {
-        num_fails += 1;
         std::cout << std::left << std::setw(test_output_width)
                   << std::setfill('.') << test_data.name << "FAIL" << '\n';
       }
+      results.push_back(test_result);
     }
-    return num_fails;
+    return results;
   }
 };
 

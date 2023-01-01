@@ -18,7 +18,6 @@
 #ifndef SUPPLE_CORE_TUPLE_ALGO_HPP
 #define SUPPLE_CORE_TUPLE_ALGO_HPP
 
-#include <bits/utility.h>
 #include <cstddef>
 #include <tuple>
 #include <type_traits>

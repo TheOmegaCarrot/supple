@@ -34,7 +34,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_17
+./all/gcc-debug/test_core_17
 
 cat << EOF
 
@@ -44,7 +44,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_20
+./all/gcc-debug/test_core_20
 
 cat << EOF
 
@@ -54,7 +54,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_23
+./all/gcc-debug/test_core_23
 
 
 
@@ -77,7 +77,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_17
+./all/gcc-debug/test_core_17
 
 cat << EOF
 
@@ -87,7 +87,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_20
+./all/gcc-debug/test_core_20
 
 cat << EOF
 
@@ -97,7 +97,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_23
+./all/gcc-debug/test_core_23
 
 
 
@@ -119,7 +119,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_17
+./all/gcc-debug/test_core_17
 
 cat << EOF
 
@@ -129,7 +129,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_20
+./all/gcc-debug/test_core_20
 
 cat << EOF
 
@@ -139,7 +139,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_23
+./all/gcc-debug/test_core_23
 
 
 cat << EOF
@@ -161,7 +161,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_17
+./all/gcc-debug/test_core_17
 
 cat << EOF
 
@@ -171,7 +171,7 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_20
+./all/gcc-debug/test_core_20
 
 cat << EOF
 
@@ -181,4 +181,4 @@ cat << EOF
 
 EOF
 
-./all/gcc-debug/run_tests_23
+./all/gcc-debug/test_core_23

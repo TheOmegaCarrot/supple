@@ -10,7 +10,7 @@ cat << EOF
 
 EOF
 
-find . -type f -name "*.cpp" | xargs -P0 -I{} clang-tidy {} --quiet --header-filter='.*' -- -xc++ -std=c++17 -Iinc/core -Itst/inc -Itst/inc/core 2>/dev/null
+find . -type f -name "*.cpp" | xargs -P0 -I{} clang-tidy {} --quiet --header-filter='.*' -- -xc++ -std=c++17 -Iinc/core -Iinc/testing -Itst/inc/core 2>/dev/null
 
 cat << EOF
 
@@ -20,7 +20,7 @@ cat << EOF
 
 EOF
 
-find . -type f -name "*.cpp" | xargs -P0 -I{} clang-tidy {} --quiet --header-filter='.*' -- -xc++ -std=c++20 -Iinc/core -Itst/inc -Itst/inc/core 2>/dev/null
+find . -type f -name "*.cpp" | xargs -P0 -I{} clang-tidy {} --quiet --header-filter='.*' -- -xc++ -std=c++20 -Iinc/core -Iinc/testing -Itst/inc/core 2>/dev/null
 
 #cat << EOF
 

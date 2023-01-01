@@ -73,6 +73,7 @@ public:
         std::cout << std::left << std::setw(constants::test_output_width)
                   << std::setfill(constants::fill_char) << test_data.name
                   << "FAIL" << '\n';
+        test_result.print_case_details();
       }
       results.push_back(test_result);
     }

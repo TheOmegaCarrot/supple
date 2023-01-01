@@ -2,6 +2,7 @@
 #define TESTING_TEST_HPP
 
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -67,39 +68,26 @@ public:
     if ( result != expected ) {
       m_fail_count += 1;
 
-      details << std::left << std::setw(10) << "Case " << m_case_count
-              << '\t' << message << "\n\n\tExpected:\n\t"
-              << supl::stream_adapter(expected) << "\n\n\tGot:\n\t"
-              << supl::stream_adapter(result) << "\n\n";
+      details << "\nCase " << m_case_count << '\t' << message
+              << "\n\n\tExpected:\n\t" << supl::stream_adapter(expected)
+              << "\n\n\tGot:\n\t" << supl::stream_adapter(result)
+              << "\n\n";
       m_case_details.push_back(details.str());
     } else {
       m_case_details.emplace_back();
     }
   }
 
-  /* {{{ doc */
-  /**
-   * @brief Get total number of test cases.
-   */
-  /* }}} */
-  /* [[nodiscard]] auto case_count() const noexcept -> std::size_t */
-  /* { */
-  /*   return m_case_count; */
-  /* } */
-
-  /* {{{ doc */
-  /**
-   * @brief Get total number of failed tests
-   */
-  /* }}} */
-  /* [[nodiscard]] auto fail_count() const noexcept -> std::size_t */
-  /* { */
-  /*   return m_fail_count; */
-  /* } */
-
   [[nodiscard]] auto test_passes() const noexcept -> bool
   {
     return m_fail_count == 0;
+  }
+
+  void print_case_details() const noexcept
+  {
+    for ( const std::string& detail : m_case_details ) {
+      std::cout << detail << '\n';
+    }
   }
 };
 

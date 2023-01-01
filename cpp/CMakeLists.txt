@@ -87,14 +87,14 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supple REQUIRED)
 
 # Test executables
-file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
+file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
 
 macro(test_for numeric_standard)
-  add_executable(run_tests_${numeric_standard} ${source_files} ${test_files})
-  target_link_libraries(run_tests_${numeric_standard} supple::full)
-  target_include_directories(run_tests_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
-  target_include_directories(run_tests_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
-  target_compile_features(run_tests_${numeric_standard} PUBLIC cxx_std_${numeric_standard})
+  add_executable(test_core_${numeric_standard} ${source_files} ${test_files})
+  target_link_libraries(test_core_${numeric_standard} supple::full)
+  target_include_directories(test_core_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
+  target_include_directories(test_core_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
+  target_compile_features(test_core_${numeric_standard} PUBLIC cxx_std_${numeric_standard})
 endmacro()
 
 add_executable(basic_mock_test ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/testing/mock_test.cpp)

@@ -86,7 +86,7 @@ public:
   void print_case_details() const noexcept
   {
     for ( const std::string& detail : m_case_details ) {
-      std::cout << detail << '\n';
+      std::cout << detail;
     }
   }
 };

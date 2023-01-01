@@ -97,6 +97,9 @@ macro(test_for numeric_standard)
   target_compile_features(run_tests_${numeric_standard} PUBLIC cxx_std_${numeric_standard})
 endmacro()
 
+add_executable(basic_mock_test ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/testing/mock_test.cpp)
+target_link_libraries(basic_mock_test supple::testing)
+
 test_for(17)
 if (FULL_TESTS)
   message("-- Testing C++20 and 23 as well")

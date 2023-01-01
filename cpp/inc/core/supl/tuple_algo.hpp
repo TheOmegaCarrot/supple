@@ -873,8 +873,9 @@ template <std::size_t... Idxs, typename Tuple>
 namespace impl {
 
 template <typename Tuple, std::size_t... Idxs>
-[[nodiscard]] constexpr auto reverse_impl(const Tuple& tup,
-                                          std::index_sequence<Idxs...>)
+[[nodiscard]] constexpr auto
+reverse_impl(const Tuple& tup, std::index_sequence<Idxs...>) noexcept(
+    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
     -> tl::reverse_t<Tuple>
 {
   return {std::get<tl::size_v<Tuple> - Idxs - 1>(tup)...};
@@ -893,7 +894,8 @@ template <typename Tuple, std::size_t... Idxs>
  */
 /* }}} */
 template <typename Tuple>
-[[nodiscard]] constexpr auto reverse(const Tuple& tup)
+[[nodiscard]] constexpr auto reverse(const Tuple& tup) noexcept(
+    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
     -> tl::reverse_t<Tuple>
 {
   constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};

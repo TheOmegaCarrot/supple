@@ -1,5 +1,5 @@
-#ifndef TESTING_TEST_RUNNER_HPP
-#define TESTING_TEST_RUNNER_HPP
+#ifndef SUPPLE_TESTING_TEST_RUNNER_HPP
+#define SUPPLE_TESTING_TEST_RUNNER_HPP
 
 #include <iomanip>
 #include <iostream>

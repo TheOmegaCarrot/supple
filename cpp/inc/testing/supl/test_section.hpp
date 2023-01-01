@@ -1,5 +1,5 @@
-#ifndef TESTING_SECTION_HPP
-#define TESTING_SECTION_HPP
+#ifndef SUPPLE_TESTING_TEST_SECTION_HPP
+#define SUPPLE_TESTING_TEST_SECTION_HPP
 
 #include <iomanip>
 #include <iostream>

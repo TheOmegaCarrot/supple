@@ -8,11 +8,11 @@
 #include <supl/iterators.hpp>
 #include <supl/utility.hpp>
 
-#include "test_utils.hpp"
+#include "supl/test_iterators.h"
 
-static auto test_last() -> ehanc::test
+static auto test_last() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array<int, 5> test1 {};
   std::iota(test1.begin(), test1.end(), 1);
 
@@ -20,17 +20,18 @@ static auto test_last() -> ehanc::test
   std::vector<int> test3;
   std::forward_list<int> test4 {1, 2, 3, 4};
 
-  results.add_case(*supl::last(test1), 5);
-  results.add_case(*supl::last(test2), 3);
-  results.add_case(supl::last(test3) == std::begin(test3), true);
-  results.add_case(*supl::last(test4), 4);
+  results.enforce_exactly_equal(*supl::last(test1), 5);
+  results.enforce_exactly_equal(*supl::last(test2), 3);
+  results.enforce_exactly_equal(supl::last(test3) == std::begin(test3),
+                                true);
+  results.enforce_exactly_equal(*supl::last(test4), 4);
 
   return results;
 }
 
-static auto test_clast() -> ehanc::test
+static auto test_clast() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array<int, 5> test1 {};
   std::iota(test1.begin(), test1.end(), 1);
 
@@ -38,63 +39,64 @@ static auto test_clast() -> ehanc::test
   std::vector<int> test3;
   std::forward_list<int> test4 {1, 2, 3, 4};
 
-  results.add_case(*supl::clast(test1), 5);
-  results.add_case(*supl::clast(test2), 3);
-  results.add_case(supl::clast(test3) == std::cbegin(test3), true);
-  results.add_case(*supl::clast(test4), 4);
+  results.enforce_exactly_equal(*supl::clast(test1), 5);
+  results.enforce_exactly_equal(*supl::clast(test2), 3);
+  results.enforce_exactly_equal(supl::clast(test3) == std::cbegin(test3),
+                                true);
+  results.enforce_exactly_equal(*supl::clast(test4), 4);
 
   return results;
 }
 
-static auto test_iterator() -> ehanc::test
+static auto test_iterator() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::vector test_iterable_1 {1, 2, 3, 4, 5};
   std::deque test_iterable_2 {6, 7, 8, 9, 10};
 
   // increment and decrement
   supl::iterator test_1 {test_iterable_1.begin()};
-  results.add_case(*test_1, 1);
+  results.enforce_exactly_equal(*test_1, 1);
   ++test_1;
-  results.add_case(*test_1, 2);
+  results.enforce_exactly_equal(*test_1, 2);
   --test_1;
-  results.add_case(*test_1, 1);
+  results.enforce_exactly_equal(*test_1, 1);
 
   static_assert(std::is_same_v<
                 typename std::iterator_traits<decltype(test_1)>::reference,
                 int&>);
 
   supl::iterator test_2 {test_1++};
-  results.add_case(*test_1, 2);
-  results.add_case(*test_2, 1);
+  results.enforce_exactly_equal(*test_1, 2);
+  results.enforce_exactly_equal(*test_2, 1);
 
   ++test_2;
   supl::iterator test_3 {test_2--};
-  results.add_case(*test_2, 1);
-  results.add_case(*test_3, 2);
+  results.enforce_exactly_equal(*test_2, 1);
+  results.enforce_exactly_equal(*test_3, 2);
 
   test_1 = test_iterable_2.begin();
-  results.add_case(*test_1, 6);
+  results.enforce_exactly_equal(*test_1, 6);
   ++test_1;
 
   supl::iterator test_4 {test_1};
-  results.add_case(*test_1, 7);
-  results.add_case(*test_4, 7);
+  results.enforce_exactly_equal(*test_1, 7);
+  results.enforce_exactly_equal(*test_4, 7);
 
   // equality
   supl::iterator test_a {test_iterable_1.begin()};
   supl::iterator test_b {test_iterable_1.begin()};
 
   // same type - good cast
-  results.add_case(test_a == test_b, true);
-  results.add_case(test_a != test_b, false);
+  results.enforce_exactly_equal(test_a == test_b, true);
+  results.enforce_exactly_equal(test_a != test_b, false);
   ++test_b;
 
   // different type - bad cast
   test_b = test_iterable_2.begin();
-  results.add_case(test_a == test_b, false);
-  results.add_case(test_a != test_b, true);
+  results.enforce_exactly_equal(test_a == test_b, false);
+  results.enforce_exactly_equal(test_a != test_b, true);
 
   // arrow operator
 
@@ -110,13 +112,15 @@ static auto test_iterator() -> ehanc::test
   std::vector test_foo {foo {}};
 
   supl::iterator test_foo_itr {test_foo.begin()};
-  results.add_case(test_foo_itr->the_thing(), std::string {"foo"});
+  results.enforce_exactly_equal(test_foo_itr->the_thing(),
+                                std::string {"foo"});
 
   // const?
 
   supl::iterator const_itr {test_iterable_1.cbegin()};
 
-  results.add_case(const_itr.is_null(), false, "Should not be null");
+  results.enforce_exactly_equal(const_itr.is_null(), false,
+                                "Should not be null");
 
   static_assert(
       std::is_same_v<
@@ -124,7 +128,7 @@ static auto test_iterator() -> ehanc::test
           const int&>);
 
   const_itr = test_iterable_1.begin();
-  results.add_case(*const_itr, 1);
+  results.enforce_exactly_equal(*const_itr, 1);
 
   // useful error message here - bad reassignment due to const incorrectness
   /* test_1 = test_iterable_1.cbegin(); */
@@ -135,32 +139,36 @@ static auto test_iterator() -> ehanc::test
   /* test_1 = test_iterable_3.begin(); */
 
   const supl::iterator constify {test_iterable_1.begin()};
-  results.add_case(*constify, 1);
+  results.enforce_exactly_equal(*constify, 1);
 
   // Null case
 
   supl::iterator<int> nulled {};
 
-  results.add_case(nulled.is_null(), true, "Should be null");
+  results.enforce_exactly_equal(nulled.is_null(), true, "Should be null");
 
   try {
     [[maybe_unused]] auto illegal {*nulled};
-    results.add_case(true, false, "Should not be reached");
+    results.enforce_exactly_equal(true, false, "Should not be reached");
     throw "This should be unreachable - supl::iterator null cast test";
   } catch ( supl::bad_iterator_access& e ) {
-    results.add_case<const char*>(e.what(),
-                                  "Illegal access to null supl::iterator",
-                                  "Incorrect error message");
+    results.enforce_exactly_equal<const char*>(
+        e.what(), "Illegal access to null supl::iterator",
+        "Incorrect error message");
   }
 
   return results;
 }
 
-void test_iterators()
+auto test_iterators() -> supl::test_section
 {
-  ehanc::run_test("supl::last", &test_last);
-  ehanc::run_test("supl::clast", &test_clast);
-  ehanc::run_test("supl::iterator", &test_iterator);
+  supl::test_section section;
+
+  section.add_test("supl::last", &test_last);
+  section.add_test("supl::clast", &test_clast);
+  section.add_test("supl::iterator", &test_iterator);
+
+  return section;
 }
 
 static_assert(supl::is_iterator_tag_v<std::forward_iterator_tag>);
@@ -169,3 +177,4 @@ static_assert(supl::is_iterator_tag_v<std::random_access_iterator_tag>);
 static_assert(not supl::is_iterator_tag_v<int>);
 static_assert(
     not supl::is_iterator_tag_v<supl::stream_adapter<std::vector<int>>>);
+

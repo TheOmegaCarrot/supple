@@ -3,100 +3,109 @@
 
 #include <supl/functional.hpp>
 
-#include "test_utils.hpp"
+#include "supl/test_functional.h"
 
-static auto test_equal_to() -> ehanc::test
+static auto test_equal_to() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   auto equal_to_5 {supl::equal_to(5)};
 
-  results.add_case(equal_to_5(3), false, "(3 == 5) == false");
-  results.add_case(equal_to_5(7), false, "(7 == 5) == false");
-  results.add_case(equal_to_5(5), true, "(5 == 5) == true");
+  results.enforce_exactly_equal(equal_to_5(3), false, "(3 == 5) == false");
+  results.enforce_exactly_equal(equal_to_5(7), false, "(7 == 5) == false");
+  results.enforce_exactly_equal(equal_to_5(5), true, "(5 == 5) == true");
 
   return results;
 }
 
-static auto test_not_equal_to() -> ehanc::test
+static auto test_not_equal_to() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   auto not_equal_to_5 {supl::not_equal_to(5)};
 
-  results.add_case(not_equal_to_5(3), true, "(3 != 5) == true");
-  results.add_case(not_equal_to_5(7), true, "(7 != 5) == true");
-  results.add_case(not_equal_to_5(5), false, "(5 != 5) == false");
+  results.enforce_exactly_equal(not_equal_to_5(3), true,
+                                "(3 != 5) == true");
+  results.enforce_exactly_equal(not_equal_to_5(7), true,
+                                "(7 != 5) == true");
+  results.enforce_exactly_equal(not_equal_to_5(5), false,
+                                "(5 != 5) == false");
 
   return results;
 }
 
-static auto test_greater_than() -> ehanc::test
+static auto test_greater_than() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   auto greater_than_5 {supl::greater_than(5)};
 
-  results.add_case(greater_than_5(3), false, "3 > 5 == false");
-  results.add_case(greater_than_5(7), true, "7 > 5 == true");
-  results.add_case(greater_than_5(5), false, "5 > 5 == false");
+  results.enforce_exactly_equal(greater_than_5(3), false,
+                                "3 > 5 == false");
+  results.enforce_exactly_equal(greater_than_5(7), true, "7 > 5 == true");
+  results.enforce_exactly_equal(greater_than_5(5), false,
+                                "5 > 5 == false");
 
   return results;
 }
 
-static auto test_greater_eq_than() -> ehanc::test
+static auto test_greater_eq_than() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   auto greater_eq_than_5 {supl::greater_eq_than(5)};
 
-  results.add_case(greater_eq_than_5(3), false, "3 >= 5 == false");
-  results.add_case(greater_eq_than_5(7), true, "7 >= 5 == true");
-  results.add_case(greater_eq_than_5(5), true, "5 >= 5 == true");
+  results.enforce_exactly_equal(greater_eq_than_5(3), false,
+                                "3 >= 5 == false");
+  results.enforce_exactly_equal(greater_eq_than_5(7), true,
+                                "7 >= 5 == true");
+  results.enforce_exactly_equal(greater_eq_than_5(5), true,
+                                "5 >= 5 == true");
 
   return results;
 }
 
-static auto test_less_than() -> ehanc::test
+static auto test_less_than() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   auto less_than_5 {supl::less_than(5)};
 
-  results.add_case(less_than_5(3), true, "3 < 5 == true");
-  results.add_case(less_than_5(7), false, "7 < 5 == false");
-  results.add_case(less_than_5(5), false, "5 < 5 == false");
+  results.enforce_exactly_equal(less_than_5(3), true, "3 < 5 == true");
+  results.enforce_exactly_equal(less_than_5(7), false, "7 < 5 == false");
+  results.enforce_exactly_equal(less_than_5(5), false, "5 < 5 == false");
 
   return results;
 }
 
-static auto test_less_eq_than() -> ehanc::test
+static auto test_less_eq_than() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   auto less_eq_than_5 {supl::less_eq_than(5)};
 
-  results.add_case(less_eq_than_5(3), true, "3 <= 5 == true");
-  results.add_case(less_eq_than_5(7), false, "7 <= 5 == false");
-  results.add_case(less_eq_than_5(5), true, "5 <= 5 == true");
+  results.enforce_exactly_equal(less_eq_than_5(3), true, "3 <= 5 == true");
+  results.enforce_exactly_equal(less_eq_than_5(7), false,
+                                "7 <= 5 == false");
+  results.enforce_exactly_equal(less_eq_than_5(5), true, "5 <= 5 == true");
 
   return results;
 }
 
-static auto test_invoke() -> ehanc::test
+static auto test_invoke() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   // Regular functions
 
   constexpr static int result1 {supl::invoke([]() { return 5; })};
-  results.add_case(result1, 5);
+  results.enforce_exactly_equal(result1, 5);
 
-  results.add_case(result1, 5);
+  results.enforce_exactly_equal(result1, 5);
 
   constexpr static int result2 {supl::invoke([](int x) { return x; }, 5)};
 
-  results.add_case(result2, 5);
+  results.enforce_exactly_equal(result2, 5);
 
   // Pointer to member
 
@@ -118,27 +127,27 @@ static auto test_invoke() -> ehanc::test
 
   constexpr static int result3 {supl::invoke(&Foo::value, &foo)};
 
-  results.add_case(result3, 5);
+  results.enforce_exactly_equal(result3, 5);
 
   constexpr static int result4 {supl::invoke(&Foo::value_plus, &foo, 2)};
 
-  results.add_case(result4, 7);
+  results.enforce_exactly_equal(result4, 7);
 
   constexpr static int result5 {supl::invoke(&Foo::value, foo)};
 
-  results.add_case(result5, 5);
+  results.enforce_exactly_equal(result5, 5);
 
   constexpr static int result6 {supl::invoke(&Foo::value_plus, foo, 2)};
 
-  results.add_case(result6, 7);
+  results.enforce_exactly_equal(result6, 7);
 
   constexpr static int result12 {supl::invoke(&Foo::m_value, foo)};
 
-  results.add_case(result12, 5);
+  results.enforce_exactly_equal(result12, 5);
 
   constexpr static int result13 {supl::invoke(&Foo::m_value, &foo)};
 
-  results.add_case(result13, 5);
+  results.enforce_exactly_equal(result13, 5);
 
   // ref-qualification
 
@@ -170,21 +179,21 @@ static auto test_invoke() -> ehanc::test
 
   constexpr static int result7 {supl::invoke(&ref_qual::funcl, qual)};
 
-  results.add_case(result7, 5);
+  results.enforce_exactly_equal(result7, 5);
 
   constexpr static int result8 {
       supl::invoke(&ref_qual::funcr, ref_qual {5})};
 
-  results.add_case(result8, 10);
+  results.enforce_exactly_equal(result8, 10);
 
   constexpr static int result9 {supl::invoke(&ref_qual::funcl2, qual, 3)};
 
-  results.add_case(result9, 8);
+  results.enforce_exactly_equal(result9, 8);
 
   constexpr static int result10 {
       supl::invoke(&ref_qual::funcr2, ref_qual {5}, 3)};
 
-  results.add_case(result10, 13);
+  results.enforce_exactly_equal(result10, 13);
 
   // virtual calls
 
@@ -235,18 +244,22 @@ static auto test_invoke() -> ehanc::test
 
   const int result11 {supl::invoke(&virt_base::func, vptr.get(), 3)};
 
-  results.add_case(result11, 15);
+  results.enforce_exactly_equal(result11, 15);
 
   return results;
 }
 
-void test_functional()
+auto test_functional() -> supl::test_section
 {
-  ehanc::run_test("supl::equal_to", &test_equal_to);
-  ehanc::run_test("supl::not_equal_to", &test_not_equal_to);
-  ehanc::run_test("supl::greater_than", &test_greater_than);
-  ehanc::run_test("supl::greater_eq_than", &test_greater_eq_than);
-  ehanc::run_test("supl::less_than", &test_less_than);
-  ehanc::run_test("supl::less_eq_than", &test_less_eq_than);
-  ehanc::run_test("supl::invoke", &test_invoke);
+  supl::test_section section;
+
+  section.add_test("supl::equal_to", &test_equal_to);
+  section.add_test("supl::not_equal_to", &test_not_equal_to);
+  section.add_test("supl::greater_than", &test_greater_than);
+  section.add_test("supl::greater_eq_than", &test_greater_eq_than);
+  section.add_test("supl::less_than", &test_less_than);
+  section.add_test("supl::less_eq_than", &test_less_eq_than);
+  section.add_test("supl::invoke", &test_invoke);
+
+  return section;
 }

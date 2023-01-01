@@ -1,8 +1,6 @@
 #include <iostream>
 
-#include "supl/term_colors.h"
-#include "supl/utility.hpp"
-#include "test_utils.hpp"
+#include <supl/test_runner.hpp>
 
 #include "supl/test_algorithm.h"
 #include "supl/test_crtp.h"
@@ -14,20 +12,21 @@
 
 auto main() -> int
 {
+  supl::test_runner runner;
 
-  ehanc::test_section("Algorithm", &test_algorithm);
+  runner.add_section(test_algorithm());
 
-  ehanc::test_section("Tuple Algorithms", &test_tuple_algo);
+  runner.add_section(test_tuple_algo());
 
-  ehanc::test_section("Fake Ranges", &test_fake_ranges);
+  runner.add_section(test_fake_ranges());
 
-  ehanc::test_section("Iterators", &test_iterators);
+  runner.add_section(test_iterators());
 
-  ehanc::test_section("Utility", &test_utility);
+  runner.add_section(test_utility());
 
-  ehanc::test_section("Functional", &test_functional);
+  runner.add_section(test_functional());
 
-  ehanc::test_section("CRTP", &test_crtp);
+  runner.add_section(test_crtp());
 
-  return 0;
+  return runner.run();
 }

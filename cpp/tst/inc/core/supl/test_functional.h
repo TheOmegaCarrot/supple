@@ -1,6 +1,8 @@
 #ifndef TEST_SUPPLE_CORE_FUNCTIONAL_H
 #define TEST_SUPPLE_CORE_FUNCTIONAL_H
 
-void test_functional();
+#include <supl/test_section.hpp>
+
+auto test_functional() -> supl::test_section;
 
 #endif

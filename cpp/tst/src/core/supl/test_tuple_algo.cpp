@@ -3,7 +3,7 @@
 #include <supl/metaprogramming.hpp>
 #include <supl/tuple_algo.hpp>
 
-#include "test_utils.hpp"
+#include "supl/test_tuple_algo.h"
 
 template <typename... Ls>
 struct overload : Ls... {
@@ -13,38 +13,38 @@ struct overload : Ls... {
 template <typename... Ls>
 overload(Ls...) -> overload<Ls...>;
 
-static auto test_for_each() -> ehanc::test
+static auto test_for_each() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple<int, char, bool> test {42, 'c', false};
 
-  supl::tuple::for_each(test,
-                        [&results, index {0}](const auto& i) mutable {
-                          using I = std::decay_t<decltype(i)>;
+  supl::tuple::for_each(
+      test, [&results, index {0}](const auto& i) mutable {
+        using I = std::decay_t<decltype(i)>;
 
-                          if constexpr ( std::is_same_v<I, int> ) {
-                            results.add_case(static_cast<int>(i), 42);
-                            results.add_case(index, 0);
+        if constexpr ( std::is_same_v<I, int> ) {
+          results.enforce_exactly_equal(static_cast<int>(i), 42);
+          results.enforce_exactly_equal(index, 0);
 
-                          } else if constexpr ( std::is_same_v<I, char> ) {
-                            results.add_case(static_cast<char>(i), 'c');
-                            results.add_case(index, 1);
+        } else if constexpr ( std::is_same_v<I, char> ) {
+          results.enforce_exactly_equal(static_cast<char>(i), 'c');
+          results.enforce_exactly_equal(index, 1);
 
-                          } else if constexpr ( std::is_same_v<I, bool> ) {
-                            results.add_case(static_cast<bool>(i), false);
-                            results.add_case(index, 2);
-                          }
+        } else if constexpr ( std::is_same_v<I, bool> ) {
+          results.enforce_exactly_equal(static_cast<bool>(i), false);
+          results.enforce_exactly_equal(index, 2);
+        }
 
-                          ++index;
-                        });
+        ++index;
+      });
 
   return results;
 }
 
-static auto test_for_each_in_subtuple() -> ehanc::test
+static auto test_for_each_in_subtuple() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple<int, char, bool> test {42, 'c', false};
 
@@ -53,12 +53,12 @@ static auto test_for_each_in_subtuple() -> ehanc::test
         using I = std::decay_t<decltype(i)>;
 
         if constexpr ( std::is_same_v<I, int> ) {
-          results.add_case(static_cast<int>(i), 42);
-          results.add_case(index, 0);
+          results.enforce_exactly_equal(static_cast<int>(i), 42);
+          results.enforce_exactly_equal(index, 0);
 
         } else if constexpr ( std::is_same_v<I, char> ) {
-          results.add_case(static_cast<char>(i), 'c');
-          results.add_case(index, 1);
+          results.enforce_exactly_equal(static_cast<char>(i), 'c');
+          results.enforce_exactly_equal(index, 1);
         }
         ++index;
       });
@@ -66,11 +66,11 @@ static auto test_for_each_in_subtuple() -> ehanc::test
   return results;
 }
 
-static auto test_transform() -> ehanc::test
+static auto test_transform() -> supl::test_results
 {
   using supl::literals::size_t_literal::operator""_z;
 
-  ehanc::test results;
+  supl::test_results results;
 
   /*constexpr static*/ std::tuple<int, char, bool> test1 {42, 'c', false};
 
@@ -80,9 +80,9 @@ static auto test_transform() -> ehanc::test
                 [](char b) { return static_cast<char>(std::toupper(b)); },
                 [](bool c) { return !c; }})};
 
-  results.add_case(std::get<0>(out1), 84, "out1 : 0");
-  results.add_case(std::get<1>(out1), 'C', "out1 : 1");
-  results.add_case(std::get<2>(out1), true, "out1 : 2");
+  results.enforce_exactly_equal(std::get<0>(out1), 84, "out1 : 0");
+  results.enforce_exactly_equal(std::get<1>(out1), 'C', "out1 : 1");
+  results.enforce_exactly_equal(std::get<2>(out1), true, "out1 : 2");
 
   std::tuple<std::string, std::vector<int>> test2 {
       "Hello", {3, 9, 2}
@@ -93,8 +93,8 @@ static auto test_transform() -> ehanc::test
       overload {[](const std::string& str) { return str.length(); },
                 [](const std::vector<int>& vec) { return vec.size(); }})};
 
-  results.add_case(std::get<0>(out2), 5_z, "out2 : 0");
-  results.add_case(std::get<1>(out2), 3_z, "out2 : 1");
+  results.enforce_exactly_equal(std::get<0>(out2), 5_z, "out2 : 0");
+  results.enforce_exactly_equal(std::get<1>(out2), 3_z, "out2 : 1");
 
   std::pair<std::string, std::vector<int>> test3 {
       "Hello", {3, 9, 3}
@@ -105,19 +105,19 @@ static auto test_transform() -> ehanc::test
       overload {[](const std::string& str) { return str.length(); },
                 [](const std::vector<int>& vec) { return vec.size(); }})};
 
-  results.add_case(std::get<0>(out3), 5_z, "out3 : 0");
-  results.add_case(std::get<1>(out3), 3_z, "out3 : 1");
+  results.enforce_exactly_equal(std::get<0>(out3), 5_z, "out3 : 0");
+  results.enforce_exactly_equal(std::get<1>(out3), 3_z, "out3 : 1");
 
   return results;
 }
 
-static auto test_any_of() -> ehanc::test
+static auto test_any_of() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {42, 'c', false};
 
-  results.add_case(
+  results.enforce_exactly_equal(
       supl::tuple::any_of(test1,
                           overload {[](const int i) { return i < 10; },
                                     [](const char c) { return c == 'c'; },
@@ -126,7 +126,7 @@ static auto test_any_of() -> ehanc::test
                           }),
       true);
 
-  results.add_case(
+  results.enforce_exactly_equal(
       supl::tuple::any_of(test1,
                           overload {[](const auto& i) { return i < 0; },
                                     [](const bool b) { return b; }}),
@@ -135,19 +135,19 @@ static auto test_any_of() -> ehanc::test
   return results;
 }
 
-static auto test_all_of() -> ehanc::test
+static auto test_all_of() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {42, 'c', false};
 
-  results.add_case(
+  results.enforce_exactly_equal(
       supl::tuple::all_of(test1,
                           overload {[](const bool b) { return not b; },
                                     [](const auto& i) { return i > 2; }}),
       true);
 
-  results.add_case(
+  results.enforce_exactly_equal(
       supl::tuple::all_of(test1,
                           overload {[](const bool b) { return b; },
                                     [](const auto& i) { return i > 2; }}),
@@ -156,13 +156,13 @@ static auto test_all_of() -> ehanc::test
   return results;
 }
 
-static auto test_none_of() -> ehanc::test
+static auto test_none_of() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {42, 'c', false};
 
-  results.add_case(
+  results.enforce_exactly_equal(
       supl::tuple::none_of(test1,
                            overload {[](const int i) { return i < 10; },
                                      [](const char c) { return c == 'c'; },
@@ -171,7 +171,7 @@ static auto test_none_of() -> ehanc::test
                            }),
       false);
 
-  results.add_case(
+  results.enforce_exactly_equal(
       supl::tuple::none_of(test1,
                            overload {[](const auto& i) { return i < 0; },
                                      [](const bool b) { return b; }}),
@@ -180,16 +180,16 @@ static auto test_none_of() -> ehanc::test
   return results;
 }
 
-static auto test_push_back() -> ehanc::test
+static auto test_push_back() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3, 3.14, 'd', true};
 
   auto result1 {supl::tuple::push_back(test1, true)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   int ref_test {5};
   std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
@@ -198,19 +198,19 @@ static auto test_push_back() -> ehanc::test
 
   auto result2 {supl::tuple::push_back(test2, 3.14)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {3, 3.14, 'd', true, 42, nullptr};
   auto result3 {supl::tuple::push_back(test1, true, 42, nullptr)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_push_back_as() -> ehanc::test
+static auto test_push_back_as() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {3, 3.14, 'd'};
   bool test_val_1 {true};
@@ -219,7 +219,7 @@ static auto test_push_back_as() -> ehanc::test
 
   auto result1 {supl::tuple::push_back_as<const bool&>(test1, test_val_1)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   int ref_test {5};
   std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
@@ -229,27 +229,27 @@ static auto test_push_back_as() -> ehanc::test
 
   auto result2 {supl::tuple::push_back_as<double&>(test2, test_val_2)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   int test_val_3 {81};
   std::tuple expected3 {3, 3.14, 'd', 81};
   auto result3 {supl::tuple::push_back_as<int>(test1, test_val_3)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_pop_back() -> ehanc::test
+static auto test_pop_back() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3, 3.14};
 
   auto result1 {supl::tuple::pop_back(test1)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   int ref_test {5};
   std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
@@ -257,21 +257,21 @@ static auto test_pop_back() -> ehanc::test
 
   auto result2 {supl::tuple::pop_back(test2)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   return results;
 }
 
-static auto test_push_front() -> ehanc::test
+static auto test_push_front() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {true, 3, 3.14, 'd'};
 
   auto result1 {supl::tuple::push_front(test1, true)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   int ref_test {5};
   std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
@@ -280,19 +280,19 @@ static auto test_push_front() -> ehanc::test
 
   auto result2 {supl::tuple::push_front(test2, 3.14)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {true, 42, nullptr, 3, 3.14, 'd'};
   auto result3 {supl::tuple::push_front(test1, true, 42, nullptr)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_push_front_as() -> ehanc::test
+static auto test_push_front_as() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {3, 3.14, 'd'};
   bool test_val_1 {true};
@@ -302,7 +302,7 @@ static auto test_push_front_as() -> ehanc::test
   auto result1 {
       supl::tuple::push_front_as<const bool&>(test1, test_val_1)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   int ref_test {5};
   std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
@@ -312,27 +312,27 @@ static auto test_push_front_as() -> ehanc::test
 
   auto result2 {supl::tuple::push_front_as<double&>(test2, test_val_2)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   int test_val_3 {81};
   std::tuple expected3 {81, 3, 3.14, 'd'};
   auto result3 {supl::tuple::push_front_as<int>(test1, test_val_3)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_pop_front() -> ehanc::test
+static auto test_pop_front() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1 {3, 3.14, 'd'};
   std::tuple expected1 {3.14, 'd'};
 
   auto result1 {supl::tuple::pop_front(test1)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   int ref_test {5};
   std::tuple<bool, int&, int, char> test2 {true, ref_test, 3, 'g'};
@@ -340,14 +340,14 @@ static auto test_pop_front() -> ehanc::test
 
   auto result2 {supl::tuple::pop_front(test2)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   return results;
 }
 
-static auto test_rotate_left() -> ehanc::test
+static auto test_rotate_left() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {42, false, 3.14, 'w'};
 
@@ -355,14 +355,14 @@ static auto test_rotate_left() -> ehanc::test
 
   auto result1 {supl::tuple::rotate_left(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   return results;
 }
 
-static auto test_rotate_right() -> ehanc::test
+static auto test_rotate_right() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {42, false, 3.14, 'w'};
 
@@ -370,40 +370,40 @@ static auto test_rotate_right() -> ehanc::test
 
   auto result1 {supl::tuple::rotate_right(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   return results;
 }
 
-static auto test_insert() -> ehanc::test
+static auto test_insert() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {3, 3.14};
   std::tuple expected1 {3, true, 3.14};
 
   auto result1 {supl::tuple::insert<1>(test_input, true)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple expected2 {3, 3.14, true};
   auto result2 {
       supl::tuple::insert<std::tuple_size_v<decltype(test_input)>>(
           test_input, true)};
 
-  results.add_case(result2, expected2, "max index");
+  results.enforce_exactly_equal(result2, expected2, "max index");
 
   std::tuple expected3 {true, 3, 3.14};
   auto result3 {supl::tuple::insert<0>(test_input, true)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   std::string neat {"neat"};
   std::vector vec {1, 2, 3, 4};
   std::tuple expected4 {3, 42069, neat, vec, 3.14};
   auto result4 {supl::tuple::insert<1>(test_input, 42069, neat, vec)};
 
-  results.add_case(result4, expected4);
+  results.enforce_exactly_equal(result4, expected4);
 
   int ref_test {42};
   std::tuple<const char, int&, double> test_ref_input {'g', ref_test,
@@ -412,38 +412,38 @@ static auto test_insert() -> ehanc::test
       'g', ref_test, false, '*', 3.14};
   auto result5 {supl::tuple::insert<2>(test_ref_input, false, '*')};
 
-  results.add_case(result5, expected5);
+  results.enforce_exactly_equal(result5, expected5);
 
   std::tuple expected6 {3, 42069, neat, vec, 3.14};
   auto result6 {supl::tuple::insert<1>(test_input, 42069, neat, vec)};
 
-  results.add_case(result6, expected6);
+  results.enforce_exactly_equal(result6, expected6);
 
   return results;
 }
 
-static auto test_erase() -> ehanc::test
+static auto test_erase() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   constexpr static std::tuple test_input {3, true, 3.14};
   constexpr static std::tuple expected1 {3, 3.14};
 
   constexpr static auto result1 {supl::tuple::erase<1>(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple expected2 {3, true};
 
   auto result2 {supl::tuple::erase<2>(test_input)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {true, 3.14};
 
   auto result3 {supl::tuple::erase<0>(test_input)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   constexpr static std::tuple<int, decltype(test_input)&, bool>
       test_ref_input {42, test_input, false};
@@ -452,56 +452,56 @@ static auto test_erase() -> ehanc::test
 
   auto result4 {supl::tuple::erase<0>(test_ref_input)};
 
-  results.add_case(result4, expected4);
+  results.enforce_exactly_equal(result4, expected4);
 
   std::tuple<int, bool> expected5 {42, false};
 
   auto result5 {supl::tuple::erase<1>(test_ref_input)};
 
-  results.add_case(result5, expected5);
+  results.enforce_exactly_equal(result5, expected5);
 
   constexpr static std::tuple<int, decltype(test_input)&> expected6 {
       42, test_input};
 
   constexpr static auto result6 {supl::tuple::erase<2>(test_ref_input)};
 
-  results.add_case(result6, expected6);
+  results.enforce_exactly_equal(result6, expected6);
 
   constexpr static std::tuple expected7 {3, 3.14};
 
   constexpr static auto result7 {supl::tuple::erase<1>(test_input)};
 
-  results.add_case(result7, expected7);
+  results.enforce_exactly_equal(result7, expected7);
 
   return results;
 }
 
-static auto test_replace() -> ehanc::test
+static auto test_replace() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {42, true, 3.14};
   std::tuple expected1 {42, 'B', 3.14};
   auto result1 {supl::tuple::replace<1>(test_input, 'B')};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple expected2 {'B', true, 3.14};
   auto result2 {supl::tuple::replace<0>(test_input, 'B')};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {42, true, 'B'};
   auto result3 {supl::tuple::replace<2, char>(test_input, 'B')};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_split() -> ehanc::test
+static auto test_split() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::string split {"split"};
   std::vector vec {1, 2, 3, 4};
@@ -511,15 +511,15 @@ static auto test_split() -> ehanc::test
   std::tuple expected1_second {true, 'f', split};
   auto result1 {supl::tuple::split<3>(test_input)};
 
-  results.add_case(result1.first, expected1_first);
-  results.add_case(result1.second, expected1_second);
+  results.enforce_exactly_equal(result1.first, expected1_first);
+  results.enforce_exactly_equal(result1.second, expected1_second);
 
   std::tuple expected2_first {3, 3.14, vec, true, 'f'};
   std::tuple expected2_second {split};
   auto result2 {supl::tuple::split<5>(test_input)};
 
-  results.add_case(result2.first, expected2_first);
-  results.add_case(result2.second, expected2_second);
+  results.enforce_exactly_equal(result2.first, expected2_first);
+  results.enforce_exactly_equal(result2.second, expected2_second);
 
   int ref_test {42};
   std::tuple<int&, char, bool, double, int&> test_ref_input {
@@ -529,22 +529,22 @@ static auto test_split() -> ehanc::test
 
   auto results3 {supl::tuple::split<3>(test_ref_input)};
 
-  results.add_case(results3.first, expected3_first);
-  results.add_case(results3.second, expected3_second);
+  results.enforce_exactly_equal(results3.first, expected3_first);
+  results.enforce_exactly_equal(results3.second, expected3_second);
 
   std::tuple expected4_first {3, 3.14, vec};
   std::tuple expected4_second {true, 'f', split};
   auto result4 {supl::tuple::split<3>(test_input)};
 
-  results.add_case(result4.first, expected4_first);
-  results.add_case(result4.second, expected4_second);
+  results.enforce_exactly_equal(result4.first, expected4_first);
+  results.enforce_exactly_equal(result4.second, expected4_second);
 
   return results;
 }
 
-static auto test_reorder() -> ehanc::test
+static auto test_reorder() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::string reorder {"reorder"};
   std::vector vec {1, 2, 3, 4};
@@ -553,7 +553,7 @@ static auto test_reorder() -> ehanc::test
 
   auto result1 {supl::tuple::reorder<1, 3, 0, 1, 4, 2>(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple<int, std::vector<int>&, std::string&, char, bool>
       test_ref_input {42, vec, reorder, 'j', true};
@@ -564,32 +564,32 @@ static auto test_reorder() -> ehanc::test
 
   auto result2 {supl::tuple::reorder<1, 4, 3, 2, 1, 0>(test_ref_input)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {3.14, reorder, 3, 3.14, vec, true};
 
   auto result3 {supl::tuple::reorder<1, 3, 0, 1, 4, 2>(test_input)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_reverse() -> ehanc::test
+static auto test_reverse() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {42, 'g', 3.14, true, 'D'};
   std::tuple expected1 {'D', true, 3.14, 'g', 42};
   auto result1 {supl::tuple::reverse(test_input)};
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   return results;
 }
 
-static auto test_subtuple() -> ehanc::test
+static auto test_subtuple() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::string str {"subtuple"};
   std::vector vec {1, 2, 3, 4};
@@ -598,34 +598,34 @@ static auto test_subtuple() -> ehanc::test
   std::tuple expected1 {str, 3.14, vec};
   auto result1 {supl::tuple::subtuple<2, 5>(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple expected2 {test_input};
   auto result2 {
       supl::tuple::subtuple<0, std::tuple_size_v<decltype(test_input)>>(
           test_input)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {3, true, str};
   auto result3 {supl::tuple::subtuple<0, 3>(test_input)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   std::tuple expected4 {3, true, str};
   auto result4 {supl::tuple::subtuple<0, 3>(test_input)};
 
-  results.add_case(result4, expected4);
+  results.enforce_exactly_equal(result4, expected4);
 
   std::tuple expected5 {str, 3.14, vec};
   auto result5 {supl::tuple::subtuple<2, 5>(test_input)};
 
-  results.add_case(result5, expected5);
+  results.enforce_exactly_equal(result5, expected5);
 
   std::tuple expected6 {str, 3.14, vec};
   auto result6 {supl::tuple::subtuple<2, 5>(test_input)};
 
-  results.add_case(result6, expected6);
+  results.enforce_exactly_equal(result6, expected6);
 
   int ref_test {42};
   std::tuple<char, bool, int&, double, char> test_ref_input {
@@ -633,24 +633,24 @@ static auto test_subtuple() -> ehanc::test
   std::tuple<bool, int&, double> expected7 {true, ref_test, 3.14};
   auto result7 {supl::tuple::subtuple<1, 4>(test_ref_input)};
 
-  results.add_case(result7, expected7);
+  results.enforce_exactly_equal(result7, expected7);
 
   std::tuple expected8 {3, true, str};
   auto result8 {supl::tuple::subtuple<0, 3>(test_input)};
 
-  results.add_case(result8, expected8);
+  results.enforce_exactly_equal(result8, expected8);
 
   return results;
 }
 
-static auto test_count_if() -> ehanc::test
+static auto test_count_if() -> supl::test_results
 {
   using supl::literals::size_t_literal::operator""_z;
 
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test {7, 2, 42.53, 3.14F, 9344285UL, -83LL};
-  results.add_case(
+  results.enforce_exactly_equal(
       supl::tuple::count_if(
           test, [](const auto& i) -> std::size_t { return i > 5; }),
       3_z);
@@ -658,9 +658,9 @@ static auto test_count_if() -> ehanc::test
   return results;
 }
 
-static auto test_interleave() -> ehanc::test
+static auto test_interleave() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test1_1 {42, 'g', 3.14};
   std::tuple test1_2 {2.6F, true, 8L};
@@ -668,7 +668,7 @@ static auto test_interleave() -> ehanc::test
   std::tuple expected1 {42, 2.6F, 'g', true, 3.14, 8L};
   auto result1 {supl::tuple::interleave(test1_1, test1_2)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   using std::string_literals::operator""s;
 
@@ -683,101 +683,101 @@ static auto test_interleave() -> ehanc::test
   };
   auto result2 {supl::tuple::interleave(test2_1, test2_2)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   return results;
 }
 
-static auto test_front_n() -> ehanc::test
+static auto test_front_n() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {42, '&', 3.14};
 
   std::tuple<> expected0 {};
   auto result0 {supl::tuple::front_n<0>(test_input)};
 
-  results.add_case(result0, expected0);
+  results.enforce_exactly_equal(result0, expected0);
 
   std::tuple expected1 {42};
   auto result1 {supl::tuple::front_n<1>(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple expected2 {42, '&'};
   auto result2 {supl::tuple::front_n<2>(test_input)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {42, '&', 3.14};
   auto result3 {supl::tuple::front_n<3>(test_input)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_back_n() -> ehanc::test
+static auto test_back_n() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {42, '&', 3.14};
 
   std::tuple<> expected0 {};
   auto result0 {supl::tuple::back_n<0>(test_input)};
 
-  results.add_case(result0, expected0);
+  results.enforce_exactly_equal(result0, expected0);
 
   std::tuple expected1 {3.14};
   auto result1 {supl::tuple::back_n<1>(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple expected2 {'&', 3.14};
   auto result2 {supl::tuple::back_n<2>(test_input)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {42, '&', 3.14};
   auto result3 {supl::tuple::back_n<3>(test_input)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   return results;
 }
 
-static auto test_elem_swap() -> ehanc::test
+static auto test_elem_swap() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::tuple test_input {42, 'g', 3.14, true, 18UL, 2.7F};
 
   std::tuple expected1 {42, 18UL, 3.14, true, 'g', 2.7F};
   auto result1 {supl::tuple::elem_swap<1, 4>(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::tuple expected2 {42, 'g', 3.14, true, 18UL, 2.7F};
   auto result2 {supl::tuple::elem_swap<3, 3>(test_input)};
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   std::tuple expected3 {2.7F, 'g', 3.14, true, 18UL, 42};
   auto result3 {supl::tuple::elem_swap<0, 5>(test_input)};
 
-  results.add_case(result3, expected3);
+  results.enforce_exactly_equal(result3, expected3);
 
   std::tuple expected4 {42, 18UL, 3.14, true, 'g', 2.7F};
   auto result4 {supl::tuple::elem_swap<4, 1>(test_input)};
 
-  results.add_case(result4, expected4);
+  results.enforce_exactly_equal(result4, expected4);
 
   return results;
 }
 
-static auto test_type_transform() -> ehanc::test
+static auto test_type_transform() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   const std::tuple test_input {42, 3.14, true};
 
@@ -788,27 +788,27 @@ static auto test_type_transform() -> ehanc::test
   const auto result1 {
       supl::tuple::type_transform<supl::make_const_ref>(test_input)};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
-  results.add_case<const int*>(&std::get<0>(test_input),
-                               &std::get<0>(result1));
+  results.enforce_exactly_equal<const int*>(&std::get<0>(test_input),
+                                            &std::get<0>(result1));
 
-  results.add_case<const double*>(&std::get<1>(test_input),
-                                  &std::get<1>(result1));
+  results.enforce_exactly_equal<const double*>(&std::get<1>(test_input),
+                                               &std::get<1>(result1));
 
-  results.add_case<const bool*>(&std::get<2>(test_input),
-                                &std::get<2>(result1));
+  results.enforce_exactly_equal<const bool*>(&std::get<2>(test_input),
+                                             &std::get<2>(result1));
 
   const auto& test_input_2 {expected1};
   const auto& expected2 {test_input};
   const auto result2 {
       supl::tuple::type_transform<std::decay>(test_input_2)};
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   return results;
 }
 
-static auto test_convert() -> ehanc::test
+static auto test_convert() -> supl::test_results
 {
   struct just_a_bool {
     // NOLINTNEXTLINE(google-explicit-constructor)
@@ -839,26 +839,26 @@ static auto test_convert() -> ehanc::test
   // end of ridiculous workaround
 
   using supl::literals::size_t_literal::operator""_z;
-  ehanc::test results;
+  supl::test_results results;
 
   constexpr static std::tuple test_input {42, 3.14, true};
 
   constexpr static std::tuple expected1 {42.0, 3_z, 1};
   constexpr static auto result1 {
       supl::tuple::convert<double, std::size_t, int>(test_input)};
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
   std::tuple<char, double, just_a_bool> expected2 {'*', 3.14,
                                                    just_a_bool {true}};
   auto result2 {
       supl::tuple::convert<char, double, just_a_bool>(test_input)};
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   return results;
 }
 
-static auto test_resolve_refs() -> ehanc::test
+static auto test_resolve_refs() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   // NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
   class copy_counter
@@ -938,41 +938,45 @@ static auto test_resolve_refs() -> ehanc::test
   std::tuple<int, double, char, copy_counter, int, double, char, bool>
       expected1 {42, 3.14, '&', copy_counter {1}, 42, 3.14, '|', false};
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   return results;
 }
 
-void test_tuple_algo()
+auto test_tuple_algo() -> supl::test_section
 {
-  ehanc::run_test("supl::tuple::for_each", &test_for_each);
-  ehanc::run_test("supl::tuple::for_each_in_subtuple",
-                  &test_for_each_in_subtuple);
-  ehanc::run_test("supl::tuple::transform", &test_transform);
-  ehanc::run_test("supl::tuple::any_of", &test_any_of);
-  ehanc::run_test("supl::tuple::all_of", &test_all_of);
-  ehanc::run_test("supl::tuple::none_of", &test_none_of);
-  ehanc::run_test("supl::tuple::push_back", &test_push_back);
-  ehanc::run_test("supl::tuple::push_back_as", &test_push_back_as);
-  ehanc::run_test("supl::tuple::pop_front", &test_pop_front);
-  ehanc::run_test("supl::tuple::push_front", &test_push_front);
-  ehanc::run_test("supl::tuple::push_front_as", &test_push_front_as);
-  ehanc::run_test("supl::tuple::pop_back", &test_pop_back);
-  ehanc::run_test("supl::tuple::rotate_left", &test_rotate_left);
-  ehanc::run_test("supl::tuple::rotate_right", &test_rotate_right);
-  ehanc::run_test("supl::tuple::insert", &test_insert);
-  ehanc::run_test("supl::tuple::erase", &test_erase);
-  ehanc::run_test("supl::tuple::replace", &test_replace);
-  ehanc::run_test("supl::tuple::reorder", &test_reorder);
-  ehanc::run_test("supl::tuple::reverse", &test_reverse);
-  ehanc::run_test("supl::tuple::split", &test_split);
-  ehanc::run_test("supl::tuple::subtuple", &test_subtuple);
-  ehanc::run_test("supl::tuple::count_if", &test_count_if);
-  ehanc::run_test("supl::tuple::interleave", &test_interleave);
-  ehanc::run_test("supl::tuple::front_n", &test_front_n);
-  ehanc::run_test("supl::tuple::back_n", &test_back_n);
-  ehanc::run_test("supl::tuple::elem_swap", &test_elem_swap);
-  ehanc::run_test("supl::tuple::type_transform", &test_type_transform);
-  ehanc::run_test("supl::tuple::convert", &test_convert);
-  ehanc::run_test("supl::tuple::resolve_refs", &test_resolve_refs);
+  supl::test_section section;
+
+  section.add_test("supl::tuple::for_each", &test_for_each);
+  section.add_test("supl::tuple::for_each_in_subtuple",
+                   &test_for_each_in_subtuple);
+  section.add_test("supl::tuple::transform", &test_transform);
+  section.add_test("supl::tuple::any_of", &test_any_of);
+  section.add_test("supl::tuple::all_of", &test_all_of);
+  section.add_test("supl::tuple::none_of", &test_none_of);
+  section.add_test("supl::tuple::push_back", &test_push_back);
+  section.add_test("supl::tuple::push_back_as", &test_push_back_as);
+  section.add_test("supl::tuple::pop_front", &test_pop_front);
+  section.add_test("supl::tuple::push_front", &test_push_front);
+  section.add_test("supl::tuple::push_front_as", &test_push_front_as);
+  section.add_test("supl::tuple::pop_back", &test_pop_back);
+  section.add_test("supl::tuple::rotate_left", &test_rotate_left);
+  section.add_test("supl::tuple::rotate_right", &test_rotate_right);
+  section.add_test("supl::tuple::insert", &test_insert);
+  section.add_test("supl::tuple::erase", &test_erase);
+  section.add_test("supl::tuple::replace", &test_replace);
+  section.add_test("supl::tuple::reorder", &test_reorder);
+  section.add_test("supl::tuple::reverse", &test_reverse);
+  section.add_test("supl::tuple::split", &test_split);
+  section.add_test("supl::tuple::subtuple", &test_subtuple);
+  section.add_test("supl::tuple::count_if", &test_count_if);
+  section.add_test("supl::tuple::interleave", &test_interleave);
+  section.add_test("supl::tuple::front_n", &test_front_n);
+  section.add_test("supl::tuple::back_n", &test_back_n);
+  section.add_test("supl::tuple::elem_swap", &test_elem_swap);
+  section.add_test("supl::tuple::type_transform", &test_type_transform);
+  section.add_test("supl::tuple::convert", &test_convert);
+  section.add_test("supl::tuple::resolve_refs", &test_resolve_refs);
+
+  return section;
 }

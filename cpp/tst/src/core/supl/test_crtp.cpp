@@ -3,11 +3,11 @@
 
 #include <supl/crtp.hpp>
 
-#include "test_utils.hpp"
+#include "supl/test_crtp.h"
 
-static auto test_rel_ops() -> ehanc::test
+static auto test_rel_ops() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   class rel : public supl::rel_ops<rel>
   {
@@ -36,19 +36,19 @@ static auto test_rel_ops() -> ehanc::test
   rel rel_B {5};
   rel rel_C {8};
 
-  results.add_case(rel_A == rel_B, true);
-  results.add_case(rel_A != rel_B, false);
-  results.add_case(rel_A < rel_B, false);
-  results.add_case(rel_A <= rel_B, true);
-  results.add_case(rel_A > rel_B, false);
-  results.add_case(rel_A >= rel_B, true);
+  results.enforce_exactly_equal(rel_A == rel_B, true);
+  results.enforce_exactly_equal(rel_A != rel_B, false);
+  results.enforce_exactly_equal(rel_A < rel_B, false);
+  results.enforce_exactly_equal(rel_A <= rel_B, true);
+  results.enforce_exactly_equal(rel_A > rel_B, false);
+  results.enforce_exactly_equal(rel_A >= rel_B, true);
 
-  results.add_case(rel_C == rel_B, false);
-  results.add_case(rel_C != rel_B, true);
-  results.add_case(rel_C < rel_B, false);
-  results.add_case(rel_C <= rel_B, false);
-  results.add_case(rel_C > rel_B, true);
-  results.add_case(rel_C >= rel_B, true);
+  results.enforce_exactly_equal(rel_C == rel_B, false);
+  results.enforce_exactly_equal(rel_C != rel_B, true);
+  results.enforce_exactly_equal(rel_C < rel_B, false);
+  results.enforce_exactly_equal(rel_C <= rel_B, false);
+  results.enforce_exactly_equal(rel_C > rel_B, true);
+  results.enforce_exactly_equal(rel_C >= rel_B, true);
 
   // and at compile-time!
   class ct_rel : public supl::rel_ops<ct_rel>
@@ -91,27 +91,27 @@ static auto test_rel_ops() -> ehanc::test
   constexpr static bool C_gt_B {ct_rel_C > ct_rel_B};
   constexpr static bool C_geq_B {ct_rel_C >= ct_rel_B};
 
-  results.add_case(A_eq_B, true);
-  results.add_case(A_neq_B, false);
-  results.add_case(A_lt_B, false);
-  results.add_case(A_leq_B, true);
-  results.add_case(A_gt_B, false);
-  results.add_case(A_geq_B, true);
-  results.add_case(C_eq_B, false);
-  results.add_case(C_neq_B, true);
-  results.add_case(C_lt_B, false);
-  results.add_case(C_leq_B, false);
-  results.add_case(C_gt_B, true);
-  results.add_case(C_geq_B, true);
+  results.enforce_exactly_equal(A_eq_B, true);
+  results.enforce_exactly_equal(A_neq_B, false);
+  results.enforce_exactly_equal(A_lt_B, false);
+  results.enforce_exactly_equal(A_leq_B, true);
+  results.enforce_exactly_equal(A_gt_B, false);
+  results.enforce_exactly_equal(A_geq_B, true);
+  results.enforce_exactly_equal(C_eq_B, false);
+  results.enforce_exactly_equal(C_neq_B, true);
+  results.enforce_exactly_equal(C_lt_B, false);
+  results.enforce_exactly_equal(C_leq_B, false);
+  results.enforce_exactly_equal(C_gt_B, true);
+  results.enforce_exactly_equal(C_geq_B, true);
 
   return results;
 }
 
-static auto test_add_to_string() -> ehanc::test
+static auto test_add_to_string() -> supl::test_results
 {
   using std::literals::operator""s;
 
-  ehanc::test results;
+  supl::test_results results;
 
   struct consumer : supl::add_to_string<consumer> {
     int value {42};
@@ -122,16 +122,16 @@ static auto test_add_to_string() -> ehanc::test
     }
   };
 
-  results.add_case(consumer {}.to_string(), "42"s);
+  results.enforce_exactly_equal(consumer {}.to_string(), "42"s);
 
   return results;
 }
 
-static auto test_add_ostream() -> ehanc::test
+static auto test_add_ostream() -> supl::test_results
 {
   using std::literals::operator""s;
 
-  ehanc::test results;
+  supl::test_results results;
 
   struct consumer_to_stream : supl::add_ostream<consumer_to_stream> {
     int value {42};
@@ -146,7 +146,7 @@ static auto test_add_ostream() -> ehanc::test
 
   std::stringstream str1;
   str1 << test1;
-  results.add_case(str1.str(), "42"s);
+  results.enforce_exactly_equal(str1.str(), "42"s);
 
   struct consumer_iterators : supl::add_ostream<consumer_iterators> {
     std::vector<int> value {1, 2, 42, 18};
@@ -166,7 +166,7 @@ static auto test_add_ostream() -> ehanc::test
 
   std::stringstream str2;
   str2 << test2;
-  results.add_case(str2.str(), "[ 1, 2, 42, 18 ]"s);
+  results.enforce_exactly_equal(str2.str(), "[ 1, 2, 42, 18 ]"s);
 
   struct consumer_both : supl::add_ostream<consumer_both> {
     std::vector<int> value {1, 2, 42, 18};
@@ -196,14 +196,18 @@ static auto test_add_ostream() -> ehanc::test
 
   std::stringstream str3;
   str3 << test3;
-  results.add_case(str3.str(), "1"s);
+  results.enforce_exactly_equal(str3.str(), "1"s);
 
   return results;
 }
 
-void test_crtp()
+auto test_crtp() -> supl::test_section
 {
-  ehanc::run_test("supl::rel_ops", &test_rel_ops);
-  ehanc::run_test("supl::add_to_string", &test_add_to_string);
-  ehanc::run_test("supl::add_ostream", &test_add_ostream);
+  supl::test_section section;
+
+  section.add_test("supl::rel_ops", &test_rel_ops);
+  section.add_test("supl::add_to_string", &test_add_to_string);
+  section.add_test("supl::add_ostream", &test_add_ostream);
+
+  return section;
 }

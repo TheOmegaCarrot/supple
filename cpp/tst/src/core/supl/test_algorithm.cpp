@@ -6,60 +6,64 @@
 #include <supl/algorithm.hpp>
 #include <supl/utility.hpp>
 
-#include "test_utils.hpp"
+#include "supl/test_algorithm.h"
 
-static auto test_min_size() -> ehanc::test
+static auto test_min_size() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array<int, 5> test1 {};
   std::array<int, 8> test2 {};
   std::array<int, 3> test3 {};
   std::array<int, 6> test4 {};
 
   using supl::literals::operator""_z;
-  results.add_case(supl::min_size(test1, test2, test3, test4), 3_z);
+  results.enforce_exactly_equal(supl::min_size(test1, test2, test3, test4),
+                                3_z);
 
   return results;
 }
 
-static auto test_max_size() -> ehanc::test
+static auto test_max_size() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array<int, 5> test1 {};
   std::array<int, 8> test2 {};
   std::array<int, 3> test3 {};
   std::array<int, 6> test4 {};
 
   using supl::literals::operator""_z;
-  results.add_case(supl::max_size(test1, test2, test3, test4), 8_z);
+  results.enforce_exactly_equal(supl::max_size(test1, test2, test3, test4),
+                                8_z);
 
   return results;
 }
 
-static auto test_contains() -> ehanc::test
+static auto test_contains() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::vector<int> test1 {1, 2, 3, 4, 5, 6};
 
-  results.add_case(supl::contains(test1.begin(), test1.end(), 2), true,
-                   "Contains 2");
-  results.add_case(supl::contains(test1.begin(), test1.end(), 42), false,
-                   "Does not contain 42");
+  results.enforce_exactly_equal(
+      supl::contains(test1.begin(), test1.end(), 2), true, "Contains 2");
+  results.enforce_exactly_equal(
+      supl::contains(test1.begin(), test1.end(), 42), false,
+      "Does not contain 42");
 
   std::vector<std::int64_t> test2 {1, 2, 3, 4, 5, 6};
 
-  results.add_case(supl::contains(test2.begin(), test2.end(), 2), true,
-                   "Contains 2");
-  results.add_case(supl::contains(test2.begin(), test2.end(), 42), false,
-                   "Does not contain 42");
+  results.enforce_exactly_equal(
+      supl::contains(test2.begin(), test2.end(), 2), true, "Contains 2");
+  results.enforce_exactly_equal(
+      supl::contains(test2.begin(), test2.end(), 42), false,
+      "Does not contain 42");
 
   return results;
 }
 
-static auto test_transform_if() -> ehanc::test
+static auto test_transform_if() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   const std::vector<int> test_input {1, 2, 3, 4, 5, 6, 7, 8};
   std::vector<int> test_output;
@@ -71,17 +75,18 @@ static auto test_transform_if() -> ehanc::test
                      std::back_inserter(test_output), is_even,
                      times_three);
 
-  supl::for_each_both(
-      test_output.cbegin(), test_output.cend(), reference_output.cbegin(),
-      reference_output.cend(),
-      [&results](int test, int ref) { results.add_case(test, ref); });
+  supl::for_each_both(test_output.cbegin(), test_output.cend(),
+                      reference_output.cbegin(), reference_output.cend(),
+                      [&results](int test, int ref) {
+                        results.enforce_exactly_equal(test, ref);
+                      });
 
   return results;
 }
 
-static auto test_for_each_adjacent() -> ehanc::test
+static auto test_for_each_adjacent() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::vector<int> test_input(6);
   std::iota(test_input.begin(), test_input.end(), 1);
   std::vector<int> test_output;
@@ -92,17 +97,17 @@ static auto test_for_each_adjacent() -> ehanc::test
                             test_output.push_back(i + j);
                           });
 
-  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
-                              reference_output.cbegin(),
-                              reference_output.cend()),
-                   true);
+  results.enforce_exactly_equal(
+      std::equal(test_output.cbegin(), test_output.cend(),
+                 reference_output.cbegin(), reference_output.cend()),
+      true);
 
   return results;
 }
 
-static auto test_for_each_adjacent_n() -> ehanc::test
+static auto test_for_each_adjacent_n() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::vector<int> test_input {1, 2, 3, 4, 5, 6};
   std::vector<int> test_output;
   std::vector<int> reference_output {3, 5, 7};
@@ -111,17 +116,17 @@ static auto test_for_each_adjacent_n() -> ehanc::test
                             [&test_output](const int i, const int j) {
                               test_output.push_back(i + j);
                             });
-  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
-                              reference_output.cbegin(),
-                              reference_output.cend()),
-                   true);
+  results.enforce_exactly_equal(
+      std::equal(test_output.cbegin(), test_output.cend(),
+                 reference_output.cbegin(), reference_output.cend()),
+      true);
 
   return results;
 }
 
-static auto test_for_each_all() -> ehanc::test
+static auto test_for_each_all() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array test1 {4, 9, 16, 25};
   std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
@@ -133,17 +138,17 @@ static auto test_for_each_all() -> ehanc::test
       },
       test1, test2);
 
-  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
-                              reference_output.cbegin(),
-                              reference_output.cend()),
-                   true);
+  results.enforce_exactly_equal(
+      std::equal(test_output.cbegin(), test_output.cend(),
+                 reference_output.cbegin(), reference_output.cend()),
+      true);
 
   return results;
 }
 
-static auto test_for_each_all_c() -> ehanc::test
+static auto test_for_each_all_c() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   const std::array test1 {4, 9, 16, 25};
   const std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
@@ -155,17 +160,17 @@ static auto test_for_each_all_c() -> ehanc::test
       },
       test1, test2);
 
-  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
-                              reference_output.cbegin(),
-                              reference_output.cend()),
-                   true);
+  results.enforce_exactly_equal(
+      std::equal(test_output.cbegin(), test_output.cend(),
+                 reference_output.cbegin(), reference_output.cend()),
+      true);
 
   return results;
 }
 
-static auto test_for_each_all_n() -> ehanc::test
+static auto test_for_each_all_n() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array test1 {4, 9, 16, 25};
   std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
@@ -177,17 +182,17 @@ static auto test_for_each_all_n() -> ehanc::test
       },
       3, test1.cbegin(), test2.cbegin());
 
-  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
-                              reference_output.cbegin(),
-                              reference_output.cend()),
-                   true);
+  results.enforce_exactly_equal(
+      std::equal(test_output.cbegin(), test_output.cend(),
+                 reference_output.cbegin(), reference_output.cend()),
+      true);
 
   return results;
 }
 
-static auto test_for_each_both() -> ehanc::test
+static auto test_for_each_both() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array<int, 5> test_input_1 {};
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2 {10, 20, 30, 40};
@@ -200,17 +205,17 @@ static auto test_for_each_both() -> ehanc::test
                         test_output.push_back(i + j);
                       });
 
-  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
-                              reference_output.cbegin(),
-                              reference_output.cend()),
-                   true);
+  results.enforce_exactly_equal(
+      std::equal(test_output.cbegin(), test_output.cend(),
+                 reference_output.cbegin(), reference_output.cend()),
+      true);
 
   return results;
 }
 
-static auto test_for_each_both_n() -> ehanc::test
+static auto test_for_each_both_n() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
   std::array<int, 5> test_input_1 {};
   std::iota(test_input_1.begin(), test_input_1.end(), 1);
   std::array<int, 4> test_input_2 {10, 20, 30, 40};
@@ -222,17 +227,17 @@ static auto test_for_each_both_n() -> ehanc::test
                           test_output.push_back(i + j);
                         });
 
-  results.add_case(std::equal(test_output.cbegin(), test_output.cend(),
-                              reference_output.cbegin(),
-                              reference_output.cend()),
-                   true);
+  results.enforce_exactly_equal(
+      std::equal(test_output.cbegin(), test_output.cend(),
+                 reference_output.cbegin(), reference_output.cend()),
+      true);
 
   return results;
 }
 
-static auto test_generate() -> ehanc::test
+static auto test_generate() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   std::vector<int> test(10);
   std::vector<int> ref(10);
@@ -251,7 +256,7 @@ static auto test_generate() -> ehanc::test
           return tmp;
         }()); // IILE
 
-        results.add_case(t, r, case_string);
+        results.enforce_exactly_equal(t, r, case_string);
       });
 
   constexpr static std::array cexpr_arr {[]() {
@@ -264,14 +269,14 @@ static auto test_generate() -> ehanc::test
   constexpr static std::array expected_cexpr_arr {1, 2, 3, 4, 5,
                                                   6, 7, 8, 9, 10};
 
-  results.add_case(cexpr_arr, expected_cexpr_arr);
+  results.enforce_exactly_equal(cexpr_arr, expected_cexpr_arr);
 
   return results;
 }
 
-static auto test_copy() -> ehanc::test
+static auto test_copy() -> supl::test_results
 {
-  ehanc::test results;
+  supl::test_results results;
 
   constexpr static std::array from_arr {1, 2, 3, 4, 5, 6};
 
@@ -282,35 +287,40 @@ static auto test_copy() -> ehanc::test
     return retval;
   }()}; // IILE
 
-  results.add_case(result1, expected1);
+  results.enforce_exactly_equal(result1, expected1);
 
   std::array expected2 {1, 2, 3, 4};
   std::array result2 {[&]() {
     std::array<int, 4> retval {};
     auto* oitr {supl::copy(from_arr.begin(), from_arr.begin() + 4,
                            retval.begin())};
-    results.add_case(oitr, retval.end(), "Returned iterator not correct");
+    results.enforce_exactly_equal(oitr, retval.end(),
+                                  "Returned iterator not correct");
     return retval;
   }()}; // IILE
 
-  results.add_case(result2, expected2);
+  results.enforce_exactly_equal(result2, expected2);
 
   return results;
 }
 
-void test_algorithm()
+auto test_algorithm() -> supl::test_section
 {
-  ehanc::run_test("supl::min_size", &test_min_size);
-  ehanc::run_test("supl::max_size", &test_max_size);
-  ehanc::run_test("supl::contains", &test_contains);
-  ehanc::run_test("supl::transform_if", &test_transform_if);
-  ehanc::run_test("supl::for_each_adjacent", &test_for_each_adjacent);
-  ehanc::run_test("supl::for_each_adjacent_n", &test_for_each_adjacent_n);
-  ehanc::run_test("supl::for_each_all_n", &test_for_each_all_n);
-  ehanc::run_test("supl::for_each_all", &test_for_each_all);
-  ehanc::run_test("supl::for_each_all_c", &test_for_each_all_c);
-  ehanc::run_test("supl::for_each_both", &test_for_each_both);
-  ehanc::run_test("supl::for_each_both_n", &test_for_each_both_n);
-  ehanc::run_test("supl::generate", &test_generate);
-  ehanc::run_test("supl::copy", &test_copy);
+  supl::test_section section;
+
+  section.add_test("supl::min_size", &test_min_size);
+  section.add_test("supl::max_size", &test_max_size);
+  section.add_test("supl::contains", &test_contains);
+  section.add_test("supl::transform_if", &test_transform_if);
+  section.add_test("supl::for_each_adjacent", &test_for_each_adjacent);
+  section.add_test("supl::for_each_adjacent_n", &test_for_each_adjacent_n);
+  section.add_test("supl::for_each_all_n", &test_for_each_all_n);
+  section.add_test("supl::for_each_all", &test_for_each_all);
+  section.add_test("supl::for_each_all_c", &test_for_each_all_c);
+  section.add_test("supl::for_each_both", &test_for_each_both);
+  section.add_test("supl::for_each_both_n", &test_for_each_both_n);
+  section.add_test("supl::generate", &test_generate);
+  section.add_test("supl::copy", &test_copy);
+
+  return section;
 }

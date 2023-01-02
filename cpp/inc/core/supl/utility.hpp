@@ -281,7 +281,7 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
   using std::literals::operator""sv;
 
-  ostream_state_restorer restorer(out);
+  const ostream_state_restorer restorer(out);
 
   out << std::boolalpha;
 

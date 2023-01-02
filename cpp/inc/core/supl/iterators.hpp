@@ -188,8 +188,7 @@ private:
     auto operator=(const Iterator_Model&) noexcept
       -> Iterator_Model& = default;
     auto operator=(Iterator_Model&&) noexcept -> Iterator_Model& = default;
-    // NOLINTNEXTLINE(modernize-use-override)
-    virtual ~Iterator_Model() noexcept override = default;
+    ~Iterator_Model() noexcept override = default;
 
     template <
       typename Type,

@@ -75,8 +75,8 @@ static_assert(std::is_same_v<
               int,
               supl::remove_cvref_t<const volatile int&&>>);
 
-// NOLINTNEXTLINE(*-avoid-c-arrays)
 static_assert(std::is_same_v<
+              // NOLINTNEXTLINE(*-avoid-c-arrays)
               int[5],
               // NOLINTNEXTLINE(*-avoid-c-arrays)
               supl::remove_cvref_t<const int[5]>>);

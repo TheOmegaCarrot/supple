@@ -112,7 +112,7 @@ namespace impl {
     const T& value
   ) noexcept
   {
-    ostream_state_restorer restorer(out);
+    const ostream_state_restorer restorer(out);
 
     out << std::boolalpha;
 

@@ -29,7 +29,7 @@ public:
     std::size_t num_failing_test_functions {0};
 
     for ( const test_section& section : m_sections ) {
-      std::vector<test_results> result_vector {section.run()};
+      const std::vector<test_results> result_vector {section.run()};
       for ( const test_results& result : result_vector ) {
         num_test_functions += 1;
         if ( ! result.test_passes() ) {

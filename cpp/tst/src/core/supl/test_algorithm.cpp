@@ -11,10 +11,10 @@
 static auto test_min_size() -> supl::test_results
 {
   supl::test_results results;
-  std::array<int, 5> test1 {};
-  std::array<int, 8> test2 {};
-  std::array<int, 3> test3 {};
-  std::array<int, 6> test4 {};
+  const std::array<int, 5> test1 {};
+  const std::array<int, 8> test2 {};
+  const std::array<int, 3> test3 {};
+  const std::array<int, 6> test4 {};
 
   using supl::literals::operator""_z;
   results.enforce_exactly_equal(
@@ -27,10 +27,10 @@ static auto test_min_size() -> supl::test_results
 static auto test_max_size() -> supl::test_results
 {
   supl::test_results results;
-  std::array<int, 5> test1 {};
-  std::array<int, 8> test2 {};
-  std::array<int, 3> test3 {};
-  std::array<int, 6> test4 {};
+  const std::array<int, 5> test1 {};
+  const std::array<int, 8> test2 {};
+  const std::array<int, 3> test3 {};
+  const std::array<int, 6> test4 {};
 
   using supl::literals::operator""_z;
   results.enforce_exactly_equal(
@@ -44,7 +44,7 @@ static auto test_contains() -> supl::test_results
 {
   supl::test_results results;
 
-  std::vector<int> test1 {1, 2, 3, 4, 5, 6};
+  const std::vector<int> test1 {1, 2, 3, 4, 5, 6};
 
   results.enforce_exactly_equal(
     supl::contains(test1.begin(), test1.end(), 2), true, "Contains 2"
@@ -55,7 +55,7 @@ static auto test_contains() -> supl::test_results
     "Does not contain 42"
   );
 
-  std::vector<std::int64_t> test2 {1, 2, 3, 4, 5, 6};
+  const std::vector<std::int64_t> test2 {1, 2, 3, 4, 5, 6};
 
   results.enforce_exactly_equal(
     supl::contains(test2.begin(), test2.end(), 2), true, "Contains 2"
@@ -91,6 +91,8 @@ static auto test_transform_if() -> supl::test_results
     times_three
   );
 
+  results.enforce_exactly_equal(test_output, reference_output);
+
   supl::for_each_both(
     test_output.cbegin(),
     test_output.cend(),
@@ -107,28 +109,20 @@ static auto test_transform_if() -> supl::test_results
 static auto test_for_each_adjacent() -> supl::test_results
 {
   supl::test_results results;
-  std::vector<int> test_input(6);
-  std::iota(test_input.begin(), test_input.end(), 1);
+
+  const std::vector<int> test_input {1, 2, 3, 4, 5, 6};
   std::vector<int> test_output;
-  std::vector<int> reference_output {3, 5, 7, 9, 11};
+  const std::vector<int> reference_output {3, 5, 7, 9, 11};
 
   supl::for_each_adjacent(
-    test_input.cbegin(),
-    test_input.cend(),
+    test_input.begin(),
+    test_input.end(),
     [&test_output](const int i, const int j) {
       test_output.push_back(i + j);
     }
   );
 
-  results.enforce_exactly_equal(
-    std::equal(
-      test_output.cbegin(),
-      test_output.cend(),
-      reference_output.cbegin(),
-      reference_output.cend()
-    ),
-    true
-  );
+  results.enforce_exactly_equal(test_output, reference_output);
 
   return results;
 }
@@ -136,26 +130,20 @@ static auto test_for_each_adjacent() -> supl::test_results
 static auto test_for_each_adjacent_n() -> supl::test_results
 {
   supl::test_results results;
-  std::vector<int> test_input {1, 2, 3, 4, 5, 6};
+
+  const std::vector<int> test_input {1, 2, 3, 4, 5, 6};
   std::vector<int> test_output;
-  std::vector<int> reference_output {3, 5, 7};
+  const std::vector<int> reference_output {3, 5, 7};
 
   supl::for_each_adjacent_n(
-    test_input.cbegin(),
+    test_input.begin(),
     3,
     [&test_output](const int i, const int j) {
       test_output.push_back(i + j);
     }
   );
-  results.enforce_exactly_equal(
-    std::equal(
-      test_output.cbegin(),
-      test_output.cend(),
-      reference_output.cbegin(),
-      reference_output.cend()
-    ),
-    true
-  );
+
+  results.enforce_exactly_equal(test_output, reference_output);
 
   return results;
 }
@@ -163,10 +151,11 @@ static auto test_for_each_adjacent_n() -> supl::test_results
 static auto test_for_each_all() -> supl::test_results
 {
   supl::test_results results;
-  std::array test1 {4, 9, 16, 25};
-  std::array test2 {2, 3, 4, 5};
+
+  const std::array test1 {4, 9, 16, 25};
+  const std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
-  std::vector reference_output {2, 3, 4, 5};
+  const std::vector reference_output {2, 3, 4, 5};
 
   supl::for_each_all(
     [&test_output](const int a, const int b) {
@@ -176,15 +165,7 @@ static auto test_for_each_all() -> supl::test_results
     test2
   );
 
-  results.enforce_exactly_equal(
-    std::equal(
-      test_output.cbegin(),
-      test_output.cend(),
-      reference_output.cbegin(),
-      reference_output.cend()
-    ),
-    true
-  );
+  results.enforce_exactly_equal(test_output, reference_output);
 
   return results;
 }
@@ -192,10 +173,11 @@ static auto test_for_each_all() -> supl::test_results
 static auto test_for_each_all_c() -> supl::test_results
 {
   supl::test_results results;
+
   const std::array test1 {4, 9, 16, 25};
   const std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
-  std::vector reference_output {2, 3, 4, 5};
+  const std::vector reference_output {2, 3, 4, 5};
 
   supl::for_each_all_c(
     [&test_output](const int a, const int b) {
@@ -205,15 +187,7 @@ static auto test_for_each_all_c() -> supl::test_results
     test2
   );
 
-  results.enforce_exactly_equal(
-    std::equal(
-      test_output.cbegin(),
-      test_output.cend(),
-      reference_output.cbegin(),
-      reference_output.cend()
-    ),
-    true
-  );
+  results.enforce_exactly_equal(test_output, reference_output);
 
   return results;
 }
@@ -221,10 +195,11 @@ static auto test_for_each_all_c() -> supl::test_results
 static auto test_for_each_all_n() -> supl::test_results
 {
   supl::test_results results;
-  std::array test1 {4, 9, 16, 25};
-  std::array test2 {2, 3, 4, 5};
+
+  const std::array test1 {4, 9, 16, 25};
+  const std::array test2 {2, 3, 4, 5};
   std::vector<int> test_output;
-  std::vector reference_output {2, 3, 4};
+  const std::vector reference_output {2, 3, 4};
 
   supl::for_each_all_n(
     [&test_output](const int a, const int b) {
@@ -235,15 +210,7 @@ static auto test_for_each_all_n() -> supl::test_results
     test2.cbegin()
   );
 
-  results.enforce_exactly_equal(
-    std::equal(
-      test_output.cbegin(),
-      test_output.cend(),
-      reference_output.cbegin(),
-      reference_output.cend()
-    ),
-    true
-  );
+  results.enforce_exactly_equal(test_output, reference_output);
 
   return results;
 }
@@ -251,11 +218,11 @@ static auto test_for_each_all_n() -> supl::test_results
 static auto test_for_each_both() -> supl::test_results
 {
   supl::test_results results;
-  std::array<int, 5> test_input_1 {};
-  std::iota(test_input_1.begin(), test_input_1.end(), 1);
-  std::array<int, 4> test_input_2 {10, 20, 30, 40};
+
+  const std::array<int, 5> test_input_1 {1, 2, 3, 4, 5};
+  const std::array<int, 4> test_input_2 {10, 20, 30, 40};
   std::vector<int> test_output;
-  std::array<int, 4> reference_output {11, 22, 33, 44};
+  const std::vector reference_output {11, 22, 33, 44};
 
   supl::for_each_both(
     test_input_1.cbegin(),
@@ -267,15 +234,7 @@ static auto test_for_each_both() -> supl::test_results
     }
   );
 
-  results.enforce_exactly_equal(
-    std::equal(
-      test_output.cbegin(),
-      test_output.cend(),
-      reference_output.cbegin(),
-      reference_output.cend()
-    ),
-    true
-  );
+  results.enforce_exactly_equal(test_output, reference_output);
 
   return results;
 }
@@ -283,11 +242,10 @@ static auto test_for_each_both() -> supl::test_results
 static auto test_for_each_both_n() -> supl::test_results
 {
   supl::test_results results;
-  std::array<int, 5> test_input_1 {};
-  std::iota(test_input_1.begin(), test_input_1.end(), 1);
-  std::array<int, 4> test_input_2 {10, 20, 30, 40};
+  const std::array<int, 5> test_input_1 {1, 2, 3, 4, 5};
+  const std::array<int, 4> test_input_2 {10, 20, 30, 40};
   std::vector<int> test_output;
-  std::array<int, 2> reference_output {11, 22};
+  const std::vector reference_output {11, 22};
 
   supl::for_each_both_n(
     test_input_1.cbegin(),
@@ -298,15 +256,7 @@ static auto test_for_each_both_n() -> supl::test_results
     }
   );
 
-  results.enforce_exactly_equal(
-    std::equal(
-      test_output.cbegin(),
-      test_output.cend(),
-      reference_output.cbegin(),
-      reference_output.cend()
-    ),
-    true
-  );
+  results.enforce_exactly_equal(test_output, reference_output);
 
   return results;
 }
@@ -371,8 +321,8 @@ static auto test_copy() -> supl::test_results
 
   results.enforce_exactly_equal(result1, expected1);
 
-  std::array expected2 {1, 2, 3, 4};
-  std::array result2 {[&]() {
+  const std::array expected2 {1, 2, 3, 4};
+  const std::array result2 {[&]() {
     std::array<int, 4> retval {};
     auto* oitr {
       supl::copy(from_arr.begin(), from_arr.begin() + 4, retval.begin())};

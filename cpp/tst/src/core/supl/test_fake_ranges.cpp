@@ -83,7 +83,7 @@ static auto test_iota() -> supl::test_results
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   constexpr static auto result1 {[]() {
     std::array<std::size_t, 10> retval {};
-    for ( std::size_t i : supl::fr::iota<std::size_t> {1, 11} ) {
+    for ( const std::size_t i : supl::fr::iota<std::size_t> {1, 11} ) {
       retval.at(i - 1) = i;
     }
     return retval;
@@ -91,7 +91,8 @@ static auto test_iota() -> supl::test_results
 
   results.enforce_exactly_equal(result1, expected1);
 
-  std::array<std::size_t, 10> expected2 {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  const std::array<std::size_t, 10> expected2 {
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   auto result2 {[]() {
     std::array<std::size_t, 10> retval {};
     std::copy(

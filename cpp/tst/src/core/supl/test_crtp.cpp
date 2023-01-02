@@ -32,9 +32,9 @@ static auto test_rel_ops() -> supl::test_results
     }
   };
 
-  rel rel_A {5};
-  rel rel_B {5};
-  rel rel_C {8};
+  const rel rel_A {5};
+  const rel rel_B {5};
+  const rel rel_C {8};
 
   results.enforce_exactly_equal(rel_A == rel_B, true);
   results.enforce_exactly_equal(rel_A != rel_B, false);
@@ -116,6 +116,7 @@ static auto test_add_to_string() -> supl::test_results
   struct consumer : supl::add_to_string<consumer> {
     int value {42};
 
+    // NOLINTNEXTLINE(*unused*)
     void to_stream(std::ostream& out) const noexcept
     {
       out << value;
@@ -136,13 +137,14 @@ static auto test_add_ostream() -> supl::test_results
   struct consumer_to_stream : supl::add_ostream<consumer_to_stream> {
     int value {42};
 
+    // NOLINTNEXTLINE(*unused*)
     void to_stream(std::ostream& out) const noexcept
     {
       out << value;
     }
   };
 
-  consumer_to_stream test1 {};
+  const consumer_to_stream test1 {};
 
   std::stringstream str1;
   str1 << test1;
@@ -151,18 +153,20 @@ static auto test_add_ostream() -> supl::test_results
   struct consumer_iterators : supl::add_ostream<consumer_iterators> {
     std::vector<int> value {1, 2, 42, 18};
 
+    // NOLINTNEXTLINE(*unused*)
     [[nodiscard]] auto begin() const noexcept
     {
       return value.begin();
     }
 
+    // NOLINTNEXTLINE(*unused*)
     [[nodiscard]] auto end() const noexcept
     {
       return value.end();
     }
   };
 
-  consumer_iterators test2 {};
+  const consumer_iterators test2 {};
 
   std::stringstream str2;
   str2 << test2;
@@ -187,7 +191,7 @@ static auto test_add_ostream() -> supl::test_results
     }
   };
 
-  consumer_both test3 {};
+  const consumer_both test3 {};
 
   std::stringstream discard;
   test3.to_stream(discard);

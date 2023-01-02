@@ -84,8 +84,10 @@ using remove_cvref_t = typename remove_cvref<T>::type;
 /* }}} */
 template <typename T, typename... Pack>
 struct is_type_in_pack
-    : std::conditional_t<(std::is_same_v<T, Pack> || ...), std::true_type,
-                         std::false_type> {};
+    : std::conditional_t<
+        (std::is_same_v<T, Pack> || ...),
+        std::true_type,
+        std::false_type> { };
 
 /* {{{ doc */
 /**
@@ -94,7 +96,7 @@ struct is_type_in_pack
  */
 /* }}} */
 template <typename T>
-struct is_type_in_pack<T> : std::false_type {};
+struct is_type_in_pack<T> : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -104,7 +106,7 @@ struct is_type_in_pack<T> : std::false_type {};
 /* }}} */
 template <typename T, typename... Pack>
 constexpr inline bool is_type_in_pack_v =
-    is_type_in_pack<T, Pack...>::value;
+  is_type_in_pack<T, Pack...>::value;
 
 ///////////////////////////////////////////// peel_first
 
@@ -115,7 +117,7 @@ constexpr inline bool is_type_in_pack_v =
  */
 /* }}} */
 template <typename... Pack>
-struct peel_first : type_identity<void> {};
+struct peel_first : type_identity<void> { };
 
 /* {{{ doc */
 /**
@@ -124,7 +126,7 @@ struct peel_first : type_identity<void> {};
  */
 /* }}} */
 template <typename First, typename... Pack>
-struct peel_first<First, Pack...> : type_identity<First> {};
+struct peel_first<First, Pack...> : type_identity<First> { };
 
 /* {{{ doc */
 /**
@@ -144,7 +146,7 @@ using peel_first_t = typename peel_first<Pack...>::type;
  */
 /* }}} */
 template <typename... Pack>
-struct peel_last : type_identity<void> {};
+struct peel_last : type_identity<void> { };
 
 /* {{{ doc */
 /**
@@ -154,7 +156,7 @@ struct peel_last : type_identity<void> {};
 /* }}} */
 template <typename First, typename... Pack>
 struct peel_last<First, Pack...>
-    : type_identity<typename peel_last<Pack...>::type> {};
+    : type_identity<typename peel_last<Pack...>::type> { };
 
 /* {{{ doc */
 /**
@@ -163,7 +165,7 @@ struct peel_last<First, Pack...>
  */
 /* }}} */
 template <typename Last>
-struct peel_last<Last> : type_identity<Last> {};
+struct peel_last<Last> : type_identity<Last> { };
 
 /* {{{ doc */
 /**
@@ -184,8 +186,9 @@ using peel_last_t = typename peel_last<Pack...>::type;
 /* }}} */
 template <typename... Pack>
 using is_pack_uniform = std::conditional_t<
-    (std::is_same_v<peel_first_t<Pack...>, Pack> && ...), std::true_type,
-    std::false_type>;
+  (std::is_same_v<peel_first_t<Pack...>, Pack> && ...),
+  std::true_type,
+  std::false_type>;
 
 /* {{{ doc */
 /**
@@ -206,8 +209,9 @@ constexpr inline bool is_pack_uniform_v = is_pack_uniform<Pack...>::value;
 /* }}} */
 template <typename T, typename... Pack>
 struct is_pack_only
-    : std::conjunction<is_pack_uniform<Pack...>,
-                       std::is_same<T, peel_first_t<Pack...>>> {};
+    : std::conjunction<
+        is_pack_uniform<Pack...>,
+        std::is_same<T, peel_first_t<Pack...>>> { };
 
 /* {{{ doc */
 /**
@@ -217,7 +221,7 @@ struct is_pack_only
  */
 /* }}} */
 template <typename T>
-struct is_pack_only<T> : std::false_type {};
+struct is_pack_only<T> : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -237,7 +241,7 @@ constexpr inline bool is_pack_only_v = is_pack_only<T, Pack...>::value;
  */
 /* }}} */
 template <typename T, typename = void>
-struct is_iterable : std::false_type {};
+struct is_iterable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -247,9 +251,11 @@ struct is_iterable : std::false_type {};
  */
 /* }}} */
 template <typename T>
-struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T&>())),
-                                  decltype(std::end(std::declval<T&>()))>>
-    : std::true_type {};
+struct is_iterable<
+  T,
+  std::void_t<
+    decltype(std::begin(std::declval<T&>())),
+    decltype(std::end(std::declval<T&>()))>> : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -270,7 +276,7 @@ constexpr inline bool is_iterable_v = is_iterable<T>::value;
  */
 /* }}} */
 template <typename T, typename = void>
-struct is_iterator : std::false_type {};
+struct is_iterator : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -280,9 +286,11 @@ struct is_iterator : std::false_type {};
  */
 /* }}} */
 template <typename T>
-struct is_iterator<T, std::void_t<decltype(*std::declval<T>()),
-                                  decltype(++std::declval<T&>())>>
-    : std::true_type {};
+struct is_iterator<
+  T,
+  std::
+    void_t<decltype(*std::declval<T>()), decltype(++std::declval<T&>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -304,8 +312,8 @@ constexpr inline bool is_iterator_v = is_iterator<T>::value;
 template <typename T>
 struct is_forward
     : std::is_base_of<
-          std::forward_iterator_tag,
-          typename std::iterator_traits<T>::iterator_category> {};
+        std::forward_iterator_tag,
+        typename std::iterator_traits<T>::iterator_category> { };
 
 /* {{{ doc */
 /**
@@ -327,8 +335,8 @@ constexpr inline bool is_forward_v = is_forward<T>::value;
 template <typename T>
 struct is_bidirectional
     : std::is_base_of<
-          std::bidirectional_iterator_tag,
-          typename std::iterator_traits<T>::iterator_category> {};
+        std::bidirectional_iterator_tag,
+        typename std::iterator_traits<T>::iterator_category> { };
 
 /* {{{ doc */
 /**
@@ -350,8 +358,8 @@ constexpr inline bool is_bidirectional_v = is_bidirectional<T>::value;
 template <typename T>
 struct is_random_access
     : std::is_base_of<
-          std::random_access_iterator_tag,
-          typename std::iterator_traits<T>::iterator_category> {};
+        std::random_access_iterator_tag,
+        typename std::iterator_traits<T>::iterator_category> { };
 
 /* {{{ doc */
 /**
@@ -365,24 +373,24 @@ constexpr inline bool is_random_access_v = is_random_access<T>::value;
 ///////////////////////////////////////////// is_tuple
 
 namespace impl {
-/* {{{ doc */
-/**
+  /* {{{ doc */
+  /**
  * @brief Partial implementation of a metafunction to determine
  * if a type is a std::tuple.
  */
-/* }}} */
-template <typename... Ts>
-struct is_tuple_impl : std::false_type {};
+  /* }}} */
+  template <typename... Ts>
+  struct is_tuple_impl : std::false_type { };
 
-/* {{{ doc */
-/**
+  /* {{{ doc */
+  /**
  * @brief Partial implementation of a metafunction to determine
  * if a type is a std::tuple. Specialization for true case.
  */
-/* }}} */
-template <typename... Ts>
-struct is_tuple_impl<std::tuple<Ts...>> : std::true_type {};
-} // namespace impl
+  /* }}} */
+  template <typename... Ts>
+  struct is_tuple_impl<std::tuple<Ts...>> : std::true_type { };
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -390,7 +398,7 @@ struct is_tuple_impl<std::tuple<Ts...>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_tuple : impl::is_tuple_impl<remove_cvref_t<T>> {};
+struct is_tuple : impl::is_tuple_impl<remove_cvref_t<T>> { };
 
 /* {{{ doc */
 /**
@@ -404,24 +412,24 @@ constexpr inline bool is_tuple_v = is_tuple<T>::value;
 ///////////////////////////////////////////// is_pair
 
 namespace impl {
-/* {{{ doc */
-/**
+  /* {{{ doc */
+  /**
  * @brief Partial implementation of a metafunction to determine
  * if a type is a std::pair.
  */
-/* }}} */
-template <typename T>
-struct is_pair_impl : std::false_type {};
+  /* }}} */
+  template <typename T>
+  struct is_pair_impl : std::false_type { };
 
-/* {{{ doc */
-/**
+  /* {{{ doc */
+  /**
  * @brief Partial implementation of a metafunction to determine
  * if a type is a std::pair. Specialization for true case.
  */
-/* }}} */
-template <typename First, typename Second>
-struct is_pair_impl<std::pair<First, Second>> : std::true_type {};
-} // namespace impl
+  /* }}} */
+  template <typename First, typename Second>
+  struct is_pair_impl<std::pair<First, Second>> : std::true_type { };
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -429,7 +437,7 @@ struct is_pair_impl<std::pair<First, Second>> : std::true_type {};
  */
 /* }}} */
 template <typename T>
-struct is_pair : impl::is_pair_impl<remove_cvref_t<T>> {};
+struct is_pair : impl::is_pair_impl<remove_cvref_t<T>> { };
 
 /* {{{ doc */
 /**
@@ -443,19 +451,19 @@ constexpr inline bool is_pair_v = is_pair<T>::value;
 ///////////////////////////////////////////// is_smart_pointer
 
 template <typename T>
-struct is_smart_pointer : std::false_type {};
+struct is_smart_pointer : std::false_type { };
 
 template <typename T>
-struct is_smart_pointer<std::unique_ptr<T>> : std::true_type {};
+struct is_smart_pointer<std::unique_ptr<T>> : std::true_type { };
 
 template <typename T, typename U>
-struct is_smart_pointer<std::unique_ptr<T, U>> : std::true_type {};
+struct is_smart_pointer<std::unique_ptr<T, U>> : std::true_type { };
 
 template <typename T>
-struct is_smart_pointer<std::shared_ptr<T>> : std::true_type {};
+struct is_smart_pointer<std::shared_ptr<T>> : std::true_type { };
 
 template <typename T>
-struct is_smart_pointer<std::weak_ptr<T>> : std::true_type {};
+struct is_smart_pointer<std::weak_ptr<T>> : std::true_type { };
 
 template <typename T>
 constexpr inline bool is_smart_pointer_v = is_smart_pointer<T>::value;
@@ -468,7 +476,7 @@ constexpr inline bool is_smart_pointer_v = is_smart_pointer<T>::value;
  */
 /* }}} */
 template <typename T, typename = void>
-struct is_printable : std::false_type {};
+struct is_printable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -477,9 +485,11 @@ struct is_printable : std::false_type {};
  */
 /* }}} */
 template <typename T>
-struct is_printable<T, std::void_t<decltype(std::declval<std::ostream&>()
-                                            << std::declval<T>())>>
-    : std::true_type {};
+struct is_printable<
+  T,
+  std::void_t<
+    decltype(std::declval<std::ostream&>() << std::declval<T>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -498,7 +508,7 @@ constexpr inline bool is_printable_v = is_printable<T>::value;
  */
 /* }}} */
 template <typename T, typename U, typename = void>
-struct are_equality_comparable : std::false_type {};
+struct are_equality_comparable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -508,8 +518,10 @@ struct are_equality_comparable : std::false_type {};
 /* }}} */
 template <typename T, typename U>
 struct are_equality_comparable<
-    T, U, std::void_t<decltype(std::declval<T>() == std::declval<U>())>>
-    : std::true_type {};
+  T,
+  U,
+  std::void_t<decltype(std::declval<T>() == std::declval<U>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -519,7 +531,7 @@ struct are_equality_comparable<
 /* }}} */
 template <typename T, typename U>
 constexpr inline bool are_equality_comparable_v =
-    are_equality_comparable<T, U>::value;
+  are_equality_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_inequality_comparable
 
@@ -529,7 +541,7 @@ constexpr inline bool are_equality_comparable_v =
  */
 /* }}} */
 template <typename T, typename U, typename = void>
-struct are_inequality_comparable : std::false_type {};
+struct are_inequality_comparable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -539,8 +551,10 @@ struct are_inequality_comparable : std::false_type {};
 /* }}} */
 template <typename T, typename U>
 struct are_inequality_comparable<
-    T, U, std::void_t<decltype(std::declval<T>() != std::declval<U>())>>
-    : std::true_type {};
+  T,
+  U,
+  std::void_t<decltype(std::declval<T>() != std::declval<U>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -550,7 +564,7 @@ struct are_inequality_comparable<
 /* }}} */
 template <typename T, typename U>
 constexpr inline bool are_inequality_comparable_v =
-    are_inequality_comparable<T, U>::value;
+  are_inequality_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_less_comparable
 
@@ -560,7 +574,7 @@ constexpr inline bool are_inequality_comparable_v =
  */
 /* }}} */
 template <typename T, typename U, typename = void>
-struct are_less_comparable : std::false_type {};
+struct are_less_comparable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -570,8 +584,10 @@ struct are_less_comparable : std::false_type {};
 /* }}} */
 template <typename T, typename U>
 struct are_less_comparable<
-    T, U, std::void_t<decltype(std::declval<T>() < std::declval<U>())>>
-    : std::true_type {};
+  T,
+  U,
+  std::void_t<decltype(std::declval<T>() < std::declval<U>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -581,7 +597,7 @@ struct are_less_comparable<
 /* }}} */
 template <typename T, typename U>
 constexpr inline bool are_less_comparable_v =
-    are_less_comparable<T, U>::value;
+  are_less_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_less_eq_comparable
 
@@ -591,7 +607,7 @@ constexpr inline bool are_less_comparable_v =
  */
 /* }}} */
 template <typename T, typename U, typename = void>
-struct are_less_eq_comparable : std::false_type {};
+struct are_less_eq_comparable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -601,8 +617,10 @@ struct are_less_eq_comparable : std::false_type {};
 /* }}} */
 template <typename T, typename U>
 struct are_less_eq_comparable<
-    T, U, std::void_t<decltype(std::declval<T>() <= std::declval<U>())>>
-    : std::true_type {};
+  T,
+  U,
+  std::void_t<decltype(std::declval<T>() <= std::declval<U>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -612,7 +630,7 @@ struct are_less_eq_comparable<
 /* }}} */
 template <typename T, typename U>
 constexpr inline bool are_less_eq_comparable_v =
-    are_less_eq_comparable<T, U>::value;
+  are_less_eq_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_less_comparable
 
@@ -622,7 +640,7 @@ constexpr inline bool are_less_eq_comparable_v =
  */
 /* }}} */
 template <typename T, typename U, typename = void>
-struct are_greater_comparable : std::false_type {};
+struct are_greater_comparable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -632,8 +650,10 @@ struct are_greater_comparable : std::false_type {};
 /* }}} */
 template <typename T, typename U>
 struct are_greater_comparable<
-    T, U, std::void_t<decltype(std::declval<T>() > std::declval<U>())>>
-    : std::true_type {};
+  T,
+  U,
+  std::void_t<decltype(std::declval<T>() > std::declval<U>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -643,7 +663,7 @@ struct are_greater_comparable<
 /* }}} */
 template <typename T, typename U>
 constexpr inline bool are_greater_comparable_v =
-    are_greater_comparable<T, U>::value;
+  are_greater_comparable<T, U>::value;
 
 ///////////////////////////////////////////// are_greater_eq_comparable
 
@@ -653,7 +673,7 @@ constexpr inline bool are_greater_comparable_v =
  */
 /* }}} */
 template <typename T, typename U, typename = void>
-struct are_greater_eq_comparable : std::false_type {};
+struct are_greater_eq_comparable : std::false_type { };
 
 /* {{{ doc */
 /**
@@ -663,8 +683,10 @@ struct are_greater_eq_comparable : std::false_type {};
 /* }}} */
 template <typename T, typename U>
 struct are_greater_eq_comparable<
-    T, U, std::void_t<decltype(std::declval<T>() >= std::declval<U>())>>
-    : std::true_type {};
+  T,
+  U,
+  std::void_t<decltype(std::declval<T>() >= std::declval<U>())>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -674,7 +696,7 @@ struct are_greater_eq_comparable<
 /* }}} */
 template <typename T, typename U>
 constexpr inline bool are_greater_eq_comparable_v =
-    are_greater_eq_comparable<T, U>::value;
+  are_greater_eq_comparable<T, U>::value;
 
 ///////////////////////////////////////////// make_const_ref
 
@@ -687,8 +709,10 @@ constexpr inline bool are_greater_eq_comparable_v =
  */
 /* }}} */
 template <typename T>
-struct make_const_ref : type_identity<std::add_lvalue_reference_t<
-                            std::add_const_t<remove_cvref_t<T>>>> {};
+struct make_const_ref
+    : type_identity<
+        std::add_lvalue_reference_t<std::add_const_t<remove_cvref_t<T>>>> {
+};
 
 /* {{{ doc */
 /**
@@ -817,24 +841,36 @@ struct binary_partial_apply {
  * sequential_compose_v<int, std::add_const, std::is_const> -> true
  */
 /* }}} */
-template <typename T, template <typename> typename FUNC,
-          template <typename> typename... FUNC_PACK>
+template <
+  typename T,
+  template <typename>
+  typename FUNC,
+  template <typename>
+  typename... FUNC_PACK>
 struct sequential_apply
-    : sequential_apply<typename FUNC<T>::type, FUNC_PACK...> {};
+    : sequential_apply<typename FUNC<T>::type, FUNC_PACK...> { };
 
 template <typename T, template <typename> typename FUNC>
-struct sequential_apply<T, FUNC> : FUNC<T> {};
+struct sequential_apply<T, FUNC> : FUNC<T> { };
 
-template <typename T, template <typename> typename FUNC,
-          template <typename> typename... FUNC_PACK>
+template <
+  typename T,
+  template <typename>
+  typename FUNC,
+  template <typename>
+  typename... FUNC_PACK>
 using sequential_apply_t =
-    typename sequential_apply<T, FUNC, FUNC_PACK...>::type;
+  typename sequential_apply<T, FUNC, FUNC_PACK...>::type;
 
-template <typename T, template <typename> typename FUNC,
-          template <typename> typename... FUNC_PACK>
+template <
+  typename T,
+  template <typename>
+  typename FUNC,
+  template <typename>
+  typename... FUNC_PACK>
 constexpr inline auto sequential_apply_v =
-    sequential_apply<T, FUNC, FUNC_PACK...>::value;
+  sequential_apply<T, FUNC, FUNC_PACK...>::value;
 
-} // namespace supl
+}  // namespace supl
 
 #endif

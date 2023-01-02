@@ -19,7 +19,7 @@ static auto test_rel_ops() -> supl::test_results
 
     explicit rel(int value)
         : m_value {value}
-    {}
+    { }
 
     auto operator==(const rel& rhs) const noexcept -> bool
     {
@@ -61,7 +61,7 @@ static auto test_rel_ops() -> supl::test_results
 
     constexpr explicit ct_rel(int value)
         : m_value {value}
-    {}
+    { }
 
     constexpr auto operator==(const ct_rel& rhs) const noexcept -> bool
     {

@@ -10,9 +10,9 @@
 namespace supl {
 
 namespace constants {
-constexpr inline int test_output_width {60};
-constexpr inline char fill_char {'.'};
-} // namespace constants
+  constexpr inline int test_output_width {60};
+  constexpr inline char fill_char {'.'};
+}  // namespace constants
 
 /* {{{ doc */
 /**
@@ -52,11 +52,13 @@ public:
    * @param test_function Test function to be ran
    */
   /* }}} */
-  inline void add_test(std::string_view test_name,
-                       test_function_t test_function) noexcept
+  inline void add_test(
+    std::string_view test_name,
+    test_function_t test_function
+  ) noexcept
   {
-    m_test_functions.push_back(
-        test_function_data_t {test_name, test_function});
+    m_test_functions.push_back(test_function_data_t {
+      test_name, test_function});
   }
 
   /* {{{ doc */
@@ -69,7 +71,7 @@ public:
     std::vector<test_results> results;
     for ( auto&& test_data : m_test_functions ) {
       test_results test_result {test_data.function()};
-      if ( !test_result.test_passes() ) {
+      if ( ! test_result.test_passes() ) {
         std::cout << std::left << std::setw(constants::test_output_width)
                   << std::setfill(constants::fill_char) << test_data.name
                   << "FAIL" << '\n';
@@ -81,6 +83,6 @@ public:
   }
 };
 
-} // namespace supl
+}  // namespace supl
 
 #endif

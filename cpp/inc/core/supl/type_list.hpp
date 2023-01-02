@@ -32,7 +32,7 @@ namespace supl::tl {
  */
 /* }}} */
 template <typename... Pack>
-struct type_list {};
+struct type_list { };
 
 ///////////////////////////////////////////// func_wrapper
 
@@ -58,14 +58,14 @@ struct func_wrapper {
 ///////////////////////////////////////////// apply_wrapped
 
 template <typename Func, typename... Args>
-struct apply_wrapped : Func::template func<Args...> {};
+struct apply_wrapped : Func::template func<Args...> { };
 
 template <typename Func, typename... Args>
 using apply_wrapped_t = typename apply_wrapped<Func, Args...>::type;
 
 template <typename Func, typename... Args>
 constexpr inline auto apply_wrapped_v =
-    apply_wrapped<Func, Args...>::value;
+  apply_wrapped<Func, Args...>::value;
 
 ///////////////////////////////////////////// make_list
 
@@ -90,9 +90,12 @@ using make_list_t = typename make_list<LIST, Pack...>::type;
 template <typename T, typename LIST>
 struct contains;
 
-template <typename T, template <typename...> typename LIST,
-          typename... Pack>
-struct contains<T, LIST<Pack...>> : is_type_in_pack<T, Pack...> {};
+template <
+  typename T,
+  template <typename...>
+  typename LIST,
+  typename... Pack>
+struct contains<T, LIST<Pack...>> : is_type_in_pack<T, Pack...> { };
 
 template <typename T, typename LIST>
 constexpr inline bool contains_v = contains<T, LIST>::value;
@@ -108,7 +111,7 @@ template <typename LIST>
 struct size;
 
 template <template <typename...> typename LIST, typename... Pack>
-struct size<LIST<Pack...>> : index_constant<sizeof...(Pack)> {};
+struct size<LIST<Pack...>> : index_constant<sizeof...(Pack)> { };
 
 template <typename LIST>
 constexpr inline std::size_t size_v = size<LIST>::value;
@@ -122,7 +125,7 @@ constexpr inline std::size_t size_v = size<LIST>::value;
 /* }}} */
 template <typename LIST>
 using empty =
-    std::conditional_t<size_v<LIST> == 0, std::true_type, std::false_type>;
+  std::conditional_t<size_v<LIST> == 0, std::true_type, std::false_type>;
 
 template <typename LIST>
 constexpr inline bool empty_v = empty<LIST>::value;
@@ -137,18 +140,20 @@ constexpr inline bool empty_v = empty<LIST>::value;
 template <typename... LISTS>
 struct concat;
 
-template <template <typename...> typename LIST, typename... Pack1,
-          typename... Pack2>
+template <
+  template <typename...>
+  typename LIST,
+  typename... Pack1,
+  typename... Pack2>
 struct concat<LIST<Pack1...>, LIST<Pack2...>>
-    : type_identity<LIST<Pack1..., Pack2...>> {};
+    : type_identity<LIST<Pack1..., Pack2...>> { };
 
-template <typename LIST1, typename LIST2, typename LIST3,
-          typename... LISTS>
+template <typename LIST1, typename LIST2, typename LIST3, typename... LISTS>
 struct concat<LIST1, LIST2, LIST3, LISTS...>
-    : concat<typename concat<LIST1, LIST2>::type, LIST3, LISTS...> {};
+    : concat<typename concat<LIST1, LIST2>::type, LIST3, LISTS...> { };
 
 template <typename LIST>
-struct concat<LIST> : type_identity<LIST> {};
+struct concat<LIST> : type_identity<LIST> { };
 
 template <typename... LISTS>
 using concat_t = typename concat<LISTS...>::type;
@@ -163,9 +168,12 @@ using concat_t = typename concat<LISTS...>::type;
 template <typename LIST>
 struct front;
 
-template <template <typename...> typename LIST, typename Front,
-          typename... Pack>
-struct front<LIST<Front, Pack...>> : type_identity<Front> {};
+template <
+  template <typename...>
+  typename LIST,
+  typename Front,
+  typename... Pack>
+struct front<LIST<Front, Pack...>> : type_identity<Front> { };
 
 template <typename LIST>
 using front_t = typename front<LIST>::type;
@@ -181,11 +189,18 @@ using front_t = typename front<LIST>::type;
 template <std::size_t Idx, typename LIST, std::size_t Current = 0>
 struct at_index;
 
-template <std::size_t Idx, template <typename...> typename LIST,
-          typename T, typename... Pack, std::size_t Current>
+template <
+  std::size_t Idx,
+  template <typename...>
+  typename LIST,
+  typename T,
+  typename... Pack,
+  std::size_t Current>
 struct at_index<Idx, LIST<T, Pack...>, Current>
-    : std::conditional_t<Idx == Current, type_identity<T>,
-                         at_index<Idx, LIST<Pack...>, Current + 1>> {
+    : std::conditional_t<
+        Idx == Current,
+        type_identity<T>,
+        at_index<Idx, LIST<Pack...>, Current + 1>> {
   static_assert(Idx - Current <= sizeof...(Pack), "Index out of bounds");
 };
 
@@ -216,10 +231,13 @@ using back_t = typename back<LIST>::type;
 template <typename LIST, typename... T>
 struct push_back;
 
-template <template <typename...> typename LIST, typename... T,
-          typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  typename... T,
+  typename... Pack>
 struct push_back<LIST<Pack...>, T...>
-    : type_identity<LIST<Pack..., T...>> {};
+    : type_identity<LIST<Pack..., T...>> { };
 
 template <typename LIST, typename... T>
 using push_back_t = typename push_back<LIST, T...>::type;
@@ -235,10 +253,13 @@ using push_back_t = typename push_back<LIST, T...>::type;
 template <typename LIST, typename... T>
 struct push_front;
 
-template <template <typename...> typename LIST, typename... Pack,
-          typename... T>
+template <
+  template <typename...>
+  typename LIST,
+  typename... Pack,
+  typename... T>
 struct push_front<LIST<Pack...>, T...>
-    : type_identity<LIST<T..., Pack...>> {};
+    : type_identity<LIST<T..., Pack...>> { };
 
 template <typename LIST, typename... T>
 using push_front_t = typename push_front<LIST, T...>::type;
@@ -247,12 +268,15 @@ using push_front_t = typename push_front<LIST, T...>::type;
 
 namespace impl {
 
-template <template <typename...> typename LIST, typename... Pack,
-          std::size_t... Idxs>
-auto front_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>)
+  template <
+    template <typename...>
+    typename LIST,
+    typename... Pack,
+    std::size_t... Idxs>
+  auto front_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>)
     -> LIST<at_index_t<Idxs, LIST<Pack...>>...>;
 
-} // namespace impl
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -263,7 +287,9 @@ auto front_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>)
 template <typename LIST, std::size_t N>
 struct front_n
     : type_identity<decltype(impl::front_n_impl(
-          std::declval<LIST>(), std::make_index_sequence<N> {}))> {
+        std::declval<LIST>(),
+        std::make_index_sequence<N> {}
+      ))> {
   static_assert(N <= size_v<LIST>);
 };
 
@@ -274,13 +300,17 @@ using front_n_t = typename front_n<LIST, N>::type;
 
 namespace impl {
 
-template <template <typename...> typename LIST, typename... Pack,
-          std::size_t... Idxs, std::size_t Offset>
-auto back_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
-                 index_constant<Offset>)
-    -> LIST<at_index_t<Idxs + Offset, LIST<Pack...>>...>;
+  template <
+    template <typename...>
+    typename LIST,
+    typename... Pack,
+    std::size_t... Idxs,
+    std::size_t Offset>
+  auto
+    back_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>, index_constant<Offset>)
+      -> LIST<at_index_t<Idxs + Offset, LIST<Pack...>>...>;
 
-} // namespace impl
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -289,9 +319,12 @@ auto back_n_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
  */
 /* }}} */
 template <typename LIST, std::size_t N>
-struct back_n : type_identity<decltype(impl::back_n_impl(
-                    std::declval<LIST>(), std::make_index_sequence<N> {},
-                    index_constant<size_v<LIST> - N> {}))> {
+struct back_n
+    : type_identity<decltype(impl::back_n_impl(
+        std::declval<LIST>(),
+        std::make_index_sequence<N> {},
+        index_constant<size_v<LIST> - N> {}
+      ))> {
   static_assert(N <= size_v<LIST>);
 };
 
@@ -349,10 +382,13 @@ using pop_back_t = typename pop_back<LIST>::type;
 template <typename LIST>
 struct pop_front;
 
-template <template <typename...> typename LIST, typename Popped,
-          typename... Remaining>
+template <
+  template <typename...>
+  typename LIST,
+  typename Popped,
+  typename... Remaining>
 struct pop_front<LIST<Popped, Remaining...>>
-    : type_identity<LIST<Remaining...>> {};
+    : type_identity<LIST<Remaining...>> { };
 
 template <typename LIST>
 using pop_front_t = typename pop_front<LIST>::type;
@@ -361,13 +397,17 @@ using pop_front_t = typename pop_front<LIST>::type;
 
 namespace impl {
 
-template <template <typename...> typename LIST, std::size_t... Idxs,
-          std::size_t Begin, typename... Pack>
-auto sublist_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
-                  index_constant<Begin>)
-    -> LIST<at_index_t<Idxs + Begin, LIST<Pack...>>...>;
+  template <
+    template <typename...>
+    typename LIST,
+    std::size_t... Idxs,
+    std::size_t Begin,
+    typename... Pack>
+  auto
+    sublist_impl(LIST<Pack...>, std::index_sequence<Idxs...>, index_constant<Begin>)
+      -> LIST<at_index_t<Idxs + Begin, LIST<Pack...>>...>;
 
-} // namespace impl
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -378,8 +418,10 @@ auto sublist_impl(LIST<Pack...>, std::index_sequence<Idxs...>,
 template <typename LIST, std::size_t Begin, std::size_t End>
 struct sublist
     : type_identity<decltype(impl::sublist_impl(
-          std::declval<LIST>(), std::make_index_sequence<End - Begin> {},
-          index_constant<Begin> {}))> {
+        std::declval<LIST>(),
+        std::make_index_sequence<End - Begin> {},
+        index_constant<Begin> {}
+      ))> {
   static_assert(Begin <= End, "Illegal index range");
   static_assert(Begin <= size_v<LIST>, "Index out of bounds");
   static_assert(End <= size_v<LIST>, "Index out of bounds");
@@ -401,16 +443,20 @@ using sublist_t = typename sublist<LIST, Begin, End>::type;
 template <typename LIST, std::size_t Idx, typename... Inserted>
 struct insert;
 
-template <template <typename...> typename LIST, std::size_t Idx,
-          typename... Inserted, typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  std::size_t Idx,
+  typename... Inserted,
+  typename... Pack>
 struct insert<LIST<Pack...>, Idx, Inserted...>
     : concat<
-          // [0, Idx - 1) of input
-          front_n_t<LIST<Pack...>, Idx>,
-          // New elements
-          LIST<Inserted...>,
-          // [Idx, <END>) of input
-          drop_front_n_t<LIST<Pack...>, Idx>> {
+        // [0, Idx - 1) of input
+        front_n_t<LIST<Pack...>, Idx>,
+        // New elements
+        LIST<Inserted...>,
+        // [Idx, <END>) of input
+        drop_front_n_t<LIST<Pack...>, Idx>> {
   static_assert(Idx <= sizeof...(Pack), "Index out of bounds");
 };
 
@@ -427,11 +473,15 @@ using insert_t = typename insert<LIST, Idx, Inserted...>::type;
 template <typename LIST, std::size_t Idx>
 struct erase;
 
-template <template <typename...> typename LIST, std::size_t Idx,
-          typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  std::size_t Idx,
+  typename... Pack>
 struct erase<LIST<Pack...>, Idx>
-    : concat<front_n_t<LIST<Pack...>, Idx>,
-             drop_front_n_t<LIST<Pack...>, Idx + 1>> {
+    : concat<
+        front_n_t<LIST<Pack...>, Idx>,
+        drop_front_n_t<LIST<Pack...>, Idx + 1>> {
   static_assert(Idx <= sizeof...(Pack), "Index out of bounds");
 };
 
@@ -443,11 +493,17 @@ using erase_t = typename erase<LIST, Idx>::type;
 template <typename LIST, std::size_t Idx, typename T>
 struct replace;
 
-template <template <typename...> typename LIST, std::size_t Idx,
-          typename T, typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  std::size_t Idx,
+  typename T,
+  typename... Pack>
 struct replace<LIST<Pack...>, Idx, T>
-    : concat<front_n_t<LIST<Pack...>, Idx>, LIST<T>,
-             drop_front_n_t<LIST<Pack...>, Idx + 1>> {
+    : concat<
+        front_n_t<LIST<Pack...>, Idx>,
+        LIST<T>,
+        drop_front_n_t<LIST<Pack...>, Idx + 1>> {
   static_assert(Idx <= sizeof...(Pack), "Index out of bounds");
 };
 
@@ -462,13 +518,18 @@ using replace_t = typename replace<LIST, Idx, T>::type;
  */
 /* }}} */
 template <typename LIST, template <typename> typename PRED>
-struct all_of : std::conditional_t<PRED<front_t<LIST>>::value,
-                                   all_of<pop_front_t<LIST>, PRED>,
-                                   std::false_type> {};
+struct all_of
+    : std::conditional_t<
+        PRED<front_t<LIST>>::value,
+        all_of<pop_front_t<LIST>, PRED>,
+        std::false_type> { };
 
-template <template <typename...> typename LIST,
-          template <typename> typename PRED>
-struct all_of<LIST<>, PRED> : std::true_type {};
+template <
+  template <typename...>
+  typename LIST,
+  template <typename>
+  typename PRED>
+struct all_of<LIST<>, PRED> : std::true_type { };
 
 template <typename LIST, template <typename> typename PRED>
 constexpr inline bool all_of_v = all_of<LIST, PRED>::value;
@@ -482,12 +543,17 @@ constexpr inline bool all_of_v = all_of<LIST, PRED>::value;
 /* }}} */
 template <typename LIST, template <typename> typename PRED>
 struct any_of
-    : std::conditional_t<PRED<front_t<LIST>>::value, std::true_type,
-                         any_of<pop_front_t<LIST>, PRED>> {};
+    : std::conditional_t<
+        PRED<front_t<LIST>>::value,
+        std::true_type,
+        any_of<pop_front_t<LIST>, PRED>> { };
 
-template <template <typename...> typename LIST,
-          template <typename> typename PRED>
-struct any_of<LIST<>, PRED> : std::false_type {};
+template <
+  template <typename...>
+  typename LIST,
+  template <typename>
+  typename PRED>
+struct any_of<LIST<>, PRED> : std::false_type { };
 
 template <typename LIST, template <typename> typename PRED>
 constexpr inline bool any_of_v = any_of<LIST, PRED>::value;
@@ -501,12 +567,17 @@ constexpr inline bool any_of_v = any_of<LIST, PRED>::value;
 /* }}} */
 template <typename LIST, template <typename> typename PRED>
 struct none_of
-    : std::conditional_t<PRED<front_t<LIST>>::value, std::false_type,
-                         none_of<pop_front_t<LIST>, PRED>> {};
+    : std::conditional_t<
+        PRED<front_t<LIST>>::value,
+        std::false_type,
+        none_of<pop_front_t<LIST>, PRED>> { };
 
-template <template <typename...> typename LIST,
-          template <typename> typename PRED>
-struct none_of<LIST<>, PRED> : std::true_type {};
+template <
+  template <typename...>
+  typename LIST,
+  template <typename>
+  typename PRED>
+struct none_of<LIST<>, PRED> : std::true_type { };
 
 template <typename LIST, template <typename> typename PRED>
 constexpr inline bool none_of_v = none_of<LIST, PRED>::value;
@@ -524,10 +595,14 @@ constexpr inline bool none_of_v = none_of<LIST, PRED>::value;
 template <typename LIST, template <typename> typename PRED>
 struct transform;
 
-template <template <typename...> typename LIST,
-          template <typename> typename PRED, typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  template <typename>
+  typename PRED,
+  typename... Pack>
 struct transform<LIST<Pack...>, PRED>
-    : type_identity<LIST<typename PRED<Pack>::type...>> {};
+    : type_identity<LIST<typename PRED<Pack>::type...>> { };
 
 template <typename LIST, template <typename> typename PRED>
 using transform_t = typename transform<LIST, PRED>::type;
@@ -543,10 +618,13 @@ using transform_t = typename transform<LIST, PRED>::type;
 template <typename LIST>
 struct rotate_left;
 
-template <template <typename...> typename LIST, typename Front,
-          typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  typename Front,
+  typename... Pack>
 struct rotate_left<LIST<Front, Pack...>>
-    : type_identity<LIST<Pack..., Front>> {};
+    : type_identity<LIST<Pack..., Front>> { };
 
 template <typename LIST>
 using rotate_left_t = typename rotate_left<LIST>::type;
@@ -564,8 +642,9 @@ struct rotate_right;
 
 template <template <typename...> typename LIST, typename... Pack>
 struct rotate_right<LIST<Pack...>>
-    : type_identity<concat_t<LIST<back_t<LIST<Pack...>>>,
-                             pop_back_t<LIST<Pack...>>>> {};
+    : type_identity<
+        concat_t<LIST<back_t<LIST<Pack...>>>, pop_back_t<LIST<Pack...>>>> {
+};
 
 template <typename LIST>
 using rotate_right_t = typename rotate_right<LIST>::type;
@@ -584,8 +663,11 @@ using rotate_right_t = typename rotate_right<LIST>::type;
 template <typename LIST, std::size_t... Idxs>
 struct reorder;
 
-template <template <typename...> typename LIST, std::size_t... Idxs,
-          typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  std::size_t... Idxs,
+  typename... Pack>
 struct reorder<LIST<Pack...>, Idxs...>
     : type_identity<LIST<at_index_t<Idxs, LIST<Pack...>>...>> {
   static_assert(((Idxs < sizeof...(Pack)) && ...), "Index out of bounds");
@@ -598,29 +680,33 @@ using reorder_t = typename reorder<LIST, Idxs...>::type;
 
 namespace impl {
 
-template <typename OLD_LIST, typename NEW_LIST>
-struct reverse_impl;
+  template <typename OLD_LIST, typename NEW_LIST>
+  struct reverse_impl;
 
-template <template <typename...> typename LIST, typename Front,
-          typename... Old_Pack, typename... New_Pack>
-struct reverse_impl<LIST<Front, Old_Pack...>, LIST<New_Pack...>>
-    : reverse_impl<LIST<Old_Pack...>, LIST<Front, New_Pack...>> {};
+  template <
+    template <typename...>
+    typename LIST,
+    typename Front,
+    typename... Old_Pack,
+    typename... New_Pack>
+  struct reverse_impl<LIST<Front, Old_Pack...>, LIST<New_Pack...>>
+      : reverse_impl<LIST<Old_Pack...>, LIST<Front, New_Pack...>> { };
 
-template <template <typename...> typename LIST, typename... Pack>
-struct reverse_impl<LIST<>, LIST<Pack...>> : type_identity<LIST<Pack...>> {
-};
+  template <template <typename...> typename LIST, typename... Pack>
+  struct reverse_impl<LIST<>, LIST<Pack...>>
+      : type_identity<LIST<Pack...>> { };
 
-} // namespace impl
+}  // namespace impl
 
 template <typename LIST>
 struct reverse;
 
 template <template <typename...> typename LIST, typename... Pack>
-struct reverse<LIST<Pack...>> : impl::reverse_impl<LIST<Pack...>, LIST<>> {
-};
+struct reverse<LIST<Pack...>>
+    : impl::reverse_impl<LIST<Pack...>, LIST<>> { };
 
 template <template <typename...> typename LIST>
-struct reverse<LIST<>> : type_identity<LIST<>> {};
+struct reverse<LIST<>> : type_identity<LIST<>> { };
 
 template <typename LIST>
 using reverse_t = typename reverse<LIST>::type;
@@ -640,7 +726,7 @@ using reverse_t = typename reverse<LIST>::type;
 template <typename LIST, std::size_t Idx>
 struct split
     : type_identity<
-          std::pair<front_n_t<LIST, Idx>, drop_front_n_t<LIST, Idx>>> {
+        std::pair<front_n_t<LIST, Idx>, drop_front_n_t<LIST, Idx>>> {
   static_assert(Idx <= size_v<LIST>, "Index out of bounds");
 };
 
@@ -657,22 +743,22 @@ using split_t = typename split<LIST, Idx>::type;
 template <typename LIST, std::size_t Idx1, std::size_t Idx2>
 struct swap
     : concat<
-          // Unaltered first subrange
-          front_n_t<LIST, std::min(Idx1, Idx2)>,
-          // Swap
-          reorder_t<LIST, std::max(Idx1, Idx2)>,
-          // Unaltered second subrange
-          sublist_t<LIST, std::min(Idx1, Idx2) + 1, std::max(Idx1, Idx2)>,
-          // Swap
-          reorder_t<LIST, std::min(Idx1, Idx2)>,
-          // Unaltered third subrange
-          drop_front_n_t<LIST, std::max(Idx1, Idx2) + 1>
-          // end concat
-          > {};
+        // Unaltered first subrange
+        front_n_t<LIST, std::min(Idx1, Idx2)>,
+        // Swap
+        reorder_t<LIST, std::max(Idx1, Idx2)>,
+        // Unaltered second subrange
+        sublist_t<LIST, std::min(Idx1, Idx2) + 1, std::max(Idx1, Idx2)>,
+        // Swap
+        reorder_t<LIST, std::min(Idx1, Idx2)>,
+        // Unaltered third subrange
+        drop_front_n_t<LIST, std::max(Idx1, Idx2) + 1>
+        // end concat
+        > { };
 
 // No-op specialization
 template <typename LIST, std::size_t Idx>
-struct swap<LIST, Idx, Idx> : type_identity<LIST> {};
+struct swap<LIST, Idx, Idx> : type_identity<LIST> { };
 
 template <typename LIST, std::size_t Idx1, std::size_t Idx2>
 using swap_t = typename swap<LIST, Idx1, Idx2>::type;
@@ -693,12 +779,18 @@ using swap_t = typename swap<LIST, Idx1, Idx2>::type;
 template <typename LIST1, typename LIST2>
 struct interleave;
 
-template <template <typename...> typename LIST, typename... Pack1,
-          typename... Pack2>
+template <
+  template <typename...>
+  typename LIST,
+  typename... Pack1,
+  typename... Pack2>
 struct interleave<LIST<Pack1...>, LIST<Pack2...>>
     : concat<LIST<Pack1, Pack2>...> {
-  static_assert(sizeof...(Pack1) == sizeof...(Pack2),
-                "Lists must be of the same length");
+  static_assert(
+    sizeof...(Pack1) == sizeof...(Pack2),
+    "Lists must be of the same "
+    "length"
+  );
 };
 
 template <typename LIST1, typename LIST2>
@@ -720,20 +812,28 @@ using interleave_t = typename interleave<LIST1, LIST2>::type;
 template <typename LIST>
 struct has_duplicates;
 
-template <template <typename...> typename LIST, typename First,
-          typename... Pack>
+template <
+  template <typename...>
+  typename LIST,
+  typename First,
+  typename... Pack>
 struct has_duplicates<LIST<First, Pack...>>
-    : std::conditional_t<is_type_in_pack_v<First, Pack...>, std::true_type,
-                         has_duplicates<LIST<Pack...>>> {};
+    : std::conditional_t<
+        is_type_in_pack_v<First, Pack...>,
+        std::true_type,
+        has_duplicates<LIST<Pack...>>> { };
 
-template <template <typename...> typename LIST, typename Almost_Last,
-          typename Last>
+template <
+  template <typename...>
+  typename LIST,
+  typename Almost_Last,
+  typename Last>
 struct has_duplicates<LIST<Almost_Last, Last>>
-    : std::is_same<Almost_Last, Last> {};
+    : std::is_same<Almost_Last, Last> { };
 
 // An empty list has no duplicates
 template <template <typename...> typename LIST>
-struct has_duplicates<LIST<>> : std::false_type {};
+struct has_duplicates<LIST<>> : std::false_type { };
 
 template <typename LIST>
 constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
@@ -753,16 +853,25 @@ constexpr inline bool has_duplicates_v = has_duplicates<LIST>::value;
 template <typename LIST, typename Sought, std::size_t Idx = 0>
 struct find;
 
-template <template <typename...> typename LIST, typename Front,
-          typename... Pack, typename Sought, std::size_t Idx>
+template <
+  template <typename...>
+  typename LIST,
+  typename Front,
+  typename... Pack,
+  typename Sought,
+  std::size_t Idx>
 struct find<LIST<Front, Pack...>, Sought, Idx>
-    : std::conditional_t<std::is_same_v<Front, Sought>,
-                         index_constant<Idx>,
-                         find<LIST<Pack...>, Sought, Idx + 1>> {};
+    : std::conditional_t<
+        std::is_same_v<Front, Sought>,
+        index_constant<Idx>,
+        find<LIST<Pack...>, Sought, Idx + 1>> { };
 
-template <template <typename...> typename LIST, typename Sought,
-          std::size_t Idx>
-struct find<LIST<>, Sought, Idx> : index_constant<Idx> {};
+template <
+  template <typename...>
+  typename LIST,
+  typename Sought,
+  std::size_t Idx>
+struct find<LIST<>, Sought, Idx> : index_constant<Idx> { };
 
 template <typename LIST, typename Sought, std::size_t Idx = 0>
 constexpr inline std::size_t find_v = find<LIST, Sought, Idx>::value;
@@ -771,24 +880,29 @@ constexpr inline std::size_t find_v = find<LIST, Sought, Idx>::value;
 
 namespace impl {
 
-template <typename LIST, typename REBUILD>
-struct deduplicate_impl;
+  template <typename LIST, typename REBUILD>
+  struct deduplicate_impl;
 
-template <template <typename...> typename LIST, typename LFront,
-          typename... LPack, typename... Rebuild_Pack>
-struct deduplicate_impl<LIST<LFront, LPack...>, LIST<Rebuild_Pack...>>
-    : std::conditional_t<
+  template <
+    template <typename...>
+    typename LIST,
+    typename LFront,
+    typename... LPack,
+    typename... Rebuild_Pack>
+  struct deduplicate_impl<LIST<LFront, LPack...>, LIST<Rebuild_Pack...>>
+      : std::conditional_t<
           is_type_in_pack_v<LFront, Rebuild_Pack...>,
           deduplicate_impl<LIST<LPack...>, LIST<Rebuild_Pack...>>,
-          deduplicate_impl<LIST<LPack...>,
-                           push_back_t<LIST<Rebuild_Pack...>, LFront>>> {};
+          deduplicate_impl<
+            LIST<LPack...>,
+            push_back_t<LIST<Rebuild_Pack...>, LFront>>> { };
 
-// base case- done recursing
-template <template <typename...> typename LIST, typename... Rebuild_Pack>
-struct deduplicate_impl<LIST<>, LIST<Rebuild_Pack...>>
-    : type_identity<LIST<Rebuild_Pack...>> {};
+  // base case- done recursing
+  template <template <typename...> typename LIST, typename... Rebuild_Pack>
+  struct deduplicate_impl<LIST<>, LIST<Rebuild_Pack...>>
+      : type_identity<LIST<Rebuild_Pack...>> { };
 
-} // namespace impl
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -807,9 +921,10 @@ struct deduplicate;
 
 template <template <typename...> typename LIST, typename... Pack>
 struct deduplicate<LIST<Pack...>>
-    : std::conditional_t<has_duplicates_v<LIST<Pack...>>,
-                         impl::deduplicate_impl<LIST<Pack...>, LIST<>>,
-                         type_identity<LIST<Pack...>>> {};
+    : std::conditional_t<
+        has_duplicates_v<LIST<Pack...>>,
+        impl::deduplicate_impl<LIST<Pack...>, LIST<>>,
+        type_identity<LIST<Pack...>>> { };
 
 template <typename LIST>
 using deduplicate_t = typename deduplicate<LIST>::type;
@@ -818,24 +933,33 @@ using deduplicate_t = typename deduplicate<LIST>::type;
 
 namespace impl {
 
-template <typename LIST1, typename LIST2>
-struct equal_size_checked;
+  template <typename LIST1, typename LIST2>
+  struct equal_size_checked;
 
-template <template <typename...> typename LIST1,
-          template <typename...> typename LIST2, typename... Pack1,
-          typename... Pack2>
-struct equal_size_checked<LIST1<Pack1...>, LIST2<Pack2...>>
-    : std::conditional_t<std::is_same_v<front_t<LIST1<Pack1...>>,
-                                        front_t<LIST2<Pack2...>>>,
-                         equal_size_checked<pop_front_t<LIST1<Pack1...>>,
-                                            pop_front_t<LIST2<Pack2...>>>,
-                         std::false_type> {};
+  template <
+    template <typename...>
+    typename LIST1,
+    template <typename...>
+    typename LIST2,
+    typename... Pack1,
+    typename... Pack2>
+  struct equal_size_checked<LIST1<Pack1...>, LIST2<Pack2...>>
+      : std::conditional_t<
+          std::
+            is_same_v<front_t<LIST1<Pack1...>>, front_t<LIST2<Pack2...>>>,
+          equal_size_checked<
+            pop_front_t<LIST1<Pack1...>>,
+            pop_front_t<LIST2<Pack2...>>>,
+          std::false_type> { };
 
-template <template <typename...> typename LIST1,
-          template <typename...> typename LIST2>
-struct equal_size_checked<LIST1<>, LIST2<>> : std::true_type {};
+  template <
+    template <typename...>
+    typename LIST1,
+    template <typename...>
+    typename LIST2>
+  struct equal_size_checked<LIST1<>, LIST2<>> : std::true_type { };
 
-} // namespace impl
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -850,9 +974,11 @@ struct equal_size_checked<LIST1<>, LIST2<>> : std::true_type {};
  */
 /* }}} */
 template <typename LIST1, typename LIST2>
-struct equal : std::conditional_t<size_v<LIST1> == size_v<LIST2>,
-                                  impl::equal_size_checked<LIST1, LIST2>,
-                                  std::false_type> {};
+struct equal
+    : std::conditional_t<
+        size_v<LIST1> == size_v<LIST2>,
+        impl::equal_size_checked<LIST1, LIST2>,
+        std::false_type> { };
 
 template <typename LIST1, typename LIST2>
 constexpr inline bool equal_v = equal<LIST1, LIST2>::value;
@@ -871,11 +997,11 @@ constexpr inline bool equal_v = equal<LIST1, LIST2>::value;
 /* }}} */
 template <typename T, template <typename> typename... Funcs>
 using multi_apply =
-    type_identity<tl::type_list<typename Funcs<T>::type...>>;
+  type_identity<tl::type_list<typename Funcs<T>::type...>>;
 
 template <typename T, template <typename> typename... Funcs>
 using multi_apply_t = typename multi_apply<T, Funcs...>::type;
 
-} // namespace supl::tl
+}  // namespace supl::tl
 
 #endif

@@ -24,12 +24,15 @@ static auto test_not_equal_to() -> supl::test_results
 
   auto not_equal_to_5 {supl::not_equal_to(5)};
 
-  results.enforce_exactly_equal(not_equal_to_5(3), true,
-                                "(3 != 5) == true");
-  results.enforce_exactly_equal(not_equal_to_5(7), true,
-                                "(7 != 5) == true");
-  results.enforce_exactly_equal(not_equal_to_5(5), false,
-                                "(5 != 5) == false");
+  results.enforce_exactly_equal(
+    not_equal_to_5(3), true, "(3 != 5) == true"
+  );
+  results.enforce_exactly_equal(
+    not_equal_to_5(7), true, "(7 != 5) == true"
+  );
+  results.enforce_exactly_equal(
+    not_equal_to_5(5), false, "(5 != 5) == false"
+  );
 
   return results;
 }
@@ -40,11 +43,13 @@ static auto test_greater_than() -> supl::test_results
 
   auto greater_than_5 {supl::greater_than(5)};
 
-  results.enforce_exactly_equal(greater_than_5(3), false,
-                                "3 > 5 == false");
+  results.enforce_exactly_equal(
+    greater_than_5(3), false, "3 > 5 == false"
+  );
   results.enforce_exactly_equal(greater_than_5(7), true, "7 > 5 == true");
-  results.enforce_exactly_equal(greater_than_5(5), false,
-                                "5 > 5 == false");
+  results.enforce_exactly_equal(
+    greater_than_5(5), false, "5 > 5 == false"
+  );
 
   return results;
 }
@@ -55,12 +60,15 @@ static auto test_greater_eq_than() -> supl::test_results
 
   auto greater_eq_than_5 {supl::greater_eq_than(5)};
 
-  results.enforce_exactly_equal(greater_eq_than_5(3), false,
-                                "3 >= 5 == false");
-  results.enforce_exactly_equal(greater_eq_than_5(7), true,
-                                "7 >= 5 == true");
-  results.enforce_exactly_equal(greater_eq_than_5(5), true,
-                                "5 >= 5 == true");
+  results.enforce_exactly_equal(
+    greater_eq_than_5(3), false, "3 >= 5 == false"
+  );
+  results.enforce_exactly_equal(
+    greater_eq_than_5(7), true, "7 >= 5 == true"
+  );
+  results.enforce_exactly_equal(
+    greater_eq_than_5(5), true, "5 >= 5 == true"
+  );
 
   return results;
 }
@@ -85,8 +93,9 @@ static auto test_less_eq_than() -> supl::test_results
   auto less_eq_than_5 {supl::less_eq_than(5)};
 
   results.enforce_exactly_equal(less_eq_than_5(3), true, "3 <= 5 == true");
-  results.enforce_exactly_equal(less_eq_than_5(7), false,
-                                "7 <= 5 == false");
+  results.enforce_exactly_equal(
+    less_eq_than_5(7), false, "7 <= 5 == false"
+  );
   results.enforce_exactly_equal(less_eq_than_5(5), true, "5 <= 5 == true");
 
   return results;
@@ -182,7 +191,7 @@ static auto test_invoke() -> supl::test_results
   results.enforce_exactly_equal(result7, 5);
 
   constexpr static int result8 {
-      supl::invoke(&ref_qual::funcr, ref_qual {5})};
+    supl::invoke(&ref_qual::funcr, ref_qual {5})};
 
   results.enforce_exactly_equal(result8, 10);
 
@@ -191,7 +200,7 @@ static auto test_invoke() -> supl::test_results
   results.enforce_exactly_equal(result9, 8);
 
   constexpr static int result10 {
-      supl::invoke(&ref_qual::funcr2, ref_qual {5}, 3)};
+    supl::invoke(&ref_qual::funcr2, ref_qual {5}, 3)};
 
   results.enforce_exactly_equal(result10, 13);
 
@@ -211,7 +220,7 @@ static auto test_invoke() -> supl::test_results
 
     explicit virt_base(int value)
         : m_value {value}
-    {}
+    { }
 
     virtual ~virt_base() = default;
 
@@ -230,7 +239,7 @@ static auto test_invoke() -> supl::test_results
 
     explicit virt_derv(int value)
         : virt_base {value}
-    {}
+    { }
 
     ~virt_derv() override = default;
 

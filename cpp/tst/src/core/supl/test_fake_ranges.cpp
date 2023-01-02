@@ -79,25 +79,28 @@ static auto test_iota() -> supl::test_results
 {
   supl::test_results results;
 
-  constexpr static std::array<std::size_t, 10> expected1 {1, 2, 3, 4, 5,
-                                                          6, 7, 8, 9, 10};
+  constexpr static std::array<std::size_t, 10> expected1 {
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   constexpr static auto result1 {[]() {
     std::array<std::size_t, 10> retval {};
     for ( std::size_t i : supl::fr::iota<std::size_t> {1, 11} ) {
       retval.at(i - 1) = i;
     }
     return retval;
-  }()}; // IILE
+  }()};  // IILE
 
   results.enforce_exactly_equal(result1, expected1);
 
   std::array<std::size_t, 10> expected2 {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   auto result2 {[]() {
     std::array<std::size_t, 10> retval {};
-    std::copy(supl::fr::iota<std::size_t>::iterator {1},
-              supl::fr::iota<std::size_t>::iterator {11}, retval.begin());
+    std::copy(
+      supl::fr::iota<std::size_t>::iterator {1},
+      supl::fr::iota<std::size_t>::iterator {11},
+      retval.begin()
+    );
     return retval;
-  }()}; // IILE
+  }()};  // IILE
 
   results.enforce_exactly_equal(result2, expected2);
 

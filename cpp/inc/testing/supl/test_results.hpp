@@ -58,8 +58,11 @@ public:
   /* }}} */
   template <typename T>
   // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-  void enforce_exactly_equal(const T& result, const T& expected,
-                             const std::string& message = {})
+  void enforce_exactly_equal(
+    const T& result,
+    const T& expected,
+    const std::string& message = {}
+  )
   {
     m_case_count += 1;
 
@@ -91,6 +94,6 @@ public:
   }
 };
 
-} // namespace supl
+}  // namespace supl
 
 #endif

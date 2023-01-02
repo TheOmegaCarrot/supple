@@ -52,23 +52,23 @@ template <typename T>
 struct rel_ops {
   constexpr auto operator!=(const T& rhs) const noexcept -> bool
   {
-    return !(rhs == (*static_cast<const T*>(this)));
+    return ! (rhs == (*static_cast<const T*>(this)));
   }
 
   constexpr auto operator<=(const T& rhs) const noexcept -> bool
   {
     return ((*static_cast<const T*>(this)) < rhs)
-           || (rhs == (*static_cast<const T*>(this)));
+        || (rhs == (*static_cast<const T*>(this)));
   }
 
   constexpr auto operator>(const T& rhs) const noexcept -> bool
   {
-    return !this->operator<=(rhs);
+    return ! this->operator<=(rhs);
   }
 
   constexpr auto operator>=(const T& rhs) const noexcept -> bool
   {
-    return this->operator>(rhs) || !this->operator!=(rhs);
+    return this->operator>(rhs) || ! this->operator!=(rhs);
   }
 };
 
@@ -106,25 +106,27 @@ struct add_to_string {
 
 namespace impl {
 
-template <typename T>
-void to_stream_for_add_ostream_impl(std::ostream& out,
-                                    const T& value) noexcept
-{
-  ostream_state_restorer restorer(out);
+  template <typename T>
+  void to_stream_for_add_ostream_impl(
+    std::ostream& out,
+    const T& value
+  ) noexcept
+  {
+    ostream_state_restorer restorer(out);
 
-  out << std::boolalpha;
+    out << std::boolalpha;
 
-  if constexpr ( has_to_stream_v<T> ) {
+    if constexpr ( has_to_stream_v<T> ) {
 
-    value.to_stream(out);
+      value.to_stream(out);
 
-  } else if constexpr ( is_iterable_v<T> ) {
+    } else if constexpr ( is_iterable_v<T> ) {
 
-    impl::to_stream_iterable_impl(out, value);
+      impl::to_stream_iterable_impl(out, value);
+    }
   }
-}
 
-} // namespace impl
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -145,13 +147,13 @@ void to_stream_for_add_ostream_impl(std::ostream& out,
 template <typename T>
 struct add_ostream {
   friend inline auto operator<<(std::ostream& out, const T& value) noexcept
-      -> std::ostream&
+    -> std::ostream&
   {
     impl::to_stream_for_add_ostream_impl(out, value);
     return out;
   }
 };
 
-} // namespace supl
+}  // namespace supl
 
 #endif

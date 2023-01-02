@@ -32,7 +32,7 @@ public:
       std::vector<test_results> result_vector {section.run()};
       for ( const test_results& result : result_vector ) {
         num_test_functions += 1;
-        if ( !result.test_passes() ) {
+        if ( ! result.test_passes() ) {
           num_failing_test_functions += 1;
         }
       }
@@ -49,6 +49,6 @@ public:
   }
 };
 
-} // namespace supl
+}  // namespace supl
 
 #endif

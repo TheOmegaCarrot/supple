@@ -249,7 +249,7 @@ static auto test_invoke() -> supl::test_results
     }
   };
 
-  std::unique_ptr<virt_base> vptr {std::make_unique<virt_derv>(5)};
+  const std::unique_ptr<virt_base> vptr {std::make_unique<virt_derv>(5)};
 
   const int result11 {supl::invoke(&virt_base::func, vptr.get(), 3)};
 

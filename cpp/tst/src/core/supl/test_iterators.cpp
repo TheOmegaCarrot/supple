@@ -13,12 +13,11 @@
 static auto test_last() -> supl::test_results
 {
   supl::test_results results;
-  std::array<int, 5> test1 {};
-  std::iota(test1.begin(), test1.end(), 1);
 
-  std::array<int, 2> test2 {2, 3};
-  std::vector<int> test3;
-  std::forward_list<int> test4 {1, 2, 3, 4};
+  const std::array<int, 5> test1 {1, 2, 3, 4, 5};
+  const std::array<int, 2> test2 {2, 3};
+  const std::vector<int> test3;
+  const std::forward_list<int> test4 {1, 2, 3, 4};
 
   results.enforce_exactly_equal(*supl::last(test1), 5);
   results.enforce_exactly_equal(*supl::last(test2), 3);
@@ -33,12 +32,11 @@ static auto test_last() -> supl::test_results
 static auto test_clast() -> supl::test_results
 {
   supl::test_results results;
-  std::array<int, 5> test1 {};
-  std::iota(test1.begin(), test1.end(), 1);
 
-  std::array<int, 2> test2 {2, 3};
-  std::vector<int> test3;
-  std::forward_list<int> test4 {1, 2, 3, 4};
+  const std::array<int, 5> test1 {1, 2, 3, 4, 5};
+  const std::array<int, 2> test2 {2, 3};
+  const std::vector<int> test3;
+  const std::forward_list<int> test4 {1, 2, 3, 4};
 
   results.enforce_exactly_equal(*supl::clast(test1), 5);
   results.enforce_exactly_equal(*supl::clast(test2), 3);
@@ -54,8 +52,8 @@ static auto test_iterator() -> supl::test_results
 {
   supl::test_results results;
 
-  std::vector test_iterable_1 {1, 2, 3, 4, 5};
-  std::deque test_iterable_2 {6, 7, 8, 9, 10};
+  const std::vector test_iterable_1 {1, 2, 3, 4, 5};
+  const std::deque test_iterable_2 {6, 7, 8, 9, 10};
 
   // increment and decrement
   supl::iterator test_1 {test_iterable_1.begin()};
@@ -67,14 +65,14 @@ static auto test_iterator() -> supl::test_results
 
   static_assert(std::is_same_v<
                 typename std::iterator_traits<decltype(test_1)>::reference,
-                int&>);
+                const int&>);
 
   supl::iterator test_2 {test_1++};
   results.enforce_exactly_equal(*test_1, 2);
   results.enforce_exactly_equal(*test_2, 1);
 
   ++test_2;
-  supl::iterator test_3 {test_2--};
+  const supl::iterator test_3 {test_2--};
   results.enforce_exactly_equal(*test_2, 1);
   results.enforce_exactly_equal(*test_3, 2);
 
@@ -82,12 +80,12 @@ static auto test_iterator() -> supl::test_results
   results.enforce_exactly_equal(*test_1, 6);
   ++test_1;
 
-  supl::iterator test_4 {test_1};
+  const supl::iterator test_4 {test_1};
   results.enforce_exactly_equal(*test_1, 7);
   results.enforce_exactly_equal(*test_4, 7);
 
   // equality
-  supl::iterator test_a {test_iterable_1.begin()};
+  const supl::iterator test_a {test_iterable_1.begin()};
   supl::iterator test_b {test_iterable_1.begin()};
 
   // same type - good cast
@@ -113,7 +111,7 @@ static auto test_iterator() -> supl::test_results
 
   std::vector test_foo {foo {}};
 
-  supl::iterator test_foo_itr {test_foo.begin()};
+  const supl::iterator test_foo_itr {test_foo.begin()};
   results.enforce_exactly_equal(
     test_foo_itr->the_thing(), std::string {"foo"}
   );
@@ -137,7 +135,7 @@ static auto test_iterator() -> supl::test_results
   // useful error message here - bad reassignment due to const incorrectness
   /* test_1 = test_iterable_1.cbegin(); */
 
-  std::vector test_iterable_3 {1.0, 2.0, 3.0, 4.0, 5.0};
+  const std::vector test_iterable_3 {1.0, 2.0, 3.0, 4.0, 5.0};
 
   // useful error message here - bad reassignment due to type mismatch
   /* test_1 = test_iterable_3.begin(); */
@@ -147,7 +145,7 @@ static auto test_iterator() -> supl::test_results
 
   // Null case
 
-  supl::iterator<int> nulled {};
+  const supl::iterator<int> nulled {};
 
   results.enforce_exactly_equal(nulled.is_null(), true, "Should be null");
 

@@ -146,6 +146,10 @@ static auto test_to_stream() -> supl::test_results
 
   results.enforce_exactly_equal(str10.str(), "works: 5"s);
 
+  std::stringstream str11;
+  test10.to_stream(str11);
+  results.enforce_exactly_equal(str11.str(), "works: 5"s);
+
   return results;
 }
 

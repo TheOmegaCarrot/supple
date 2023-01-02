@@ -10,10 +10,10 @@
 
 cd ..
 
-cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=YES -DAUTOMATED_BUILD=YES -G Ninja 
-cmake -S cpp -B all/gcc-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DAUTOMATED_BUILD=YES -G Ninja 
-env CXX=/usr/bin/clang++ cmake -S cpp -B all/clang-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=Yes -DAUTOMATED_BUILD=YES -G Ninja 
-env CXX=/usr/bin/clang++ cmake -S cpp -B all/clang-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DAUTOMATED_BUILD=YES -G Ninja 
+cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=YES -DCMAKE_CXX_COMPILER=g++ -DAUTOMATED_BUILD=YES -G Ninja 
+cmake -S cpp -B all/gcc-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=g++ -DAUTOMATED_BUILD=YES -G Ninja 
+cmake -S cpp -B all/clang-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=clang++ -DAUTOMATED_BUILD=YES -G Ninja 
+cmake -S cpp -B all/clang-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=clang++ -DAUTOMATED_BUILD=YES -G Ninja 
 
 
 cat << EOF

@@ -24,7 +24,7 @@ struct copy_counter {
   auto operator=(copy_counter&&) -> copy_counter& = default;
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-  static int copy_count;
+  static inline int copy_count {0};
 
   copy_counter([[maybe_unused]] const copy_counter& src)
   {
@@ -32,37 +32,34 @@ struct copy_counter {
   }
 };
 
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-int copy_counter::copy_count {0};
-
 static auto test_explicit_copy() -> supl::test_results
 {
   supl::test_results results;
-  copy_counter test;
+  const copy_counter test;
 
   results.enforce_exactly_equal(
     copy_counter::copy_count, 0, "Counter not properly initialized"
   );
 
-  [[maybe_unused]] copy_counter test2 = supl::explicit_copy(test);
+  [[maybe_unused]] const copy_counter test2 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
     copy_counter::copy_count, 1, "Incorrect number of copies"
   );
 
-  [[maybe_unused]] copy_counter test3 = supl::explicit_copy(test);
+  [[maybe_unused]] const copy_counter test3 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
     copy_counter::copy_count, 2, "Incorrect number of copies"
   );
 
-  [[maybe_unused]] copy_counter test4 = supl::explicit_copy(test);
+  [[maybe_unused]] const copy_counter test4 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
     copy_counter::copy_count, 3, "Incorrect number of copies"
   );
 
-  [[maybe_unused]] copy_counter test5 = supl::explicit_copy(test);
+  [[maybe_unused]] const copy_counter test5 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
     copy_counter::copy_count, 4, "Incorrect number of copies"
@@ -78,7 +75,7 @@ static auto test_to_stream() -> supl::test_results
   using namespace std::literals;
 
   std::stringstream str1;
-  std::tuple test1 {1, "hello", true};
+  const std::tuple test1 {1, "hello", true};
   supl::to_stream(str1, test1);
   results.enforce_exactly_equal(
     str1.str(), "( 1, hello, true )"s, "tuple"
@@ -89,17 +86,17 @@ static auto test_to_stream() -> supl::test_results
   );
 
   std::stringstream str2;
-  std::pair test2 {42, "Neat"s};
+  const std::pair test2 {42, "Neat"s};
   supl::to_stream(str2, test2);
   results.enforce_exactly_equal(str2.str(), "( 42, Neat )"s, "pair");
 
   std::stringstream str3;
-  std::vector test3 {1, 2, 42, 81};
+  const std::vector test3 {1, 2, 42, 81};
   supl::to_stream(str3, test3);
   results.enforce_exactly_equal(str3.str(), "[ 1, 2, 42, 81 ]"s, "vector");
 
   std::stringstream str4;
-  std::list<std::pair<int, bool>> test4 {
+  const std::list<std::pair<int, bool>> test4 {
     {1,  true},
     {2, false},
     {5,  true}
@@ -134,7 +131,7 @@ static auto test_to_stream() -> supl::test_results
   results.enforce_exactly_equal(str8.str(), "( 5 )"s);
 
   std::stringstream str9;
-  std::tuple test9 {test1, test3, false};
+  const std::tuple test9 {test1, test3, false};
   supl::to_stream(str9, test9);
 
   results.enforce_exactly_equal(
@@ -151,7 +148,7 @@ static auto test_to_stream() -> supl::test_results
   };
 
   std::stringstream str10;
-  has_a_to_stream test10 {};
+  const has_a_to_stream test10 {};
   supl::to_stream(str10, test10);
 
   results.enforce_exactly_equal(str10.str(), "works: 5"s);
@@ -169,22 +166,22 @@ static auto test_to_string() -> supl::test_results
 
   using namespace std::literals;
 
-  std::tuple test1 {1, "hello", true};
+  const std::tuple test1 {1, "hello", true};
   results.enforce_exactly_equal(
     supl::to_string(test1), "( 1, hello, true )"s, "tuple"
   );
 
-  std::pair test2 {42, "Neat"s};
+  const std::pair test2 {42, "Neat"s};
   results.enforce_exactly_equal(
     supl::to_string(test2), "( 42, Neat )"s, "pair"
   );
 
-  std::vector test3 {1, 2, 42, 81};
+  const std::vector test3 {1, 2, 42, 81};
   results.enforce_exactly_equal(
     supl::to_string(test3), "[ 1, 2, 42, 81 ]"s, "vector"
   );
 
-  std::list<std::pair<int, bool>> test4 {
+  const std::list<std::pair<int, bool>> test4 {
     {1,  true},
     {2, false},
     {5,  true}
@@ -207,7 +204,7 @@ static auto test_to_string() -> supl::test_results
     supl::to_string(std::tuple<int> {5}), "( 5 )"s
   );
 
-  std::tuple test5 {test1, test3, false};
+  const std::tuple test5 {test1, test3, false};
 
   results.enforce_exactly_equal(
     supl::to_string(test5),
@@ -343,19 +340,19 @@ static auto test_stream_adapter() -> supl::test_results
 {
   supl::test_results results;
 
-  std::vector test_input_vec {4, 8, 3};
-  std::map<char, int> test_input_map {
+  const std::vector test_input_vec {4, 8, 3};
+  const std::map<char, int> test_input_map {
     {'a', 1},
     {'b', 2},
     {'c', 3},
     {'d', 4}
   };
 
-  std::string beans {"Beans"};
+  const std::string beans {"Beans"};
 
   uncopiable neat {7};
 
-  std::tuple test_input_tup {
+  const std::tuple test_input_tup {
     true,
     test_input_vec,
     std::move(neat),
@@ -366,11 +363,11 @@ static auto test_stream_adapter() -> supl::test_results
     beans
   };
 
-  std::string expected1 {supl::to_string(test_input_tup)};
+  const std::string expected1 {supl::to_string(test_input_tup)};
 
   std::stringstream test_stream;
   test_stream << supl::stream_adapter(test_input_tup);
-  std::string result1 {test_stream.str()};
+  const std::string result1 {test_stream.str()};
 
   results.enforce_exactly_equal(result1, expected1);
 
@@ -384,14 +381,11 @@ static auto test_size_t_literals() -> supl::test_results
   using supl::size_t_literal::operator""_z;
   /* using namespace supl::literals::size_t_literal; */  // also works
   /* using namespace supl::literals; */  // also works
-  std::size_t i {500};
-  auto j {500_z};
+  const std::size_t i {500};
+  const auto j {500_z};
 
-  results.enforce_exactly_equal(
-    std::is_same_v<decltype(j), std::size_t>,
-    true,
-    "Type is not std::size_t"
-  );
+  static_assert(std::is_same_v<decltype(j), decltype(i)>);
+
   results.enforce_exactly_equal(i, j, "Value is not as expected");
 
   return results;
@@ -404,22 +398,15 @@ static auto test_ptrdiff_t_literals() -> supl::test_results
   using supl::ptrdiff_t_literal::operator""_pd;
   /* using namespace supl::literals::ptrdiff_t_literal; */  // also works
   /* using namespace supl::literals; */  // also works
-  std::ptrdiff_t i {500};
-  auto j {500_pd};
+  const std::ptrdiff_t i {500};
+  const auto j {500_pd};
 
-  results.enforce_exactly_equal(
-    std::is_same_v<decltype(j), std::ptrdiff_t>,
-    true,
-    "Type is not std::ptrdiff_t"
-  );
+  static_assert(std::is_same_v<decltype(j), decltype(i)>);
+
   results.enforce_exactly_equal(i, j, "Value is not as expected");
 
-  auto k {-500_pd};
-  results.enforce_exactly_equal(
-    std::is_same_v<decltype(k), std::ptrdiff_t>,
-    true,
-    "Type is not std::ptrdiff_t"
-  );
+  const auto k {-500_pd};
+
   results.enforce_exactly_equal(-i, k, "Value is not as expected");
   results.enforce_exactly_equal(0 - i, k, "Value is not as expected");
 

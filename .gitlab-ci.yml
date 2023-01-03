@@ -29,7 +29,7 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug
+    - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin/g++
     - cmake --build bld --parallel 2
 
 unit-test-job:   # This job runs in the test stage.

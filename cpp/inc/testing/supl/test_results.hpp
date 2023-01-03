@@ -1,6 +1,7 @@
 #ifndef SUPPLE_TESTING_TEST_RESULTS_HPP
 #define SUPPLE_TESTING_TEST_RESULTS_HPP
 
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -62,17 +63,39 @@ public:
     const T& result,
     const T& expected,
     const std::string& message = {}
-  )
+  ) noexcept
   {
     this->enforce_equal(result, expected, message);
   }
 
+  /* {{{ doc */
+  /**
+   * @brief Enforce that two values are equal.
+   * Values are permitted to be of different type,
+   * so long as they are inequality comparable, 
+   * with `T` as the left-hand side of operator `!=`.
+   *
+   * @tparam T Type of value under test.
+   * Must be a class which is a valid input to `supl::to_stream`.
+   * See documentation for `to_stream` for details.
+   *
+   * @tparam U Type of expected value.
+   * Must be a class which is a valid input to `supl::to_stream`.
+   * See documentation for `to_stream` for details.
+   *
+   * @param result Value produced by code under test
+   *
+   * @param expected Known-good value which `result` must equal
+   *
+   * @param message A string which will be printed if the test fails
+   */
+  /* }}} */
   template <typename T, typename U>
   void enforce_equal(
     const T& result,
     const U& expected,
     const std::string& message = {}
-  )
+  ) noexcept
   {
     m_case_count += 1;
 
@@ -85,6 +108,31 @@ public:
               << "\n\n\tExpected:\n\t" << supl::stream_adapter(expected)
               << "\n\n\tGot:\n\t" << supl::stream_adapter(result)
               << "\n\n";
+      m_case_details.push_back(details.str());
+    } else {
+      m_case_details.emplace_back();
+    }
+  }
+
+  inline void enforce_floating_point_approx(
+    double result,
+    double expected,
+    double tolerance = 0.001,
+    const std::string& message = {}
+  ) noexcept
+  {
+    m_case_count += 1;
+
+    std::stringstream details;
+
+    if ( std::abs(result - expected) > tolerance ) {
+      m_fail_count += 1;
+
+      details << "\nCase " << m_case_count << '\t' << message
+              << "\n\n\tExpected value within "
+              << supl::stream_adapter(tolerance) << " of:\n\t"
+              << supl::stream_adapter(expected) << "\n\n\tGot:\n\t"
+              << supl::stream_adapter(result) << "\n\n";
       m_case_details.push_back(details.str());
     } else {
       m_case_details.emplace_back();

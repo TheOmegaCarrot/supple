@@ -10,7 +10,8 @@ target_include_directories(supple::core
 target_compile_features(supple::core INTERFACE cxx_std_17)
 
 add_library(supple::testing INTERFACE IMPORTED)
-target_include_directories(supple::testing INTERFACE ${CMAKE_CURRENT_LIST_DIR}/cpp/inc/testing)
+target_include_directories(supple::testing
+                           INTERFACE ${CMAKE_CURRENT_LIST_DIR}/cpp/inc/testing)
 target_link_libraries(supple::testing INTERFACE supple::core)
 target_compile_features(supple::testing INTERFACE cxx_std_17)
 

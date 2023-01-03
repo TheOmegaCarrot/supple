@@ -9,8 +9,9 @@ if(NOT AUTOMATED_BUILD)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
   # compile_commands needed in source directory
   file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
-       "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR SYMBOLIC)
- endif()
+       "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR
+       SYMBOLIC)
+endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # set warnings for GCC
@@ -56,7 +57,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # Use clang-tidy if not an automated build by cmake-all.sh
   if(DO_CLANG_TIDY)
     message("-- Using clang-tidy")
-    set(CMAKE_CXX_CLANG_TIDY "clang-tidy;--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy")
+    set(CMAKE_CXX_CLANG_TIDY
+        "clang-tidy;--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy")
   endif()
 
 elseif(MSVC)
@@ -87,7 +89,8 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supple REQUIRED)
 
 # Test executables
-file(GLOB_RECURSE core_test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
+file(GLOB_RECURSE core_test_files
+     ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
 
 enable_testing()
 
@@ -107,7 +110,7 @@ function(test_for numeric_standard)
 endfunction()
 
 test_for(17)
-if (FULL_TESTS)
+if(FULL_TESTS)
   message("-- Testing C++20 and 23 as well")
   test_for(20)
   test_for(23)

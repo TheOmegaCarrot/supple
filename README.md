@@ -21,12 +21,13 @@ I've made things just as a learning exercise.
 
 You can simply clone this repository into your `CMAKE_PREFIX_PATH`,
 find the package `supple`.
-The package currently defines two targets: `supple::core`, and `supple::full`.
-Currently, there is no difference, however, more modules may be added in the future.
-If and when more modules are added, `supple::full` will include all modules,
-while `supple::core` is only one module.
+The package currently defines three targets: `supple::core`, `supple::testing`, and `supple::full`.
 
-Alternatively, you can simply copy `cpp/inc/supl` into your project, and include headers directly.
+* `supple::full` will always link all targets.
+* `supple::core` contains the majority of the library's functionality.
+* `supple::testing` contains the testing framework.
+
+Alternatively, you can simply copy `cpp/inc/<module-name>` into your project, and include headers directly.
 
 ---
 

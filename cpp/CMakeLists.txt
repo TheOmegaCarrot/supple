@@ -89,12 +89,17 @@ find_package(supple REQUIRED)
 # Test executables
 file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
 
+enable_testing()
+
+list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
+
 macro(test_for numeric_standard)
   add_executable(test_core_${numeric_standard} ${source_files} ${test_files})
   target_link_libraries(test_core_${numeric_standard} supple::full)
   target_include_directories(test_core_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc)
   target_include_directories(test_core_${numeric_standard} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tst/inc/core)
   target_compile_features(test_core_${numeric_standard} PUBLIC cxx_std_${numeric_standard})
+  add_test(Test_core_${numeric_standard} test_core_${numeric_standard})
 endmacro()
 
 test_for(17)

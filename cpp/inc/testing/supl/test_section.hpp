@@ -1,3 +1,18 @@
+/* {{{ doc */
+/**
+ * @file test_section.hpp
+ *
+ * @brief `test_section` class
+ *
+ * @details This header contains the definition of the
+ * `test_section` class.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLE_TESTING_TEST_SECTION_HPP
 #define SUPPLE_TESTING_TEST_SECTION_HPP
 

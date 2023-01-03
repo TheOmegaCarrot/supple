@@ -1,3 +1,18 @@
+/* {{{ doc */
+/**
+ * @file test_results.hpp
+ *
+ * @brief `test_results` class
+ *
+ * @details This header contains the definition of the
+ * `test_results` class.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLE_TESTING_TEST_RESULTS_HPP
 #define SUPPLE_TESTING_TEST_RESULTS_HPP
 
@@ -114,6 +129,21 @@ public:
     }
   }
 
+  /* {{{ doc */
+  /**
+   * @brief Enforce that two floating-point values are
+   * close enough to equal.
+   *
+   * @param result Value produced by code under test
+   *
+   * @param expected Known-good value which `result`
+   * must be close enough to
+   *
+   * @param tolerance Definition of "close enough"
+   *
+   * @param message A string which will be printed if the test fails
+   */
+  /* }}} */
   inline void enforce_floating_point_approx(
     double result,
     double expected,
@@ -137,6 +167,25 @@ public:
     } else {
       m_case_details.emplace_back();
     }
+  }
+
+  /* {{{ doc */
+  /**
+   * @brief Fail with a message
+   *
+   * @param message String to print
+   */
+  /* }}} */
+  inline void fail(const std::string& message) noexcept
+  {
+    m_case_count += 1;
+    m_fail_count += 1;
+
+    std::stringstream details;
+
+    details << "\nCase " << m_case_count << "\n\n" << message << "\n\n";
+
+    m_case_details.push_back(details.str());
   }
 
   [[nodiscard]] auto test_passes() const noexcept -> bool

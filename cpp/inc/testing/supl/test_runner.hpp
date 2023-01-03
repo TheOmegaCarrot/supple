@@ -1,3 +1,18 @@
+/* {{{ doc */
+/**
+ * @file test_runner.hpp
+ *
+ * @brief `test_runner` class
+ *
+ * @details This header contains the definition of the
+ * `test_runner` class.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLE_TESTING_TEST_RUNNER_HPP
 #define SUPPLE_TESTING_TEST_RUNNER_HPP
 

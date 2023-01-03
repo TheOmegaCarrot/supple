@@ -2,7 +2,7 @@
 
 #include <supl/fake_ranges.hpp>
 
-#include "supl/test_fake_ranges.h"
+#include <supl/test_runner.hpp>
 
 /* static auto test_all_of() -> supl::test_results */
 /* { */
@@ -124,4 +124,13 @@ auto test_fake_ranges() -> supl::test_section
   section.add_test("supl::fr::iota", &test_iota);
 
   return section;
+}
+
+auto main() -> int
+{
+  supl::test_runner runner;
+
+  runner.add_section(test_fake_ranges());
+
+  return runner.run();
 }

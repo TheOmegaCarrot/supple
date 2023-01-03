@@ -3,7 +3,7 @@
 
 #include <supl/crtp.hpp>
 
-#include "supl/test_crtp.h"
+#include <supl/test_runner.hpp>
 
 static auto test_rel_ops() -> supl::test_results
 {
@@ -214,4 +214,13 @@ auto test_crtp() -> supl::test_section
   section.add_test("supl::add_ostream", &test_add_ostream);
 
   return section;
+}
+
+auto main() -> int
+{
+  supl::test_runner runner;
+
+  runner.add_section(test_crtp());
+
+  return runner.run();
 }

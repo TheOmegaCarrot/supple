@@ -14,7 +14,7 @@
 
 #include <supl/utility.hpp>
 
-#include "supl/test_utility.h"
+#include <supl/test_runner.hpp>
 
 struct copy_counter {
   copy_counter() = default;
@@ -430,4 +430,13 @@ auto test_utility() -> supl::test_section
   );
 
   return section;
+}
+
+auto main() -> int
+{
+  supl::test_runner runner;
+
+  runner.add_section(test_utility());
+
+  return runner.run();
 }

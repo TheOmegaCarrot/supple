@@ -518,3 +518,6 @@ static_assert(! supl::sequential_apply_v<
               int,
               std::add_const,
               supl::binary_partial_apply<std::is_same, const int&>::func>);
+
+auto main() -> int
+{ }

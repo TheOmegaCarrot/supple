@@ -1191,3 +1191,6 @@ static_assert(std::is_same_v<
                 std::add_rvalue_reference,
                 std::make_unsigned>,
               supl::tl::type_list<const int, int&, int&&, unsigned>>);
+
+auto main() -> int
+{ }

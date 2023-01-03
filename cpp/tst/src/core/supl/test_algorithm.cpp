@@ -7,7 +7,7 @@
 #include <supl/functional.hpp>
 #include <supl/utility.hpp>
 
-#include "supl/test_algorithm.h"
+#include <supl/test_runner.hpp>
 
 static auto test_min_size() -> supl::test_results
 {
@@ -381,4 +381,13 @@ auto test_algorithm() -> supl::test_section
   section.add_test("supl::copy", &test_copy);
 
   return section;
+}
+
+auto main() -> int
+{
+  supl::test_runner runner;
+
+  runner.add_section(test_algorithm());
+
+  return runner.run();
 }

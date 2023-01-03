@@ -3,7 +3,7 @@
 
 #include <supl/functional.hpp>
 
-#include "supl/test_functional.h"
+#include <supl/test_runner.hpp>
 
 static auto test_equal_to() -> supl::test_results
 {
@@ -271,4 +271,13 @@ auto test_functional() -> supl::test_section
   section.add_test("supl::invoke", &test_invoke);
 
   return section;
+}
+
+auto main() -> int
+{
+  supl::test_runner runner;
+
+  runner.add_section(test_functional());
+
+  return runner.run();
 }

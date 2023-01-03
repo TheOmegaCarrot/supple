@@ -8,7 +8,7 @@
 #include <supl/iterators.hpp>
 #include <supl/utility.hpp>
 
-#include "supl/test_iterators.h"
+#include <supl/test_runner.hpp>
 
 static auto test_last() -> supl::test_results
 {
@@ -182,3 +182,12 @@ static_assert(supl::is_iterator_tag_v<std::random_access_iterator_tag>);
 static_assert(not supl::is_iterator_tag_v<int>);
 static_assert(not supl::is_iterator_tag_v<
               supl::stream_adapter<std::vector<int>>>);
+
+auto main() -> int
+{
+  supl::test_runner runner;
+
+  runner.add_section(test_iterators());
+
+  return runner.run();
+}

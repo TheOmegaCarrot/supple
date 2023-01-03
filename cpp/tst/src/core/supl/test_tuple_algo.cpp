@@ -3,7 +3,7 @@
 #include <supl/metaprogramming.hpp>
 #include <supl/tuple_algo.hpp>
 
-#include "supl/test_tuple_algo.h"
+#include <supl/test_runner.hpp>
 
 template <typename... Ls>
 struct overload : Ls... {
@@ -1049,4 +1049,13 @@ auto test_tuple_algo() -> supl::test_section
   section.add_test("supl::tuple::resolve_refs", &test_resolve_refs);
 
   return section;
+}
+
+auto main() -> int
+{
+  supl::test_runner runner;
+
+  runner.add_section(test_tuple_algo());
+
+  return runner.run();
 }

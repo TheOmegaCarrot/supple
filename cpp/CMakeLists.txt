@@ -96,9 +96,13 @@ list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 function(test_for numeric_standard)
   foreach(test_file ${test_files})
     get_filename_component(filename ${test_file} NAME_WLE)
-    add_executable(${filename}_${numeric_standard} ${test_file})
-    target_link_libraries(${filename}_${numeric_standard} supple::full)
-    add_test(${filename} ${filename}_${numeric_standard})
+
+    set(test_exe_name ${filename}_${numeric_standard})
+    add_executable(${test_exe_name} ${test_file})
+    target_link_libraries(${test_exe_name} supple::full)
+
+    string(REPLACE "test_" "" test_name ${test_exe_name})
+    add_test(${test_name} ${test_exe_name})
   endforeach()
 endfunction()
 

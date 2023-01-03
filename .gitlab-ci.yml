@@ -20,7 +20,7 @@ image: ubuntu
 
 before_script:
   - apt-get update --yes
-  - apt-get install --yes cmake gcc
+  - apt-get install --yes cmake gcc g++
 
 stages:          # List of stages for jobs, and their order of execution
   - build

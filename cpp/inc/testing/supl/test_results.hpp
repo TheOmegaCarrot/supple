@@ -64,6 +64,16 @@ public:
     const std::string& message = {}
   )
   {
+    this->enforce_equal(result, expected, message);
+  }
+
+  template <typename T, typename U>
+  void enforce_equal(
+    const T& result,
+    const U& expected,
+    const std::string& message = {}
+  )
+  {
     m_case_count += 1;
 
     std::stringstream details;

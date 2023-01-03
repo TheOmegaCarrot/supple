@@ -25,15 +25,15 @@ static auto test_for_each() -> supl::test_results
       using I = std::decay_t<decltype(i)>;
 
       if constexpr ( std::is_same_v<I, int> ) {
-        results.enforce_exactly_equal(static_cast<int>(i), 42);
+        results.enforce_equal(i, 42);
         results.enforce_exactly_equal(index, 0);
 
       } else if constexpr ( std::is_same_v<I, char> ) {
-        results.enforce_exactly_equal(static_cast<char>(i), 'c');
-        results.enforce_exactly_equal(index, 1);
+        results.enforce_exactly_equal(i, 'c');
+        results.enforce_equal(index, 1);
 
       } else if constexpr ( std::is_same_v<I, bool> ) {
-        results.enforce_exactly_equal(static_cast<bool>(i), false);
+        results.enforce_equal(i, false);
         results.enforce_exactly_equal(index, 2);
       }
 
@@ -56,11 +56,11 @@ static auto test_for_each_in_subtuple() -> supl::test_results
       using I = std::decay_t<decltype(i)>;
 
       if constexpr ( std::is_same_v<I, int> ) {
-        results.enforce_exactly_equal(static_cast<int>(i), 42);
+        results.enforce_equal(i, 42);
         results.enforce_exactly_equal(index, 0);
 
       } else if constexpr ( std::is_same_v<I, char> ) {
-        results.enforce_exactly_equal(static_cast<char>(i), 'c');
+        results.enforce_equal(i, 'c');
         results.enforce_exactly_equal(index, 1);
       }
       ++index;

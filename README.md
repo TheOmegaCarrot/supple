@@ -31,6 +31,23 @@ Alternatively, you can simply copy `cpp/inc/<module-name>` into your project, an
 
 ---
 
+# How do I run the tests?
+
+You may want to run the tests to ensure that this library works with your toolchain.
+Please note that use with MSVC is entirely untested and unsupported.
+If any tests fail with any other compiler which properly supports C++17,
+please file a bug report.
+
+To run the tests:
+
+```
+cmake -S cpp -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+cmake --build build --target test
+```
+
+---
+
 # What's with the name?
 
 This project was formerly known as `supplementaries`,

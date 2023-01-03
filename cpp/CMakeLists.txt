@@ -87,17 +87,17 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supple REQUIRED)
 
 # Test executables
-file(GLOB_RECURSE test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
+file(GLOB_RECURSE core_test_files ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
 
 enable_testing()
 
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 function(test_for numeric_standard)
-  foreach(test_file ${test_files})
+  foreach(test_file ${core_test_files})
     get_filename_component(filename ${test_file} NAME_WLE)
 
-    set(test_exe_name ${filename}_${numeric_standard})
+    set(test_exe_name core_${filename}_${numeric_standard})
     add_executable(${test_exe_name} ${test_file})
     target_link_libraries(${test_exe_name} supple::full)
 

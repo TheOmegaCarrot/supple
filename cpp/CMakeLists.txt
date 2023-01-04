@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.22.1)
 
 project(supl LANGUAGES CXX)
 
+# CMake options: FULL_TESTS: perform C++20 and C++23 tests as well OMIT_20: Omit
+# C++20 tests (for compatibility with older compilers) OMIT_23: Omit C++23 tests
+# (for compatibility with older compilers) AUTOMATED_BUILD: Internal flag,
+# currently controls exporting of compile commands NO_SANITIZERS: Allows
+# disabling sanitizers for debug builds
+
 # Do not export if doing an automated build by cmake-all.sh
 if(NOT AUTOMATED_BUILD)
   message("-- Exporting compile commands")

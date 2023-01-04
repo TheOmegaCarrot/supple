@@ -10,88 +10,60 @@
 
 cd ..
 
-cat << EOF
+test_compiler() {
+  PREFIX=${1}
+  COMPILER=${2}
+  shift
+  shift
+  FLAGS=${@}
+
+  echo ${PREFIX}
+  echo ${COMPILER}
+  echo ${FLAGS}
+
+  if [ -x ${PREFIX}/${COMPILER} ]; then
+
+    cat << EOF
 
 ##############################################################################
-#                               GCC DEBUG                                    #
-##############################################################################
-
-EOF
-
-cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=YES -DCMAKE_CXX_COMPILER=g++ -DAUTOMATED_BUILD=YES -G Ninja 
-echo
-cmake --build all/gcc-debug --parallel $(nproc)
-cmake --build all/gcc-debug --parallel $(nproc) --target test
-
-cat << EOF
-
-##############################################################################
-#                              GCC RELEASE                                   #
-##############################################################################
-
-EOF
-
-
-cmake -S cpp -B all/gcc-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=g++ -DAUTOMATED_BUILD=YES -G Ninja 
-echo
-cmake --build all/gcc-release --parallel $(nproc)
-cmake --build all/gcc-release --parallel $(nproc) --target test
-
-
-cat << EOF
-
-##############################################################################
-#                              CLANG DEBUG                                   #
+                              ${COMPILER} DEBUG                                     
 ##############################################################################
 
 EOF
 
-cmake -S cpp -B all/clang-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=clang++ -DAUTOMATED_BUILD=YES -G Ninja 
-echo
-cmake --build all/clang-debug --parallel $(nproc)
-cmake --build all/clang-debug --parallel $(nproc) --target test
+    cmake -S cpp -B all/${COMPILER}-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=YES ${FLAGS} -DNO_SANITIZERS=YES -DCMAKE_CXX_COMPILER=${PREFIX}/${COMPILER} -DAUTOMATED_BUILD=YES -G Ninja 
+    echo
+    cmake --build all/${COMPILER}-debug --parallel $(nproc)
+    cmake --build all/${COMPILER}-debug --parallel $(nproc) --target test
 
-cat << EOF
-
-##############################################################################
-#                             CLANG RELEASE                                  #
-##############################################################################
-
-EOF
-
-cmake -S cpp -B all/clang-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=clang++ -DAUTOMATED_BUILD=YES -G Ninja 
-echo
-cmake --build all/clang-release --parallel $(nproc)
-cmake --build all/clang-release --parallel $(nproc) --target test
-
-ICC="/opt/intel/oneapi/compiler/2023.0.0/linux/bin/intel64/icc"
-
-if [ -x ${ICC} ]; then
-
-cat << EOF
+    cat << EOF
 
 ##############################################################################
-#                              INTEL DEBUG                                   #
+                               ${COMPILER} RELEASE                                   
 ##############################################################################
 
 EOF
 
-  cmake -S cpp -B all/intel-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=${ICC} -DAUTOMATED_BUILD=YES -G Ninja
-  echo
-  cmake --build all/intel-debug --parallel $(nproc)
-  cmake --build all/intel-debug --parallel $(nproc) --target test
 
-cat << EOF
+    cmake -S cpp -B all/${COMPILER}-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes ${FLAGS} -DCMAKE_CXX_COMPILER=${PREFIX}/${COMPILER} -DAUTOMATED_BUILD=YES -G Ninja 
+    echo
+    cmake --build all/${COMPILER}-release --parallel $(nproc)
+    cmake --build all/${COMPILER}-release --parallel $(nproc) --target test
 
-##############################################################################
-#                             INTEL RELEASE                                  #
-##############################################################################
+  else
 
-EOF
+    echo "${PREFIX}/${COMPILER}" not found
 
-  cmake -S cpp -B all/intel-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=${ICC} -DAUTOMATED_BUILD=YES -G Ninja
-  echo
-  cmake --build all/intel-release --parallel $(nproc)
-  cmake --build all/intel-release --parallel $(nproc) --target test
+  fi
 
-fi
+}
+
+test_compiler /usr/bin g++-9 -DOMIT_23=YES
+test_compiler /usr/bin g++-10 -DOMIT_23=YES
+test_compiler /usr/bin g++-11
+test_compiler /usr/bin clang++-11 -DOMIT_23=YES
+test_compiler /usr/bin clang++-12
+test_compiler /usr/bin clang++-13
+test_compiler /usr/bin clang++-14
+test_compiler /opt/llvm-15/bin clang++
+test_compiler /opt/intel-2023/oneapi/compiler/2023.0.0/linux/bin/intel64 icc -DOMIT_23=YES

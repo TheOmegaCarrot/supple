@@ -11,9 +11,13 @@
 cd ..
 
 cmake -S cpp -B all/gcc-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=YES -DCMAKE_CXX_COMPILER=g++ -DAUTOMATED_BUILD=YES -G Ninja 
+echo
 cmake -S cpp -B all/gcc-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=g++ -DAUTOMATED_BUILD=YES -G Ninja 
+echo
 cmake -S cpp -B all/clang-debug -DCMAKE_BUILD_TYPE=Debug -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=clang++ -DAUTOMATED_BUILD=YES -G Ninja 
+echo
 cmake -S cpp -B all/clang-release -DCMAKE_BUILD_TYPE=Release -DFULL_TESTS=Yes -DCMAKE_CXX_COMPILER=clang++ -DAUTOMATED_BUILD=YES -G Ninja 
+echo
 
 
 cat << EOF

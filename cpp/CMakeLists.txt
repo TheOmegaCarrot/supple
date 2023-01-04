@@ -103,6 +103,7 @@ function(test_for numeric_standard)
     set(test_exe_name core_${filename}_${numeric_standard})
     add_executable(${test_exe_name} ${test_file})
     target_link_libraries(${test_exe_name} supple::full)
+    target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
 
     string(REPLACE "test_" "" test_name ${test_exe_name})
     add_test(${test_name} ${test_exe_name})

@@ -35,6 +35,7 @@ Alternatively, you can simply copy `cpp/inc/<module-name>` into your project, an
 
 You may want to run the tests to ensure that this library works with your toolchain.
 Please note that use with MSVC is entirely untested and unsupported.
+This library is tested with gcc 9,10,11,12, clang 11,12,13,14,15, and Intel icc and icpx 2023.
 If any tests fail with any other compiler which properly supports C++17,
 please file a bug report.
 

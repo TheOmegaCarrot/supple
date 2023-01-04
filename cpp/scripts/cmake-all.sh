@@ -17,10 +17,6 @@ test_compiler() {
   shift
   FLAGS=${@}
 
-  echo ${PREFIX}
-  echo ${COMPILER}
-  echo ${FLAGS}
-
   if [ -x ${PREFIX}/${COMPILER} ]; then
 
     cat << EOF

@@ -88,16 +88,18 @@ endif()
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supple REQUIRED)
 
-# Test executables
+# find all test source files
 file(GLOB_RECURSE core_test_files
      ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
 
 enable_testing()
 
+# make ctest give useful output to console on test failure
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 function(test_for numeric_standard)
   foreach(test_file ${core_test_files})
+    # remove parent directory path and extension
     get_filename_component(filename ${test_file} NAME_WLE)
 
     set(test_exe_name core_${filename}_${numeric_standard})
@@ -105,6 +107,7 @@ function(test_for numeric_standard)
     target_link_libraries(${test_exe_name} supple::full)
     target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
 
+    # remove test_ prefix for prettier test output
     string(REPLACE "test_" "" test_name ${test_exe_name})
     add_test(${test_name} ${test_exe_name})
   endforeach()

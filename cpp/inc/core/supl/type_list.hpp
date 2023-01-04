@@ -52,7 +52,7 @@ struct func_wrapper {
   using func_t = typename Func<T>::type;
 
   template <typename T>
-  constexpr inline static auto func_v = Func<T>::value;
+  constexpr inline static decltype(func<T>::value) func_v = Func<T>::value;
 };
 
 ///////////////////////////////////////////// apply_wrapped

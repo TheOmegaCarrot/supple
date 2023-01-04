@@ -819,7 +819,8 @@ struct binary_partial_apply {
   using func_t = typename func<Second>::type;
 
   template <typename Second>
-  constexpr inline static auto func_v = func<Second>::value;
+  constexpr inline static decltype(func<Second>::value) func_v =
+    func<Second>::value;
 };
 
 ///////////////////////////////////////////// sequential_apply

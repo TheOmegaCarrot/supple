@@ -63,3 +63,4 @@ test_compiler /usr/bin clang++-13
 test_compiler /usr/bin clang++-14
 test_compiler /opt/llvm-15/bin clang++
 test_compiler /opt/intel-2023/oneapi/compiler/2023.0.0/linux/bin/intel64 icc -DOMIT_23=YES
+test_compiler /opt/intel-2023/oneapi/compiler/2023.0.0/linux/bin icpx -DOMIT_23=YES

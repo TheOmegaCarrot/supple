@@ -57,10 +57,13 @@ EOF
 test_compiler /usr/bin g++-9 -DOMIT_23=YES
 test_compiler /usr/bin g++-10 -DOMIT_23=YES
 test_compiler /usr/bin g++-11
+test_compiler /opt/gcc-12/bin g++
+# test_compiler /opt/gcc-trunk/bin g++
 test_compiler /usr/bin clang++-11 -DOMIT_23=YES
 test_compiler /usr/bin clang++-12
 test_compiler /usr/bin clang++-13
 test_compiler /usr/bin clang++-14
 test_compiler /opt/llvm-15/bin clang++
+# test_compiler /opt/llvm-trunk/bin clang++
 test_compiler /opt/intel-2023/oneapi/compiler/2023.0.0/linux/bin/intel64 icc -DOMIT_23=YES
 test_compiler /opt/intel-2023/oneapi/compiler/2023.0.0/linux/bin icpx -DOMIT_23=YES

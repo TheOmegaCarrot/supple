@@ -3,6 +3,7 @@
 #include <supl/metaprogramming.hpp>
 #include <supl/tuple_algo.hpp>
 
+#include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
 template <typename... Ls>
@@ -1012,6 +1013,22 @@ static auto test_resolve_refs() -> supl::test_results
   return results;
 }
 
+static auto test_make_cref_tuple() -> supl::test_results
+{
+  supl::test_results results;
+
+  const int a {5};
+  const char b {'b'};
+  const bool c {true};
+  const std::tuple<const int&, const char&, const bool&> expected1 {
+    a, b, c};
+  const auto result1 {supl::tuple::make_cref_tuple(a, b, c)};
+
+  results.enforce_exactly_equal(result1, expected1);
+
+  return results;
+}
+
 auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
@@ -1047,6 +1064,7 @@ auto test_tuple_algo() -> supl::test_section
   section.add_test("supl::tuple::type_transform", &test_type_transform);
   section.add_test("supl::tuple::convert", &test_convert);
   section.add_test("supl::tuple::resolve_refs", &test_resolve_refs);
+  section.add_test("supl::tuple::make_cref_tuple", &test_make_cref_tuple);
 
   return section;
 }

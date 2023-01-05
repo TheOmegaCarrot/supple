@@ -173,50 +173,6 @@ static auto test_for_each_adjacent_n() -> supl::test_results
   return results;
 }
 
-static auto test_for_each_all() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::array test1 {4, 9, 16, 25};
-  const std::array test2 {2, 3, 4, 5};
-  std::vector<int> test_output;
-  const std::vector reference_output {2, 3, 4, 5};
-
-  supl::for_each_all(
-    [&test_output](const int a, const int b) {
-      test_output.push_back(a / b);
-    },
-    test1,
-    test2
-  );
-
-  results.enforce_exactly_equal(test_output, reference_output);
-
-  return results;
-}
-
-static auto test_for_each_all_c() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::array test1 {4, 9, 16, 25};
-  const std::array test2 {2, 3, 4, 5};
-  std::vector<int> test_output;
-  const std::vector reference_output {2, 3, 4, 5};
-
-  supl::for_each_all_c(
-    [&test_output](const int a, const int b) {
-      test_output.push_back(a / b);
-    },
-    test1,
-    test2
-  );
-
-  results.enforce_exactly_equal(test_output, reference_output);
-
-  return results;
-}
-
 static auto test_for_each_all_n() -> supl::test_results
 {
   supl::test_results results;
@@ -373,8 +329,7 @@ auto test_algorithm() -> supl::test_section
   section.add_test("supl::for_each_adjacent", &test_for_each_adjacent);
   section.add_test("supl::for_each_adjacent_n", &test_for_each_adjacent_n);
   section.add_test("supl::for_each_all_n", &test_for_each_all_n);
-  section.add_test("supl::for_each_all", &test_for_each_all);
-  section.add_test("supl::for_each_all_c", &test_for_each_all_c);
+  /* section.add_test("supl::for_each_all", &test_for_each_all); */
   section.add_test("supl::for_each_both", &test_for_each_both);
   section.add_test("supl::for_each_both_n", &test_for_each_both_n);
   section.add_test("supl::generate", &test_generate);

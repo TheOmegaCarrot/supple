@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
+#include <supl/tuple_algo.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -451,77 +452,16 @@ constexpr void for_each_all_n(
   }
 }
 
-/* {{{ doc */
-/**
- * @brief Applies `func` to members of all container in
- * parameter order. Iteration ceases upon reaching the end of
- * any container.
- *
- * @tparam VarFunc A function which acccepts the types of all the
- * contaners in parameter order.
- *
- * @tparam Containers Sequence of containers which provide
- * iterators capable of incrementing and dereferencing.
- *
- * @param func A function which accepts the types of all the containers
- * in parameter order.
- *
- * @param containers Parameter pack of containers to be
- * iterated over.
- */
-/* }}} */
-template <typename VarFunc, typename... Containers>
-constexpr void
-for_each_all(VarFunc&& func, Containers&... containers) noexcept(
-  noexcept(for_each_all_n(
-    std::forward<VarFunc>(func),
-    min_size(containers...),
-    std::begin(containers)...
-  ))
-)
-{
-  for_each_all_n(
-    std::forward<VarFunc>(func),
-    min_size(containers...),
-    std::begin(containers)...
-  );
-}
-
-/* {{{ doc */
-/**
- * @brief Applies `func` to members of all container in
- * parameter order. Iteration ceases upon reaching the end of
- * any container. Ensures the containers are not modified.
- *
- * @tparam VarFunc A function which acccepts the types of all the
- * contaners in parameter order.
- *
- * @tparam Containers Sequence of containers which provide
- * iterators capable of incrementing and dereferencing.
- *
- * @param func A function which accepts the types of all the containers
- * in parameter order.
- *
- * @param containers Parameter pack of const containers to be
- * iterated over.
- */
-/* }}} */
-template <typename VarFunc, typename... Containers>
-constexpr void
-for_each_all_c(VarFunc&& func, const Containers&... containers) noexcept(
-  noexcept(for_each_all_n(
-    std::forward<VarFunc>(func),
-    min_size(containers...),
-    std::cbegin(containers)...
-  ))
-)
-{
-  for_each_all_n(
-    std::forward<VarFunc>(func),
-    min_size(containers...),
-    std::cbegin(containers)...
-  );
-}
+/* template <typename VarFunc, typename... Iterators> */
+/* constexpr void */
+/* for_each_all(VarFunc&& func, Iterators... iterators) /1* noexcept *1/ */
+/* { */
+/*   for ( auto [begins, ends] { */
+/*           tuple::alternating_split(std::tuple {iterators...})}; */
+/*         begins != ends; */
+/*         tuple::for_each(begins, [](auto& iterator) { ++iterator; }) ) { */
+/*   } */
+/* } */
 
 /* {{{ doc */
 /**

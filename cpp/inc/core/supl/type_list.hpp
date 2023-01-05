@@ -113,6 +113,33 @@ struct size;
 template <template <typename...> typename LIST, typename... Pack>
 struct size<LIST<Pack...>> : index_constant<sizeof...(Pack)> { };
 
+template <template <typename...> typename LIST, typename... Pack>
+struct size<LIST<Pack...>&> : index_constant<sizeof...(Pack)> { };
+
+template <template <typename...> typename LIST, typename... Pack>
+struct size<LIST<Pack...>&&> : index_constant<sizeof...(Pack)> { };
+
+template <template <typename...> typename LIST, typename... Pack>
+struct size<const LIST<Pack...>&> : index_constant<sizeof...(Pack)> { };
+
+template <template <typename...> typename LIST, typename... Pack>
+struct size<const LIST<Pack...>&&> : index_constant<sizeof...(Pack)> { };
+
+template <template <typename...> typename LIST, typename... Pack>
+struct size<volatile LIST<Pack...>&> : index_constant<sizeof...(Pack)> { };
+
+template <template <typename...> typename LIST, typename... Pack>
+struct size<volatile LIST<Pack...>&&>
+    : index_constant<sizeof...(Pack)> { };
+
+template <template <typename...> typename LIST, typename... Pack>
+struct size<const volatile LIST<Pack...>&>
+    : index_constant<sizeof...(Pack)> { };
+
+template <template <typename...> typename LIST, typename... Pack>
+struct size<const volatile LIST<Pack...>&&>
+    : index_constant<sizeof...(Pack)> { };
+
 template <typename LIST>
 constexpr inline std::size_t size_v = size<LIST>::value;
 

@@ -148,6 +148,26 @@ for_each_in_subtuple(const Tuple& tup, Func&& func) noexcept(
 }
 
 namespace impl {
+  template <typename Tuple, typename VarFunc, std::size_t... Idxs>
+  constexpr auto
+  call_as_pack_impl(Tuple&& tup, VarFunc&& func, std::index_sequence<Idxs...>) /* noexcept */
+    -> decltype(auto)
+  {
+    return supl::invoke(func, std::get<Idxs>(tup)...);
+  }
+}  // namespace impl
+
+template <typename Tuple, typename VarFunc>
+constexpr auto call_as_pack(Tuple&& tup, VarFunc&& func) /* noexcept */
+  -> decltype(auto)
+{
+  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+  return impl::call_as_pack_impl(
+    std::forward<Tuple>(tup), std::forward<VarFunc>(func), seq
+  );
+}
+
+namespace impl {
   /* {{{ doc */
   /**
  * @brief Applies a visitor function to every member of a tuple,

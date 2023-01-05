@@ -20,12 +20,12 @@
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
-#include <supl/tuple_algo.hpp>
 #include <type_traits>
 #include <utility>
 
 #include "functional.hpp"
 #include "metaprogramming.hpp"
+#include "tuple_algo.hpp"
 
 namespace supl {
 
@@ -452,16 +452,87 @@ constexpr void for_each_all_n(
   }
 }
 
-/* template <typename VarFunc, typename... Iterators> */
-/* constexpr void */
-/* for_each_all(VarFunc&& func, Iterators... iterators) /1* noexcept *1/ */
-/* { */
-/*   for ( auto [begins, ends] { */
-/*           tuple::alternating_split(std::tuple {iterators...})}; */
-/*         begins != ends; */
-/*         tuple::for_each(begins, [](auto& iterator) { ++iterator; }) ) { */
-/*   } */
-/* } */
+namespace impl {
+
+  template <typename Tuple1, typename Tuple2, std::size_t... Idxs>
+  constexpr auto
+  tuple_elementwise_compare_any_impl(const Tuple1& tup1, const Tuple2& tup2,
+
+      std::index_sequence<Idxs...>) noexcept
+    -> bool
+  {
+    return ((std::get<Idxs>(tup1) == std::get<Idxs>(tup2)) || ...);
+  }
+
+  template <typename Tuple1, typename Tuple2>
+  constexpr auto tuple_elementwise_compare_any(
+    const Tuple1& tup1,
+    const Tuple2& tup2
+  ) noexcept -> bool
+  {
+    static_assert(tl::size_v<Tuple1> == tl::size_v<Tuple2>);
+    return tuple_elementwise_compare_any_impl(
+      tup1, tup2, std::make_index_sequence<tl::size_v<Tuple1>> {}
+    );
+  }
+
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Applies `func` to elements of every passed range in parameter order.
+ * 
+ * @details Iteration ceases when any `end` iterator is reached.
+ *
+ * @pre Must be passed a pack of matching iterator pairs.
+ * ex. `for_each_all(callable, begin1, end1, begin2, end2, begin3, end3)`
+ * Failure to meet this precondition may be a compile-time error
+ * if types mismatch,
+ * or a segmentation fault if types match,
+ * but do not correspond to the same range.
+ *
+ * @pre `func` must be invocable with the value types of each iterator pair.
+ *
+ * @pre For example: the following would be a compile-time error
+ * due to type mismatch,
+ * as what would be called would be `function(int, long)`.
+ *
+ * ```
+ * void function(int, char);
+ *
+ * int main() {
+ * std::vector<int> int_vec {...};
+ * std::vector<long> long_vec {...};
+ * for_each_all(&function,
+ * int_vec.begin(),
+ * int_vec.end(),
+ * long_vec.begin(),
+ * long_vec.end()
+ * )
+ * };
+ * ```
+ *
+ * @param func Callable to invoke with each set of range elements
+ *
+ * @param iterators Pack of iterators satisfying preconditions
+ */
+/* }}} */
+template <typename VarFunc, typename... Iterators>
+constexpr void
+for_each_all(VarFunc&& func, Iterators... iterators) noexcept
+{
+  for ( auto [begins, ends] {
+          tuple::alternating_split(std::tuple {iterators...})};
+        not impl::tuple_elementwise_compare_any(begins, ends);
+        tuple::for_each(begins, [](auto& iterator) { ++iterator; }) ) {
+    tuple::call_as_pack(
+      begins,
+      [&func](auto&&... iterators_inner) mutable {
+        return supl::invoke(func, *iterators_inner...);
+      }
+    );
+  }
+}
 
 /* {{{ doc */
 /**
@@ -491,13 +562,10 @@ generate(Itr begin, const Itr end, Gen&& gen) noexcept(noexcept(gen()
 }
 
 template <typename InItr, typename OutItr>
-constexpr auto copy(
-  InItr begin,
-  const InItr end,
-  OutItr out
-) noexcept(std::
-             is_nothrow_copy_constructible_v<
-               typename std::iterator_traits<InItr>::value_type>) -> OutItr
+constexpr auto copy(InItr begin, const InItr end, OutItr out)
+
+  noexcept(std::is_nothrow_copy_constructible_v<
+           typename std::iterator_traits<InItr>::value_type>) -> OutItr
 {
   for ( ; begin != end; ++out, ++begin ) {
     *out = *begin;

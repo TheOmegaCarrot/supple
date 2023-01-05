@@ -196,6 +196,92 @@ static auto test_for_each_all_n() -> supl::test_results
   return results;
 }
 
+static auto test_tuple_elementwise_compare_any() -> supl::test_results
+{
+  supl::test_results results;
+
+  const std::tuple test1_1 {1, 2, 3};
+  const std::tuple test1_2 {4, 5, 6};
+  results.enforce_equal(
+    supl::impl::tuple_elementwise_compare_any(test1_1, test1_2),
+    false,
+    supl::to_string(test1_1) + " && " + supl::to_string(test1_2)
+  );
+
+  const std::tuple test2_1 {1, 2, 3};
+  const std::tuple test2_2 {1, 4, 5};
+  results.enforce_equal(
+    supl::impl::tuple_elementwise_compare_any(test2_1, test2_2),
+    true,
+    supl::to_string(test2_1) + " && " + supl::to_string(test2_2)
+  );
+
+  const std::tuple test3_1 {1, 2, 3};
+  const std::tuple test3_2 {4, 2, 5};
+  results.enforce_equal(
+    supl::impl::tuple_elementwise_compare_any(test3_1, test3_2),
+    true,
+    supl::to_string(test3_1) + " && " + supl::to_string(test3_2)
+  );
+
+  const std::tuple test4_1 {1, 2, 3};
+  const std::tuple test4_2 {4, 5, 3};
+  results.enforce_equal(
+    supl::impl::tuple_elementwise_compare_any(test4_1, test4_2),
+    true,
+    supl::to_string(test4_1) + " && " + supl::to_string(test4_2)
+  );
+
+  return results;
+}
+
+static auto test_for_each_all() -> supl::test_results
+{
+  supl::test_results results;
+
+  const std::array test1_1 {4, 9, 16, 25};
+  const std::array test1_2 {2, 3, 4, 5};
+  const std::array test1_3 {5, 6, 7, 8};
+  std::vector<int> test_output1;
+  const std::vector reference_output1 {11, 18, 27, 38};
+
+  supl::for_each_all(
+    [&test_output1](const int a, const int b, const int c) {
+      test_output1.push_back(a + b + c);
+    },
+    test1_1.begin(),
+    test1_1.end(),
+    test1_2.begin(),
+    test1_2.end(),
+    test1_3.begin(),
+    test1_3.end()
+  );
+
+  results.enforce_equal(test_output1, reference_output1);
+
+  const std::array test2_1 {4, 9, 16, 25};
+  const std::array test2_2 {2, 3, 4, 5};
+  const std::array test2_3 {5, 6, 7, 8, 0x00F};
+  std::vector<int> test_output2;
+  const std::vector reference_output2 {11, 18, 27, 38};
+
+  supl::for_each_all(
+    [&test_output2](const int a, const int b, const int c) {
+      test_output2.push_back(a + b + c);
+    },
+    test2_1.begin(),
+    test2_1.end(),
+    test2_2.begin(),
+    test2_2.end(),
+    test2_3.begin(),
+    test2_3.end()
+  );
+
+  results.enforce_equal(test_output2, reference_output2);
+
+  return results;
+}
+
 static auto test_for_each_both() -> supl::test_results
 {
   supl::test_results results;
@@ -329,7 +415,11 @@ auto test_algorithm() -> supl::test_section
   section.add_test("supl::for_each_adjacent", &test_for_each_adjacent);
   section.add_test("supl::for_each_adjacent_n", &test_for_each_adjacent_n);
   section.add_test("supl::for_each_all_n", &test_for_each_all_n);
-  /* section.add_test("supl::for_each_all", &test_for_each_all); */
+  section.add_test(
+    "supl::impl::test_tuple_elementwise_compare_any",
+    &test_tuple_elementwise_compare_any
+  );
+  section.add_test("supl::for_each_all", &test_for_each_all);
   section.add_test("supl::for_each_both", &test_for_each_both);
   section.add_test("supl::for_each_both_n", &test_for_each_both_n);
   section.add_test("supl::generate", &test_generate);

@@ -1388,6 +1388,13 @@ template <typename Tuple>
   return type_transform<remove_cvref>(tup);
 }
 
+/* template<typename... Ts> */
+/* [[nodiscard]] constexpr auto make_cref_tuple(Ts&&... values) noexcept */
+/* -> std::tuple<sequential_apply_t<Ts, remove_cvref, std::add_const, std::add_lvalue_reference>...> */
+/* { */
+/*   return type_transform<se> */
+/* } */
+
 }  // namespace supl::tuple
 
 #endif

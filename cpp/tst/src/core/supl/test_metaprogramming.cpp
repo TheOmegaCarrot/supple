@@ -519,5 +519,41 @@ static_assert(! supl::sequential_apply_v<
               std::add_const,
               supl::binary_partial_apply<std::is_same, const int&>::func>);
 
+///////////////////////////////////////////// sequential_applicator
+
+static_assert(std::is_same_v<
+              supl::sequential_applicator<
+                supl::remove_cvref,
+                std::add_const,
+                std::add_lvalue_reference>::template func_t<int>,
+              const int&>);
+
+static_assert(std::is_same_v<
+              supl::sequential_applicator<
+                supl::remove_cvref,
+                std::add_const,
+                std::add_lvalue_reference>::template func_t<const int&&>,
+              const int&>);
+
+static_assert(std::is_same_v<
+              supl::sequential_applicator<
+                supl::remove_cvref,
+                std::add_const,
+                std::add_lvalue_reference>::template func_t<volatile int>,
+              const int&>);
+
+static_assert(std::is_same_v<
+              supl::sequential_applicator<
+                std::decay,
+                std::remove_pointer,
+                std::decay,
+                std::add_volatile,
+                std::add_const,
+                std::add_pointer,
+                std::add_const,
+                std::add_lvalue_reference>::
+                template func_t<volatile char* const>,
+              const volatile char* const&>);
+
 auto main() -> int
 { }

@@ -872,6 +872,28 @@ template <
 constexpr inline auto sequential_apply_v =
   sequential_apply<T, FUNC, FUNC_PACK...>::value;
 
+///////////////////////////////////////////// sequential_applicator
+
+/* {{{ doc */
+/**
+ * @brief Provides a unary metafunction
+ * `sequential_applicator<FUNCS...>::template func<T>`, which is equivalent
+ * to calling `sequential_apply<T, FUNCS...>`.
+ *
+ * @details This is helpful to compose many metafunctions to
+ * create a new metafunction to provide to another higher-order
+ * metafunction which expects a unary type -> type metafunction.
+ */
+/* }}} */
+template <template <typename> typename... FUNCS>
+struct sequential_applicator {
+  template <typename T>
+  struct func : sequential_apply<T, FUNCS...> { };
+
+  template <typename T>
+  using func_t = typename func<T>::type;
+};
+
 }  // namespace supl
 
 #endif

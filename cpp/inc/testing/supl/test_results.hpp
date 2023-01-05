@@ -119,10 +119,64 @@ public:
     if ( result != expected ) {
       m_fail_count += 1;
 
-      details << "\nCase " << m_case_count << '\t' << message
+      details << "\nCase " << m_case_count << ":\t" << message
               << "\n\n\tExpected:\n\t" << supl::stream_adapter(expected)
               << "\n\n\tGot:\n\t" << supl::stream_adapter(result)
               << "\n\n";
+      m_case_details.push_back(details.str());
+    } else {
+      m_case_details.emplace_back();
+    }
+  }
+
+  /* {{{ doc */
+  /**
+   * @brief Enforce that a condition is true.
+   *
+   * @param result Value produced by code under test
+   *
+   * @param message A string which will be printed if the test fails
+   */
+  /* }}} */
+  inline void
+  enforce_true(bool result, const std::string& message = {}) noexcept
+  {
+    m_case_count += 1;
+
+    std::stringstream details;
+
+    if ( ! result ) {
+      m_fail_count += 1;
+
+      details << "\nCase " << m_case_count << ":\t" << message
+              << "\n\n\tExpected true\n\n";
+      m_case_details.push_back(details.str());
+    } else {
+      m_case_details.emplace_back();
+    }
+  }
+
+  /* {{{ doc */
+  /**
+   * @brief Enforce that a condition is false.
+   *
+   * @param result Value produced by code under test
+   *
+   * @param message A string which will be printed if the test fails
+   */
+  /* }}} */
+  inline void
+  enforce_false(bool result, const std::string& message = {}) noexcept
+  {
+    m_case_count += 1;
+
+    std::stringstream details;
+
+    if ( result ) {
+      m_fail_count += 1;
+
+      details << "\nCase " << m_case_count << ":\t" << message
+              << "\n\n\tExpected false\n\n";
       m_case_details.push_back(details.str());
     } else {
       m_case_details.emplace_back();
@@ -158,7 +212,7 @@ public:
     if ( std::abs(result - expected) > tolerance ) {
       m_fail_count += 1;
 
-      details << "\nCase " << m_case_count << '\t' << message
+      details << "\nCase " << m_case_count << ":\t" << message
               << "\n\n\tExpected value within "
               << supl::stream_adapter(tolerance) << " of:\n\t"
               << supl::stream_adapter(expected) << "\n\n\tGot:\n\t"
@@ -183,7 +237,7 @@ public:
 
     std::stringstream details;
 
-    details << "\nCase " << m_case_count << "\n\n" << message << "\n\n";
+    details << "\nCase " << m_case_count << ":\n\n" << message << "\n\n";
 
     m_case_details.push_back(details.str());
   }

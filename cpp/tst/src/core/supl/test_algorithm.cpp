@@ -202,33 +202,29 @@ static auto test_tuple_elementwise_compare_any() -> supl::test_results
 
   const std::tuple test1_1 {1, 2, 3};
   const std::tuple test1_2 {4, 5, 6};
-  results.enforce_equal(
+  results.enforce_false(
     supl::impl::tuple_elementwise_compare_any(test1_1, test1_2),
-    false,
     supl::to_string(test1_1) + " && " + supl::to_string(test1_2)
   );
 
   const std::tuple test2_1 {1, 2, 3};
   const std::tuple test2_2 {1, 4, 5};
-  results.enforce_equal(
+  results.enforce_true(
     supl::impl::tuple_elementwise_compare_any(test2_1, test2_2),
-    true,
     supl::to_string(test2_1) + " && " + supl::to_string(test2_2)
   );
 
   const std::tuple test3_1 {1, 2, 3};
   const std::tuple test3_2 {4, 2, 5};
-  results.enforce_equal(
+  results.enforce_true(
     supl::impl::tuple_elementwise_compare_any(test3_1, test3_2),
-    true,
     supl::to_string(test3_1) + " && " + supl::to_string(test3_2)
   );
 
   const std::tuple test4_1 {1, 2, 3};
   const std::tuple test4_2 {4, 5, 3};
-  results.enforce_equal(
+  results.enforce_true(
     supl::impl::tuple_elementwise_compare_any(test4_1, test4_2),
-    true,
     supl::to_string(test4_1) + " && " + supl::to_string(test4_2)
   );
 

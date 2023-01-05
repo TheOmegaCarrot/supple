@@ -1117,6 +1117,44 @@ template <typename Tuple1, typename Tuple2>
 namespace impl {
   template <typename Tuple, std::size_t... Idxs>
   [[nodiscard]] constexpr auto
+  alternating_split_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+
+    noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+      -> std::pair<
+        std::tuple<tl::at_index_t<Idxs * 2, Tuple>...>,
+        std::tuple<tl::at_index_t<Idxs * 2 + 1, Tuple>...>>
+  {
+    return {
+      {std::get<Idxs * 2>(tup)...}, {std::get<Idxs * 2 + 1>(tup)...}};
+  }
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Split a tuple into a pair of tuples,
+ * each containing every other element.
+ *
+ * @details This is best explained with an example:
+ * `alternating_split(tuple{42, true, 'e', 3.14})
+ * == pair{tuple{42, 'e'}, tuple{true, 3.14}}`
+ *
+ * If the input tuple has an odd number of elements,
+ * the final element will be dropped. ex.
+ * `alternating_split(tuple{42, true, 'e', 3.14, 81})
+ * == pair{tuple{42, 'e'}, tuple{true, 3.14}}`
+ */
+/* }}} */
+template <typename Tuple>
+[[nodiscard]] constexpr auto alternating_split(const Tuple& tup
+) noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+{
+  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> / 2> {}};
+  return impl::alternating_split_impl(tup, seq);
+}
+
+namespace impl {
+  template <typename Tuple, std::size_t... Idxs>
+  [[nodiscard]] constexpr auto
   front_n_impl(const Tuple& tup, std::index_sequence<Idxs...>)
 
     noexcept(tl::all_of_v<

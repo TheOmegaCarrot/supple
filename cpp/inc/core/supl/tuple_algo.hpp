@@ -77,16 +77,17 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Func>
-constexpr void for_each(const Tuple& tup, Func&& func) noexcept(
-  noexcept(impl::for_each_impl(
-    tup,
-    std::forward<Func>(func),
-    std::make_index_sequence<tl::size_v<Tuple>> {}
-  ))
-)
+constexpr void
+for_each(Tuple&& tup, Func&& func) noexcept(noexcept(impl::for_each_impl(
+  tup,
+  std::forward<Func>(func),
+  std::make_index_sequence<tl::size_v<Tuple>> {}
+)))
 {
   constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  impl::for_each_impl(tup, std::forward<Func>(func), seq);
+  impl::for_each_impl(
+    std::forward<Tuple>(tup), std::forward<Func>(func), seq
+  );
 }
 
 namespace impl {

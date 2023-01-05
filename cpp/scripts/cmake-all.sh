@@ -64,6 +64,6 @@ test_compiler /usr/bin/clang++-12 CLANG-12
 test_compiler /usr/bin/clang++-13 CLANG-13
 test_compiler /usr/bin/clang++-14 CLANG-14
 test_compiler /opt/llvm-15/bin/clang++ CLANG-15
-# test_compiler /opt/llvm-trunk/bin clang++ CLANG-TRUNK
+test_compiler /opt/llvm-trunk/bin clang++ CLANG-TRUNK
 test_compiler /opt/intel-2023/oneapi/compiler/2023.0.0/linux/bin/intel64/icc ICC -DOMIT_23=YES
 test_compiler /opt/intel-2023/oneapi/compiler/2023.0.0/linux/bin/icpx ICPX -DOMIT_23=YES

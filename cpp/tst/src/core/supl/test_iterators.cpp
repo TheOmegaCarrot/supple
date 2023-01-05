@@ -52,11 +52,11 @@ static auto test_iterator() -> supl::test_results
 {
   supl::test_results results;
 
-  const std::vector test_iterable_1 {1, 2, 3, 4, 5};
-  const std::deque test_iterable_2 {6, 7, 8, 9, 10};
+  const std::vector test_vector {1, 2, 3, 4, 5};
+  const std::deque test_deque {6, 7, 8, 9, 10};
 
   // increment and decrement
-  supl::iterator test_1 {test_iterable_1.begin()};
+  supl::iterator test_1 {test_vector.begin()};
   results.enforce_exactly_equal(*test_1, 1);
   ++test_1;
   results.enforce_exactly_equal(*test_1, 2);
@@ -76,7 +76,7 @@ static auto test_iterator() -> supl::test_results
   results.enforce_exactly_equal(*test_2, 1);
   results.enforce_exactly_equal(*test_3, 2);
 
-  test_1 = test_iterable_2.begin();
+  test_1 = test_deque.begin();
   results.enforce_exactly_equal(*test_1, 6);
   ++test_1;
 
@@ -85,8 +85,8 @@ static auto test_iterator() -> supl::test_results
   results.enforce_exactly_equal(*test_4, 7);
 
   // equality
-  const supl::iterator test_a {test_iterable_1.begin()};
-  supl::iterator test_b {test_iterable_1.begin()};
+  const supl::iterator test_a {test_vector.begin()};
+  supl::iterator test_b {test_vector.begin()};
 
   // same type - good cast
   results.enforce_exactly_equal(test_a == test_b, true);
@@ -94,7 +94,7 @@ static auto test_iterator() -> supl::test_results
   ++test_b;
 
   // different type - bad cast
-  test_b = test_iterable_2.begin();
+  test_b = test_deque.begin();
   results.enforce_exactly_equal(test_a == test_b, false);
   results.enforce_exactly_equal(test_a != test_b, true);
 
@@ -118,7 +118,7 @@ static auto test_iterator() -> supl::test_results
 
   // const?
 
-  supl::iterator const_itr {test_iterable_1.cbegin()};
+  supl::iterator const_itr {test_vector.cbegin()};
 
   results.enforce_exactly_equal(
     const_itr.is_null(), false, "Should not be null"
@@ -129,7 +129,7 @@ static auto test_iterator() -> supl::test_results
                 )>::reference,
                 const int&>);
 
-  const_itr = test_iterable_1.begin();
+  const_itr = test_vector.begin();
   results.enforce_exactly_equal(*const_itr, 1);
 
   // useful error message here - bad reassignment due to const incorrectness
@@ -140,7 +140,7 @@ static auto test_iterator() -> supl::test_results
   // useful error message here - bad reassignment due to type mismatch
   /* test_1 = test_iterable_3.begin(); */
 
-  const supl::iterator constify {test_iterable_1.begin()};
+  const supl::iterator constify {test_vector.begin()};
   results.enforce_exactly_equal(*constify, 1);
 
   // Null case

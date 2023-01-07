@@ -67,6 +67,11 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         "clang-tidy;--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy")
   endif()
 
+  if(DO_TIME_TRACE)
+    message("-- Running time trace")
+    add_compile_options(-ftime-trace)
+  endif()
+
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   message("-- Using Intel")
   add_compile_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000)

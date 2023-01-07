@@ -536,6 +536,75 @@ for_each_all(VarFunc&& func, Iterators... iterators) noexcept
 
 /* {{{ doc */
 /**
+ * @brief Determine if all arguments satisfy a predicate
+ *
+ * @param pred Unary predicate all arguments must satisfy
+ *
+ * @return `true` if all arguments satisfy `pred`,
+ * `false` otherwise. Returns `true` for zero arguments.
+ */
+/* }}} */
+template <typename Pred, typename... Args>
+constexpr auto all_of(Pred&& pred, Args&&... args) noexcept(
+  (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
+   && ...)
+) -> bool
+{
+  if constexpr ( sizeof...(Args) == 0 ) {
+    return true;
+  } else {
+    return (
+      invoke(std::forward<Pred>(pred), std::forward<Args>(args)) && ...
+    );
+  }
+}
+
+/* {{{ doc */
+/**
+ * @brief Determine if any arguments satisfy a predicate
+ *
+ * @param pred Unary predicate any arguments must satisfy
+ *
+ * @return `true` if any arguments satisfy `pred`,
+ * `false` otherwise. Returns `false` for zero arguments.
+ */
+/* }}} */
+template <typename Pred, typename... Args>
+constexpr auto any_of(Pred&& pred, Args&&... args) noexcept(
+  (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
+   && ...)
+) -> bool
+{
+  if constexpr ( sizeof...(Args) == 0 ) {
+    return false;
+  } else {
+    return (
+      invoke(std::forward<Pred>(pred), std::forward<Args>(args)) || ...
+    );
+  }
+}
+
+/* {{{ doc */
+/**
+ * @brief Determine if no arguments satisfy a predicate
+ *
+ * @param pred Unary predicate no arguments must satisfy
+ *
+ * @return `true` if no arguments satisfy `pred`,
+ * `false` otherwise. Returns `true` for zero arguments.
+ */
+/* }}} */
+template <typename Pred, typename... Args>
+constexpr auto none_of(Pred&& pred, Args&&... args) noexcept(
+  (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
+   && ...)
+) -> bool
+{
+  return not any_of(std::forward<Pred>(pred), std::forward<Args>(args)...);
+}
+
+/* {{{ doc */
+/**
  * @brief Re-implementation of std::generate usable in a constexpr context.
  * Redundant if using >=C++20.
  *

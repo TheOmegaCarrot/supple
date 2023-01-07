@@ -324,6 +324,67 @@ static auto test_for_each_both_n() -> supl::test_results
   return results;
 }
 
+static auto test_all_of_pack() -> supl::test_results
+{
+  supl::test_results results;
+
+  results.enforce_true(
+    supl::all_of(supl::greater_than(3), 4, 8, 3.14, 42), "All pass case"
+  );
+
+  results.enforce_false(
+    supl::all_of(supl::greater_than(3), 4, 8, 3.14, 1),
+    "One argument fails"
+  );
+
+  results.enforce_true(
+    supl::all_of(supl::less_than(8)), "No argument case"
+  );
+
+  return results;
+}
+
+static auto test_any_of_pack() -> supl::test_results
+{
+  supl::test_results results;
+
+  results.enforce_true(
+    supl::any_of(supl::greater_than(42), 2, 18, 1, 4.82, 85.2, 3),
+    "One pass case"
+  );
+
+  results.enforce_false(
+    supl::any_of(supl::greater_than(42), 8, 3.14, 18, 27), "None pass case"
+  );
+
+  results.enforce_false(
+    supl::any_of(supl::less_than(8)), "No argument case"
+  );
+
+  return results;
+}
+
+static auto test_none_of_pack() -> supl::test_results
+{
+  supl::test_results results;
+
+  results.enforce_false(
+    supl::none_of(supl::greater_than(42), 2, 18, 1, 4.82, 85.2, 3),
+    "One pass case"
+  );
+
+  results.enforce_true(
+    supl::none_of(supl::greater_than(42), 8, 3.14, 18, 27),
+    "None pass case"
+  );
+
+  results.enforce_true(
+    supl::none_of(supl::less_than(8)), "No argument case"
+  );
+
+  return results;
+}
+
 static auto test_generate() -> supl::test_results
 {
   supl::test_results results;
@@ -418,6 +479,9 @@ auto test_algorithm() -> supl::test_section
   section.add_test("supl::for_each_all", &test_for_each_all);
   section.add_test("supl::for_each_both", &test_for_each_both);
   section.add_test("supl::for_each_both_n", &test_for_each_both_n);
+  section.add_test("supl::all_of (pack)", &test_all_of_pack);
+  section.add_test("supl::any_of (pack)", &test_any_of_pack);
+  section.add_test("supl::none_of (pack)", &test_none_of_pack);
   section.add_test("supl::generate", &test_generate);
   section.add_test("supl::copy", &test_copy);
 

@@ -154,15 +154,58 @@ template <typename T>
   };
 }
 
+/* {{{ doc */
+/**
+ * @brief Create a unary predicate which determines if an argument
+ * satisfies all of the provided predicates
+ *
+ * @details The returned predicate takes ownership of
+ * the given predicates, do keep this in mind if
+ * calling this function with nontrivial function objects.
+ *
+ * @param preds Pack of unary predicates
+ *
+ * @return Unary predicate equivalent to `(preds(arg) && ...)`,
+ * where `arg` is the argument to the returned predicate.
+ */
+/* }}} */
 template <typename... Preds>
 [[nodiscard]] constexpr auto unary_conjunction(Preds&&... preds) noexcept
 {
-  return
-    [pred_tup {std::tuple {std::forward<Preds>(preds)...}}](auto&& arg) {
-      return tuple::call_as_pack(pred_tup, [&arg](auto&&... inner_preds) {
-        return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
-      });
-    };
+  return [pred_tup {
+           tl::transform_t<std::tuple<Preds...>, std::remove_reference> {
+             std::forward<Preds>(preds)...}}](auto&& arg) {
+    return tuple::call_as_pack(pred_tup, [&arg](auto&&... inner_preds) {
+      return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
+    });
+  };
+}
+
+/* {{{ doc */
+/**
+ * @brief Create a unary predicate which determines if an argument
+ * satisfies any of the provided predicates
+ *
+ * @details The returned predicate takes ownership of
+ * the given predicates, do keep this in mind if
+ * calling this function with nontrivial function objects.
+ *
+ * @param preds Pack of unary predicates
+ *
+ * @return Unary predicate equivalent to `(preds(arg) || ...)`,
+ * where `arg` is the argument to the returned predicate.
+ */
+/* }}} */
+template <typename... Preds>
+[[nodiscard]] constexpr auto unary_disjunction(Preds&&... preds) noexcept
+{
+  return [pred_tup {
+           tl::transform_t<std::tuple<Preds...>, std::remove_reference> {
+             std::forward<Preds>(preds)...}}](auto&& arg) {
+    return tuple::call_as_pack(pred_tup, [&arg](auto&&... inner_preds) {
+      return (inner_preds(std::forward<decltype(arg)>(arg)) || ...);
+    });
+  };
 }
 
 }  // namespace supl

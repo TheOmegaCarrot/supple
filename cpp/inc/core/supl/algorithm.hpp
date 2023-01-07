@@ -545,7 +545,7 @@ for_each_all(VarFunc&& func, Iterators... iterators) noexcept
  */
 /* }}} */
 template <typename Pred, typename... Args>
-constexpr auto all_of(Pred&& pred, Args&&... args) noexcept(
+[[nodiscard]] constexpr auto all_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
    && ...)
 ) -> bool
@@ -570,7 +570,7 @@ constexpr auto all_of(Pred&& pred, Args&&... args) noexcept(
  */
 /* }}} */
 template <typename Pred, typename... Args>
-constexpr auto any_of(Pred&& pred, Args&&... args) noexcept(
+[[nodiscard]] constexpr auto any_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
    && ...)
 ) -> bool
@@ -595,7 +595,7 @@ constexpr auto any_of(Pred&& pred, Args&&... args) noexcept(
  */
 /* }}} */
 template <typename Pred, typename... Args>
-constexpr auto none_of(Pred&& pred, Args&&... args) noexcept(
+[[nodiscard]] constexpr auto none_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
    && ...)
 ) -> bool

@@ -23,7 +23,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "functional.hpp"
+#include "invoke.hpp"
 #include "metaprogramming.hpp"
 #include "type_list.hpp"
 

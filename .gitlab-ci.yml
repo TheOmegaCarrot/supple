@@ -5,11 +5,18 @@ before_script:
   - apt-get install --yes cmake gcc g++
 
 stages:
-  - build_and_test
+  - build
+  - test
 
 build-job:
-  stage: build_and_test
+
+  stage: build
   script:
     - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug
-    - cmake --build bld --parallel 2
+    - cmake --build bld --parallel $(nproc)
+
+  stage: test
+  script:
+    - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug
+    - cmake --build bld --parallel $(nproc)
     - cmake --build bld --target test

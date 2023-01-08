@@ -9,12 +9,12 @@ stages:
   - test
 
 build-job:
-
   stage: build
   script:
     - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug
     - cmake --build bld --parallel $(nproc)
 
+unit-test-job:
   stage: test
   script:
     - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug

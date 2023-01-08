@@ -172,9 +172,8 @@ template <typename T>
 template <typename... Preds>
 [[nodiscard]] constexpr auto unary_conjunction(Preds&&... preds) noexcept
 {
-  return [pred_tup {
-           tl::transform_t<std::tuple<Preds...>, std::remove_reference> {
-             std::forward<Preds>(preds)...}}](auto&& arg) {
+  return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
+           std::forward<Preds>(preds)...}}](auto&& arg) {
     return tuple::call_as_pack(pred_tup, [&arg](auto&&... inner_preds) {
       return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
     });
@@ -199,9 +198,8 @@ template <typename... Preds>
 template <typename... Preds>
 [[nodiscard]] constexpr auto unary_disjunction(Preds&&... preds) noexcept
 {
-  return [pred_tup {
-           tl::transform_t<std::tuple<Preds...>, std::remove_reference> {
-             std::forward<Preds>(preds)...}}](auto&& arg) {
+  return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
+           std::forward<Preds>(preds)...}}](auto&& arg) {
     return tuple::call_as_pack(pred_tup, [&arg](auto&&... inner_preds) {
       return (inner_preds(std::forward<decltype(arg)>(arg)) || ...);
     });

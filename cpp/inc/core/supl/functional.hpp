@@ -20,6 +20,7 @@
 
 #include <functional>
 #include <memory>
+#include <supl/metaprogramming.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -407,6 +408,31 @@ pred_bicond(Pred1&& pred1, Pred2&& pred2) noexcept
   return pred_not(
     pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2))
   );
+}
+
+namespace impl {
+  template <typename T>
+  struct is_predicate_impl : std::false_type { };
+
+  template <typename T>
+  struct is_predicate_impl<predicate<T>> : std::true_type { };
+
+  template <typename T>
+  struct is_predicate : is_predicate_impl<supl::remove_cvref_t<T>> { };
+
+  template <typename T>
+  constexpr inline bool is_predicate_v = is_predicate<T>::value;
+
+}  // namespace impl
+
+template <
+  typename Pred1,
+  typename Pred2,
+  typename = std::enable_if_t<
+    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
+auto operator&&(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return pred_and(pred1, pred2);
 }
 
 }  // namespace supl

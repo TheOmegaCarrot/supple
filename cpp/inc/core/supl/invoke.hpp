@@ -1,5 +1,5 @@
-#ifndef CORE_SUPL_INVOKE_HPP
-#define CORE_SUPL_INVOKE_HPP
+#ifndef SUPPLE_CORE_INVOKE_HPP
+#define SUPPLE_CORE_INVOKE_HPP
 
 #include <type_traits>
 #include <utility>

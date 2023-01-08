@@ -324,6 +324,28 @@ static auto test_pred_op_and() -> supl::test_results
   return results;
 }
 
+static auto test_pred_op_or() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto not_between_3_and_8 {
+    supl::less_than(3) || supl::greater_than(8)};
+
+  results.enforce_true(not_between_3_and_8(0), "3 > 0 || 0 > 8");
+  results.enforce_true(not_between_3_and_8(1), "3 > 1 || 1 > 8");
+  results.enforce_true(not_between_3_and_8(2), "3 > 2 || 2 > 8");
+  results.enforce_false(not_between_3_and_8(3), "3 > 3 || 3 > 8");
+  results.enforce_false(not_between_3_and_8(4), "3 > 4 || 4 > 8");
+  results.enforce_false(not_between_3_and_8(5), "3 > 5 || 5 > 8");
+  results.enforce_false(not_between_3_and_8(6), "3 > 6 || 6 > 8");
+  results.enforce_false(not_between_3_and_8(7), "3 > 7 || 7 > 8");
+  results.enforce_false(not_between_3_and_8(8), "3 > 8 || 8 > 8");
+  results.enforce_true(not_between_3_and_8(9), "3 > 9 || 9 > 8");
+  results.enforce_true(not_between_3_and_8(10), "3 > 10 || 10 > 8");
+
+  return results;
+}
+
 auto test_functional() -> supl::test_section
 {
   supl::test_section section;
@@ -342,7 +364,8 @@ auto test_functional() -> supl::test_section
   section.add_test("supl::pred_xor", &test_pred_xor);
   section.add_test("supl::pred_implies", &test_pred_implies);
   section.add_test("supl::pred_bicond", &test_pred_bicond);
-  section.add_test("supl::predicate_operator_&&", &test_pred_op_and);
+  section.add_test("supl::predicate_op_and", &test_pred_op_and);
+  section.add_test("supl::predicate_op_or", &test_pred_op_or);
 
   return section;
 }

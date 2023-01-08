@@ -435,6 +435,16 @@ auto operator&&(Pred1&& pred1, Pred2&& pred2) noexcept
   return pred_and(pred1, pred2);
 }
 
+template <
+  typename Pred1,
+  typename Pred2,
+  typename = std::enable_if_t<
+    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
+auto operator||(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return pred_or(pred1, pred2);
+}
+
 }  // namespace supl
 
 #endif

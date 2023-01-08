@@ -78,6 +78,12 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   add_link_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000)
   set(OMIT_23 YES)
 
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
+  message("-- Using Intel LLVM")
+  add_compile_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000 -Rno-debug-disables-optimization)
+  add_link_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000 -Rno-debug-disables-optimization)
+  set(OMIT_23 YES)
+
 elseif(MSVC)
   # I do not have access to MSVC, and thus cannot test it
   message("-- Using MSVC")

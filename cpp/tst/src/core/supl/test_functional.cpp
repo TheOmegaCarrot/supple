@@ -101,13 +101,12 @@ static auto test_less_eq_than() -> supl::test_results
   return results;
 }
 
-static auto test_unary_conjunction() -> supl::test_results
+static auto test_conjunction() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto between_3_and_8_inclusive {supl::unary_conjunction(
-    supl::greater_eq_than(3), supl::less_eq_than(8)
-  )};
+  const auto between_3_and_8_inclusive {
+    supl::conjunction(supl::greater_eq_than(3), supl::less_eq_than(8))};
 
   results.enforce_true(between_3_and_8_inclusive(5), "3 <= 5 <= 8");
   results.enforce_true(between_3_and_8_inclusive(3), "3 <= 3 <= 8");
@@ -120,12 +119,12 @@ static auto test_unary_conjunction() -> supl::test_results
   return results;
 }
 
-static auto test_unary_disjunction() -> supl::test_results
+static auto test_disjunction() -> supl::test_results
 {
   supl::test_results results;
 
   const auto less_than_4_or_greater_than_10 {
-    supl::unary_disjunction(supl::less_than(4), supl::greater_than(10))};
+    supl::disjunction(supl::less_than(4), supl::greater_than(10))};
 
   results.enforce_true(
     less_than_4_or_greater_than_10(1), "1 < 4 || 1 > 10"
@@ -153,8 +152,8 @@ auto test_functional() -> supl::test_section
   section.add_test("supl::greater_eq_than", &test_greater_eq_than);
   section.add_test("supl::less_than", &test_less_than);
   section.add_test("supl::less_eq_than", &test_less_eq_than);
-  section.add_test("supl::unary_conjunction", &test_unary_conjunction);
-  section.add_test("supl::unary_disjunction", &test_unary_disjunction);
+  section.add_test("supl::conjunction", &test_conjunction);
+  section.add_test("supl::disjunction", &test_disjunction);
 
   return section;
 }

@@ -176,7 +176,7 @@ template <typename T>
  */
 /* }}} */
 template <typename... Preds>
-[[nodiscard]] constexpr auto unary_conjunction(Preds&&... preds) noexcept
+[[nodiscard]] constexpr auto conjunction(Preds&&... preds) noexcept
 {
   return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
            std::forward<Preds>(preds)...}}](auto&& arg
@@ -206,7 +206,7 @@ template <typename... Preds>
  */
 /* }}} */
 template <typename... Preds>
-[[nodiscard]] constexpr auto unary_disjunction(Preds&&... preds) noexcept
+[[nodiscard]] constexpr auto disjunction(Preds&&... preds) noexcept
 {
   return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
            std::forward<Preds>(preds)...}}](auto&& arg

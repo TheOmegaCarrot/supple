@@ -174,9 +174,12 @@ template <typename... Preds>
 {
   return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
            std::forward<Preds>(preds)...}}](auto&& arg) {
-    return tuple::call_as_pack(pred_tup, [&arg](auto&&... inner_preds) {
-      return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
-    });
+    return std::apply(
+      [&arg](auto&&... inner_preds) {
+        return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
+      },
+      pred_tup
+    );
   };
 }
 
@@ -200,11 +203,31 @@ template <typename... Preds>
 {
   return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
            std::forward<Preds>(preds)...}}](auto&& arg) {
-    return tuple::call_as_pack(pred_tup, [&arg](auto&&... inner_preds) {
-      return (inner_preds(std::forward<decltype(arg)>(arg)) || ...);
-    });
+    return std::apply(
+      [&arg](auto&&... inner_preds) {
+        return (inner_preds(std::forward<decltype(arg)>(arg)) || ...);
+      },
+      pred_tup
+    );
   };
 }
+
+/* template <typename Func, typename... Args> */
+/* [[nodiscard]] constexpr auto */
+/* bind_front(Func&& func, Args&&... binding_args) noexcept */
+/* { */
+/*   return [inner_func {std::forward<Func>(func)}, */
+/*           bound_arg_tup {std::tuple<std::remove_reference_t<Args>...> { */
+/*             binding_args...}}](auto&&... future_args) { */
+/*     return tuple::call_as_pack( */
+/*       bound_arg_tup, */
+/*       [future_arg_tup {std::tuple { */
+/*         future_args...}}]([[maybe_unused]] auto&&... bound_args) { */
+/*         // I think I need a way to expand two tuples to packs */
+/*       } */
+/*     ); */
+/*   }; */
+/* } */
 
 }  // namespace supl
 

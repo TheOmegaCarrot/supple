@@ -71,22 +71,6 @@ static auto test_for_each_in_subtuple() -> supl::test_results
   return results;
 }
 
-static auto test_call_as_pack() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple input_args {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-  const int expected1 {55};
-  const int result1 {supl::tuple::call_as_pack(
-    input_args, [](auto... args) { return (args + ...); }
-  )};
-
-  results.enforce_equal(result1, expected1);
-
-  return results;
-}
-
 static auto test_transform() -> supl::test_results
 {
   using supl::literals::size_t_literal::operator""_z;
@@ -1079,7 +1063,6 @@ auto test_tuple_algo() -> supl::test_section
   section.add_test(
     "supl::tuple::for_each_in_subtuple", &test_for_each_in_subtuple
   );
-  section.add_test("supl::tuple::call_as_pack", &test_call_as_pack);
   section.add_test("supl::tuple::transform", &test_transform);
   section.add_test("supl::tuple::any_of", &test_any_of);
   section.add_test("supl::tuple::all_of", &test_all_of);

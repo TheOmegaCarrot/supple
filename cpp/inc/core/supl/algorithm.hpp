@@ -525,11 +525,11 @@ for_each_all(VarFunc&& func, Iterators... iterators) noexcept
           tuple::alternating_split(std::tuple {iterators...})};
         not impl::tuple_elementwise_compare_any(begins, ends);
         tuple::for_each(begins, [](auto& iterator) { ++iterator; }) ) {
-    tuple::call_as_pack(
-      begins,
+    std::apply(
       [&func](auto&&... iterators_inner) mutable {
         return supl::invoke(func, *iterators_inner...);
-      }
+      },
+      begins
     );
   }
 }

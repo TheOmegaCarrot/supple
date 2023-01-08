@@ -30,6 +30,38 @@ namespace supl {
 
 /* {{{ doc */
 /**
+ * @brief Wrapper class for a unary predicate of class type,
+ * which includes lambdas.
+ */
+/* }}} */
+template <typename Pred>
+class predicate : Pred
+{
+public:
+
+  template <
+    typename T,
+    typename = std::enable_if_t<not std::is_same_v<T, predicate>>>
+  // NOLINTNEXTLINE(*explicit*)
+  predicate(T&& pred)
+      : Pred {std::forward<T>(pred)}
+  { }
+
+  predicate() = delete;
+  predicate(const predicate&) = default;
+  predicate(predicate&&) noexcept = default;
+  auto operator=(const predicate&) -> predicate& = default;
+  auto operator=(predicate&&) noexcept -> predicate& = default;
+  ~predicate() = default;
+
+  using Pred::operator();
+};
+
+template <typename T>
+predicate(T) -> predicate<T>;
+
+/* {{{ doc */
+/**
  * @brief Returns a unary predicate which determines if
  * its argument is equal to `arg`
  *
@@ -44,10 +76,11 @@ namespace supl {
 template <typename T>
 [[nodiscard]] constexpr auto equal_to(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
-         ) constexpr noexcept -> bool {
-    return new_arg == parent_arg;
-  };
+  return predicate {
+    [parent_arg = std::forward<T>(arg)](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return new_arg == parent_arg;
+    }};
 }
 
 /* {{{ doc */
@@ -66,10 +99,11 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto not_equal_to(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
-         ) constexpr noexcept -> bool {
-    return new_arg != parent_arg;
-  };
+  return predicate {
+    [parent_arg = std::forward<T>(arg)](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return new_arg != parent_arg;
+    }};
 }
 
 /* {{{ doc */
@@ -88,10 +122,11 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto greater_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
-         ) constexpr noexcept -> bool {
-    return new_arg > parent_arg;
-  };
+  return predicate {
+    [parent_arg = std::forward<T>(arg)](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return new_arg > parent_arg;
+    }};
 }
 
 /* {{{ doc */
@@ -110,10 +145,11 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto greater_eq_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
-         ) constexpr noexcept -> bool {
-    return new_arg >= parent_arg;
-  };
+  return predicate {
+    [parent_arg = std::forward<T>(arg)](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return new_arg >= parent_arg;
+    }};
 }
 
 /* {{{ doc */
@@ -132,10 +168,11 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto less_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
-         ) constexpr noexcept -> bool {
-    return new_arg < parent_arg;
-  };
+  return predicate {
+    [parent_arg = std::forward<T>(arg)](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return new_arg < parent_arg;
+    }};
 }
 
 /* {{{ doc */
@@ -154,10 +191,11 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto less_eq_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
-         ) constexpr noexcept -> bool {
-    return new_arg <= parent_arg;
-  };
+  return predicate {
+    [parent_arg = std::forward<T>(arg)](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return new_arg <= parent_arg;
+    }};
 }
 
 /* {{{ doc */
@@ -178,16 +216,19 @@ template <typename T>
 template <typename... Preds>
 [[nodiscard]] constexpr auto conjunction(Preds&&... preds) noexcept
 {
-  return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
-           std::forward<Preds>(preds)...}}](auto&& arg
-         ) constexpr noexcept -> bool {
-    return std::apply(
-      [&arg](auto&&... inner_preds) constexpr noexcept(
-        noexcept((inner_preds(std::forward<decltype(arg)>(arg)) && ...))
-      ) { return (inner_preds(std::forward<decltype(arg)>(arg)) && ...); },
-      pred_tup
-    );
-  };
+  return predicate {
+    [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
+      std::forward<Preds>(preds)...}}](auto&& arg
+    ) constexpr noexcept -> bool {
+      return std::apply(
+        [&arg](auto&&... inner_preds) constexpr noexcept(
+          noexcept((inner_preds(std::forward<decltype(arg)>(arg)) && ...))
+        ) {
+          return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
+        },
+        pred_tup
+      );
+    }};
 }
 
 /* {{{ doc */
@@ -208,16 +249,19 @@ template <typename... Preds>
 template <typename... Preds>
 [[nodiscard]] constexpr auto disjunction(Preds&&... preds) noexcept
 {
-  return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
-           std::forward<Preds>(preds)...}}](auto&& arg
-         ) constexpr noexcept -> bool {
-    return std::apply(
-      [&arg](auto&&... inner_preds) constexpr noexcept(
-        noexcept((inner_preds(std::forward<decltype(arg)>(arg)) || ...))
-      ) { return (inner_preds(std::forward<decltype(arg)>(arg)) || ...); },
-      pred_tup
-    );
-  };
+  return predicate {
+    [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
+      std::forward<Preds>(preds)...}}](auto&& arg
+    ) constexpr noexcept -> bool {
+      return std::apply(
+        [&arg](auto&&... inner_preds) constexpr noexcept(
+          noexcept((inner_preds(std::forward<decltype(arg)>(arg)) || ...))
+        ) {
+          return (inner_preds(std::forward<decltype(arg)>(arg)) || ...);
+        },
+        pred_tup
+      );
+    }};
 }
 
 /* {{{ doc */
@@ -237,10 +281,10 @@ template <typename... Preds>
 template <typename Pred>
 [[nodiscard]] constexpr auto pred_not(Pred&& pred) noexcept
 {
-  return [inner_pred {std::forward<Pred>(pred)}](auto&& arg
-         ) constexpr noexcept {
+  return predicate {[inner_pred {std::forward<Pred>(pred)}](auto&& arg
+                    ) constexpr noexcept {
     return not inner_pred(std::forward<decltype(arg)>(arg));
-  };
+  }};
 }
 
 /* {{{ doc */
@@ -260,11 +304,11 @@ template <typename Pred1, typename Pred2>
 [[nodiscard]] constexpr auto
 pred_and(Pred1&& pred1, Pred2&& pred2) noexcept
 {
-  return [inner_pred1 {pred1},
-          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+  return predicate {[inner_pred1 {pred1},
+                     inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
     return inner_pred1(std::forward<decltype(arg)>(arg))
         && inner_pred2(std::forward<decltype(arg)>(arg));
-  };
+  }};
 }
 
 /* {{{ doc */
@@ -283,11 +327,11 @@ pred_and(Pred1&& pred1, Pred2&& pred2) noexcept
 template <typename Pred1, typename Pred2>
 [[nodiscard]] constexpr auto pred_or(Pred1&& pred1, Pred2&& pred2) noexcept
 {
-  return [inner_pred1 {pred1},
-          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+  return predicate {[inner_pred1 {pred1},
+                     inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
     return inner_pred1(std::forward<decltype(arg)>(arg))
         || inner_pred2(std::forward<decltype(arg)>(arg));
-  };
+  }};
 }
 
 /* {{{ doc */
@@ -306,12 +350,12 @@ template <typename Pred1, typename Pred2>
 [[nodiscard]] constexpr auto
 pred_xor(Pred1&& pred1, Pred2&& pred2) noexcept
 {
-  return [inner_pred1 {pred1},
-          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+  return predicate {[inner_pred1 {pred1},
+                     inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
     return (inner_pred1(std::forward<decltype(arg)>(arg))
             + inner_pred2(std::forward<decltype(arg)>(arg)))
         == 1;
-  };
+  }};
 }
 
 /* {{{ doc */
@@ -332,14 +376,14 @@ template <typename Pred1, typename Pred2>
 [[nodiscard]] constexpr auto
 pred_implies(Pred1&& pred1, Pred2&& pred2) noexcept
 {
-  return [inner_pred1 {pred1},
-          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+  return predicate {[inner_pred1 {pred1},
+                     inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
     if ( not inner_pred1(std::forward<decltype(arg)>(arg)) ) {
       return true;
     } else {
       return inner_pred2(std::forward<decltype(arg)>(arg));
     }
-  };
+  }};
 }
 
 /* {{{ doc */

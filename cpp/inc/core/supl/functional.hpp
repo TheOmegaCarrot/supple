@@ -220,6 +220,151 @@ template <typename... Preds>
   };
 }
 
+/* {{{ doc */
+/**
+ * @brief Logical negation of a predicate
+ *
+ * @details Yes, this is redundant to `std::not_fn`,
+ * this exists for naming consistency with the remaining
+ * `pred_*` functions.
+ *
+ * | pred | ret |
+ * |:----:|:---:|
+ * |  T   |  F  |
+ * |  F   |  T  |
+ */
+/* }}} */
+template <typename Pred>
+[[nodiscard]] constexpr auto pred_not(Pred&& pred) noexcept
+{
+  return [inner_pred {std::forward<Pred>(pred)}](auto&& arg
+         ) constexpr noexcept {
+    return not inner_pred(std::forward<decltype(arg)>(arg));
+  };
+}
+
+/* {{{ doc */
+/**
+ * @brief `conjunction`, but accepts exactly 2 predicates
+ * to reduce overhead
+ *
+ * | p1 | p2 | ret |
+ * |:--:|:--:|:---:|
+ * | T  | T  |  T  |
+ * | T  | F  |  F  |
+ * | F  | T  |  F  |
+ * | F  | F  |  F  |
+ */
+/* }}} */
+template <typename Pred1, typename Pred2>
+[[nodiscard]] constexpr auto
+pred_and(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return [inner_pred1 {pred1},
+          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+    return inner_pred1(std::forward<decltype(arg)>(arg))
+        && inner_pred2(std::forward<decltype(arg)>(arg));
+  };
+}
+
+/* {{{ doc */
+/**
+ * @brief `disjunction`, but accepts exactly 2 predicates
+ * to reduce overhead
+ *
+ * | p1 | p2 | ret |
+ * |:--:|:--:|:---:|
+ * | T  | T  |  T  |
+ * | T  | F  |  T  |
+ * | F  | T  |  T  |
+ * | F  | F  |  F  |
+ */
+/* }}} */
+template <typename Pred1, typename Pred2>
+[[nodiscard]] constexpr auto pred_or(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return [inner_pred1 {pred1},
+          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+    return inner_pred1(std::forward<decltype(arg)>(arg))
+        || inner_pred2(std::forward<decltype(arg)>(arg));
+  };
+}
+
+/* {{{ doc */
+/**
+ * @brief Logical xor of two predicates
+ *
+ * | p1 | p2 | ret |
+ * |:--:|:--:|:---:|
+ * | T  | T  |  F  |
+ * | T  | F  |  T  |
+ * | F  | T  |  T  |
+ * | F  | F  |  F  |
+ */
+/* }}} */
+template <typename Pred1, typename Pred2>
+[[nodiscard]] constexpr auto
+pred_xor(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return [inner_pred1 {pred1},
+          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+    return (inner_pred1(std::forward<decltype(arg)>(arg))
+            + inner_pred2(std::forward<decltype(arg)>(arg)))
+        == 1;
+  };
+}
+
+/* {{{ doc */
+/**
+ * @brief Logical implication of two predicates
+ *
+ * 
+ * | p1 | p2 | ret |
+ * |:--:|:--:|:---:|
+ * | T  | T  |  T  |
+ * | T  | F  |  F  |
+ * | F  | T  |  T  |
+ * | F  | F  |  T  |
+ * 
+ */
+/* }}} */
+template <typename Pred1, typename Pred2>
+[[nodiscard]] constexpr auto
+pred_implies(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return [inner_pred1 {pred1},
+          inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
+    if ( not inner_pred1(std::forward<decltype(arg)>(arg)) ) {
+      return true;
+    } else {
+      return inner_pred2(std::forward<decltype(arg)>(arg));
+    }
+  };
+}
+
+/* {{{ doc */
+/**
+ * @brief Logical biconditional of two predicates
+ *
+ * 
+ * | p1 | p2 | ret |
+ * |:--:|:--:|:---:|
+ * | T  | T  |  T  |
+ * | T  | F  |  F  |
+ * | F  | T  |  F  |
+ * | F  | F  |  T  |
+ * 
+ */
+/* }}} */
+template <typename Pred1, typename Pred2>
+[[nodiscard]] constexpr auto
+pred_bicond(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return pred_not(
+    pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2))
+  );
+}
+
 }  // namespace supl
 
 #endif

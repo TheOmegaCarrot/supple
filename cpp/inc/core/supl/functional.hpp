@@ -44,7 +44,8 @@ namespace supl {
 template <typename T>
 [[nodiscard]] constexpr auto equal_to(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg) -> bool {
+  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
+         ) constexpr noexcept -> bool {
     return new_arg == parent_arg;
   };
 }
@@ -65,7 +66,8 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto not_equal_to(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg) -> bool {
+  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
+         ) constexpr noexcept -> bool {
     return new_arg != parent_arg;
   };
 }
@@ -86,7 +88,8 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto greater_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg) -> bool {
+  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
+         ) constexpr noexcept -> bool {
     return new_arg > parent_arg;
   };
 }
@@ -107,7 +110,8 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto greater_eq_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg) -> bool {
+  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
+         ) constexpr noexcept -> bool {
     return new_arg >= parent_arg;
   };
 }
@@ -128,7 +132,8 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto less_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg) -> bool {
+  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
+         ) constexpr noexcept -> bool {
     return new_arg < parent_arg;
   };
 }
@@ -149,7 +154,8 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto less_eq_than(T&& arg) noexcept
 {
-  return [parent_arg = std::forward<T>(arg)](const auto& new_arg) -> bool {
+  return [parent_arg = std::forward<T>(arg)](const auto& new_arg
+         ) constexpr noexcept -> bool {
     return new_arg <= parent_arg;
   };
 }
@@ -173,11 +179,12 @@ template <typename... Preds>
 [[nodiscard]] constexpr auto unary_conjunction(Preds&&... preds) noexcept
 {
   return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
-           std::forward<Preds>(preds)...}}](auto&& arg) {
+           std::forward<Preds>(preds)...}}](auto&& arg
+         ) constexpr noexcept -> bool {
     return std::apply(
-      [&arg](auto&&... inner_preds) {
-        return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
-      },
+      [&arg](auto&&... inner_preds) constexpr noexcept(
+        noexcept((inner_preds(std::forward<decltype(arg)>(arg)) && ...))
+      ) { return (inner_preds(std::forward<decltype(arg)>(arg)) && ...); },
       pred_tup
     );
   };
@@ -202,11 +209,12 @@ template <typename... Preds>
 [[nodiscard]] constexpr auto unary_disjunction(Preds&&... preds) noexcept
 {
   return [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
-           std::forward<Preds>(preds)...}}](auto&& arg) {
+           std::forward<Preds>(preds)...}}](auto&& arg
+         ) constexpr noexcept -> bool {
     return std::apply(
-      [&arg](auto&&... inner_preds) {
-        return (inner_preds(std::forward<decltype(arg)>(arg)) || ...);
-      },
+      [&arg](auto&&... inner_preds) constexpr noexcept(
+        noexcept((inner_preds(std::forward<decltype(arg)>(arg)) && ...))
+      ) { return (inner_preds(std::forward<decltype(arg)>(arg)) || ...); },
       pred_tup
     );
   };

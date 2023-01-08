@@ -526,9 +526,9 @@ for_each_all(VarFunc&& func, Iterators... iterators) noexcept
         not impl::tuple_elementwise_compare_any(begins, ends);
         tuple::for_each(begins, [](auto& iterator) { ++iterator; }) ) {
     std::apply(
-      [&func](auto&&... iterators_inner) mutable {
-        return supl::invoke(func, *iterators_inner...);
-      },
+      [&func](auto&&... iterators_inner
+      ) mutable noexcept(noexcept(supl::invoke(func, *iterators_inner...))
+      ) { return supl::invoke(func, *iterators_inner...); },
       begins
     );
   }

@@ -213,7 +213,7 @@ template <typename... Preds>
          ) constexpr noexcept -> bool {
     return std::apply(
       [&arg](auto&&... inner_preds) constexpr noexcept(
-        noexcept((inner_preds(std::forward<decltype(arg)>(arg)) && ...))
+        noexcept((inner_preds(std::forward<decltype(arg)>(arg)) || ...))
       ) { return (inner_preds(std::forward<decltype(arg)>(arg)) || ...); },
       pred_tup
     );

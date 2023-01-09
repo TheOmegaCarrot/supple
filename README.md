@@ -27,7 +27,10 @@ The package currently defines three targets: `supple::core`, `supple::testing`, 
 * `supple::core` contains the majority of the library's functionality.
 * `supple::testing` contains the testing framework.
 
-Alternatively, you can simply copy `cpp/inc/<module-name>` into your project, and include headers directly.
+Alternatively, you can simply copy `cpp/inc/<module-name>` into your project, and include headers directly,
+listing the `<module-name>` directory as `-isystem`.
+For example: if you copy `cpp/inc/core` to `my_cool_project/include/core`,
+then you should pass the compiler option `-isystem include/core`.
 
 ---
 
@@ -35,7 +38,7 @@ Alternatively, you can simply copy `cpp/inc/<module-name>` into your project, an
 
 You may want to run the tests to ensure that this library works with your toolchain.
 Please note that use with MSVC is entirely untested and unsupported.
-This library is tested with gcc 9,10,11,12, clang 11,12,13,14,15, and Intel icc and icpx 2023.
+This library is tested with gcc 9,10,11,12, clang 11,12,13,14,15, and Intel icc 2021 and icpx 2023.
 If any tests fail with any other compiler which properly supports C++17,
 please file a bug report.
 

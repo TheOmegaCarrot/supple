@@ -30,9 +30,9 @@
 #include <type_traits>
 #include <utility>
 
-#include "invoke.hpp"
-#include "metaprogramming.hpp"
-#include "type_list.hpp"
+#include <supl/invoke.hpp>
+#include <supl/metaprogramming.hpp>
+#include <supl/type_list.hpp>
 
 namespace supl::tuple {
 

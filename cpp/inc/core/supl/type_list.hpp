@@ -20,7 +20,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "metaprogramming.hpp"
+#include <supl/metaprogramming.hpp>
 
 namespace supl::tl {
 

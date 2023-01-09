@@ -28,7 +28,7 @@
 #include <numeric>
 #include <utility>
 
-#include "algorithm.hpp"
+#include <supl/algorithm.hpp>
 
 namespace supl::fr {
 

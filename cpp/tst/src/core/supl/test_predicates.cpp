@@ -1,5 +1,3 @@
-#include "supl/predicates.hpp"
-
 #include <supl/fake_ranges.hpp>
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>

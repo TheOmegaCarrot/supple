@@ -20,8 +20,8 @@
 #include <iostream>
 #include <vector>
 
-#include "test_results.hpp"
-#include "test_section.hpp"
+#include <supl/test_results.hpp>
+#include <supl/test_section.hpp>
 
 namespace supl {
 

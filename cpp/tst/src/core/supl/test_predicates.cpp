@@ -1,6 +1,7 @@
 #include "supl/predicates.hpp"
 
 #include <supl/fake_ranges.hpp>
+#include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
 static auto test_equal_to() -> supl::test_results
@@ -367,6 +368,81 @@ static auto test_pred_op_xor() -> supl::test_results
   return results;
 }
 
+static auto test_pred_op_compound() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto compound_3_to_7_or_12_to_17 {
+    (supl::greater_eq_than(3) && supl::less_eq_than(7))
+    || (supl::greater_eq_than(12) && supl::less_eq_than(17))};
+
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(0), "0 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(1), "1 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(2), "2 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(3), "3 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(4), "4 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(5), "5 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(6), "6 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(7), "7 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(8), "8 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(9), "9 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(10), "10 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(11), "11 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(12), "12 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(13), "13 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(14), "14 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(15), "15 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(16), "16 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_true(
+    compound_3_to_7_or_12_to_17(17), "17 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(18), "18 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(19), "19 not in ([3, 7] U [12, 17])"
+  );
+  results.enforce_false(
+    compound_3_to_7_or_12_to_17(20), "20 not in ([3, 7] U [12, 17])"
+  );
+
+  return results;
+}
+
 auto test_predicates() -> supl::test_section
 {
   supl::test_section section;
@@ -389,6 +465,7 @@ auto test_predicates() -> supl::test_section
   section.add_test("supl::predicate_op_and", &test_pred_op_and);
   section.add_test("supl::predicate_op_or", &test_pred_op_or);
   section.add_test("supl::predicate_op_xor", &test_pred_op_xor);
+  section.add_test("supl::predicate_op_compound", &test_pred_op_compound);
 
   return section;
 }

@@ -22,15 +22,9 @@ static auto test_not_equal_to() -> supl::test_results
 
   const auto not_equal_to_5 {supl::not_equal_to(5)};
 
-  results.enforce_exactly_equal(
-    not_equal_to_5(3), true, "(3 != 5) == true"
-  );
-  results.enforce_exactly_equal(
-    not_equal_to_5(7), true, "(7 != 5) == true"
-  );
-  results.enforce_exactly_equal(
-    not_equal_to_5(5), false, "(5 != 5) == false"
-  );
+  results.enforce_true(not_equal_to_5(3), "(3 != 5) == true");
+  results.enforce_true(not_equal_to_5(7), "(7 != 5) == true");
+  results.enforce_false(not_equal_to_5(5), "(5 != 5) == false");
 
   return results;
 }
@@ -41,13 +35,9 @@ static auto test_greater_than() -> supl::test_results
 
   const auto greater_than_5 {supl::greater_than(5)};
 
-  results.enforce_exactly_equal(
-    greater_than_5(3), false, "3 > 5 == false"
-  );
-  results.enforce_exactly_equal(greater_than_5(7), true, "7 > 5 == true");
-  results.enforce_exactly_equal(
-    greater_than_5(5), false, "5 > 5 == false"
-  );
+  results.enforce_false(greater_than_5(3), "3 > 5 == false");
+  results.enforce_true(greater_than_5(7), "7 > 5 == true");
+  results.enforce_false(greater_than_5(5), "5 > 5 == false");
 
   return results;
 }
@@ -58,15 +48,9 @@ static auto test_greater_eq_than() -> supl::test_results
 
   const auto greater_eq_than_5 {supl::greater_eq_than(5)};
 
-  results.enforce_exactly_equal(
-    greater_eq_than_5(3), false, "3 >= 5 == false"
-  );
-  results.enforce_exactly_equal(
-    greater_eq_than_5(7), true, "7 >= 5 == true"
-  );
-  results.enforce_exactly_equal(
-    greater_eq_than_5(5), true, "5 >= 5 == true"
-  );
+  results.enforce_false(greater_eq_than_5(3), "3 >= 5 == false");
+  results.enforce_true(greater_eq_than_5(7), "7 >= 5 == true");
+  results.enforce_true(greater_eq_than_5(5), "5 >= 5 == true");
 
   return results;
 }
@@ -77,9 +61,9 @@ static auto test_less_than() -> supl::test_results
 
   const auto less_than_5 {supl::less_than(5)};
 
-  results.enforce_exactly_equal(less_than_5(3), true, "3 < 5 == true");
-  results.enforce_exactly_equal(less_than_5(7), false, "7 < 5 == false");
-  results.enforce_exactly_equal(less_than_5(5), false, "5 < 5 == false");
+  results.enforce_true(less_than_5(3), "3 < 5 == true");
+  results.enforce_false(less_than_5(7), "7 < 5 == false");
+  results.enforce_false(less_than_5(5), "5 < 5 == false");
 
   return results;
 }
@@ -90,11 +74,9 @@ static auto test_less_eq_than() -> supl::test_results
 
   const auto less_eq_than_5 {supl::less_eq_than(5)};
 
-  results.enforce_exactly_equal(less_eq_than_5(3), true, "3 <= 5 == true");
-  results.enforce_exactly_equal(
-    less_eq_than_5(7), false, "7 <= 5 == false"
-  );
-  results.enforce_exactly_equal(less_eq_than_5(5), true, "5 <= 5 == true");
+  results.enforce_true(less_eq_than_5(3), "3 <= 5 == true");
+  results.enforce_false(less_eq_than_5(7), "7 <= 5 == false");
+  results.enforce_true(less_eq_than_5(5), "5 <= 5 == true");
 
   return results;
 }

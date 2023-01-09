@@ -60,7 +60,7 @@ constexpr inline auto false_pred {predicate {[](const auto&) {
  *
  * @param arg Right-hand-side of comparison
  *
- * @return Unary predicate which determiens if its argument is
+ * @return Unary predicate which determines if its argument is
  * equal to `arg`
  */
 /* }}} */
@@ -74,6 +74,17 @@ template <typename T>
     }};
 }
 
+/* {{{ doc */
+/**
+ * @brief Returns a unary predicate which determines if
+ * its argument equals any of `args`
+ *
+ * @param args Values which returned predicate will compare against
+ *
+ * @return Unary predicate which determines if its argument
+ * is equal to any of `args`
+ */
+/* }}} */
 template <typename... Ts>
 [[nodiscard]] constexpr auto equals_any_of(Ts&&... args) noexcept
 {
@@ -97,7 +108,7 @@ template <typename... Ts>
  *
  * @param arg Right-hand-side of comparison
  *
- * @return Unary predicate which determiens if its argument is
+ * @return Unary predicate which determines if its argument is
  * not equal to `arg`
  */
 /* }}} */
@@ -120,7 +131,7 @@ template <typename T>
  *
  * @param arg Right-hand-side of comparison
  *
- * @return Unary predicate which determiens if its argument is
+ * @return Unary predicate which determines if its argument is
  * greater than `arg`
  */
 /* }}} */
@@ -143,7 +154,7 @@ template <typename T>
  *
  * @param arg Right-hand-side of comparison
  *
- * @return Unary predicate which determiens if its argument is
+ * @return Unary predicate which determines if its argument is
  * greater than or equal to `arg`
  */
 /* }}} */
@@ -166,7 +177,7 @@ template <typename T>
  *
  * @param arg Right-hand-side of comparison
  *
- * @return Unary predicate which determiens if its argument is
+ * @return Unary predicate which determines if its argument is
  * less than `arg`
  */
 /* }}} */
@@ -189,7 +200,7 @@ template <typename T>
  *
  * @param arg Right-hand-side of comparison
  *
- * @return Unary predicate which determiens if its argument is
+ * @return Unary predicate which determines if its argument is
  * less than or equal to `arg`
  */
 /* }}} */

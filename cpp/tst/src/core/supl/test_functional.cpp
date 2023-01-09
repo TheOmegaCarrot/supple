@@ -303,6 +303,26 @@ static auto test_pred_bicond() -> supl::test_results
   return results;
 }
 
+static auto test_pred_op_not() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto greater_eq_5 {not supl::less_than(5)};
+
+  results.enforce_false(greater_eq_5(0), "0 >= 5");
+  results.enforce_false(greater_eq_5(1), "1 >= 5");
+  results.enforce_false(greater_eq_5(2), "2 >= 5");
+  results.enforce_false(greater_eq_5(3), "3 >= 5");
+  results.enforce_false(greater_eq_5(4), "4 >= 5");
+  results.enforce_true(greater_eq_5(5), "5 >= 5");
+  results.enforce_true(greater_eq_5(6), "6 >= 5");
+  results.enforce_true(greater_eq_5(7), "7 >= 5");
+  results.enforce_true(greater_eq_5(8), "8 >= 5");
+  results.enforce_true(greater_eq_5(9), "9 >= 5");
+
+  return results;
+}
+
 static auto test_pred_op_and() -> supl::test_results
 {
   supl::test_results results;
@@ -364,6 +384,7 @@ auto test_functional() -> supl::test_section
   section.add_test("supl::pred_xor", &test_pred_xor);
   section.add_test("supl::pred_implies", &test_pred_implies);
   section.add_test("supl::pred_bicond", &test_pred_bicond);
+  section.add_test("supl::predicate_op_not", &test_pred_op_not);
   section.add_test("supl::predicate_op_and", &test_pred_op_and);
   section.add_test("supl::predicate_op_or", &test_pred_op_or);
 

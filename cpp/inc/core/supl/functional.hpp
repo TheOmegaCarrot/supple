@@ -19,10 +19,10 @@
 #define SUPPLE_CORE_FUNCTIONAL_HPP
 
 #include <functional>
-#include <memory>
-#include <supl/metaprogramming.hpp>
 #include <type_traits>
 #include <utility>
+
+#include <supl/metaprogramming.hpp>
 
 #include "invoke.hpp"
 #include "tuple_algo.hpp"
@@ -426,13 +426,11 @@ namespace impl {
 }  // namespace impl
 
 template <
-  typename Pred1,
-  typename Pred2,
-  typename = std::enable_if_t<
-    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
-auto operator&&(Pred1&& pred1, Pred2&& pred2) noexcept
+  typename Pred,
+  typename = std::enable_if_t<impl::is_predicate_v<Pred>>>
+[[nodiscard]] constexpr auto operator!(Pred&& pred) noexcept
 {
-  return pred_and(pred1, pred2);
+  return pred_not(std::forward<Pred>(pred));
 }
 
 template <
@@ -440,9 +438,21 @@ template <
   typename Pred2,
   typename = std::enable_if_t<
     impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
-auto operator||(Pred1&& pred1, Pred2&& pred2) noexcept
+[[nodiscard]] constexpr auto
+operator&&(Pred1&& pred1, Pred2&& pred2) noexcept
 {
-  return pred_or(pred1, pred2);
+  return pred_and(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
+}
+
+template <
+  typename Pred1,
+  typename Pred2,
+  typename = std::enable_if_t<
+    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
+[[nodiscard]] constexpr auto
+operator||(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return pred_or(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }
 
 }  // namespace supl

@@ -500,6 +500,15 @@ operator^(Pred1&& pred1, Pred2&& pred2) noexcept
 {
   return pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }
+
+// There is no technical reason not to add operator equivalents
+// of pred_implies or pred_bicond, but I cannot think of any
+// operator which would make any sense
+//
+// If you wish to implement it yourself, it should be trivial
+// if you copy-paste from the above binary operators,
+// and define it in a `namespace supl` block, for reduced visibility
+
 }  // namespace supl
 
 #endif

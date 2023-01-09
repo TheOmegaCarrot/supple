@@ -455,6 +455,17 @@ operator||(Pred1&& pred1, Pred2&& pred2) noexcept
   return pred_or(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }
 
+template <
+  typename Pred1,
+  typename Pred2,
+  typename = std::enable_if_t<
+    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
+[[nodiscard]] constexpr auto
+operator^(Pred1&& pred1, Pred2&& pred2) noexcept
+{
+  return pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
+}
+
 }  // namespace supl
 
 #endif

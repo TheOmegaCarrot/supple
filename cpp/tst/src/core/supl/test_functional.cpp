@@ -366,6 +366,29 @@ static auto test_pred_op_or() -> supl::test_results
   return results;
 }
 
+static auto test_pred_op_xor() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto less_than_6_xor_equals_3 {
+    supl::less_than(6) ^ supl::equal_to(3)};
+
+  results.enforce_true(less_than_6_xor_equals_3(5), "5 < 6 ^ 5 == 3");
+  results.enforce_false(less_than_6_xor_equals_3(3), "3 < 6 ^ 3 == 3");
+  results.enforce_false(less_than_6_xor_equals_3(10), "10 < 6 ^ 10 == 3");
+
+  const auto greater_than_8_xor_equals_3 {
+    supl::pred_xor(supl::greater_than(8), supl::equal_to(3))};
+
+  results.enforce_true(
+    greater_than_8_xor_equals_3(10), "10 > 8 ^ 10 == 3"
+  );
+  results.enforce_true(greater_than_8_xor_equals_3(3), "3 > 8 ^ 3 == 3");
+  results.enforce_false(greater_than_8_xor_equals_3(5), "5 > 8 ^ 5 == 3");
+
+  return results;
+}
+
 auto test_functional() -> supl::test_section
 {
   supl::test_section section;
@@ -387,6 +410,7 @@ auto test_functional() -> supl::test_section
   section.add_test("supl::predicate_op_not", &test_pred_op_not);
   section.add_test("supl::predicate_op_and", &test_pred_op_and);
   section.add_test("supl::predicate_op_or", &test_pred_op_or);
+  section.add_test("supl::predicate_op_xor", &test_pred_op_xor);
 
   return section;
 }

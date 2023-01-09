@@ -372,73 +372,31 @@ static auto test_pred_op_compound() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto compound_3_to_7_or_12_to_17 {
+  const auto test_pred_1 {
     (supl::greater_eq_than(3) && supl::less_eq_than(7))
     || (supl::greater_eq_than(12) && supl::less_eq_than(17))};
 
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(0), "0 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(1), "1 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(2), "2 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(3), "3 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(4), "4 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(5), "5 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(6), "6 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(7), "7 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(8), "8 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(9), "9 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(10), "10 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(11), "11 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(12), "12 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(13), "13 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(14), "14 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(15), "15 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(16), "16 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_true(
-    compound_3_to_7_or_12_to_17(17), "17 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(18), "18 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(19), "19 not in ([3, 7] U [12, 17])"
-  );
-  results.enforce_false(
-    compound_3_to_7_or_12_to_17(20), "20 not in ([3, 7] U [12, 17])"
-  );
+  results.enforce_false(test_pred_1(0), "0 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(1), "1 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(2), "2 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(3), "3 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(4), "4 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(5), "5 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(6), "6 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(7), "7 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(8), "8 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(9), "9 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(10), "10 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(11), "11 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(12), "12 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(13), "13 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(14), "14 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(15), "15 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(16), "16 not in ([3, 7] U [12, 17])");
+  results.enforce_true(test_pred_1(17), "17 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(18), "18 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(19), "19 not in ([3, 7] U [12, 17])");
+  results.enforce_false(test_pred_1(20), "20 not in ([3, 7] U [12, 17])");
 
   return results;
 }

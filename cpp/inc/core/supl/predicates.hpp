@@ -405,6 +405,11 @@ namespace impl {
 
 }  // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Logical negation of a predicate
+ */
+/* }}} */
 template <
   typename Pred,
   typename = std::enable_if_t<impl::is_predicate_v<Pred>>>
@@ -413,6 +418,11 @@ template <
   return pred_not(std::forward<Pred>(pred));
 }
 
+/* {{{ doc */
+/**
+ * @brief Logical conjunction (and) of two predicates
+ */
+/* }}} */
 template <
   typename Pred1,
   typename Pred2,
@@ -424,6 +434,11 @@ operator&&(Pred1&& pred1, Pred2&& pred2) noexcept
   return pred_and(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }
 
+/* {{{ doc */
+/**
+ * @brief Logical disjunction (inclusive or) of two predicates
+ */
+/* }}} */
 template <
   typename Pred1,
   typename Pred2,
@@ -435,6 +450,11 @@ operator||(Pred1&& pred1, Pred2&& pred2) noexcept
   return pred_or(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }
 
+/* {{{ doc */
+/**
+ * @brief Logical xor of two predicates
+ */
+/* }}} */
 template <
   typename Pred1,
   typename Pred2,

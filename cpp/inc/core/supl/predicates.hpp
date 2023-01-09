@@ -214,6 +214,16 @@ template <typename T>
     }};
 }
 
+template <typename T>
+[[nodiscard]] constexpr auto multiple_of(T&& arg) noexcept
+{
+  return predicate {
+    [parent_arg = std::forward<T>(arg)](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return new_arg % parent_arg == 0;
+    }};
+}
+
 /* {{{ doc */
 /**
  * @brief Create a unary predicate which determines if an argument

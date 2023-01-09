@@ -1,4 +1,5 @@
 #include <supl/fake_ranges.hpp>
+#include <supl/predicates.hpp>
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
@@ -99,15 +100,15 @@ static auto test_greater_than() -> supl::test_results
   return results;
 }
 
-static auto test_greater_eq_than() -> supl::test_results
+static auto test_greater_eq() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto greater_eq_than_5 {supl::greater_eq(5)};
+  const auto greater_eq_5 {supl::greater_eq(5)};
 
-  results.enforce_false(greater_eq_than_5(3), "3 >= 5 == false");
-  results.enforce_true(greater_eq_than_5(7), "7 >= 5 == true");
-  results.enforce_true(greater_eq_than_5(5), "5 >= 5 == true");
+  results.enforce_false(greater_eq_5(3), "3 >= 5 == false");
+  results.enforce_true(greater_eq_5(7), "7 >= 5 == true");
+  results.enforce_true(greater_eq_5(5), "5 >= 5 == true");
 
   return results;
 }
@@ -125,15 +126,29 @@ static auto test_less_than() -> supl::test_results
   return results;
 }
 
-static auto test_less_eq_than() -> supl::test_results
+static auto test_less_eq() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto less_eq_than_5 {supl::less_eq(5)};
+  const auto less_eq_5 {supl::less_eq(5)};
 
-  results.enforce_true(less_eq_than_5(3), "3 <= 5 == true");
-  results.enforce_false(less_eq_than_5(7), "7 <= 5 == false");
-  results.enforce_true(less_eq_than_5(5), "5 <= 5 == true");
+  results.enforce_true(less_eq_5(3), "3 <= 5 == true");
+  results.enforce_false(less_eq_5(7), "7 <= 5 == false");
+  results.enforce_true(less_eq_5(5), "5 <= 5 == true");
+
+  return results;
+}
+
+static auto test_multiple_of() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto is_even {supl::multiple_of(2)};
+
+  for ( int i {0}; i < 20; i += 2 ) {
+    results.enforce_true(is_even(i), std::to_string(i));
+    results.enforce_false(is_even(i + 1), std::to_string(i + 1));
+  }
 
   return results;
 }
@@ -485,9 +500,10 @@ auto test_predicates() -> supl::test_section
   section.add_test("supl::equals_any_of", &test_equals_any_of);
   section.add_test("supl::not_equal_to", &test_not_equal_to);
   section.add_test("supl::greater_than", &test_greater_than);
-  section.add_test("supl::greater_eq_than", &test_greater_eq_than);
+  section.add_test("supl::greater_eq", &test_greater_eq);
   section.add_test("supl::less_than", &test_less_than);
-  section.add_test("supl::less_eq_than", &test_less_eq_than);
+  section.add_test("supl::less_eq", &test_less_eq);
+  section.add_test("supl::multiple_of", &test_multiple_of);
   section.add_test("supl::conjunction", &test_conjunction);
   section.add_test("supl::disjunction", &test_disjunction);
   section.add_test("supl::pred_not", &test_pred_not);

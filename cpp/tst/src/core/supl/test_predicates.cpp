@@ -2,6 +2,28 @@
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
+static auto test_true_pred() -> supl::test_results
+{
+  supl::test_results results;
+
+  for ( int i : supl::fr::iota(-50, 51) ) {
+    results.enforce_true(supl::true_pred(i));
+  }
+
+  return results;
+}
+
+static auto test_false_pred() -> supl::test_results
+{
+  supl::test_results results;
+
+  for ( int i : supl::fr::iota(-50, 51) ) {
+    results.enforce_false(supl::false_pred(i));
+  }
+
+  return results;
+}
+
 static auto test_equal_to() -> supl::test_results
 {
   supl::test_results results;
@@ -11,6 +33,42 @@ static auto test_equal_to() -> supl::test_results
   results.enforce_exactly_equal(equal_to_5(3), false, "(3 == 5) == false");
   results.enforce_exactly_equal(equal_to_5(7), false, "(7 == 5) == false");
   results.enforce_exactly_equal(equal_to_5(5), true, "(5 == 5) == true");
+
+  return results;
+}
+
+static auto test_equals_any_of() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto is_lower_vowel {supl::equals_any_of('a', 'e', 'i', 'o', 'u')};
+
+  results.enforce_true(is_lower_vowel('a'), "a");
+  results.enforce_false(is_lower_vowel('b'), "b");
+  results.enforce_false(is_lower_vowel('c'), "c");
+  results.enforce_false(is_lower_vowel('d'), "d");
+  results.enforce_true(is_lower_vowel('e'), "e");
+  results.enforce_false(is_lower_vowel('f'), "f");
+  results.enforce_false(is_lower_vowel('g'), "g");
+  results.enforce_false(is_lower_vowel('h'), "h");
+  results.enforce_true(is_lower_vowel('i'), "i");
+  results.enforce_false(is_lower_vowel('j'), "j");
+  results.enforce_false(is_lower_vowel('k'), "k");
+  results.enforce_false(is_lower_vowel('l'), "l");
+  results.enforce_false(is_lower_vowel('m'), "m");
+  results.enforce_false(is_lower_vowel('n'), "n");
+  results.enforce_true(is_lower_vowel('o'), "o");
+  results.enforce_false(is_lower_vowel('p'), "p");
+  results.enforce_false(is_lower_vowel('q'), "q");
+  results.enforce_false(is_lower_vowel('r'), "r");
+  results.enforce_false(is_lower_vowel('s'), "s");
+  results.enforce_false(is_lower_vowel('t'), "t");
+  results.enforce_true(is_lower_vowel('u'), "u");
+  results.enforce_false(is_lower_vowel('v'), "v");
+  results.enforce_false(is_lower_vowel('w'), "w");
+  results.enforce_false(is_lower_vowel('x'), "x");
+  results.enforce_false(is_lower_vowel('y'), "y");
+  results.enforce_false(is_lower_vowel('z'), "z");
 
   return results;
 }
@@ -399,11 +457,32 @@ static auto test_pred_op_compound() -> supl::test_results
   return results;
 }
 
+auto test_constexpr() -> supl::test_results
+{
+  supl::test_results results;
+
+  constexpr static auto simple_pred {
+    supl::greater_than(3) && supl::less_than(8)};
+
+  constexpr static bool t {simple_pred(5)};
+  constexpr static bool f {simple_pred(10)};
+
+  static_assert(t);
+  static_assert(not f);
+  results.enforce_true(t);
+  results.enforce_false(f);
+
+  return results;
+}
+
 auto test_predicates() -> supl::test_section
 {
   supl::test_section section;
 
+  section.add_test("supl::true_pred", &test_true_pred);
+  section.add_test("supl::false_pred", &test_false_pred);
   section.add_test("supl::equal_to", &test_equal_to);
+  section.add_test("supl::equals_any_of", &test_equals_any_of);
   section.add_test("supl::not_equal_to", &test_not_equal_to);
   section.add_test("supl::greater_than", &test_greater_than);
   section.add_test("supl::greater_eq_than", &test_greater_eq_than);
@@ -422,6 +501,7 @@ auto test_predicates() -> supl::test_section
   section.add_test("supl::predicate_op_or", &test_pred_op_or);
   section.add_test("supl::predicate_op_xor", &test_pred_op_xor);
   section.add_test("supl::predicate_op_compound", &test_pred_op_compound);
+  section.add_test("constexpr predicates", &test_constexpr);
 
   return section;
 }

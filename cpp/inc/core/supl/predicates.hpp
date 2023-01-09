@@ -2,10 +2,12 @@
 #define SUPPLE_CORE_PREDICATES_HPP
 
 #include <functional>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 
 #include <supl/metaprogramming.hpp>
+#include <supl/tuple_algo.hpp>
 
 namespace supl {
 
@@ -24,15 +26,15 @@ public:
     typename T,
     typename = std::enable_if_t<not std::is_same_v<T, predicate>>>
   // NOLINTNEXTLINE(*explicit*)
-  predicate(T&& pred)
+  constexpr predicate(T&& pred)
       : Pred {std::forward<T>(pred)}
   { }
 
   predicate() = delete;
   predicate(const predicate&) = default;
-  predicate(predicate&&) noexcept = default;
-  auto operator=(const predicate&) -> predicate& = default;
-  auto operator=(predicate&&) noexcept -> predicate& = default;
+  constexpr predicate(predicate&&) noexcept = default;
+  constexpr auto operator=(const predicate&) -> predicate& = default;
+  constexpr auto operator=(predicate&&) noexcept -> predicate& = default;
   ~predicate() = default;
 
   using Pred::operator();
@@ -40,6 +42,14 @@ public:
 
 template <typename T>
 predicate(T) -> predicate<T>;
+
+constexpr inline auto true_pred {predicate {[](const auto&) {
+  return true;
+}}};
+
+constexpr inline auto false_pred {predicate {[](const auto&) {
+  return false;
+}}};
 
 /* {{{ doc */
 /**
@@ -62,6 +72,20 @@ template <typename T>
     ) constexpr noexcept -> bool {
       return new_arg == parent_arg;
     }};
+}
+
+template <typename... Ts>
+[[nodiscard]] constexpr auto equals_any_of(Ts&&... args) noexcept
+{
+  if constexpr ( sizeof...(args) == 0 ) {
+    return false_pred;
+  } else {
+    return predicate {
+      [parent_args_tup = std::forward_as_tuple(args...
+       )](const auto& new_arg) constexpr noexcept -> bool {
+        return tuple::any_of(parent_args_tup, equal_to(new_arg));
+      }};
+  }
 }
 
 /* {{{ doc */

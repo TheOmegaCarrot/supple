@@ -124,7 +124,7 @@ template <typename T>
  */
 /* }}} */
 template <typename T>
-[[nodiscard]] constexpr auto greater_eq_than(T&& arg) noexcept
+[[nodiscard]] constexpr auto greater_eq(T&& arg) noexcept
 {
   return predicate {
     [parent_arg = std::forward<T>(arg)](const auto& new_arg
@@ -170,7 +170,7 @@ template <typename T>
  */
 /* }}} */
 template <typename T>
-[[nodiscard]] constexpr auto less_eq_than(T&& arg) noexcept
+[[nodiscard]] constexpr auto less_eq(T&& arg) noexcept
 {
   return predicate {
     [parent_arg = std::forward<T>(arg)](const auto& new_arg

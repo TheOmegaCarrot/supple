@@ -47,7 +47,7 @@ static auto test_greater_eq_than() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto greater_eq_than_5 {supl::greater_eq_than(5)};
+  const auto greater_eq_than_5 {supl::greater_eq(5)};
 
   results.enforce_false(greater_eq_than_5(3), "3 >= 5 == false");
   results.enforce_true(greater_eq_than_5(7), "7 >= 5 == true");
@@ -73,7 +73,7 @@ static auto test_less_eq_than() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto less_eq_than_5 {supl::less_eq_than(5)};
+  const auto less_eq_than_5 {supl::less_eq(5)};
 
   results.enforce_true(less_eq_than_5(3), "3 <= 5 == true");
   results.enforce_false(less_eq_than_5(7), "7 <= 5 == false");
@@ -87,7 +87,7 @@ static auto test_conjunction() -> supl::test_results
   supl::test_results results;
 
   const auto between_3_and_8_inclusive {
-    supl::conjunction(supl::greater_eq_than(3), supl::less_eq_than(8))};
+    supl::conjunction(supl::greater_eq(3), supl::less_eq(8))};
 
   results.enforce_true(between_3_and_8_inclusive(5), "3 <= 5 <= 8");
   results.enforce_true(between_3_and_8_inclusive(3), "3 <= 3 <= 8");
@@ -149,7 +149,7 @@ static auto test_pred_and() -> supl::test_results
   supl::test_results results;
 
   const auto between_3_and_8_inclusive {
-    supl::pred_and(supl::greater_eq_than(3), supl::less_eq_than(8))};
+    supl::pred_and(supl::greater_eq(3), supl::less_eq(8))};
 
   results.enforce_true(between_3_and_8_inclusive(5), "3 <= 5 <= 8");
   results.enforce_true(between_3_and_8_inclusive(3), "3 <= 3 <= 8");
@@ -373,8 +373,8 @@ static auto test_pred_op_compound() -> supl::test_results
   supl::test_results results;
 
   const auto test_pred_1 {
-    (supl::greater_eq_than(3) && supl::less_eq_than(7))
-    || (supl::greater_eq_than(12) && supl::less_eq_than(17))};
+    (supl::greater_eq(3) && supl::less_eq(7))
+    || (supl::greater_eq(12) && supl::less_eq(17))};
 
   results.enforce_false(test_pred_1(0), "0 not in ([3, 7] U [12, 17])");
   results.enforce_false(test_pred_1(1), "1 not in ([3, 7] U [12, 17])");

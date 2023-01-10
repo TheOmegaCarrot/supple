@@ -7,7 +7,7 @@ static auto test_true_pred() -> supl::test_results
 {
   supl::test_results results;
 
-  for ( int i : supl::fr::iota(-50, 51) ) {
+  for ( const int i : supl::fr::iota(-50, 51) ) {
     results.enforce_true(supl::true_pred(i));
   }
 
@@ -18,7 +18,7 @@ static auto test_false_pred() -> supl::test_results
 {
   supl::test_results results;
 
-  for ( int i : supl::fr::iota(-50, 51) ) {
+  for ( const int i : supl::fr::iota(-50, 51) ) {
     results.enforce_false(supl::false_pred(i));
   }
 
@@ -200,13 +200,13 @@ static auto test_pred_not() -> supl::test_results
 
   const auto not_less_than_6 {supl::pred_not(supl::less_than(6))};
 
-  for ( int i : supl::fr::iota(1, 6) ) {
+  for ( const int i : supl::fr::iota(1, 6) ) {
     results.enforce_false(
       not_less_than_6(i), std::to_string(i) + " not less than 6"
     );
   }
 
-  for ( int i : supl::fr::iota(6, 10) ) {
+  for ( const int i : supl::fr::iota(6, 10) ) {
     results.enforce_true(
       not_less_than_6(i), std::to_string(i) + " not less than 6"
     );
@@ -286,7 +286,7 @@ static auto test_pred_implies() -> supl::test_results
   const auto equals_3_imples_less_than_6 {
     supl::pred_implies(supl::equal_to(3), supl::less_than(6))};
 
-  for ( int i : supl::fr::iota(0, 11) ) {
+  for ( const int i : supl::fr::iota(0, 11) ) {
     results.enforce_true(
       equals_3_imples_less_than_6(i),
       "Equal to 3 implies less than 6: " + std::to_string(i)

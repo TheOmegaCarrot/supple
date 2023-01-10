@@ -1,19 +1,32 @@
 cmake_minimum_required(VERSION 3.22.1)
 
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+  message("-- Build type not specified")
+  set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
 project(supl LANGUAGES CXX)
 
-# CMake options: FULL_TESTS: perform C++20 and C++23 tests as well OMIT_20: Omit
-# C++20 tests (for compatibility with older compilers) OMIT_23: Omit C++23 tests
-# (for compatibility with older compilers) AUTOMATED_BUILD: Internal flag,
-# currently controls exporting of compile commands NO_SANITIZERS: Allows
-# disabling sanitizers for debug builds
+if(AUTOMATED_BUILD)
+  set(LINK_COMPILE_COMMANDS NO)
+endif()
 
-# Do not export if doing an automated build by cmake-all.sh
-if(NOT AUTOMATED_BUILD)
-  message("-- Exporting compile commands")
-  # compile commands needed for clangd
-  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+option(LINK_COMPILE_COMMANDS "Cmake should link compile commands into source directory" YES)
+option(SANITIZE_DEBUG "Sanitizers should be used in debug builds" YES)
+option(SANITIZE_RELEASE "Sanitizers should be used in release builds" NO)
+option(FULL_TESTS "Test C++20 and 23 as well" NO)
+option(OMIT_20 "C++20 tests should be omitted - ignored if FULL_TESTS is false" NO)
+option(OMIT_23 "C++23 tests should be omitted - ignored if FULL_TESTS is false" NO)
+
+# Options specific to compiling with clang
+option(DO_CLANG_TIDY "Run clang-tidy during build" NO)
+option(DO_TIME_TRACE "Run time trace during build" YES)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if(LINK_COMPILE_COMMANDS)
   # compile_commands needed in source directory
+  message("-- Linking compile_commands.json")
   file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
        "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR
        SYMBOLIC)
@@ -94,20 +107,25 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
                                            "Clang")
-  # GCC and Clang are the only compilers I have to test against
-  if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    # Use sanitizers in debug
-    message("-- Build type: Debug")
-    if(NOT NO_SANITIZERS)
-      message("-- Using sanitizers")
-      set(SANITIZERS address,leak,undefined)
-      add_compile_options(-fsanitize=${SANITIZERS})
-      add_link_options(-fsanitize=${SANITIZERS})
-    endif()
-  elseif(CMAKE_BUILD_TYPE STREQUAL Release)
-    message("-- Build type: Release")
+
+  # GCC and Clang are the only compilers I have which support sanitizers
+  if(SANITIZE_DEBUG AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("-- Using sanitizers in debug")
+    set(SANITIZERS address,leak,undefined)
+    add_compile_options(-fsanitize=${SANITIZERS})
+    add_link_options(-fsanitize=${SANITIZERS})
   endif()
+
+  if(SANITIZE_RELEASE AND CMAKE_BUILD_TYPE STREQUAL "Release")
+    message("-- Using sanitizers in release")
+    set(SANITIZERS address,leak,undefined)
+    add_compile_options(-fsanitize=${SANITIZERS})
+    add_link_options(-fsanitize=${SANITIZERS})
+  endif()
+
 endif()
+
+message("-- Build type: ${CMAKE_BUILD_TYPE}")
 
 # find supple package
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)

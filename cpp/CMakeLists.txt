@@ -87,8 +87,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   message("-- Using Intel")
-  add_compile_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000)
-  add_link_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000)
+  add_compile_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000 -diag-disable=11074 -diag-disable=11076)
+  add_link_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000 -diag-disable=11074 -diag-disable=11076)
   set(OMIT_23 YES)
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")

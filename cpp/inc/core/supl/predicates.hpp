@@ -224,6 +224,14 @@ template <typename T>
     }};
 }
 
+template <template <typename> typename PRED>
+[[nodiscard]] constexpr auto type_pred() noexcept
+{
+  return predicate {[](auto&& arg) {
+    return PRED<remove_cvref_t<decltype(arg)>>::value;
+  }};
+}
+
 /* {{{ doc */
 /**
  * @brief Create a unary predicate which determines if an argument

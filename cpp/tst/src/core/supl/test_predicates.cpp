@@ -153,6 +153,18 @@ static auto test_multiple_of() -> supl::test_results
   return results;
 }
 
+static auto test_type_pred() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto is_integral {supl::type_pred<std::is_integral>()};
+
+  results.enforce_true(is_integral(5));
+  results.enforce_false(is_integral(5.54));
+
+  return results;
+}
+
 static auto test_conjunction() -> supl::test_results
 {
   supl::test_results results;
@@ -469,6 +481,8 @@ static auto test_pred_op_compound() -> supl::test_results
   results.enforce_false(test_pred_1(19), "19 not in ([3, 7] U [12, 17])");
   results.enforce_false(test_pred_1(20), "20 not in ([3, 7] U [12, 17])");
 
+  results.enforce_true((supl::greater_than(3) && supl::less_than(8))(5));
+
   return results;
 }
 
@@ -504,6 +518,7 @@ auto test_predicates() -> supl::test_section
   section.add_test("supl::less_than", &test_less_than);
   section.add_test("supl::less_eq", &test_less_eq);
   section.add_test("supl::multiple_of", &test_multiple_of);
+  section.add_test("supl::type_pred", &test_type_pred);
   section.add_test("supl::conjunction", &test_conjunction);
   section.add_test("supl::disjunction", &test_disjunction);
   section.add_test("supl::pred_not", &test_pred_not);

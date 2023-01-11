@@ -494,6 +494,19 @@ static auto test_pred_op_compound() -> supl::test_results
   return results;
 }
 
+auto test_apply_operator() -> supl::test_results
+{
+  supl::test_results results;
+
+  results.enforce_true(5 | supl::less_than(10));
+  results.enforce_true(5 | (supl::less_than(10) && supl::greater_than(0)));
+  results.enforce_false(
+    20 | (supl::less_than(10) && supl::greater_than(0))
+  );
+
+  return results;
+}
+
 auto test_constexpr() -> supl::test_results
 {
   supl::test_results results;

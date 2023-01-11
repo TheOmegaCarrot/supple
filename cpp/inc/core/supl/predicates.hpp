@@ -527,6 +527,12 @@ operator^(Pred1&& pred1, Pred2&& pred2) noexcept
 // if you copy-paste from the above binary operators,
 // and define it in a `namespace supl` block, for reduced visibility
 
+template <typename Arg, typename Pred>
+[[nodiscard]] constexpr auto operator|(Arg&& arg, Pred&& pred) noexcept
+{
+  return pred(std::forward<Arg>(arg));
+}
+
 }  // namespace supl
 
 #endif

@@ -214,6 +214,15 @@ template <typename T>
     }};
 }
 
+/* {{{ doc */
+/**
+ * @brief Create a unary predicate which determined if the input
+ * is a multiple of `arg`
+ *
+ * @note Beware of using predicates returned from this function
+ * and compositions thereof with floating-point values
+ */
+/* }}} */
 template <typename T>
 [[nodiscard]] constexpr auto multiple_of(T&& arg) noexcept
 {
@@ -224,6 +233,12 @@ template <typename T>
     }};
 }
 
+/* {{{ doc */
+/**
+ * @brief Create a unary prediate which determines if
+ * the type of an argument satisfies a metafunction predicate
+ */
+/* }}} */
 template <template <typename> typename PRED>
 [[nodiscard]] constexpr auto type_pred() noexcept
 {

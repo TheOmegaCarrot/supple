@@ -162,6 +162,14 @@ static auto test_type_pred() -> supl::test_results
   results.enforce_true(is_integral(5));
   results.enforce_false(is_integral(5.54));
 
+  const auto integral_greater_than_5 {
+    is_integral && supl::greater_than(5)};
+
+  results.enforce_true(integral_greater_than_5(8));
+  results.enforce_false(integral_greater_than_5(8.32));
+  results.enforce_false(integral_greater_than_5(3));
+  results.enforce_false(integral_greater_than_5(3.14));
+
   return results;
 }
 

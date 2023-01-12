@@ -139,6 +139,39 @@ static auto test_less_eq() -> supl::test_results
   return results;
 }
 
+static auto test_between() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto between_3_and_8 {supl::between(3, 8)};
+  results.enforce_false(between_3_and_8(0), "0");
+  results.enforce_false(between_3_and_8(1), "1");
+  results.enforce_false(between_3_and_8(2), "2");
+  results.enforce_true(between_3_and_8(3), "3");
+  results.enforce_true(between_3_and_8(4), "4");
+  results.enforce_true(between_3_and_8(5), "5");
+  results.enforce_true(between_3_and_8(6), "6");
+  results.enforce_true(between_3_and_8(7), "7");
+  results.enforce_true(between_3_and_8(8), "8");
+  results.enforce_false(between_3_and_8(9), "9");
+  results.enforce_false(between_3_and_8(10), "10");
+
+  const auto between_8_and_3 {supl::between(8, 3)};
+  results.enforce_false(between_8_and_3(0), "0");
+  results.enforce_false(between_8_and_3(1), "1");
+  results.enforce_false(between_8_and_3(2), "2");
+  results.enforce_true(between_8_and_3(3), "3");
+  results.enforce_true(between_8_and_3(4), "4");
+  results.enforce_true(between_8_and_3(5), "5");
+  results.enforce_true(between_8_and_3(6), "6");
+  results.enforce_true(between_8_and_3(7), "7");
+  results.enforce_true(between_8_and_3(8), "8");
+  results.enforce_false(between_8_and_3(9), "9");
+  results.enforce_false(between_8_and_3(10), "10");
+
+  return results;
+}
+
 static auto test_multiple_of() -> supl::test_results
 {
   supl::test_results results;
@@ -541,6 +574,7 @@ auto test_predicates() -> supl::test_section
   section.add_test("supl::greater_eq", &test_greater_eq);
   section.add_test("supl::less_than", &test_less_than);
   section.add_test("supl::less_eq", &test_less_eq);
+  section.add_test("supl::between", &test_between);
   section.add_test("supl::multiple_of", &test_multiple_of);
   section.add_test("supl::type_pred", &test_type_pred);
   section.add_test("supl::conjunction", &test_conjunction);

@@ -214,6 +214,17 @@ template <typename T>
     }};
 }
 
+template <typename T>
+[[nodiscard]] constexpr auto between(T&& bound1, T&& bound2) noexcept
+{
+  return predicate {
+    [lower_bound {std::min(bound1, bound2)},
+     upper_bound {std::max(bound1, bound2)}](const auto& new_arg
+    ) constexpr noexcept -> bool {
+      return lower_bound <= new_arg && new_arg <= upper_bound;
+    }};
+}
+
 /* {{{ doc */
 /**
  * @brief Create a unary predicate which determined if the input

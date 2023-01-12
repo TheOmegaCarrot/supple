@@ -1080,6 +1080,8 @@ namespace impl {
                tl::all_of_v<Tuple2, std::is_nothrow_copy_constructible>)
       -> tl::interleave_t<Tuple1, Tuple2>
   {
+
+    // GOAL: remove `tuple_cat`
     return {std::tuple_cat(std::tuple {
       std::get<Idxs>(tup1), std::get<Idxs>(tup2)}...)};
   }

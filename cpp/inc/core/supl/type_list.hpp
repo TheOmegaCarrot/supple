@@ -1029,6 +1029,42 @@ using multi_apply =
 template <typename T, template <typename> typename... Funcs>
 using multi_apply_t = typename multi_apply<T, Funcs...>::type;
 
+///////////////////////////////////////////// enumerate
+
+template <typename T, std::size_t Idx>
+struct type_index_pair {
+  using type = T;
+  constexpr static inline std::size_t value {Idx};
+};
+
+namespace impl {
+  template <typename LIST, typename Sequence>
+  struct enumerate_impl;
+
+  template <
+    template <typename...>
+    typename LIST,
+    typename... Pack,
+    std::size_t... Idxs>
+  struct enumerate_impl<LIST<Pack...>, std::index_sequence<Idxs...>>
+      : type_identity<LIST<type_index_pair<Pack, Idxs>...>> { };
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Associate each element of a type list with its index
+ *
+ * @details Example: 
+ * `enumerate_t<type_list<int, char>> -> type_list<std::pair<int, index_constant>>`
+ */
+/* }}} */
+template <typename LIST>
+using enumerate =
+  impl::enumerate_impl<LIST, std::make_index_sequence<size_v<LIST>>>;
+
+template <typename LIST>
+using enumerate_t = typename enumerate<LIST>::type;
+
 }  // namespace supl::tl
 
 #endif

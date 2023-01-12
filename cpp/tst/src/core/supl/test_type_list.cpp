@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <type_traits>
 
+#include <supl/metaprogramming.hpp>
 #include <supl/type_list.hpp>
 
 ///////////////////////////////////////////// func_wrapper
@@ -1191,6 +1192,19 @@ static_assert(std::is_same_v<
                 std::add_rvalue_reference,
                 std::make_unsigned>,
               supl::tl::type_list<const int, int&, int&&, unsigned>>);
+
+///////////////////////////////////////////// enumerate
+
+static_assert(std::is_same_v<
+              supl::tl::enumerate_t<
+                supl::tl::
+                  type_list<int, char, bool, void*, const unsigned short&>>,
+              supl::tl::type_list<
+                supl::tl::type_index_pair<int, 0>,
+                supl::tl::type_index_pair<char, 1>,
+                supl::tl::type_index_pair<bool, 2>,
+                supl::tl::type_index_pair<void*, 3>,
+                supl::tl::type_index_pair<const unsigned short&, 4>>>);
 
 auto main() -> int
 { }

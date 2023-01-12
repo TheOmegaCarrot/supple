@@ -1250,6 +1250,28 @@ back_n(const Tuple& tup) noexcept(tl::all_of_v<
   return impl::back_n_impl(tup, seq, offset);
 }
 
+namespace impl {
+  template <
+    std::size_t Idx1,
+    std::size_t Idx2,
+    template <typename...>
+    typename Tuple,
+    typename... List_Pack,
+    typename... Tuple_Pack,
+    std::size_t... Idxs>
+  [[nodiscard]] constexpr auto elem_swap_impl(
+    tl::type_list<tl::type_index_pair<List_Pack, Idxs>...>,
+    const Tuple<Tuple_Pack...>& tup
+  )
+
+    noexcept(tl::all_of_v<
+             Tuple<List_Pack...>,
+             std::is_nothrow_copy_constructible>) -> Tuple<List_Pack...>
+  {
+    return {std::get<Idxs>(tup)...};
+  }
+}  // namespace impl
+
 /* {{{ doc */
 /**
  * @brief Swaps two elements of a tuple. `Idx1 < Idx2` or `Idx2 < Idx1`,
@@ -1268,36 +1290,24 @@ back_n(const Tuple& tup) noexcept(tl::all_of_v<
  * compared to input tuple
  */
 /* }}} */
-template <std::size_t Idx1, std::size_t Idx2, typename Tuple>
-[[nodiscard]] constexpr auto elem_swap(const Tuple& tup
-) noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-  -> tl::swap_t<Tuple, Idx1, Idx2>
+template <
+  std::size_t Idx1,
+  std::size_t Idx2,
+  template <typename...>
+  typename Tuple,
+  typename... Pack>
+[[nodiscard]] constexpr auto elem_swap(const Tuple<Pack...>& tup)
+
+  noexcept(tl::
+             all_of_v<Tuple<Pack...>, std::is_nothrow_copy_constructible>)
+    -> tl::swap_t<Tuple<Pack...>, Idx1, Idx2>
 {
-  constexpr std::size_t min_idx {std::min(Idx1, Idx2)};
-  constexpr std::size_t max_idx {std::max(Idx1, Idx2)};
-  constexpr std::size_t tup_size {tl::size_v<Tuple>};
-
   if constexpr ( Idx1 == Idx2 ) {
-
     return tup;
-
-  } else if constexpr ( max_idx != tup_size - 1 ) {
-
-    return std::tuple_cat(
-      front_n<min_idx>(tup),
-      std::tuple {std::get<max_idx>(tup)},
-      subtuple<min_idx + 1, max_idx>(tup),
-      std::tuple {std::get<min_idx>(tup)},
-      back_n<tup_size - max_idx - 1>(tup)
-    );
-
-  } else if constexpr ( max_idx == tup_size - 1 ) {
-
-    return std::tuple_cat(
-      front_n<min_idx>(tup),
-      std::tuple {std::get<max_idx>(tup)},
-      subtuple<min_idx + 1, max_idx>(tup),
-      std::tuple {std::get<min_idx>(tup)}
+  } else {
+    return impl::elem_swap_impl<Idx1, Idx2>(
+      tl::swap_t<tl::enumerate_t<tl::type_list<Pack...>>, Idx1, Idx2> {},
+      tup
     );
   }
 }

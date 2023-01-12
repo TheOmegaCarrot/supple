@@ -279,8 +279,6 @@ void to_stream(std::ostream& out, const T& value) noexcept
     "Attempting to call supl::to_stream with an unsupported type"
   );
 
-  using std::literals::operator""sv;
-
   const ostream_state_restorer restorer(out);
 
   out << std::boolalpha;

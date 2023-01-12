@@ -195,8 +195,8 @@ static auto test_type_pred() -> supl::test_results
   results.enforce_true(is_integral(5));
   results.enforce_false(is_integral(5.54));
 
-  const auto integral_greater_than_5 {
-    is_integral && supl::greater_than(5)};
+  const auto integral_greater_than_5 {is_integral
+                                      && supl::greater_than(5)};
 
   results.enforce_true(integral_greater_than_5(8));
   results.enforce_false(integral_greater_than_5(8.32));
@@ -231,18 +231,14 @@ static auto test_disjunction() -> supl::test_results
   const auto less_than_4_or_greater_than_10 {
     supl::disjunction(supl::less_than(4), supl::greater_than(10))};
 
-  results.enforce_true(
-    less_than_4_or_greater_than_10(1), "1 < 4 || 1 > 10"
-  );
-  results.enforce_true(
-    less_than_4_or_greater_than_10(15), "15 < 4 || 15 > 10"
-  );
-  results.enforce_true(
-    less_than_4_or_greater_than_10(-8), "-8 < 4 || -8 > 10"
-  );
-  results.enforce_false(
-    less_than_4_or_greater_than_10(7), "7 < 4 || 7 > 10"
-  );
+  results.enforce_true(less_than_4_or_greater_than_10(1),
+                       "1 < 4 || 1 > 10");
+  results.enforce_true(less_than_4_or_greater_than_10(15),
+                       "15 < 4 || 15 > 10");
+  results.enforce_true(less_than_4_or_greater_than_10(-8),
+                       "-8 < 4 || -8 > 10");
+  results.enforce_false(less_than_4_or_greater_than_10(7),
+                        "7 < 4 || 7 > 10");
 
   return results;
 }
@@ -254,15 +250,13 @@ static auto test_pred_not() -> supl::test_results
   const auto not_less_than_6 {supl::pred_not(supl::less_than(6))};
 
   for ( const int i : supl::fr::iota(1, 6) ) {
-    results.enforce_false(
-      not_less_than_6(i), std::to_string(i) + " not less than 6"
-    );
+    results.enforce_false(not_less_than_6(i),
+                          std::to_string(i) + " not less than 6");
   }
 
   for ( const int i : supl::fr::iota(6, 10) ) {
-    results.enforce_true(
-      not_less_than_6(i), std::to_string(i) + " not less than 6"
-    );
+    results.enforce_true(not_less_than_6(i),
+                         std::to_string(i) + " not less than 6");
   }
 
   return results;
@@ -293,18 +287,14 @@ static auto test_pred_or() -> supl::test_results
   const auto less_than_4_or_greater_than_10 {
     supl::pred_or(supl::less_than(4), supl::greater_than(10))};
 
-  results.enforce_true(
-    less_than_4_or_greater_than_10(1), "1 < 4 || 1 > 10"
-  );
-  results.enforce_true(
-    less_than_4_or_greater_than_10(15), "15 < 4 || 15 > 10"
-  );
-  results.enforce_true(
-    less_than_4_or_greater_than_10(-8), "-8 < 4 || -8 > 10"
-  );
-  results.enforce_false(
-    less_than_4_or_greater_than_10(7), "7 < 4 || 7 > 10"
-  );
+  results.enforce_true(less_than_4_or_greater_than_10(1),
+                       "1 < 4 || 1 > 10");
+  results.enforce_true(less_than_4_or_greater_than_10(15),
+                       "15 < 4 || 15 > 10");
+  results.enforce_true(less_than_4_or_greater_than_10(-8),
+                       "-8 < 4 || -8 > 10");
+  results.enforce_false(less_than_4_or_greater_than_10(7),
+                        "7 < 4 || 7 > 10");
 
   return results;
 }
@@ -323,9 +313,8 @@ static auto test_pred_xor() -> supl::test_results
   const auto greater_than_8_xor_equals_3 {
     supl::pred_xor(supl::greater_than(8), supl::equal_to(3))};
 
-  results.enforce_true(
-    greater_than_8_xor_equals_3(10), "10 > 8 ^ 10 == 3"
-  );
+  results.enforce_true(greater_than_8_xor_equals_3(10),
+                       "10 > 8 ^ 10 == 3");
   results.enforce_true(greater_than_8_xor_equals_3(3), "3 > 8 ^ 3 == 3");
   results.enforce_false(greater_than_8_xor_equals_3(5), "5 > 8 ^ 5 == 3");
 
@@ -340,39 +329,28 @@ static auto test_pred_implies() -> supl::test_results
     supl::pred_implies(supl::equal_to(3), supl::less_than(6))};
 
   for ( const int i : supl::fr::iota(0, 11) ) {
-    results.enforce_true(
-      equals_3_imples_less_than_6(i),
-      "Equal to 3 implies less than 6: " + std::to_string(i)
-    );
+    results.enforce_true(equals_3_imples_less_than_6(i),
+                         "Equal to 3 implies less than 6: "
+                           + std::to_string(i));
   }
 
   const auto greater_than_6_implies_equals_3 {
     supl::pred_implies(supl::greater_than(6), supl::equal_to(3))};
 
-  results.enforce_true(
-    greater_than_6_implies_equals_3(4),
-    "Greater than 6 implies equal to 3: 4"
-  );
+  results.enforce_true(greater_than_6_implies_equals_3(4),
+                       "Greater than 6 implies equal to 3: 4");
 
-  results.enforce_true(
-    greater_than_6_implies_equals_3(5),
-    "Greater than 6 implies equal to 3: 5"
-  );
+  results.enforce_true(greater_than_6_implies_equals_3(5),
+                       "Greater than 6 implies equal to 3: 5");
 
-  results.enforce_true(
-    greater_than_6_implies_equals_3(6),
-    "Greater than 6 implies equal to 3: 6"
-  );
+  results.enforce_true(greater_than_6_implies_equals_3(6),
+                       "Greater than 6 implies equal to 3: 6");
 
-  results.enforce_false(
-    greater_than_6_implies_equals_3(7),
-    "Greater than 6 implies equal to 3: 7"
-  );
+  results.enforce_false(greater_than_6_implies_equals_3(7),
+                        "Greater than 6 implies equal to 3: 7");
 
-  results.enforce_false(
-    greater_than_6_implies_equals_3(8),
-    "Greater than 6 implies equal to 3: 8"
-  );
+  results.enforce_false(greater_than_6_implies_equals_3(8),
+                        "Greater than 6 implies equal to 3: 8");
 
   return results;
 }
@@ -386,22 +364,18 @@ static auto test_pred_bicond() -> supl::test_results
 
   results.enforce_false(less_than_6_bicond_equals_3(5), "5 < 6 ^ 5 == 3");
   results.enforce_true(less_than_6_bicond_equals_3(3), "3 < 6 ^ 3 == 3");
-  results.enforce_true(
-    less_than_6_bicond_equals_3(10), "10 < 6 ^ 10 == 3"
-  );
+  results.enforce_true(less_than_6_bicond_equals_3(10),
+                       "10 < 6 ^ 10 == 3");
 
   const auto greater_than_8_bicond_equals_3 {
     supl::pred_bicond(supl::greater_than(8), supl::equal_to(3))};
 
-  results.enforce_false(
-    greater_than_8_bicond_equals_3(10), "10 > 8 ^ 10 == 3"
-  );
-  results.enforce_false(
-    greater_than_8_bicond_equals_3(3), "3 > 8 ^ 3 == 3"
-  );
-  results.enforce_true(
-    greater_than_8_bicond_equals_3(5), "5 > 8 ^ 5 == 3"
-  );
+  results.enforce_false(greater_than_8_bicond_equals_3(10),
+                        "10 > 8 ^ 10 == 3");
+  results.enforce_false(greater_than_8_bicond_equals_3(3),
+                        "3 > 8 ^ 3 == 3");
+  results.enforce_true(greater_than_8_bicond_equals_3(5),
+                       "5 > 8 ^ 5 == 3");
 
   return results;
 }
@@ -451,8 +425,8 @@ static auto test_pred_op_or() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto not_between_3_and_8 {
-    supl::less_than(3) || supl::greater_than(8)};
+  const auto not_between_3_and_8 {supl::less_than(3)
+                                  || supl::greater_than(8)};
 
   results.enforce_true(not_between_3_and_8(0), "3 > 0 || 0 > 8");
   results.enforce_true(not_between_3_and_8(1), "3 > 1 || 1 > 8");
@@ -473,8 +447,8 @@ static auto test_pred_op_xor() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto less_than_6_xor_equals_3 {
-    supl::less_than(6) ^ supl::equal_to(3)};
+  const auto less_than_6_xor_equals_3 {supl::less_than(6)
+                                       ^ supl::equal_to(3)};
 
   results.enforce_true(less_than_6_xor_equals_3(5), "5 < 6 ^ 5 == 3");
   results.enforce_false(less_than_6_xor_equals_3(3), "3 < 6 ^ 3 == 3");
@@ -483,9 +457,8 @@ static auto test_pred_op_xor() -> supl::test_results
   const auto greater_than_8_xor_equals_3 {
     supl::pred_xor(supl::greater_than(8), supl::equal_to(3))};
 
-  results.enforce_true(
-    greater_than_8_xor_equals_3(10), "10 > 8 ^ 10 == 3"
-  );
+  results.enforce_true(greater_than_8_xor_equals_3(10),
+                       "10 > 8 ^ 10 == 3");
   results.enforce_true(greater_than_8_xor_equals_3(3), "3 > 8 ^ 3 == 3");
   results.enforce_false(greater_than_8_xor_equals_3(5), "5 > 8 ^ 5 == 3");
 
@@ -496,9 +469,8 @@ static auto test_pred_op_compound() -> supl::test_results
 {
   supl::test_results results;
 
-  const auto test_pred_1 {
-    (supl::greater_eq(3) && supl::less_eq(7))
-    || (supl::greater_eq(12) && supl::less_eq(17))};
+  const auto test_pred_1 {(supl::greater_eq(3) && supl::less_eq(7))
+                          || (supl::greater_eq(12) && supl::less_eq(17))};
 
   results.enforce_false(test_pred_1(0), "0 not in ([3, 7] U [12, 17])");
   results.enforce_false(test_pred_1(1), "1 not in ([3, 7] U [12, 17])");
@@ -533,12 +505,10 @@ auto test_apply_operator() -> supl::test_results
 
   results.enforce_true(5 | supl::less_than(10));
   results.enforce_true(5 | (supl::less_than(10) && supl::greater_than(0)));
-  results.enforce_true(
-    5.32 | (supl::less_than(10) && supl::greater_than(0))
-  );
-  results.enforce_false(
-    20 | (supl::less_than(10) && supl::greater_than(0))
-  );
+  results.enforce_true(5.32
+                       | (supl::less_than(10) && supl::greater_than(0)));
+  results.enforce_false(20
+                        | (supl::less_than(10) && supl::greater_than(0)));
 
   return results;
 }
@@ -547,8 +517,8 @@ auto test_constexpr() -> supl::test_results
 {
   supl::test_results results;
 
-  constexpr static auto simple_pred {
-    supl::greater_than(3) && supl::less_than(8)};
+  constexpr static auto simple_pred {supl::greater_than(3)
+                                     && supl::less_than(8)};
 
   constexpr static bool t {simple_pred(5)};
   constexpr static bool f {simple_pred(10)};
@@ -603,4 +573,3 @@ auto main() -> int
 
   return runner.run();
 }
-

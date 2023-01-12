@@ -107,10 +107,8 @@ struct add_to_string {
 namespace impl {
 
   template <typename T>
-  void to_stream_for_add_ostream_impl(
-    std::ostream& out,
-    const T& value
-  ) noexcept
+  void to_stream_for_add_ostream_impl(std::ostream& out,
+                                      const T& value) noexcept
   {
     const ostream_state_restorer restorer(out);
 

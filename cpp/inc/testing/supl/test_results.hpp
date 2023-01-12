@@ -74,11 +74,9 @@ public:
   /* }}} */
   template <typename T>
   // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-  void enforce_exactly_equal(
-    const T& result,
-    const T& expected,
-    const std::string& message = {}
-  ) noexcept
+  void enforce_exactly_equal(const T& result,
+                             const T& expected,
+                             const std::string& message = {}) noexcept
   {
     this->enforce_equal(result, expected, message);
   }
@@ -106,11 +104,9 @@ public:
    */
   /* }}} */
   template <typename T, typename U>
-  void enforce_equal(
-    const T& result,
-    const U& expected,
-    const std::string& message = {}
-  ) noexcept
+  void enforce_equal(const T& result,
+                     const U& expected,
+                     const std::string& message = {}) noexcept
   {
     m_case_count += 1;
 
@@ -138,8 +134,8 @@ public:
    * @param message A string which will be printed if the test fails
    */
   /* }}} */
-  inline void
-  enforce_true(bool result, const std::string& message = {}) noexcept
+  inline void enforce_true(bool result,
+                           const std::string& message = {}) noexcept
   {
     m_case_count += 1;
 
@@ -165,8 +161,8 @@ public:
    * @param message A string which will be printed if the test fails
    */
   /* }}} */
-  inline void
-  enforce_false(bool result, const std::string& message = {}) noexcept
+  inline void enforce_false(bool result,
+                            const std::string& message = {}) noexcept
   {
     m_case_count += 1;
 
@@ -198,12 +194,11 @@ public:
    * @param message A string which will be printed if the test fails
    */
   /* }}} */
-  inline void enforce_floating_point_approx(
-    double result,
-    double expected,
-    double tolerance = 0.001,
-    const std::string& message = {}
-  ) noexcept
+  inline void
+  enforce_floating_point_approx(double result,
+                                double expected,
+                                double tolerance = 0.001,
+                                const std::string& message = {}) noexcept
   {
     m_case_count += 1;
 

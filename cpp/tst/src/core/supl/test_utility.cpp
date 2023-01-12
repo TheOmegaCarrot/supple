@@ -38,32 +38,27 @@ static auto test_explicit_copy() -> supl::test_results
   const copy_counter test;
 
   results.enforce_exactly_equal(
-    copy_counter::copy_count, 0, "Counter not properly initialized"
-  );
+    copy_counter::copy_count, 0, "Counter not properly initialized");
 
   [[maybe_unused]] const copy_counter test2 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
-    copy_counter::copy_count, 1, "Incorrect number of copies"
-  );
+    copy_counter::copy_count, 1, "Incorrect number of copies");
 
   [[maybe_unused]] const copy_counter test3 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
-    copy_counter::copy_count, 2, "Incorrect number of copies"
-  );
+    copy_counter::copy_count, 2, "Incorrect number of copies");
 
   [[maybe_unused]] const copy_counter test4 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
-    copy_counter::copy_count, 3, "Incorrect number of copies"
-  );
+    copy_counter::copy_count, 3, "Incorrect number of copies");
 
   [[maybe_unused]] const copy_counter test5 = supl::explicit_copy(test);
 
   results.enforce_exactly_equal(
-    copy_counter::copy_count, 4, "Incorrect number of copies"
-  );
+    copy_counter::copy_count, 4, "Incorrect number of copies");
 
   return results;
 }
@@ -78,12 +73,10 @@ static auto test_to_stream() -> supl::test_results
   const std::tuple test1 {1, "hello", true};
   supl::to_stream(str1, test1);
   results.enforce_exactly_equal(
-    str1.str(), "( 1, hello, true )"s, "tuple"
-  );
+    str1.str(), "( 1, hello, true )"s, "tuple");
   str1 << true;
   results.enforce_exactly_equal(
-    str1.str(), "( 1, hello, true )1"s, "fmtflags not reset correctly"
-  );
+    str1.str(), "( 1, hello, true )1"s, "fmtflags not reset correctly");
 
   std::stringstream str2;
   const std::pair test2 {42, "Neat"s};
@@ -105,8 +98,7 @@ static auto test_to_stream() -> supl::test_results
   results.enforce_exactly_equal(
     str4.str(),
     "[ ( 1, true ), ( 2, false ), ( 5, true ) ]"s,
-    "List of tuples"
-  );
+    "List of tuples");
 
   std::stringstream str5;
   supl::to_stream(str5, 1);
@@ -135,8 +127,7 @@ static auto test_to_stream() -> supl::test_results
   supl::to_stream(str9, test9);
 
   results.enforce_exactly_equal(
-    str9.str(), "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s
-  );
+    str9.str(), "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s);
 
   struct has_a_to_stream {
     int value {5};
@@ -168,18 +159,15 @@ static auto test_to_string() -> supl::test_results
 
   const std::tuple test1 {1, "hello", true};
   results.enforce_exactly_equal(
-    supl::to_string(test1), "( 1, hello, true )"s, "tuple"
-  );
+    supl::to_string(test1), "( 1, hello, true )"s, "tuple");
 
   const std::pair test2 {42, "Neat"s};
   results.enforce_exactly_equal(
-    supl::to_string(test2), "( 42, Neat )"s, "pair"
-  );
+    supl::to_string(test2), "( 42, Neat )"s, "pair");
 
   const std::vector test3 {1, 2, 42, 81};
   results.enforce_exactly_equal(
-    supl::to_string(test3), "[ 1, 2, 42, 81 ]"s, "vector"
-  );
+    supl::to_string(test3), "[ 1, 2, 42, 81 ]"s, "vector");
 
   const std::list<std::pair<int, bool>> test4 {
     {1,  true},
@@ -189,67 +177,54 @@ static auto test_to_string() -> supl::test_results
   results.enforce_exactly_equal(
     supl::to_string(test4),
     "[ ( 1, true ), ( 2, false ), ( 5, true ) ]"s,
-    "List of tuples"
-  );
+    "List of tuples");
 
   results.enforce_exactly_equal(supl::to_string(1), "1"s, "int");
 
   results.enforce_exactly_equal(
-    supl::to_string(std::vector<int> {}), "[ ]"s, "empty vector"
-  );
+    supl::to_string(std::vector<int> {}), "[ ]"s, "empty vector");
 
   results.enforce_exactly_equal(supl::to_string(std::tuple<> {}), "( )"s);
 
-  results.enforce_exactly_equal(
-    supl::to_string(std::tuple<int> {5}), "( 5 )"s
-  );
+  results.enforce_exactly_equal(supl::to_string(std::tuple<int> {5}),
+                                "( 5 )"s);
 
   const std::tuple test5 {test1, test3, false};
 
   results.enforce_exactly_equal(
     supl::to_string(test5),
-    "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s
-  );
+    "( ( 1, hello, true ), [ 1, 2, 42, 81 ], false )"s);
 
   const std::string empty_container {"[ ]"};
-  results.enforce_exactly_equal(
-    supl::to_string(std::list<int> {}), empty_container
-  );
-  results.enforce_exactly_equal(
-    supl::to_string(std::vector<int> {}), empty_container
-  );
-  results.enforce_exactly_equal(
-    supl::to_string(std::array<int, 0> {}), empty_container
-  );
+  results.enforce_exactly_equal(supl::to_string(std::list<int> {}),
+                                empty_container);
+  results.enforce_exactly_equal(supl::to_string(std::vector<int> {}),
+                                empty_container);
+  results.enforce_exactly_equal(supl::to_string(std::array<int, 0> {}),
+                                empty_container);
   /* results.enforce_exactly_equal(supl::to_string(std::deque<int> {}), empty_container); */
   /* results.enforce_exactly_equal(supl::to_string(std::forward_list<int> {}), */
   /*                  empty_container); */
+  results.enforce_exactly_equal(supl::to_string(std::map<int, char> {}),
+                                empty_container);
   results.enforce_exactly_equal(
-    supl::to_string(std::map<int, char> {}), empty_container
-  );
+    supl::to_string(std::unordered_map<int, char> {}), empty_container);
   results.enforce_exactly_equal(
-    supl::to_string(std::unordered_map<int, char> {}), empty_container
-  );
+    supl::to_string(std::multimap<int, char> {}), empty_container);
   results.enforce_exactly_equal(
-    supl::to_string(std::multimap<int, char> {}), empty_container
-  );
-  results.enforce_exactly_equal(
-    supl::to_string(std::unordered_multimap<int, char> {}), empty_container
-  );
+    supl::to_string(std::unordered_multimap<int, char> {}),
+    empty_container);
   /* results.enforce_exactly_equal(supl::to_string(std::unordered_set<int> {}), */
   /*                  empty_container); */
-  results.enforce_exactly_equal(
-    supl::to_string(std::set<int> {}), empty_container
-  );
+  results.enforce_exactly_equal(supl::to_string(std::set<int> {}),
+                                empty_container);
   /* results.enforce_exactly_equal(supl::to_string(std::unordered_multiset<int> {}), */
   /*                  empty_container); */
-  results.enforce_exactly_equal(
-    supl::to_string(std::multiset<int> {}), empty_container
-  );
+  results.enforce_exactly_equal(supl::to_string(std::multiset<int> {}),
+                                empty_container);
 
-  results.enforce_exactly_equal(
-    supl::to_string(std::monostate {}), "<std::monostate>"s
-  );
+  results.enforce_exactly_equal(supl::to_string(std::monostate {}),
+                                "<std::monostate>"s);
 
   // NOLINTNEXTLINE
   struct force_valueless_by_exception {
@@ -264,7 +239,8 @@ static auto test_to_string() -> supl::test_results
     // move assignment
     // source: https://en.cppreference.com/w/cpp/utility/variant/valueless_by_exception
     // NOLINTNEXTLINE
-    [[noreturn]] force_valueless_by_exception(force_valueless_by_exception&&)
+    [[noreturn]] force_valueless_by_exception(
+      force_valueless_by_exception&&)
     {
       throw 3.14;
     }
@@ -276,39 +252,34 @@ static auto test_to_string() -> supl::test_results
     }
   };
 
-  std::variant<
-    std::monostate,
-    int,
-    std::vector<int>,
-    std::tuple<int, char, bool>,
-    force_valueless_by_exception>
+  std::variant<std::monostate,
+               int,
+               std::vector<int>,
+               std::tuple<int, char, bool>,
+               force_valueless_by_exception>
     test_variant {};
 
-  results.enforce_exactly_equal(
-    supl::to_string(test_variant), "<std::monostate>"s
-  );
+  results.enforce_exactly_equal(supl::to_string(test_variant),
+                                "<std::monostate>"s);
 
   test_variant = 5;
   results.enforce_exactly_equal(supl::to_string(test_variant), "5"s);
 
   test_variant = std::vector {1, 2, 3, 42};
-  results.enforce_exactly_equal(
-    supl::to_string(test_variant), "[ 1, 2, 3, 42 ]"s
-  );
+  results.enforce_exactly_equal(supl::to_string(test_variant),
+                                "[ 1, 2, 3, 42 ]"s);
 
   test_variant = std::tuple {5, 'g', false};
-  results.enforce_exactly_equal(
-    supl::to_string(test_variant), "( 5, g, false )"s
-  );
+  results.enforce_exactly_equal(supl::to_string(test_variant),
+                                "( 5, g, false )"s);
 
   try {
     force_valueless_by_exception forcer {};
     test_variant.emplace<force_valueless_by_exception>(std::move(forcer));
   } catch ( ... ) { }
 
-  results.enforce_exactly_equal(
-    supl::to_string(test_variant), "<valueless_by_exception>"s
-  );
+  results.enforce_exactly_equal(supl::to_string(test_variant),
+                                "<valueless_by_exception>"s);
 
   return results;
 }
@@ -327,8 +298,8 @@ struct uncopiable {
   auto operator=(uncopiable&&) noexcept -> uncopiable& = default;
   ~uncopiable() = default;
 
-  friend inline auto
-  operator<<(std::ostream& out, const uncopiable& rhs) noexcept
+  friend inline auto operator<<(std::ostream& out,
+                                const uncopiable& rhs) noexcept
     -> std::ostream&
   {
     out << rhs.m_value;
@@ -421,13 +392,10 @@ auto test_utility() -> supl::test_section
   section.add_test("supl::to_stream", &test_to_stream);
   section.add_test("supl::to_string", &test_to_string);
   section.add_test("supl::stream_adapter", &test_stream_adapter);
-  section.add_test(
-    "supl::literals::size_t_literal::operator\"\"_z", &test_size_t_literals
-  );
-  section.add_test(
-    "supl::literals::ptrdiff_t_literal::operator\"\"_pd",
-    &test_ptrdiff_t_literals
-  );
+  section.add_test("supl::literals::size_t_literal::operator\"\"_z",
+                   &test_size_t_literals);
+  section.add_test("supl::literals::ptrdiff_t_literal::operator\"\"_pd",
+                   &test_ptrdiff_t_literals);
 
   return section;
 }

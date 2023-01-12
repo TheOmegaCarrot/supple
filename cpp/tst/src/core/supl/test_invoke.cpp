@@ -8,12 +8,18 @@ static auto test_invoke() -> supl::test_results
 
   // Regular functions
 
-  constexpr static int result1 {supl::invoke([]() { return 5; })};
+  constexpr static int result1 {supl::invoke([]() {
+    return 5;
+  })};
   results.enforce_exactly_equal(result1, 5);
 
   results.enforce_exactly_equal(result1, 5);
 
-  constexpr static int result2 {supl::invoke([](int x) { return x; }, 5)};
+  constexpr static int result2 {supl::invoke(
+    [](int x) {
+      return x;
+    },
+    5)};
 
   results.enforce_exactly_equal(result2, 5);
 
@@ -176,4 +182,3 @@ auto main() -> int
 
   return runner.run();
 }
-

@@ -84,10 +84,9 @@ using remove_cvref_t = typename remove_cvref<T>::type;
 /* }}} */
 template <typename T, typename... Pack>
 struct is_type_in_pack
-    : std::conditional_t<
-        (std::is_same_v<T, Pack> || ...),
-        std::true_type,
-        std::false_type> { };
+    : std::conditional_t<(std::is_same_v<T, Pack> || ...),
+                         std::true_type,
+                         std::false_type> { };
 
 /* {{{ doc */
 /**
@@ -185,10 +184,10 @@ using peel_last_t = typename peel_last<Pack...>::type;
  */
 /* }}} */
 template <typename... Pack>
-using is_pack_uniform = std::conditional_t<
-  (std::is_same_v<peel_first_t<Pack...>, Pack> && ...),
-  std::true_type,
-  std::false_type>;
+using is_pack_uniform =
+  std::conditional_t<(std::is_same_v<peel_first_t<Pack...>, Pack> && ...),
+                     std::true_type,
+                     std::false_type>;
 
 /* {{{ doc */
 /**
@@ -209,9 +208,8 @@ constexpr inline bool is_pack_uniform_v = is_pack_uniform<Pack...>::value;
 /* }}} */
 template <typename T, typename... Pack>
 struct is_pack_only
-    : std::conjunction<
-        is_pack_uniform<Pack...>,
-        std::is_same<T, peel_first_t<Pack...>>> { };
+    : std::conjunction<is_pack_uniform<Pack...>,
+                       std::is_same<T, peel_first_t<Pack...>>> { };
 
 /* {{{ doc */
 /**
@@ -251,11 +249,10 @@ struct is_iterable : std::false_type { };
  */
 /* }}} */
 template <typename T>
-struct is_iterable<
-  T,
-  std::void_t<
-    decltype(std::begin(std::declval<T&>())),
-    decltype(std::end(std::declval<T&>()))>> : std::true_type { };
+struct is_iterable<T,
+                   std::void_t<decltype(std::begin(std::declval<T&>())),
+                               decltype(std::end(std::declval<T&>()))>>
+    : std::true_type { };
 
 /* {{{ doc */
 /**
@@ -286,10 +283,9 @@ struct is_iterator : std::false_type { };
  */
 /* }}} */
 template <typename T>
-struct is_iterator<
-  T,
-  std::
-    void_t<decltype(*std::declval<T>()), decltype(++std::declval<T&>())>>
+struct is_iterator<T,
+                   std::void_t<decltype(*std::declval<T>()),
+                               decltype(++std::declval<T&>())>>
     : std::true_type { };
 
 /* {{{ doc */
@@ -485,10 +481,9 @@ struct is_printable : std::false_type { };
  */
 /* }}} */
 template <typename T>
-struct is_printable<
-  T,
-  std::void_t<
-    decltype(std::declval<std::ostream&>() << std::declval<T>())>>
+struct is_printable<T,
+                    std::void_t<decltype(std::declval<std::ostream&>()
+                                         << std::declval<T>())>>
     : std::true_type { };
 
 /* {{{ doc */
@@ -842,33 +837,30 @@ struct binary_partial_apply {
  * sequential_compose_v<int, std::add_const, std::is_const> -> true
  */
 /* }}} */
-template <
-  typename T,
-  template <typename>
-  typename FUNC,
-  template <typename>
-  typename... FUNC_PACK>
+template <typename T,
+          template <typename>
+          typename FUNC,
+          template <typename>
+          typename... FUNC_PACK>
 struct sequential_apply
     : sequential_apply<typename FUNC<T>::type, FUNC_PACK...> { };
 
 template <typename T, template <typename> typename FUNC>
 struct sequential_apply<T, FUNC> : FUNC<T> { };
 
-template <
-  typename T,
-  template <typename>
-  typename FUNC,
-  template <typename>
-  typename... FUNC_PACK>
+template <typename T,
+          template <typename>
+          typename FUNC,
+          template <typename>
+          typename... FUNC_PACK>
 using sequential_apply_t =
   typename sequential_apply<T, FUNC, FUNC_PACK...>::type;
 
-template <
-  typename T,
-  template <typename>
-  typename FUNC,
-  template <typename>
-  typename... FUNC_PACK>
+template <typename T,
+          template <typename>
+          typename FUNC,
+          template <typename>
+          typename... FUNC_PACK>
 constexpr inline auto sequential_apply_v =
   sequential_apply<T, FUNC, FUNC_PACK...>::value;
 

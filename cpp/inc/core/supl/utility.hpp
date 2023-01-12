@@ -45,8 +45,8 @@ namespace supl {
  */
 /* }}} */
 template <typename T>
-[[nodiscard]] constexpr auto explicit_copy(const T& t
-) noexcept(std::is_nothrow_constructible_v<T>) -> T
+[[nodiscard]] constexpr auto
+explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 {
   return t;
 }
@@ -100,9 +100,8 @@ struct has_to_stream : std::false_type { };
 template <typename T>
 struct has_to_stream<
   T,
-  std::void_t<decltype(std::declval<const T&>()
-                         .to_stream(std::declval<std::ostream&>()))>>
-    : std::true_type { };
+  std::void_t<decltype(std::declval<const T&>().to_stream(
+    std::declval<std::ostream&>()))>> : std::true_type { };
 
 template <typename T>
 constexpr inline bool has_to_stream_v = has_to_stream<T>::value;
@@ -145,14 +144,13 @@ constexpr inline bool is_variant_v = is_variant<T>::value;
 /* }}} */
 template <typename T>
 struct is_to_stream_valid
-    : std::disjunction<
-        has_to_stream<remove_cvref_t<T>>,
-        is_printable<remove_cvref_t<T>>,
-        is_tuple<remove_cvref_t<T>>,
-        is_pair<remove_cvref_t<T>>,
-        is_iterable<remove_cvref_t<T>>,
-        is_std_monostate<remove_cvref_t<T>>,
-        is_variant<remove_cvref_t<T>>> { };
+    : std::disjunction<has_to_stream<remove_cvref_t<T>>,
+                       is_printable<remove_cvref_t<T>>,
+                       is_tuple<remove_cvref_t<T>>,
+                       is_pair<remove_cvref_t<T>>,
+                       is_iterable<remove_cvref_t<T>>,
+                       is_std_monostate<remove_cvref_t<T>>,
+                       is_variant<remove_cvref_t<T>>> { };
 
 template <typename T>
 constexpr inline bool is_to_stream_valid_v = is_to_stream_valid<T>::value;
@@ -171,12 +169,10 @@ namespace impl {
 
       out << "( ";
       tuple::for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
-        value,
-        [&out](const auto& i) {
+        value, [&out](const auto& i) {
           to_stream(out, i);
           out << ", ";
-        }
-      );
+        });
       to_stream(out, std::get<std::tuple_size_v<T> - 1>(value));
       out << " )";
 
@@ -215,29 +211,25 @@ namespace impl {
     } else {
       out << "[ ";
       std::for_each(
-        std::begin(value),
-        supl::last(value),
-        [&out](const auto& i) {
+        std::begin(value), supl::last(value), [&out](const auto& i) {
           to_stream(out, i);
           out << ", ";
-        }
-      );
+        });
       to_stream(out, *supl::last(value));
       out << " ]";
     }
   }
 
   template <typename... Ts>
-  void to_stream_variant_impl(
-    std::ostream& out,
-    const std::variant<Ts...>& variant
-  ) noexcept
+  void to_stream_variant_impl(std::ostream& out,
+                              const std::variant<Ts...>& variant) noexcept
   {
     try {
       std::visit(
-        [&out](const auto& alternative) { to_stream(out, alternative); },
-        variant
-      );
+        [&out](const auto& alternative) {
+          to_stream(out, alternative);
+        },
+        variant);
     } catch ( std::bad_variant_access& ) {
       out << "<valueless_by_exception>";
     }
@@ -276,8 +268,7 @@ void to_stream(std::ostream& out, const T& value) noexcept
 {
   static_assert(
     is_to_stream_valid_v<T>,
-    "Attempting to call supl::to_stream with an unsupported type"
-  );
+    "Attempting to call supl::to_stream with an unsupported type");
 
   const ostream_state_restorer restorer(out);
 
@@ -338,8 +329,8 @@ public:
       : m_value {t}
   { }
 
-  friend inline auto
-  operator<<(std::ostream& out, const stream_adapter<T>& rhs) noexcept
+  friend inline auto operator<<(std::ostream& out,
+                                const stream_adapter<T>& rhs) noexcept
     -> std::ostream&
   {
     to_stream(out, rhs.m_value);
@@ -385,8 +376,8 @@ inline namespace literals {
  * @param i Integer literal to be used as a `std::size_t`
  */
     /* }}} */
-    [[nodiscard]] constexpr auto operator""_z(unsigned long long i
-    ) noexcept -> std::size_t
+    [[nodiscard]] constexpr auto
+    operator""_z(unsigned long long i) noexcept -> std::size_t
     {
       return static_cast<std::size_t>(i);
     }
@@ -402,8 +393,8 @@ inline namespace literals {
  * @param i Integer literal to be used as a `std::ptrdiff_t`
  */
     /* }}} */
-    [[nodiscard]] constexpr auto operator""_pd(unsigned long long i
-    ) noexcept -> std::ptrdiff_t
+    [[nodiscard]] constexpr auto
+    operator""_pd(unsigned long long i) noexcept -> std::ptrdiff_t
     {
       return static_cast<std::ptrdiff_t>(i);
     }

@@ -22,9 +22,8 @@ class predicate : Pred
 {
 public:
 
-  template <
-    typename T,
-    typename = std::enable_if_t<not std::is_same_v<T, predicate>>>
+  template <typename T,
+            typename = std::enable_if_t<not std::is_same_v<T, predicate>>>
   // NOLINTNEXTLINE(*explicit*)
   constexpr predicate(T&& pred)
       : Pred {std::forward<T>(pred)}
@@ -67,11 +66,10 @@ constexpr inline auto false_pred {predicate {[](const auto&) {
 template <typename T>
 [[nodiscard]] constexpr auto equal_to(T&& arg) noexcept
 {
-  return predicate {
-    [parent_arg = std::forward<T>(arg)](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return new_arg == parent_arg;
-    }};
+  return predicate {[parent_arg = std::forward<T>(arg)](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return new_arg == parent_arg;
+  }};
 }
 
 /* {{{ doc */
@@ -115,11 +113,10 @@ template <typename... Ts>
 template <typename T>
 [[nodiscard]] constexpr auto not_equal_to(T&& arg) noexcept
 {
-  return predicate {
-    [parent_arg = std::forward<T>(arg)](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return new_arg != parent_arg;
-    }};
+  return predicate {[parent_arg = std::forward<T>(arg)](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return new_arg != parent_arg;
+  }};
 }
 
 /* {{{ doc */
@@ -138,11 +135,10 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto greater_than(T&& arg) noexcept
 {
-  return predicate {
-    [parent_arg = std::forward<T>(arg)](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return new_arg > parent_arg;
-    }};
+  return predicate {[parent_arg = std::forward<T>(arg)](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return new_arg > parent_arg;
+  }};
 }
 
 /* {{{ doc */
@@ -161,11 +157,10 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto greater_eq(T&& arg) noexcept
 {
-  return predicate {
-    [parent_arg = std::forward<T>(arg)](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return new_arg >= parent_arg;
-    }};
+  return predicate {[parent_arg = std::forward<T>(arg)](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return new_arg >= parent_arg;
+  }};
 }
 
 /* {{{ doc */
@@ -184,11 +179,10 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto less_than(T&& arg) noexcept
 {
-  return predicate {
-    [parent_arg = std::forward<T>(arg)](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return new_arg < parent_arg;
-    }};
+  return predicate {[parent_arg = std::forward<T>(arg)](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return new_arg < parent_arg;
+  }};
 }
 
 /* {{{ doc */
@@ -207,22 +201,20 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto less_eq(T&& arg) noexcept
 {
-  return predicate {
-    [parent_arg = std::forward<T>(arg)](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return new_arg <= parent_arg;
-    }};
+  return predicate {[parent_arg = std::forward<T>(arg)](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return new_arg <= parent_arg;
+  }};
 }
 
 template <typename T>
 [[nodiscard]] constexpr auto between(T&& bound1, T&& bound2) noexcept
 {
-  return predicate {
-    [lower_bound {std::min(bound1, bound2)},
-     upper_bound {std::max(bound1, bound2)}](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return lower_bound <= new_arg && new_arg <= upper_bound;
-    }};
+  return predicate {[lower_bound {std::min(bound1, bound2)},
+                     upper_bound {std::max(bound1, bound2)}](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return lower_bound <= new_arg && new_arg <= upper_bound;
+  }};
 }
 
 /* {{{ doc */
@@ -237,11 +229,10 @@ template <typename T>
 template <typename T>
 [[nodiscard]] constexpr auto multiple_of(T&& arg) noexcept
 {
-  return predicate {
-    [parent_arg = std::forward<T>(arg)](const auto& new_arg
-    ) constexpr noexcept -> bool {
-      return new_arg % parent_arg == 0;
-    }};
+  return predicate {[parent_arg = std::forward<T>(arg)](
+                      const auto& new_arg) constexpr noexcept -> bool {
+    return new_arg % parent_arg == 0;
+  }};
 }
 
 /* {{{ doc */
@@ -278,16 +269,14 @@ template <typename... Preds>
 {
   return predicate {
     [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
-      std::forward<Preds>(preds)...}}](auto&& arg
-    ) constexpr noexcept -> bool {
+      std::forward<Preds>(preds)...}}](
+      auto&& arg) constexpr noexcept -> bool {
       return std::apply(
-        [&arg](auto&&... inner_preds) constexpr noexcept(
-          noexcept((inner_preds(std::forward<decltype(arg)>(arg)) && ...))
-        ) {
+        [&arg](auto&&... inner_preds) constexpr noexcept(noexcept(
+          (inner_preds(std::forward<decltype(arg)>(arg)) && ...))) {
           return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
         },
-        pred_tup
-      );
+        pred_tup);
     }};
 }
 
@@ -311,16 +300,14 @@ template <typename... Preds>
 {
   return predicate {
     [pred_tup {std::tuple<std::remove_reference_t<Preds>...> {
-      std::forward<Preds>(preds)...}}](auto&& arg
-    ) constexpr noexcept -> bool {
+      std::forward<Preds>(preds)...}}](
+      auto&& arg) constexpr noexcept -> bool {
       return std::apply(
-        [&arg](auto&&... inner_preds) constexpr noexcept(
-          noexcept((inner_preds(std::forward<decltype(arg)>(arg)) || ...))
-        ) {
+        [&arg](auto&&... inner_preds) constexpr noexcept(noexcept(
+          (inner_preds(std::forward<decltype(arg)>(arg)) || ...))) {
           return (inner_preds(std::forward<decltype(arg)>(arg)) || ...);
         },
-        pred_tup
-      );
+        pred_tup);
     }};
 }
 
@@ -341,8 +328,8 @@ template <typename... Preds>
 template <typename Pred>
 [[nodiscard]] constexpr auto pred_not(Pred&& pred) noexcept
 {
-  return predicate {[inner_pred {std::forward<Pred>(pred)}](auto&& arg
-                    ) constexpr noexcept {
+  return predicate {[inner_pred {std::forward<Pred>(pred)}](
+                      auto&& arg) constexpr noexcept {
     return not inner_pred(std::forward<decltype(arg)>(arg));
   }};
 }
@@ -361,8 +348,8 @@ template <typename Pred>
  */
 /* }}} */
 template <typename Pred1, typename Pred2>
-[[nodiscard]] constexpr auto
-pred_and(Pred1&& pred1, Pred2&& pred2) noexcept
+[[nodiscard]] constexpr auto pred_and(Pred1&& pred1,
+                                      Pred2&& pred2) noexcept
 {
   return predicate {[inner_pred1 {pred1},
                      inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
@@ -407,8 +394,8 @@ template <typename Pred1, typename Pred2>
  */
 /* }}} */
 template <typename Pred1, typename Pred2>
-[[nodiscard]] constexpr auto
-pred_xor(Pred1&& pred1, Pred2&& pred2) noexcept
+[[nodiscard]] constexpr auto pred_xor(Pred1&& pred1,
+                                      Pred2&& pred2) noexcept
 {
   return predicate {[inner_pred1 {pred1},
                      inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
@@ -433,8 +420,8 @@ pred_xor(Pred1&& pred1, Pred2&& pred2) noexcept
  */
 /* }}} */
 template <typename Pred1, typename Pred2>
-[[nodiscard]] constexpr auto
-pred_implies(Pred1&& pred1, Pred2&& pred2) noexcept
+[[nodiscard]] constexpr auto pred_implies(Pred1&& pred1,
+                                          Pred2&& pred2) noexcept
 {
   return predicate {[inner_pred1 {pred1},
                      inner_pred2 {pred2}](auto&& arg) constexpr noexcept {
@@ -461,12 +448,11 @@ pred_implies(Pred1&& pred1, Pred2&& pred2) noexcept
  */
 /* }}} */
 template <typename Pred1, typename Pred2>
-[[nodiscard]] constexpr auto
-pred_bicond(Pred1&& pred1, Pred2&& pred2) noexcept
+[[nodiscard]] constexpr auto pred_bicond(Pred1&& pred1,
+                                         Pred2&& pred2) noexcept
 {
   return pred_not(
-    pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2))
-  );
+    pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2)));
 }
 
 namespace impl {
@@ -489,9 +475,8 @@ namespace impl {
  * @brief Logical negation of a predicate
  */
 /* }}} */
-template <
-  typename Pred,
-  typename = std::enable_if_t<impl::is_predicate_v<Pred>>>
+template <typename Pred,
+          typename = std::enable_if_t<impl::is_predicate_v<Pred>>>
 [[nodiscard]] constexpr auto operator!(Pred&& pred) noexcept
 {
   return pred_not(std::forward<Pred>(pred));
@@ -502,13 +487,12 @@ template <
  * @brief Logical conjunction (and) of two predicates
  */
 /* }}} */
-template <
-  typename Pred1,
-  typename Pred2,
-  typename = std::enable_if_t<
-    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
-[[nodiscard]] constexpr auto
-operator&&(Pred1&& pred1, Pred2&& pred2) noexcept
+template <typename Pred1,
+          typename Pred2,
+          typename = std::enable_if_t<impl::is_predicate_v<Pred1>
+                                      && impl::is_predicate_v<Pred2>>>
+[[nodiscard]] constexpr auto operator&&(Pred1&& pred1,
+                                        Pred2&& pred2) noexcept
 {
   return pred_and(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }
@@ -518,13 +502,12 @@ operator&&(Pred1&& pred1, Pred2&& pred2) noexcept
  * @brief Logical disjunction (inclusive or) of two predicates
  */
 /* }}} */
-template <
-  typename Pred1,
-  typename Pred2,
-  typename = std::enable_if_t<
-    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
-[[nodiscard]] constexpr auto
-operator||(Pred1&& pred1, Pred2&& pred2) noexcept
+template <typename Pred1,
+          typename Pred2,
+          typename = std::enable_if_t<impl::is_predicate_v<Pred1>
+                                      && impl::is_predicate_v<Pred2>>>
+[[nodiscard]] constexpr auto operator||(Pred1&& pred1,
+                                        Pred2&& pred2) noexcept
 {
   return pred_or(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }
@@ -534,13 +517,12 @@ operator||(Pred1&& pred1, Pred2&& pred2) noexcept
  * @brief Logical xor of two predicates
  */
 /* }}} */
-template <
-  typename Pred1,
-  typename Pred2,
-  typename = std::enable_if_t<
-    impl::is_predicate_v<Pred1> && impl::is_predicate_v<Pred2>>>
-[[nodiscard]] constexpr auto
-operator^(Pred1&& pred1, Pred2&& pred2) noexcept
+template <typename Pred1,
+          typename Pred2,
+          typename = std::enable_if_t<impl::is_predicate_v<Pred1>
+                                      && impl::is_predicate_v<Pred2>>>
+[[nodiscard]] constexpr auto operator^(Pred1&& pred1,
+                                       Pred2&& pred2) noexcept
 {
   return pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
 }

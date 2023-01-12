@@ -67,13 +67,11 @@ public:
    * @param test_function Test function to be ran
    */
   /* }}} */
-  inline void add_test(
-    std::string_view test_name,
-    test_function_t test_function
-  ) noexcept
+  inline void add_test(std::string_view test_name,
+                       test_function_t test_function) noexcept
   {
-    m_test_functions.push_back(test_function_data_t {
-      test_name, test_function});
+    m_test_functions.push_back(
+      test_function_data_t {test_name, test_function});
   }
 
   /* {{{ doc */

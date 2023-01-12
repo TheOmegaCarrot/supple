@@ -190,10 +190,9 @@ private:
     auto operator=(Iterator_Model&&) noexcept -> Iterator_Model& = default;
     ~Iterator_Model() noexcept override = default;
 
-    template <
-      typename Type,
-      typename = std::enable_if<
-        ! std::is_same_v<std::decay_t<Type>, Iterator_Model>>>
+    template <typename Type,
+              typename = std::enable_if<
+                ! std::is_same_v<std::decay_t<Type>, Iterator_Model>>>
     explicit Iterator_Model(Type&& value) noexcept
         : m_erased {std::forward<Type>(value)}
     { }
@@ -222,8 +221,7 @@ private:
     {
       if ( auto* rhs_cast {
              dynamic_cast<Iterator_Model<Erased_Iterator_Type>*>(
-               rhs.m_value.get()
-             )};
+               rhs.m_value.get())};
            rhs_cast != nullptr ) {
         return this->m_erased == rhs_cast->m_erased;
       } else {
@@ -279,20 +277,17 @@ public:
   auto operator=(iterator&&) noexcept -> iterator& = default;
   ~iterator() = default;
 
-  template <
-    typename T,
-    typename =
-      std::enable_if_t<! std::is_same_v<std::decay_t<T>, iterator>>>
+  template <typename T,
+            typename = std::enable_if_t<
+              ! std::is_same_v<std::decay_t<T>, iterator>>>
   explicit iterator(T&& value) noexcept
       : m_value(std::make_unique<Iterator_Model<std::decay_t<T>>>(
-        std::forward<T>(value)
-      ))
+        std::forward<T>(value)))
   { }
 
-  template <
-    typename T,
-    typename =
-      std::enable_if_t<! std::is_same_v<std::decay_t<T>, iterator>>>
+  template <typename T,
+            typename = std::enable_if_t<
+              ! std::is_same_v<std::decay_t<T>, iterator>>>
   auto operator=(T&& rhs) noexcept -> iterator&
   {
 
@@ -310,20 +305,16 @@ public:
             typename std::iterator_traits<T>::reference>>,
           std::false_type,
           std::true_type>>::value,
-      "const iterator cannot be assigned to non-const iterator"
-    );
+      "const iterator cannot be assigned to non-const iterator");
 
     // Ensure reassignment is only to an iterator of the same value_type
     static_assert(
-      std::is_same_v<
-        value_type,
-        typename std::iterator_traits<T>::value_type>,
-      "Can only assign to iterator of the same value type"
-    );
+      std::is_same_v<value_type,
+                     typename std::iterator_traits<T>::value_type>,
+      "Can only assign to iterator of the same value type");
 
-    m_value =
-      std::make_unique<Iterator_Model<std::decay_t<T>>>(std::forward<T>(rhs
-      ));
+    m_value = std::make_unique<Iterator_Model<std::decay_t<T>>>(
+      std::forward<T>(rhs));
     return *this;
   }
 

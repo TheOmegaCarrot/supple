@@ -21,9 +21,8 @@ static auto test_last() -> supl::test_results
 
   results.enforce_exactly_equal(*supl::last(test1), 5);
   results.enforce_exactly_equal(*supl::last(test2), 3);
-  results.enforce_exactly_equal(
-    supl::last(test3) == std::begin(test3), true
-  );
+  results.enforce_exactly_equal(supl::last(test3) == std::begin(test3),
+                                true);
   results.enforce_exactly_equal(*supl::last(test4), 4);
 
   return results;
@@ -40,9 +39,8 @@ static auto test_clast() -> supl::test_results
 
   results.enforce_exactly_equal(*supl::clast(test1), 5);
   results.enforce_exactly_equal(*supl::clast(test2), 3);
-  results.enforce_exactly_equal(
-    supl::clast(test3) == std::cbegin(test3), true
-  );
+  results.enforce_exactly_equal(supl::clast(test3) == std::cbegin(test3),
+                                true);
   results.enforce_exactly_equal(*supl::clast(test4), 4);
 
   return results;
@@ -112,22 +110,20 @@ static auto test_iterator() -> supl::test_results
   std::vector test_foo {foo {}};
 
   const supl::iterator test_foo_itr {test_foo.begin()};
-  results.enforce_exactly_equal(
-    test_foo_itr->the_thing(), std::string {"foo"}
-  );
+  results.enforce_exactly_equal(test_foo_itr->the_thing(),
+                                std::string {"foo"});
 
   // const?
 
   supl::iterator const_itr {test_vector.cbegin()};
 
   results.enforce_exactly_equal(
-    const_itr.is_null(), false, "Should not be null"
-  );
+    const_itr.is_null(), false, "Should not be null");
 
-  static_assert(std::is_same_v<
-                typename std::iterator_traits<decltype(const_itr
-                )>::reference,
-                const int&>);
+  static_assert(
+    std::is_same_v<
+      typename std::iterator_traits<decltype(const_itr)>::reference,
+      const int&>);
 
   const_itr = test_vector.begin();
   results.enforce_exactly_equal(*const_itr, 1);
@@ -158,8 +154,7 @@ static auto test_iterator() -> supl::test_results
     results.enforce_exactly_equal<const char*>(
       e.what(),
       "Illegal access to null supl::iterator",
-      "Incorrect error message"
-    );
+      "Incorrect error message");
   }
 
   return results;
@@ -180,8 +175,8 @@ static_assert(supl::is_iterator_tag_v<std::forward_iterator_tag>);
 static_assert(supl::is_iterator_tag_v<std::bidirectional_iterator_tag>);
 static_assert(supl::is_iterator_tag_v<std::random_access_iterator_tag>);
 static_assert(not supl::is_iterator_tag_v<int>);
-static_assert(not supl::is_iterator_tag_v<
-              supl::stream_adapter<std::vector<int>>>);
+static_assert(
+  not supl::is_iterator_tag_v<supl::stream_adapter<std::vector<int>>>);
 
 auto main() -> int
 {

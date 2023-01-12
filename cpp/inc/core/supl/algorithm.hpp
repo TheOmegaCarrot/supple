@@ -72,9 +72,8 @@ constexpr auto min_size(const Container& cont) noexcept -> std::size_t
  */
 /* }}} */
 template <typename Container, typename... Containers>
-constexpr auto
-min_size(const Container& cont, const Containers&... conts) noexcept
-  -> std::size_t
+constexpr auto min_size(const Container& cont,
+                        const Containers&... conts) noexcept -> std::size_t
 {
   return std::min(min_size(cont), min_size(conts...));
 }
@@ -122,22 +121,20 @@ constexpr auto max_size(const Container& cont) noexcept -> std::size_t
  */
 /* }}} */
 template <typename Container, typename... Containers>
-constexpr auto
-max_size(const Container& cont, const Containers&... conts) noexcept
-  -> std::size_t
+constexpr auto max_size(const Container& cont,
+                        const Containers&... conts) noexcept -> std::size_t
 {
   return std::max(max_size(cont), max_size(conts...));
 }
 
 template <typename Itr>
-constexpr auto contains(
-  const Itr begin,
-  const Itr end,
-  sequential_apply_t<
-    typename std::iterator_traits<Itr>::value_type,
-    std::add_const,
-    std::add_lvalue_reference> value
-) noexcept(noexcept(std::find(begin, end, value))) -> bool
+constexpr auto
+contains(const Itr begin,
+         const Itr end,
+         sequential_apply_t<typename std::iterator_traits<Itr>::value_type,
+                            std::add_const,
+                            std::add_lvalue_reference>
+           value) noexcept(noexcept(std::find(begin, end, value))) -> bool
 {
   return std::find(begin, end, value) != end;
 }
@@ -182,18 +179,16 @@ constexpr auto contains(
  * @param func Unary function used to transform data.
  */
 /* }}} */
-template <
-  typename Itr,
-  typename OutItr,
-  typename Predicate,
-  typename TransformFunc>
+template <typename Itr,
+          typename OutItr,
+          typename Predicate,
+          typename TransformFunc>
 constexpr void transform_if(
   Itr begin,
   const Itr end,
   OutItr output_itr,
   Predicate&& pred,
-  TransformFunc&& func
-) noexcept(noexcept(supl::invoke(func, *begin)))
+  TransformFunc&& func) noexcept(noexcept(supl::invoke(func, *begin)))
 {
   for ( ; begin != end; ++begin ) {
     if ( supl::invoke(pred, *begin) ) {
@@ -235,8 +230,7 @@ template <typename Itr, typename BinaryFunc>
 constexpr void for_each_adjacent(
   const Itr begin,
   const Itr end,
-  BinaryFunc&& func
-) noexcept(noexcept(supl::invoke(func, *begin, *begin)))
+  BinaryFunc&& func) noexcept(noexcept(supl::invoke(func, *begin, *begin)))
 {
   Itr leader {std::next(begin)};
   Itr follower {begin};
@@ -278,8 +272,7 @@ template <typename Itr, typename BinaryFunc>
 constexpr void for_each_adjacent_n(
   const Itr begin,
   const std::size_t n,
-  BinaryFunc&& func
-) noexcept(noexcept(supl::invoke(func, *begin, *begin)))
+  BinaryFunc&& func) noexcept(noexcept(supl::invoke(func, *begin, *begin)))
 {
   std::size_t count {0};
   Itr leader {std::next(begin)};
@@ -338,13 +331,14 @@ constexpr void for_each_adjacent_n(
  */
 /* }}} */
 template <typename Itr1, typename Itr2, typename BinaryFunc>
-constexpr void for_each_both(
-  Itr1 begin1,
-  const Itr1 end1,
-  Itr2 begin2,
-  const Itr2 end2,
-  BinaryFunc&& func
-) noexcept(noexcept(supl::invoke(func, *begin1, *begin2)))
+constexpr void
+for_each_both(Itr1 begin1,
+              const Itr1 end1,
+              Itr2 begin2,
+              const Itr2 end2,
+              BinaryFunc&& func) noexcept(noexcept(supl::invoke(func,
+                                                                *begin1,
+                                                                *begin2)))
 {
   for ( ; (begin1 != end1 && begin2 != end2); ++begin1, ++begin2 ) {
     supl::invoke(func, *begin1, *begin2);
@@ -397,8 +391,9 @@ constexpr void for_each_both_n(
   Itr1 begin1,
   Itr2 begin2,
   const std::size_t n,
-  BinaryFunc&& func
-) noexcept(noexcept(supl::invoke(func, *begin1, *begin2)))
+  BinaryFunc&& func) noexcept(noexcept(supl::invoke(func,
+                                                    *begin1,
+                                                    *begin2)))
 {
   for ( std::size_t count {0}; (count != n);
         ++count, ++begin1, ++begin2 ) {
@@ -443,8 +438,7 @@ template <typename VarFunc, typename... Begins>
 constexpr void for_each_all_n(
   VarFunc&& func,
   const std::size_t n,
-  Begins... begins
-) noexcept(noexcept(supl::invoke(func, *begins...)))
+  Begins... begins) noexcept(noexcept(supl::invoke(func, *begins...)))
 {
   for ( std::size_t i {0}; i != n; ++i ) {
     supl::invoke(func, *begins...);
@@ -456,24 +450,22 @@ namespace impl {
 
   template <typename Tuple1, typename Tuple2, std::size_t... Idxs>
   constexpr auto
-  tuple_elementwise_compare_any_impl(const Tuple1& tup1, const Tuple2& tup2,
-
-      std::index_sequence<Idxs...>) noexcept
+  tuple_elementwise_compare_any_impl(const Tuple1& tup1,
+                                     const Tuple2& tup2,
+                                     std::index_sequence<Idxs...>) noexcept
     -> bool
   {
     return ((std::get<Idxs>(tup1) == std::get<Idxs>(tup2)) || ...);
   }
 
   template <typename Tuple1, typename Tuple2>
-  constexpr auto tuple_elementwise_compare_any(
-    const Tuple1& tup1,
-    const Tuple2& tup2
-  ) noexcept -> bool
+  constexpr auto tuple_elementwise_compare_any(const Tuple1& tup1,
+                                               const Tuple2& tup2) noexcept
+    -> bool
   {
     static_assert(tl::size_v<Tuple1> == tl::size_v<Tuple2>);
     return tuple_elementwise_compare_any_impl(
-      tup1, tup2, std::make_index_sequence<tl::size_v<Tuple1>> {}
-    );
+      tup1, tup2, std::make_index_sequence<tl::size_v<Tuple1>> {});
   }
 
 }  // namespace impl
@@ -518,19 +510,21 @@ namespace impl {
  */
 /* }}} */
 template <typename VarFunc, typename... Iterators>
-constexpr void
-for_each_all(VarFunc&& func, Iterators... iterators) noexcept
+constexpr void for_each_all(VarFunc&& func,
+                            Iterators... iterators) noexcept
 {
-  for ( auto [begins, ends] {
-          tuple::alternating_split(std::tuple {iterators...})};
+  for ( auto [begins,
+              ends] {tuple::alternating_split(std::tuple {iterators...})};
         not impl::tuple_elementwise_compare_any(begins, ends);
-        tuple::for_each(begins, [](auto& iterator) { ++iterator; }) ) {
+        tuple::for_each(begins, [](auto& iterator) {
+          ++iterator;
+        }) ) {
     std::apply(
-      [&func](auto&&... iterators_inner
-      ) mutable noexcept(noexcept(supl::invoke(func, *iterators_inner...))
-      ) { return supl::invoke(func, *iterators_inner...); },
-      begins
-    );
+      [&func](auto&&... iterators_inner) mutable noexcept(
+        noexcept(supl::invoke(func, *iterators_inner...))) {
+        return supl::invoke(func, *iterators_inner...);
+      },
+      begins);
   }
 }
 
@@ -547,15 +541,13 @@ for_each_all(VarFunc&& func, Iterators... iterators) noexcept
 template <typename Pred, typename... Args>
 [[nodiscard]] constexpr auto all_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
-   && ...)
-) -> bool
+   && ...)) -> bool
 {
   if constexpr ( sizeof...(Args) == 0 ) {
     return true;
   } else {
-    return (
-      invoke(std::forward<Pred>(pred), std::forward<Args>(args)) && ...
-    );
+    return (invoke(std::forward<Pred>(pred), std::forward<Args>(args))
+            && ...);
   }
 }
 
@@ -572,15 +564,13 @@ template <typename Pred, typename... Args>
 template <typename Pred, typename... Args>
 [[nodiscard]] constexpr auto any_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
-   && ...)
-) -> bool
+   && ...)) -> bool
 {
   if constexpr ( sizeof...(Args) == 0 ) {
     return false;
   } else {
-    return (
-      invoke(std::forward<Pred>(pred), std::forward<Args>(args)) || ...
-    );
+    return (invoke(std::forward<Pred>(pred), std::forward<Args>(args))
+            || ...);
   }
 }
 
@@ -597,8 +587,7 @@ template <typename Pred, typename... Args>
 template <typename Pred, typename... Args>
 [[nodiscard]] constexpr auto none_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
-   && ...)
-) -> bool
+   && ...)) -> bool
 {
   return not any_of(std::forward<Pred>(pred), std::forward<Args>(args)...);
 }
@@ -620,9 +609,8 @@ template <typename Pred, typename... Args>
  */
 /* }}} */
 template <typename Itr, typename Gen>
-constexpr void
-generate(Itr begin, const Itr end, Gen&& gen) noexcept(noexcept(gen()
-) && noexcept(*begin))
+constexpr void generate(Itr begin, const Itr end, Gen&& gen) noexcept(
+  noexcept(gen()) && noexcept(*begin))
 {
   while ( begin != end ) {
     *begin = gen();
@@ -631,10 +619,9 @@ generate(Itr begin, const Itr end, Gen&& gen) noexcept(noexcept(gen()
 }
 
 template <typename InItr, typename OutItr>
-constexpr auto copy(InItr begin, const InItr end, OutItr out)
-
-  noexcept(std::is_nothrow_copy_constructible_v<
-           typename std::iterator_traits<InItr>::value_type>) -> OutItr
+constexpr auto copy(InItr begin, const InItr end, OutItr out) noexcept(
+  std::is_nothrow_copy_constructible_v<
+    typename std::iterator_traits<InItr>::value_type>) -> OutItr
 {
   for ( ; begin != end; ++out, ++begin ) {
     *out = *begin;

@@ -20,8 +20,8 @@ static_assert(
   "int + int == int"
 );
 static_assert(
-  std::is_same_v<supl::sum_type_t<int16_t, int16_t>, int>,
-  "int16_t + int16_t == int"
+  std::is_same_v<supl::sum_type_t<short, short>, int>,
+  "short + short == int"
 );
 static_assert(
   std::is_same_v<supl::sum_type_t<double, double>, double>,
@@ -36,8 +36,8 @@ static_assert(
   "double + float == double"
 );
 static_assert(
-  std::is_same_v<supl::sum_type_t<int, int16_t>, int>,
-  "int + int16_t == int"
+  std::is_same_v<supl::sum_type_t<int, short>, int>,
+  "int + short == int"
 );
 static_assert(
   std::is_same_v<supl::sum_type_t<double, int>, double>,
@@ -48,10 +48,8 @@ static_assert(
   "char + int == int"
 );
 static_assert(
-  std::is_same_v<
-    supl::sum_type_t<int16_t, int16_t, int16_t, int16_t, int>,
-    int>,
-  "int16_t + int16_t + int16_t + int16_t + int == int"
+  std::is_same_v<supl::sum_type_t<short, short, short, short, int>, int>,
+  "short + short + short + short + int == int"
 );
 
 ///////////////////////////////////////////// remove_cvref

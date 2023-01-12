@@ -25,9 +25,9 @@
 #include <type_traits>
 #include <variant>
 
-#include <supl/iterators.hpp>
-#include <supl/metaprogramming.hpp>
-#include <supl/tuple_algo.hpp>
+#include "iterators.hpp"
+#include "metaprogramming.hpp"
+#include "tuple_algo.hpp"
 
 namespace supl {
 

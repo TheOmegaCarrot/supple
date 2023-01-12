@@ -6,8 +6,8 @@
 #include <type_traits>
 #include <utility>
 
-#include <supl/metaprogramming.hpp>
-#include <supl/tuple_algo.hpp>
+#include "metaprogramming.hpp"
+#include "tuple_algo.hpp"
 
 namespace supl {
 

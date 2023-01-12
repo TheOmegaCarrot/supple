@@ -23,9 +23,9 @@
 #include <type_traits>
 #include <utility>
 
-#include <supl/functional.hpp>
-#include <supl/metaprogramming.hpp>
-#include <supl/tuple_algo.hpp>
+#include "functional.hpp"
+#include "metaprogramming.hpp"
+#include "tuple_algo.hpp"
 
 namespace supl {
 

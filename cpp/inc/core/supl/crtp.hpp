@@ -17,7 +17,7 @@
 #include <sstream>
 #include <string>
 
-#include <supl/utility.hpp>
+#include "utility.hpp"
 
 namespace supl {
 

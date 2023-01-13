@@ -145,7 +145,7 @@ contains(const Itr begin,
  *
  * @pre `end` must be reachable by incrementing `begin`.
  * If this precondition is not satisfied, the result is undefined.
- * 
+ *
  * @pre All iterators in the half-open range [begin, end) must be
  * dereferencable. 
  * If this precondition is not satisfied, the result is undefined.

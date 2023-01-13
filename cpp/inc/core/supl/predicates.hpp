@@ -207,6 +207,15 @@ template <typename T>
   }};
 }
 
+/* {{{ doc */
+/**
+ * @brief Returns a unary predicate which determines if
+ * its argument is between two values
+ *
+ * @details "Between" is defined as being in the range
+ * [min(bound1, bound2), max(bound1, bound2)]
+ */
+/* }}} */
 template <typename T>
 [[nodiscard]] constexpr auto between(T&& bound1, T&& bound2) noexcept
 {

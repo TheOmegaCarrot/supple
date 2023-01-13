@@ -85,7 +85,7 @@ public:
   /**
    * @brief Enforce that two values are equal.
    * Values are permitted to be of different type,
-   * so long as they are inequality comparable, 
+   * so long as they are inequality comparable,
    * with `T` as the left-hand side of operator `!=`.
    *
    * @tparam T Type of value under test.

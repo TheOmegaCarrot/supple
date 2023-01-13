@@ -312,7 +312,7 @@ void to_stream(std::ostream& out, const T& value) noexcept
  * Makes no copies.
  * Safe to use as a prvalue.
  * Contains a reference to its constructor argument.
- * 
+ *
  * ex. `an_ostream << supl::stream_adapter(a_vector)`;
  */
 /* }}} */

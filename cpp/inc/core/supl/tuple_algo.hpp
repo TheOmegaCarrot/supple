@@ -1297,7 +1297,7 @@ namespace impl {
  * of const lvalue references to use before applying a tuple algorithm
  * to avoid expensive copies. Then use with `std::decay` to resolve the
  * references to only perform one copy.
- * 
+ *
  * @pre For every type `T` in the input tuple,
  * `T` must be convertible to `Transform<T>::type` via `static_cast`.
  * Failure to meet this precondition is a compile-time error.

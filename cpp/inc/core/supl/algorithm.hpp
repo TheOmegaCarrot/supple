@@ -147,7 +147,7 @@ contains(const Itr begin,
  * If this precondition is not satisfied, the result is undefined.
  *
  * @pre All iterators in the half-open range [begin, end) must be
- * dereferencable. 
+ * dereferencable.
  * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr Input iterator type. A forward iterator is sufficient.
@@ -208,9 +208,9 @@ constexpr void transform_if(
  *
  * @pre `end` must be reachable by incrementing `begin`.
  * If this precondition is not satisfied, the result is undefined.
- * 
+ *
  * @pre All iterators in the half-open range [begin, end) must be
- * dereferencable. 
+ * dereferencable.
  * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr Iterator type satisfying only a minimal interface.
@@ -250,9 +250,9 @@ constexpr void for_each_adjacent(
  * Example: Range is: {1, 2, 3}
  *
  * Calls to `func` will be: `func(1, 2)`, `func(2, 3)`
- * 
+ *
  * @pre All iterators in the half-open range [begin, begin + n) must be
- * dereferencable. 
+ * dereferencable.
  * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr Iterator type satisfying only a minimal interface.
@@ -298,16 +298,16 @@ constexpr void for_each_adjacent_n(
  *
  * @pre `end1` must be reachable by incrementing `begin1`.
  * If this precondition is not satisfied, the result is undefined.
- * 
+ *
  * @pre All iterators in the half-open range [begin1, end1) must be
- * dereferencable. 
+ * dereferencable.
  * If this precondition is not satisfied, the result is undefined.
  *
  * @pre `end2` must be reachable by incrementing `begin2`.
  * If this precondition is not satisfied, the result is undefined.
- * 
+ *
  * @pre All iterators in the half-open range [begin2, end2) must be
- * dereferencable. 
+ * dereferencable.
  * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr1 Iterator type satisfying only a minimal interface.
@@ -361,11 +361,11 @@ for_each_both(Itr1 begin1,
  * * `func(3, 6)`
  *
  * @pre All iterators in the half-open range [begin1, begin1 + n) must be
- * dereferencable. 
+ * dereferencable.
  * If this precondition is not satisfied, the result is undefined.
- * 
+ *
  * @pre All iterators in the half-open range [begin2, begin2 + n) must be
- * dereferencable. 
+ * dereferencable.
  * If this precondition is not satisfied, the result is undefined.
  *
  * @tparam Itr1 Iterator type satisfying only a minimal interface.
@@ -416,7 +416,7 @@ constexpr void for_each_both_n(
  * @pre All iterators in the half-open range [begins, begins + n) must be
  * dereferencable, for all iterators in the pack `begins`.
  * If this precondition is not satisfied, the result is undefined.
- * 
+ *
  * @tparam VarFunc A function which acccepts the types of all the
  * contaners in parameter order.
  *
@@ -473,7 +473,7 @@ namespace impl {
 /* {{{ doc */
 /**
  * @brief Applies `func` to elements of every passed range in parameter order.
- * 
+ *
  * @details Iteration ceases when any `end` iterator is reached.
  *
  * @pre Must be passed a pack of matching iterator pairs.

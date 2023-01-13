@@ -418,14 +418,14 @@ template <typename Pred1, typename Pred2>
 /**
  * @brief Logical implication of two predicates
  *
- * 
+ *
  * | p1 | p2 | ret |
  * |:--:|:--:|:---:|
  * | T  | T  |  T  |
  * | T  | F  |  F  |
  * | F  | T  |  T  |
  * | F  | F  |  T  |
- * 
+ *
  */
 /* }}} */
 template <typename Pred1, typename Pred2>
@@ -446,14 +446,14 @@ template <typename Pred1, typename Pred2>
 /**
  * @brief Logical biconditional of two predicates
  *
- * 
+ *
  * | p1 | p2 | ret |
  * |:--:|:--:|:---:|
  * | T  | T  |  T  |
  * | T  | F  |  F  |
  * | F  | T  |  F  |
  * | F  | F  |  T  |
- * 
+ *
  */
 /* }}} */
 template <typename Pred1, typename Pred2>

@@ -76,7 +76,7 @@ public:
 
   /* {{{ doc */
   /**
-   * @brief Runs the tests 
+   * @brief Runs the tests
    */
   /* }}} */
   [[nodiscard]] auto run() const noexcept -> std::vector<test_results>

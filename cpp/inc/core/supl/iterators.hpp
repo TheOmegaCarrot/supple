@@ -116,7 +116,7 @@ public:
  * If it is a non-const iterator, a const_iterator may not be assigned to it,
  * as that would violate const-correctness.
  * This is checked by a static_assert.
- * 
+ *
  * Post-incement and decrement are especially inefficient, as those
  * operations require heap allocation.
  *

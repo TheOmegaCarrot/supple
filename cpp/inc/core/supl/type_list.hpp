@@ -987,7 +987,7 @@ namespace impl {
 /**
  * @brief Associate each element of a type list with its index
  *
- * @details Example: 
+ * @details Example:
  * `enumerate_t<type_list<int, char>> -> type_list<std::pair<int, index_constant>>`
  */
 /* }}} */

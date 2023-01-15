@@ -1,3 +1,18 @@
+/* {{{ doc */
+/**
+ * @file functional.hpp
+ *
+ * @brief Invoke
+ *
+ * @details This header contains a re-implementation of `std::invoke`
+ * which is usable in a constexpr context.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLE_CORE_INVOKE_HPP
 #define SUPPLE_CORE_INVOKE_HPP
 

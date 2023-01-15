@@ -1,3 +1,20 @@
+/* {{{ doc */
+/**
+ * @file predicates.hpp
+ *
+ * @brief Unary predicate generators, and composition operations
+ *
+ * @details This header contains various unary predicate generators,
+ * such as `equal_to`, `greater_than`, etc.
+ * This header also contains functions to compose predicates
+ * into new predicates.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLE_CORE_PREDICATES_HPP
 #define SUPPLE_CORE_PREDICATES_HPP
 

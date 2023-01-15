@@ -27,7 +27,21 @@
 
 namespace supl {
 
-// wow
+/* {{{ doc */
+/**
+ * @brief Re-implementation of `std::identity` from C++20
+ *
+ * @details A function object whose call operator takes one argument,
+ * and forwards it back.
+ */
+/* }}} */
+struct identity {
+  template <typename T>
+  constexpr auto operator()(T&& t) const noexcept -> decltype(auto)
+  {
+    return std::forward<T>(t);
+  }
+};
 
 }  // namespace supl
 

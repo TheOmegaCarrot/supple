@@ -401,7 +401,8 @@ static auto test_copy() -> supl::test_results
   constexpr static std::array expected1 {1, 2, 3, 4};
   constexpr static std::array result1 {[&]() {
     std::array<int, 4> retval {};
-    supl::copy(from_arr.begin(), from_arr.begin() + 4, retval.begin());
+    supl::copy(
+      from_arr.begin(), std::next(from_arr.begin(), 4), retval.begin());
     return retval;
   }()};  // IILE
 
@@ -410,8 +411,8 @@ static auto test_copy() -> supl::test_results
   const std::array expected2 {1, 2, 3, 4};
   const std::array result2 {[&]() {
     std::array<int, 4> retval {};
-    auto* oitr {
-      supl::copy(from_arr.begin(), from_arr.begin() + 4, retval.begin())};
+    auto* oitr {supl::copy(
+      from_arr.begin(), std::next(from_arr.begin(), 4), retval.begin())};
     results.enforce_exactly_equal(
       oitr, retval.end(), "Returned iterator not correct");
     return retval;

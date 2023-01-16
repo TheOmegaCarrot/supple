@@ -341,10 +341,6 @@ template <typename... Preds>
 /**
  * @brief Logical negation of a predicate
  *
- * @details Yes, this is redundant to `std::not_fn`,
- * this exists for naming consistency with the remaining
- * `pred_*` functions.
- *
  * | pred | ret |
  * |:----:|:---:|
  * |  T   |  F  |

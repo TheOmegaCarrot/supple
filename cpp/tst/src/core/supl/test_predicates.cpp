@@ -499,7 +499,7 @@ static auto test_pred_op_compound() -> supl::test_results
   return results;
 }
 
-auto test_apply_operator() -> supl::test_results
+static auto test_apply_operator() -> supl::test_results
 {
   supl::test_results results;
 
@@ -513,7 +513,7 @@ auto test_apply_operator() -> supl::test_results
   return results;
 }
 
-auto test_constexpr() -> supl::test_results
+static auto test_constexpr() -> supl::test_results
 {
   supl::test_results results;
 
@@ -555,11 +555,12 @@ auto test_predicates() -> supl::test_section
   section.add_test("supl::pred_xor", &test_pred_xor);
   section.add_test("supl::pred_implies", &test_pred_implies);
   section.add_test("supl::pred_bicond", &test_pred_bicond);
-  section.add_test("supl::predicate_op_not", &test_pred_op_not);
-  section.add_test("supl::predicate_op_and", &test_pred_op_and);
-  section.add_test("supl::predicate_op_or", &test_pred_op_or);
-  section.add_test("supl::predicate_op_xor", &test_pred_op_xor);
-  section.add_test("supl::predicate_op_compound", &test_pred_op_compound);
+  section.add_test("predicate operator !", &test_pred_op_not);
+  section.add_test("predicate operator &&", &test_pred_op_and);
+  section.add_test("predicate operator ||", &test_pred_op_or);
+  section.add_test("predicate operator ^", &test_pred_op_xor);
+  section.add_test("predicate multiple operators", &test_pred_op_compound);
+  section.add_test("predicate operator |", &test_apply_operator);
   section.add_test("constexpr predicates", &test_constexpr);
 
   return section;

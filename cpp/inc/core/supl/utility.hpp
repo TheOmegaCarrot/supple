@@ -247,6 +247,34 @@ namespace impl {
  * The case of an empty tuple is handled.
  * The case of a variant which is valueless_by_exception is handled.
  *
+ * @details `to_stream` supports being specialized.
+ * Specializations must be marked `noexcept`,
+ * and must return `void`.
+ * After specializing `to_stream` for type `T`,
+ * `to_string` and `stream_adapter` also support `T`.
+ *
+ * Example:
+ * ```
+ * struct an_example { };
+ *
+ * namespace supl {
+ * template <>
+ * void to_stream<an_example>(std::ostream& out,
+ *                                  const an_example&) noexcept
+ * {
+ *   out << "<an_example>";
+ * }
+ * } // namespace supl
+ *
+ * void foo()
+ * {
+ *    an_example example{};
+ *    supl::to_stream(std::cout, example);
+ *    std::cout << supl::stream_adapter(example);
+ *    std::string example_string {supl::to_string(example)};
+ * }
+ * ```
+ *
  * @pre A parameter type `T` is valid if any of the below are true:
  * - `T::to_stream(std::ostream&)` is defined as a const member function
  * - `operator<<(std::ostream&, const T&)` is defined
@@ -254,6 +282,7 @@ namespace impl {
  * - `T` provides an iterator pair which dereference to a valid type
  * - `T` is `std::monostate`
  * - `T` is an `std::variant` where every possible alternative is a valid type
+ * - `to_stream` has been specialized for T
  * If this precondition is not satisfied, it is a compile-time error.
  *
  * @tparam T Type to be formatted to a stream

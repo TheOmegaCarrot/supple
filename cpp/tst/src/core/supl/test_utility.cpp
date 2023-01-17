@@ -14,6 +14,7 @@
 
 #include <supl/utility.hpp>
 
+#include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
 struct copy_counter {
@@ -384,12 +385,51 @@ static auto test_ptrdiff_t_literals() -> supl::test_results
   return results;
 }
 
+struct an_example { };
+
+template <>
+void supl::to_stream<an_example>(std::ostream& out,
+                                 const an_example&) noexcept
+{
+  out << "<an_example>";
+}
+
+// this works too
+/* namespace supl { */
+/* template <> */
+/* void to_stream<an_example>(std::ostream& out, const an_example&) noexcept */
+/* { */
+/*   out << "<an_example>"; */
+/* } */
+/* }  // namespace supl */
+
+static auto test_to_stream_specialize() -> supl::test_results
+{
+  supl::test_results results;
+
+  const an_example example;
+
+  std::stringstream stream1;
+  supl::to_stream(stream1, example);
+  results.enforce_equal("<an_example>", stream1.str(), "to_stream");
+
+  std::string result {supl::to_string(example)};
+  results.enforce_equal("<an_example>", result, "to_string");
+
+  std::stringstream stream2;
+  stream2 << supl::stream_adapter(example);
+  results.enforce_equal("<an_example>", stream2.str(), "stream_adapter");
+
+  return results;
+}
+
 auto test_utility() -> supl::test_section
 {
   supl::test_section section;
 
   section.add_test("supl::explicit_copy", &test_explicit_copy);
   section.add_test("supl::to_stream", &test_to_stream);
+  section.add_test("specialize to_stream", &test_to_stream_specialize);
   section.add_test("supl::to_string", &test_to_string);
   section.add_test("supl::stream_adapter", &test_stream_adapter);
   section.add_test("supl::literals::size_t_literal::operator\"\"_z",

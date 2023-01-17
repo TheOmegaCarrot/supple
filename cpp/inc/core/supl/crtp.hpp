@@ -86,7 +86,7 @@ struct rel_ops {
  * Member operators require an object of
  * your type as the left-hand-side,
  * and can convert the right-hand operand,
- * whereas "hidden friends" can convert
+ * whereas "hidden friends" can implicitly convert
  * either the left-hand or right-hand operand,
  * so long as either operand is of your type.
  *

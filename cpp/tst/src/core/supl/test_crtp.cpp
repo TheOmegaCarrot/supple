@@ -107,37 +107,67 @@ static auto test_rel_ops() -> supl::test_results
   return results;
 }
 
+// friend functions cannot be defined in a local class
+
+class sym_rel : public supl::sym_rel_ops<sym_rel>
+{
+private:
+
+  int m_value;
+
+public:
+
+  // NOLINTNEXTLINE(*explicit*)
+  sym_rel(int value)
+      : m_value {value}
+  { }
+
+  friend auto operator==(const sym_rel& lhs, const sym_rel& rhs) noexcept
+    -> bool
+  {
+    return lhs.m_value == rhs.m_value;
+  }
+
+  friend auto operator<(const sym_rel& lhs, const sym_rel& rhs) noexcept
+    -> bool
+  {
+    return lhs.m_value < rhs.m_value;
+  }
+};
+
+class ct_sym_rel : public supl::sym_rel_ops<ct_sym_rel>
+{
+private:
+
+  int m_value;
+
+public:
+
+  // NOLINTNEXTLINE(*explicit*)
+  constexpr ct_sym_rel(int value)
+      : m_value {value}
+  { }
+
+  friend constexpr auto operator==(const ct_sym_rel& lhs,
+                                   const ct_sym_rel& rhs) noexcept -> bool
+  {
+    return lhs.m_value == rhs.m_value;
+  }
+
+  friend constexpr auto operator<(const ct_sym_rel& lhs,
+                                  const ct_sym_rel& rhs) noexcept -> bool
+  {
+    return lhs.m_value < rhs.m_value;
+  }
+};
+
 static auto test_sym_rel_ops() -> supl::test_results
 {
   supl::test_results results;
 
-  class rel : public supl::sym_rel_ops<rel>
-  {
-  private:
-
-    int m_value;
-
-  public:
-
-    // NOLINTNEXTLINE(*explicit*)
-    rel(int value)
-        : m_value {value}
-    { }
-
-    auto operator==(const rel& rhs) const noexcept -> bool
-    {
-      return m_value == rhs.m_value;
-    }
-
-    auto operator<(const rel& rhs) const noexcept -> bool
-    {
-      return m_value < rhs.m_value;
-    }
-  };
-
-  const rel rel_A {5};
-  const rel rel_B {5};
-  const rel rel_C {8};
+  const sym_rel rel_A {5};
+  const sym_rel rel_B {5};
+  const sym_rel rel_C {8};
 
   results.enforce_true(rel_A == rel_B);
   results.enforce_false(rel_A != rel_B);
@@ -154,32 +184,10 @@ static auto test_sym_rel_ops() -> supl::test_results
   results.enforce_true(rel_C >= rel_B);
 
   // and at compile-time!
-  class ct_rel : public supl::sym_rel_ops<ct_rel>
-  {
-  private:
 
-    int m_value;
-
-  public:
-
-    constexpr explicit ct_rel(int value)
-        : m_value {value}
-    { }
-
-    constexpr auto operator==(const ct_rel& rhs) const noexcept -> bool
-    {
-      return m_value == rhs.m_value;
-    }
-
-    constexpr auto operator<(const ct_rel& rhs) const noexcept -> bool
-    {
-      return m_value < rhs.m_value;
-    }
-  };
-
-  constexpr static ct_rel ct_rel_A {5};
-  constexpr static ct_rel ct_rel_B {5};
-  constexpr static ct_rel ct_rel_C {8};
+  constexpr static ct_sym_rel ct_rel_A {5};
+  constexpr static ct_sym_rel ct_rel_B {5};
+  constexpr static ct_sym_rel ct_rel_C {8};
 
   constexpr static bool A_eq_B {ct_rel_A == ct_rel_B};
   constexpr static bool A_neq_B {ct_rel_A != ct_rel_B};
@@ -206,6 +214,34 @@ static auto test_sym_rel_ops() -> supl::test_results
   results.enforce_false(C_leq_B);
   results.enforce_true(C_gt_B);
   results.enforce_true(C_geq_B);
+
+  // symmetric
+
+  constexpr static bool sym_5_eq_B {5 == ct_rel_B};
+  constexpr static bool sym_5_neq_B {5 != ct_rel_B};
+  constexpr static bool sym_5_lt_B {5 < ct_rel_B};
+  constexpr static bool sym_5_leq_B {5 <= ct_rel_B};
+  constexpr static bool sym_5_gt_B {5 > ct_rel_B};
+  constexpr static bool sym_5_geq_B {5 >= ct_rel_B};
+  constexpr static bool sym_8_eq_B {8 == ct_rel_B};
+  constexpr static bool sym_8_neq_B {8 != ct_rel_B};
+  constexpr static bool sym_8_lt_B {8 < ct_rel_B};
+  constexpr static bool sym_8_leq_B {8 <= ct_rel_B};
+  constexpr static bool sym_8_gt_B {8 > ct_rel_B};
+  constexpr static bool sym_8_geq_B {8 >= ct_rel_B};
+
+  results.enforce_true(sym_5_eq_B);
+  results.enforce_false(sym_5_neq_B);
+  results.enforce_false(sym_5_lt_B);
+  results.enforce_true(sym_5_leq_B);
+  results.enforce_false(sym_5_gt_B);
+  results.enforce_true(sym_5_geq_B);
+  results.enforce_false(sym_8_eq_B);
+  results.enforce_true(sym_8_neq_B);
+  results.enforce_false(sym_8_lt_B);
+  results.enforce_false(sym_8_leq_B);
+  results.enforce_true(sym_8_gt_B);
+  results.enforce_true(sym_8_geq_B);
 
   return results;
 }

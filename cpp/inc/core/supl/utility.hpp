@@ -252,6 +252,9 @@ namespace impl {
  * and must return `void`.
  * After specializing `to_stream` for type `T`,
  * `to_string` and `stream_adapter` also support `T`.
+ * Of course, be aware of the potential foot gun of
+ * visibility of your specialization,
+ * and beware of ODR violations.
  *
  * Example:
  * ```

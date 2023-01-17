@@ -16,6 +16,7 @@
 
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 #include "utility.hpp"
 
@@ -133,6 +134,78 @@ struct sym_rel_ops {
     -> bool
   {
     return (lhs > rhs) || (lhs == rhs);
+  }
+};
+
+/* {{{ doc */
+/**
+ * @brief Add addition operator
+ *
+ * @tparam T T must be copiable, and must provide an `operator+=`.
+ */
+/* }}} */
+template <typename T>
+struct addition {
+  friend constexpr auto operator+(const T& lhs, const T& rhs) noexcept(
+    std::is_nothrow_copy_constructible_v<T>) -> T
+  {
+    T retval {lhs};
+    retval += rhs;
+    return retval;
+  }
+};
+
+/* {{{ doc */
+/**
+ * @brief Add subtraction operator
+ *
+ * @tparam T T must be copiable, and must provide an `operator-=`.
+ */
+/* }}} */
+template <typename T>
+struct subtraction {
+  friend constexpr auto operator-(const T& lhs, const T& rhs) noexcept(
+    std::is_nothrow_copy_constructible_v<T>) -> T
+  {
+    T retval {lhs};
+    retval -= rhs;
+    return retval;
+  }
+};
+
+/* {{{ doc */
+/**
+ * @brief Add multiplication operator
+ *
+ * @tparam T T must be copiable, and must provide an `operator*=`.
+ */
+/* }}} */
+template <typename T>
+struct multiplication {
+  friend constexpr auto operator*(const T& lhs, const T& rhs) noexcept(
+    std::is_nothrow_copy_constructible_v<T>) -> T
+  {
+    T retval {lhs};
+    retval *= rhs;
+    return retval;
+  }
+};
+
+/* {{{ doc */
+/**
+ * @brief Add division operator
+ *
+ * @tparam T T must be copiable, and must provide an `operator/=`.
+ */
+/* }}} */
+template <typename T>
+struct division {
+  friend constexpr auto operator/(const T& lhs, const T& rhs) noexcept(
+    std::is_nothrow_copy_constructible_v<T>) -> T
+  {
+    T retval {lhs};
+    retval /= rhs;
+    return retval;
   }
 };
 

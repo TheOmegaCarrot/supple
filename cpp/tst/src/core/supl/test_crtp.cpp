@@ -3,6 +3,7 @@
 
 #include <supl/crtp.hpp>
 
+#include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
 static auto test_rel_ops() -> supl::test_results
@@ -246,6 +247,160 @@ static auto test_sym_rel_ops() -> supl::test_results
   return results;
 }
 
+static auto test_addition() -> supl::test_results
+{
+  supl::test_results results;
+
+  class addable : public supl::addition<addable>
+  {
+  private:
+
+    int m_value;
+
+  public:
+
+    // NOLINTNEXTLINE(*explicit*)
+    constexpr addable(int value)
+        : m_value {value}
+    { }
+
+    constexpr auto operator+=(const addable& rhs) noexcept -> addable&
+    {
+      m_value += rhs.m_value;
+      return *this;
+    }
+
+    [[nodiscard]] constexpr auto value() const noexcept -> int
+    {
+      return m_value;
+    }
+  };
+
+  const addable A {2};
+  const addable B {A + 5};
+  const addable C {5 + A};
+  results.enforce_equal(B.value(), 7);
+  results.enforce_equal(C.value(), 7);
+
+  return results;
+}
+
+static auto test_subtraction() -> supl::test_results
+{
+  supl::test_results results;
+
+  class subtractable : public supl::subtraction<subtractable>
+  {
+  private:
+
+    int m_value;
+
+  public:
+
+    // NOLINTNEXTLINE(*explicit*)
+    constexpr subtractable(int value)
+        : m_value {value}
+    { }
+
+    constexpr auto operator-=(const subtractable& rhs) noexcept
+      -> subtractable&
+    {
+      m_value -= rhs.m_value;
+      return *this;
+    }
+
+    [[nodiscard]] constexpr auto value() const noexcept -> int
+    {
+      return m_value;
+    }
+  };
+
+  const subtractable A {2};
+  const subtractable B {A - 5};
+  const subtractable C {5 - A};
+  results.enforce_equal(B.value(), -3);
+  results.enforce_equal(C.value(), 3);
+
+  return results;
+}
+
+static auto test_multiplication() -> supl::test_results
+{
+  supl::test_results results;
+
+  class multiplicable : public supl::multiplication<multiplicable>
+  {
+  private:
+
+    int m_value;
+
+  public:
+
+    // NOLINTNEXTLINE(*explicit*)
+    constexpr multiplicable(int value)
+        : m_value {value}
+    { }
+
+    constexpr auto operator*=(const multiplicable& rhs) noexcept
+      -> multiplicable&
+    {
+      m_value *= rhs.m_value;
+      return *this;
+    }
+
+    [[nodiscard]] constexpr auto value() const noexcept -> int
+    {
+      return m_value;
+    }
+  };
+
+  const multiplicable A {2};
+  const multiplicable B {A * 5};
+  const multiplicable C {5 * A};
+  results.enforce_equal(B.value(), 10);
+  results.enforce_equal(C.value(), 10);
+
+  return results;
+}
+
+static auto test_division() -> supl::test_results
+{
+  supl::test_results results;
+
+  class divisible : public supl::division<divisible>
+  {
+  private:
+
+    int m_value;
+
+  public:
+
+    // NOLINTNEXTLINE(*explicit*)
+    constexpr divisible(int value)
+        : m_value {value}
+    { }
+
+    constexpr auto operator/=(const divisible& rhs) noexcept -> divisible&
+    {
+      m_value /= rhs.m_value;
+      return *this;
+    }
+
+    [[nodiscard]] constexpr auto value() const noexcept -> int
+    {
+      return m_value;
+    }
+  };
+
+  const divisible A {4};
+  const divisible B {A / 2};
+  const divisible C {12 / A};
+  results.enforce_equal(B.value(), 2);
+  results.enforce_equal(C.value(), 3);
+
+  return results;
+}
+
 static auto test_add_to_string() -> supl::test_results
 {
   using std::literals::operator""s;
@@ -350,6 +505,10 @@ auto test_crtp() -> supl::test_section
 
   section.add_test("supl::rel_ops", &test_rel_ops);
   section.add_test("supl::sym_rel_ops", &test_sym_rel_ops);
+  section.add_test("supl::addition", &test_addition);
+  section.add_test("supl::subtraction", &test_subtraction);
+  section.add_test("supl::multiplication", &test_multiplication);
+  section.add_test("supl::division", &test_division);
   section.add_test("supl::add_to_string", &test_add_to_string);
   section.add_test("supl::add_ostream", &test_add_ostream);
 

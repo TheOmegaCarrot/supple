@@ -74,6 +74,70 @@ struct rel_ops {
 
 /* {{{ doc */
 /**
+ * @brief Call-site transparent relative comparison operations
+ *
+ * @details Inspired by `std::rel_ops`, but I found the standard
+ * rel_ops too intrusive at the call site.
+ * The provided relative operations are constexpr-capable.
+ * This differs from `supl::rel_ops` in that this provides
+ * "hidden friend" versions of the operators.
+ * This eases comparisons between your type
+ * with other types convertible to your type.
+ * Member operators require an object of
+ * your type as the left-hand-side,
+ * and can convert the right-hand operand,
+ * whereas "hidden friends" can convert
+ * either the left-hand or right-hand operand,
+ * so long as either operand is of your type.
+ *
+ * Sample use:
+ *
+ * ```
+ * class consumer : sym_rel_ops<consumer>
+ * {
+ *   // class stuff
+ *
+ *   friend constexpr bool operator==(const consumer& lhs, const consumer& rhs) const noexcept
+ *   {
+ *    // correct implementation
+ *   }
+ *   friend constexpr bool operator<(const consumer& lhs, const consumer& rhs) const noexcept
+ *   {
+ *    // correct implementation
+ *   }
+ * }
+ * ```
+ */
+/* }}} */
+template <typename T>
+struct sym_rel_ops {
+  friend constexpr auto operator!=(const T& lhs, const T& rhs) noexcept
+    -> bool
+  {
+    return ! (lhs == rhs);
+  }
+
+  friend constexpr auto operator<=(const T& lhs, const T& rhs) noexcept
+    -> bool
+  {
+    return (lhs < rhs) || (lhs == rhs);
+  }
+
+  friend constexpr auto operator>(const T& lhs, const T& rhs) noexcept
+    -> bool
+  {
+    return ! (lhs <= rhs);
+  }
+
+  friend constexpr auto operator>=(const T& lhs, const T& rhs) noexcept
+    -> bool
+  {
+    return (lhs > rhs) || (lhs == rhs);
+  }
+};
+
+/* {{{ doc */
+/**
  * @brief Add a `to_string` const member function
  *
  * @details Requires implementing `T::to_stream(std::ostream&) const`

@@ -18,7 +18,6 @@
 #ifndef SUPPLE_CORE_FUNCTIONAL_HPP
 #define SUPPLE_CORE_FUNCTIONAL_HPP
 
-#include <functional>
 #include <type_traits>
 #include <utility>
 

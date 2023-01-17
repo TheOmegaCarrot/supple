@@ -209,6 +209,13 @@ struct division {
   }
 };
 
+template <typename T>
+struct arithmetic
+    : addition<T>
+    , subtraction<T>
+    , multiplication<T>
+    , division<T> { };
+
 /* {{{ doc */
 /**
  * @brief Add a `to_string` const member function

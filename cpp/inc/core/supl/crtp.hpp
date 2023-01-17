@@ -209,6 +209,15 @@ struct division {
   }
 };
 
+/* {{{ doc */
+/**
+ * @brief Add addition, subtraction, multiplication, and division operators
+ *
+ * @details Inheriting from this CRTP class is identical to
+ * inheriting from `addition`, `subtraction`,
+ * `multiplication`, and `division`.
+ */
+/* }}} */
 template <typename T>
 struct arithmetic
     : addition<T>

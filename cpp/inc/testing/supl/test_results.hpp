@@ -225,7 +225,7 @@ public:
    * @param message String to print
    */
   /* }}} */
-  inline void fail(const std::string& message) noexcept
+  inline void fail(const std::string_view message) noexcept
   {
     m_case_count += 1;
     m_fail_count += 1;

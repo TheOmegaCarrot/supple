@@ -513,8 +513,8 @@ template <typename VarFunc, typename... Iterators>
 constexpr void for_each_all(VarFunc&& func,
                             Iterators... iterators) noexcept
 {
-  for ( auto [begins,
-              ends] {tuple::alternating_split(std::tuple {iterators...})};
+  for ( auto [begins, ends] {tuple::alternating_split(
+          std::tuple<Iterators&...> {iterators...})};
         not impl::tuple_elementwise_compare_any(begins, ends);
         tuple::for_each(begins, [](auto& iterator) {
           ++iterator;

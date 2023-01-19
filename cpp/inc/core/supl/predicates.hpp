@@ -230,7 +230,8 @@ template <typename T>
  * its argument is between two values
  *
  * @details "Between" is defined as being in the range
- * [min(bound1, bound2), max(bound1, bound2)]
+ * [min(bound1, bound2), max(bound1, bound2)].
+ * `between(a, b)` is identical to `between(b, a)`.
  */
 /* }}} */
 template <typename T>

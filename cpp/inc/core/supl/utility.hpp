@@ -119,20 +119,31 @@ template <typename T>
 constexpr inline bool has_empty_member_function_v =
   has_empty_member_function<T>::value;
 
-template <typename T>
-struct is_std_monostate : std::false_type { };
+namespace impl {
+  template <typename T>
+  struct is_std_monostate_impl : std::false_type { };
 
-template <>
-struct is_std_monostate<std::monostate> : std::true_type { };
+  template <>
+  struct is_std_monostate_impl<std::monostate> : std::true_type { };
+}  // namespace impl
+
+template <typename T>
+struct is_std_monostate
+    : impl::is_std_monostate_impl<remove_cvref_t<T>> { };
 
 template <typename T>
 constexpr inline bool is_std_monostate_v = is_std_monostate<T>::value;
 
-template <typename T>
-struct is_variant : std::false_type { };
+namespace impl {
+  template <typename T>
+  struct is_variant_impl : std::false_type { };
 
-template <typename... Ts>
-struct is_variant<std::variant<Ts...>> : std::true_type { };
+  template <typename... Ts>
+  struct is_variant_impl<std::variant<Ts...>> : std::true_type { };
+}  // namespace impl
+
+template <typename T>
+struct is_variant : impl::is_variant_impl<remove_cvref_t<T>> { };
 
 template <typename T>
 constexpr inline bool is_variant_v = is_variant<T>::value;

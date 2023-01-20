@@ -413,7 +413,7 @@ static auto test_to_stream_specialize() -> supl::test_results
   supl::to_stream(stream1, example);
   results.enforce_equal("<an_example>", stream1.str(), "to_stream");
 
-  std::string result {supl::to_string(example)};
+  const std::string result {supl::to_string(example)};
   results.enforce_equal("<an_example>", result, "to_string");
 
   std::stringstream stream2;

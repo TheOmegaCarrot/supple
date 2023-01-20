@@ -23,9 +23,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "metaprogramming.hpp"
-#include "tuple_algo.hpp"
-
 namespace supl {
 
 /* {{{ doc */
@@ -107,9 +104,14 @@ template <typename... Ts>
     return false_pred;
   } else {
     return predicate {
-      [parent_args_tup = std::tuple<supl::remove_cvref_t<Ts>...> {
-         args...}](const auto& new_arg) constexpr noexcept -> bool {
-        return tuple::any_of(parent_args_tup, equal_to(new_arg));
+      [parent_args_tup = std::tuple<std::decay_t<Ts>...> {args...}](
+        const auto& new_arg) constexpr noexcept -> bool {
+        /* return tuple::any_of(parent_args_tup, equal_to(new_arg)); */
+        return std::apply(
+          [&new_arg](auto&&... inner_args) {
+            return ((new_arg == inner_args) || ...);
+          },
+          parent_args_tup);
       }};
   }
 }
@@ -272,7 +274,7 @@ template <template <typename> typename PRED>
 [[nodiscard]] constexpr auto type_pred() noexcept
 {
   return predicate {[](auto&& arg) {
-    return PRED<remove_cvref_t<decltype(arg)>>::value;
+    return PRED<std::decay_t<decltype(arg)>>::value;
   }};
 }
 
@@ -486,7 +488,7 @@ namespace impl {
   struct is_predicate_impl<predicate<T>> : std::true_type { };
 
   template <typename T>
-  struct is_predicate : is_predicate_impl<supl::remove_cvref_t<T>> { };
+  struct is_predicate : is_predicate_impl<std::decay_t<T>> { };
 
   template <typename T>
   constexpr inline bool is_predicate_v = is_predicate<T>::value;

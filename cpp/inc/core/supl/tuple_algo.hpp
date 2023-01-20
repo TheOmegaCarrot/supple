@@ -1172,6 +1172,20 @@ template <std::size_t Count, typename Tuple>
   return impl::front_n_impl(tup, seq);
 }
 
+/* {{{ doc */
+/**
+ * @brief Get first element of tuple
+ *
+ * @note This is redundant to `std::get<0>`,
+ * but has been added anyways for interface consistency.
+ */
+/* }}} */
+template <typename Tuple>
+[[nodiscard]] constexpr auto front(Tuple&& tup) noexcept -> decltype(auto)
+{
+  return std::get<0>(tup);
+}
+
 namespace impl {
   template <typename Tuple, std::size_t... Idxs, std::size_t Offset>
   [[nodiscard]] constexpr auto back_n_impl(
@@ -1214,6 +1228,17 @@ template <std::size_t Count, typename Tuple>
     supl::index_constant<tl::size_v<Tuple> - Count> {}};
 
   return impl::back_n_impl(tup, seq, offset);
+}
+
+/* {{{ doc */
+/**
+ * @brief Get last element of tuple
+ */
+/* }}} */
+template <typename Tuple>
+[[nodiscard]] constexpr auto back(Tuple&& tup) noexcept -> decltype(auto)
+{
+  return std::get<tl::size_v<Tuple> - 1>(tup);
 }
 
 namespace impl {

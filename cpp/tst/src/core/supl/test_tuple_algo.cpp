@@ -815,6 +815,44 @@ static auto test_front_n() -> supl::test_results
   return results;
 }
 
+static auto test_front() -> supl::test_results
+{
+  supl::test_results results;
+
+  // NOLINTNEXTLINE(*const*)
+  std::tuple not_const {42, 'g', 3.14};
+
+  static_assert(
+    std::is_same_v<int&, decltype(supl::tuple::front(not_const))>);
+  results.enforce_equal(supl::tuple::front(not_const), 42);
+
+  // NOLINTNEXTLINE(*const*)
+  std::tuple<const int, char, double> const_element {42, 'g', 3.14};
+
+  static_assert(
+    std::is_same_v<const int&,
+                   decltype(supl::tuple::front(const_element))>);
+  results.enforce_equal(supl::tuple::front(const_element), 42);
+
+  // NOLINTNEXTLINE(*const*)
+  const std::tuple const_tuple {42, 'g', 3.14};
+
+  static_assert(
+    std::is_same_v<const int&, decltype(supl::tuple::front(const_tuple))>);
+  results.enforce_equal(supl::tuple::front(const_tuple), 42);
+
+  // NOLINTNEXTLINE(*const*)
+  const std::tuple<const int, char, double> const_tuple_const_element {
+    42, 'g', 3.14};
+
+  static_assert(std::is_same_v<const int&,
+                               decltype(supl::tuple::front(
+                                 const_tuple_const_element))>);
+  results.enforce_equal(supl::tuple::front(const_tuple_const_element), 42);
+
+  return results;
+}
+
 static auto test_back_n() -> supl::test_results
 {
   supl::test_results results;
@@ -840,6 +878,44 @@ static auto test_back_n() -> supl::test_results
   const auto result3 {supl::tuple::back_n<3>(test_input)};
 
   results.enforce_exactly_equal(result3, expected3);
+
+  return results;
+}
+
+static auto test_back() -> supl::test_results
+{
+  supl::test_results results;
+
+  // NOLINTNEXTLINE(*const*)
+  std::tuple not_const {3.14, 'g', 42};
+
+  static_assert(
+    std::is_same_v<int&, decltype(supl::tuple::back(not_const))>);
+  results.enforce_equal(supl::tuple::back(not_const), 42);
+
+  // NOLINTNEXTLINE(*const*)
+  std::tuple<double, char, const int> const_element {3.14, 'g', 42};
+
+  static_assert(
+    std::is_same_v<const int&,
+                   decltype(supl::tuple::back(const_element))>);
+  results.enforce_equal(supl::tuple::back(const_element), 42);
+
+  // NOLINTNEXTLINE(*const*)
+  const std::tuple const_tuple {3.14, 'g', 42};
+
+  static_assert(
+    std::is_same_v<const int&, decltype(supl::tuple::back(const_tuple))>);
+  results.enforce_equal(supl::tuple::back(const_tuple), 42);
+
+  // NOLINTNEXTLINE(*const*)
+  const std::tuple<double, char, const int> const_tuple_const_element {
+    3.14, 'g', 42};
+
+  static_assert(std::is_same_v<const int&,
+                               decltype(supl::tuple::back(
+                                 const_tuple_const_element))>);
+  results.enforce_equal(supl::tuple::back(const_tuple_const_element), 42);
 
   return results;
 }
@@ -1070,7 +1146,9 @@ auto test_tuple_algo() -> supl::test_section
   section.add_test("supl::tuple::alternating_split",
                    &test_tuple_alternating_split);
   section.add_test("supl::tuple::front_n", &test_front_n);
+  section.add_test("supl::tuple::front", &test_front);
   section.add_test("supl::tuple::back_n", &test_back_n);
+  section.add_test("supl::tuple::back", &test_back);
   section.add_test("supl::tuple::elem_swap", &test_elem_swap);
   section.add_test("supl::tuple::type_transform", &test_type_transform);
   section.add_test("supl::tuple::convert", &test_convert);

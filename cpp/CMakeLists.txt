@@ -142,6 +142,8 @@ list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 function(test_for numeric_standard)
   foreach(test_file ${core_test_files})
+    set(TEST_BIN_DIR ${CMAKE_BINARY_DIR}/tests)
+
     # remove parent directory path and extension
     get_filename_component(filename ${test_file} NAME_WLE)
 
@@ -149,10 +151,11 @@ function(test_for numeric_standard)
     add_executable(${test_exe_name} ${test_file})
     target_link_libraries(${test_exe_name} supple::full)
     target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
+    set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TEST_BIN_DIR})
 
     # remove test_ prefix for prettier test output
     string(REPLACE "test_" "" test_name ${test_exe_name})
-    add_test(${test_name} ${test_exe_name})
+    add_test(NAME ${test_name} COMMAND ${test_exe_name} WORKING_DIRECTORY ${TEST_BIN_DIR})
   endforeach()
 endfunction()
 

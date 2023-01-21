@@ -5,6 +5,7 @@
 
 namespace supl {
 
+// NOLINTNEXTLINE
 class guaranteed_exception : public std::exception
 {
 public:
@@ -31,6 +32,7 @@ struct throws_on_copy {
     throw guaranteed_exception {};
   }
 
+  // NOLINTNEXTLINE
   [[noreturn]] auto operator=(const throws_on_copy&) -> throws_on_copy&
   {
     throw guaranteed_exception {};

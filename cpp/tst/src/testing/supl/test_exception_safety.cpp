@@ -7,10 +7,11 @@ auto test_throws_on_copy() -> supl::test_results
 {
   supl::test_results results;
 
-  supl::throws_on_copy thrower {};
+  const supl::throws_on_copy thrower {};
 
   try {
-    [[maybe_unused]] supl::throws_on_copy a_copy {thrower};
+    // NOLINTNEXTLINE
+    [[maybe_unused]] const supl::throws_on_copy a_copy {thrower};
     results.fail("Did not throw after copy construction");
   } catch ( const supl::guaranteed_exception& ) { }
 
@@ -22,7 +23,7 @@ auto test_throws_on_copy() -> supl::test_results
 
   try {
     supl::throws_on_copy another_thrower {};
-    [[maybe_unused]] supl::throws_on_copy move_constructed {
+    [[maybe_unused]] const supl::throws_on_copy move_constructed {
       std::move(another_thrower)};
   } catch ( const supl::guaranteed_exception& ) {
     results.fail("Threw after move construction");

@@ -71,7 +71,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   message("-- Using Clang")
   add_compile_options(
     -Weverything -Wno-ctad-maybe-unsupported -Wno-missing-prototypes
-    -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic)
+    -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-unreachable-code)
 
   # Use clang-tidy if not an automated build by cmake-all.sh
   if(DO_CLANG_TIDY)

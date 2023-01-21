@@ -134,6 +134,8 @@ find_package(supple REQUIRED)
 # find all test source files
 file(GLOB_RECURSE core_test_files
      ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
+file(GLOB_RECURSE testing_test_files
+     ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/testing/*.cpp)
 
 enable_testing()
 
@@ -141,13 +143,13 @@ enable_testing()
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 function(test_for numeric_standard)
-  foreach(test_file ${core_test_files})
+  macro(test_module module_name)
     set(TEST_BIN_DIR ${CMAKE_BINARY_DIR}/tests)
 
     # remove parent directory path and extension
     get_filename_component(filename ${test_file} NAME_WLE)
 
-    set(test_exe_name core_${filename}_${numeric_standard})
+    set(test_exe_name ${module_name}_${filename}_${numeric_standard})
     add_executable(${test_exe_name} ${test_file})
     target_link_libraries(${test_exe_name} supple::full)
     target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
@@ -156,6 +158,14 @@ function(test_for numeric_standard)
     # remove test_ prefix for prettier test output
     string(REPLACE "test_" "" test_name ${test_exe_name})
     add_test(NAME ${test_name} COMMAND ${test_exe_name} WORKING_DIRECTORY ${TEST_BIN_DIR})
+  endmacro()
+
+  foreach(test_file ${core_test_files})
+    test_module("core")
+  endforeach()
+
+  foreach(test_file ${testing_test_files})
+    test_module("testing")
   endforeach()
 endfunction()
 

@@ -44,6 +44,35 @@ struct throws_on_copy {
   ~throws_on_copy() = default;
 };
 
+/* {{{ doc */
+/**
+ * @brief Type which is guaranteed to throw on move.
+ *
+ * @details Immediately throws a `supl::guaranteed_error` upon move construction
+ * or move assignment. Copy construction and assignment is defaulted.
+*/
+/* }}} */
+struct throws_on_move {
+  throws_on_move() = default;
+
+  // NOLINTNEXTLINE
+  [[noreturn]] throws_on_move(throws_on_move&&)
+  {
+    throw guaranteed_exception {};
+  }
+
+  // NOLINTNEXTLINE
+  [[noreturn]] auto operator=(throws_on_move&&) -> throws_on_move&
+  {
+    throw guaranteed_exception {};
+  }
+
+  throws_on_move(const throws_on_move&) = default;
+  auto operator=(const throws_on_move&) -> throws_on_move& = default;
+
+  ~throws_on_move() = default;
+};
+
 }  // namespace supl
 
 #endif

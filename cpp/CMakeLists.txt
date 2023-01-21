@@ -11,12 +11,15 @@ if(AUTOMATED_BUILD)
   set(LINK_COMPILE_COMMANDS NO)
 endif()
 
-option(LINK_COMPILE_COMMANDS "Cmake should link compile commands into source directory" YES)
+option(LINK_COMPILE_COMMANDS
+       "Cmake should link compile commands into source directory" YES)
 option(SANITIZE_DEBUG "Sanitizers should be used in debug builds" YES)
 option(SANITIZE_RELEASE "Sanitizers should be used in release builds" NO)
 option(FULL_TESTS "Test C++20 and 23 as well" NO)
-option(OMIT_20 "C++20 tests should be omitted - ignored if FULL_TESTS is false" NO)
-option(OMIT_23 "C++23 tests should be omitted - ignored if FULL_TESTS is false" NO)
+option(OMIT_20 "C++20 tests should be omitted - ignored if FULL_TESTS is false"
+       NO)
+option(OMIT_23 "C++23 tests should be omitted - ignored if FULL_TESTS is false"
+       NO)
 
 # Options specific to compiling with clang
 option(DO_CLANG_TIDY "Run clang-tidy during build" NO)
@@ -70,8 +73,13 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # set warnings for Clang
   message("-- Using Clang")
   add_compile_options(
-    -Weverything -Wno-ctad-maybe-unsupported -Wno-missing-prototypes
-    -Wno-padded -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-unreachable-code)
+    -Weverything
+    -Wno-ctad-maybe-unsupported
+    -Wno-missing-prototypes
+    -Wno-padded
+    -Wno-c++98-compat
+    -Wno-c++98-compat-pedantic
+    -Wno-unreachable-code)
 
   # Use clang-tidy if not an automated build by cmake-all.sh
   if(DO_CLANG_TIDY)
@@ -87,8 +95,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   message("-- Using Intel")
-  add_compile_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000 -diag-disable=11074 -diag-disable=11076)
-  add_link_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000 -diag-disable=11074 -diag-disable=11076)
+  add_compile_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000
+                      -diag-disable=11074 -diag-disable=11076)
+  add_link_options(-diag-enable=all -diag-disable=10441 -diag-disable=13000
+                   -diag-disable=11074 -diag-disable=11076)
   set(OMIT_23 YES)
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
@@ -153,11 +163,15 @@ function(test_for numeric_standard)
     add_executable(${test_exe_name} ${test_file})
     target_link_libraries(${test_exe_name} supple::full)
     target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
-    set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TEST_BIN_DIR})
+    set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                                                      ${TEST_BIN_DIR})
 
     # remove test_ prefix for prettier test output
     string(REPLACE "test_" "" test_name ${test_exe_name})
-    add_test(NAME ${test_name} COMMAND ${test_exe_name} WORKING_DIRECTORY ${TEST_BIN_DIR})
+    add_test(
+      NAME ${test_name}
+      COMMAND ${test_exe_name}
+      WORKING_DIRECTORY ${TEST_BIN_DIR})
   endmacro()
 
   foreach(test_file ${core_test_files})

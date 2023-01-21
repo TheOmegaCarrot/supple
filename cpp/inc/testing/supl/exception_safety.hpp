@@ -73,6 +73,10 @@ struct throws_on_move {
   ~throws_on_move() = default;
 };
 
+struct throws_on_copy_and_move
+    : throws_on_copy
+    , throws_on_move { };
+
 }  // namespace supl
 
 #endif

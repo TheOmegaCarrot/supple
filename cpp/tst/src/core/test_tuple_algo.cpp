@@ -6,62 +6,6 @@
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
-static auto test_push_front_as() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple test1 {3, 3.14, 'd'};
-  const bool test_val_1 {true};
-  const std::tuple<const bool&, int, double, char> expected1 {
-    test_val_1, 3, 3.14, 'd'};
-
-  const auto result1 {
-    supl::tuple::push_front_as<const bool&>(test1, test_val_1)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  int ref_test {5};
-  const std::tuple<int&, int, char, bool> test2 {ref_test, 3, 'g', true};
-  double test_val_2 {3.14};
-  const std::tuple<double&, int&, int, char, bool> expected2 {
-    test_val_2, ref_test, 3, 'g', true};
-
-  const auto result2 {
-    supl::tuple::push_front_as<double&>(test2, test_val_2)};
-
-  results.enforce_exactly_equal(result2, expected2);
-
-  const int test_val_3 {81};
-  const std::tuple expected3 {81, 3, 3.14, 'd'};
-  const auto result3 {supl::tuple::push_front_as<int>(test1, test_val_3)};
-
-  results.enforce_exactly_equal(result3, expected3);
-
-  return results;
-}
-
-static auto test_pop_front() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple test1 {3, 3.14, 'd'};
-  const std::tuple expected1 {3.14, 'd'};
-
-  const auto result1 {supl::tuple::pop_front(test1)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  int ref_test {5};
-  const std::tuple<bool, int&, int, char> test2 {true, ref_test, 3, 'g'};
-  const std::tuple<int&, int, char> expected2 {ref_test, 3, 'g'};
-
-  const auto result2 {supl::tuple::pop_front(test2)};
-
-  results.enforce_exactly_equal(result2, expected2);
-
-  return results;
-}
-
 static auto test_rotate_left() -> supl::test_results
 {
   supl::test_results results;
@@ -790,8 +734,6 @@ auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::tuple::pop_front", &test_pop_front);
-  section.add_test("supl::tuple::push_front_as", &test_push_front_as);
   section.add_test("supl::tuple::rotate_left", &test_rotate_left);
   section.add_test("supl::tuple::rotate_right", &test_rotate_right);
   section.add_test("supl::tuple::insert", &test_insert);

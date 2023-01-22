@@ -142,10 +142,8 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/..)
 find_package(supple REQUIRED)
 
 # find all test source files
-file(GLOB_RECURSE core_test_files
-     ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/core/*.cpp)
-file(GLOB_RECURSE testing_test_files
-     ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/testing/*.cpp)
+file(GLOB_RECURSE test_files
+     ${CMAKE_CURRENT_SOURCE_DIR}/tst/src/*.cpp)
 
 enable_testing()
 
@@ -153,13 +151,17 @@ enable_testing()
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 function(test_for numeric_standard)
-  macro(test_module module_name)
-    set(TEST_BIN_DIR ${CMAKE_BINARY_DIR}/tests)
+    set(TEST_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/tests)
 
+  foreach(test_file ${test_files})
     # remove parent directory path and extension
     get_filename_component(filename ${test_file} NAME_WLE)
+    get_filename_component(raw_path ${test_file} DIRECTORY)
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/tst/src" "" shortened_path ${raw_path})
+    string(REPLACE "/" "_" nearly_corrected_path ${shortened_path})
+    string(REGEX REPLACE "^_" "" corrected_path ${nearly_corrected_path})
 
-    set(test_exe_name ${module_name}_${filename}_${numeric_standard})
+    set(test_exe_name ${corrected_path}_${filename}_${numeric_standard})
     add_executable(${test_exe_name} ${test_file})
     target_link_libraries(${test_exe_name} supple::full)
     target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
@@ -172,15 +174,8 @@ function(test_for numeric_standard)
       NAME ${test_name}
       COMMAND ${test_exe_name}
       WORKING_DIRECTORY ${TEST_BIN_DIR})
-  endmacro()
-
-  foreach(test_file ${core_test_files})
-    test_module("core")
   endforeach()
 
-  foreach(test_file ${testing_test_files})
-    test_module("testing")
-  endforeach()
 endfunction()
 
 message("-- Testing C++17")

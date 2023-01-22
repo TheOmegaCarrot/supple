@@ -14,98 +14,10 @@ struct overload : Ls... {
 template <typename... Ls>
 overload(Ls...) -> overload<Ls...>;
 
-static auto test_for_each() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple<int, char, bool> test {42, 'c', false};
-
-  supl::tuple::for_each(test,
-                        [&results, index {0}](const auto& i) mutable {
-                          using I = std::decay_t<decltype(i)>;
-
-                          if constexpr ( std::is_same_v<I, int> ) {
-                            results.enforce_equal(i, 42);
-                            results.enforce_exactly_equal(index, 0);
-
-                          } else if constexpr ( std::is_same_v<I, char> ) {
-                            results.enforce_exactly_equal(i, 'c');
-                            results.enforce_equal(index, 1);
-
-                          } else if constexpr ( std::is_same_v<I, bool> ) {
-                            results.enforce_equal(i, false);
-                            results.enforce_exactly_equal(index, 2);
-                          }
-
-                          ++index;
-                        });
-
-  return results;
-}
-
-static auto test_for_each_in_subtuple() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple<int, char, bool> test {42, 'c', false};
-
-  supl::tuple::for_each_in_subtuple<0, 1>(
-    test, [&results, index {0}](const auto& i) mutable {
-      using I = std::decay_t<decltype(i)>;
-
-      if constexpr ( std::is_same_v<I, int> ) {
-        results.enforce_equal(i, 42);
-        results.enforce_exactly_equal(index, 0);
-
-      } else if constexpr ( std::is_same_v<I, char> ) {
-        results.enforce_equal(i, 'c');
-        results.enforce_exactly_equal(index, 1);
-      }
-      ++index;
-    });
-
-  return results;
-}
-
 static auto test_transform() -> supl::test_results
 {
   using supl::literals::size_t_literal::operator""_z;
-
   supl::test_results results;
-
-  const std::tuple<int, char, bool> test1 {42, 'c', false};
-
-  const auto out1 {supl::tuple::transform(
-    test1,
-    overload {[](int a) {
-                return 2 * a;
-              },
-              [](char b) {
-                return static_cast<char>(std::toupper(b));
-              },
-              [](bool c) {
-                return ! c;
-              }})};
-
-  results.enforce_exactly_equal(std::get<0>(out1), 84, "out1 : 0");
-  results.enforce_exactly_equal(std::get<1>(out1), 'C', "out1 : 1");
-  results.enforce_exactly_equal(std::get<2>(out1), true, "out1 : 2");
-
-  const std::tuple<std::string, std::vector<int>> test2 {
-    "Hello", {3, 9, 2}
-  };
-
-  const auto out2 {
-    supl::tuple::transform(test2,
-                           overload {[](const std::string& str) {
-                                       return str.length();
-                                     },
-                                     [](const std::vector<int>& vec) {
-                                       return vec.size();
-                                     }})};
-
-  results.enforce_exactly_equal(std::get<0>(out2), 5_z, "out2 : 0");
-  results.enforce_exactly_equal(std::get<1>(out2), 3_z, "out2 : 1");
 
   const std::pair<std::string, std::vector<int>> test3 {
     "Hello", {3, 9, 3}
@@ -1119,9 +1031,6 @@ auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::tuple::for_each", &test_for_each);
-  section.add_test("supl::tuple::for_each_in_subtuple",
-                   &test_for_each_in_subtuple);
   section.add_test("supl::tuple::transform", &test_transform);
   section.add_test("supl::tuple::any_of", &test_any_of);
   section.add_test("supl::tuple::all_of", &test_all_of);

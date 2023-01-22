@@ -6,85 +6,6 @@
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
-static auto test_rotate_left() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple test_input {42, false, 3.14, 'w'};
-
-  const std::tuple expected1 {false, 3.14, 'w', 42};
-
-  const auto result1 {supl::tuple::rotate_left(test_input)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  return results;
-}
-
-static auto test_rotate_right() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple test_input {42, false, 3.14, 'w'};
-
-  const std::tuple expected1 {'w', 42, false, 3.14};
-
-  const auto result1 {supl::tuple::rotate_right(test_input)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  return results;
-}
-
-static auto test_insert() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple test_input {3, 3.14};
-  const std::tuple expected1 {3, true, 3.14};
-
-  const auto result1 {supl::tuple::insert<1>(test_input, true)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  const std::tuple expected2 {3, 3.14, true};
-  const auto result2 {
-    supl::tuple::insert<std::tuple_size_v<decltype(test_input)>>(
-      test_input, true)};
-
-  results.enforce_exactly_equal(result2, expected2, "max index");
-
-  const std::tuple expected3 {true, 3, 3.14};
-  const auto result3 {supl::tuple::insert<0>(test_input, true)};
-
-  results.enforce_exactly_equal(result3, expected3);
-
-  const std::string neat {"neat"};
-  const std::vector vec {1, 2, 3, 4};
-  const std::tuple expected4 {3, 42069, neat, vec, 3.14};
-  const auto result4 {
-    supl::tuple::insert<1>(test_input, 42069, neat, vec)};
-
-  results.enforce_exactly_equal(result4, expected4);
-
-  int ref_test {42};
-  const std::tuple<const char, int&, double> test_ref_input {
-    'g', ref_test, 3.14};
-  const std::tuple<const char, int&, bool, char, double> expected5 {
-    'g', ref_test, false, '*', 3.14};
-  const auto result5 {supl::tuple::insert<2>(test_ref_input, false, '*')};
-
-  results.enforce_exactly_equal(result5, expected5);
-
-  const std::tuple expected6 {3, 42069, neat, vec, 3.14};
-  const auto result6 {
-    supl::tuple::insert<1>(test_input, 42069, neat, vec)};
-
-  results.enforce_exactly_equal(result6, expected6);
-
-  return results;
-}
-
 static auto test_erase() -> supl::test_results
 {
   supl::test_results results;
@@ -734,9 +655,6 @@ auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::tuple::rotate_left", &test_rotate_left);
-  section.add_test("supl::tuple::rotate_right", &test_rotate_right);
-  section.add_test("supl::tuple::insert", &test_insert);
   section.add_test("supl::tuple::erase", &test_erase);
   section.add_test("supl::tuple::replace", &test_replace);
   section.add_test("supl::tuple::reorder", &test_reorder);

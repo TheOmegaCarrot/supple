@@ -135,6 +135,15 @@ static_assert(
 static_assert(
   not std::is_nothrow_move_assignable_v<supl::throws_on_copy_and_move>);
 
+// nothrow_function
+static_assert(noexcept(supl::nothrow_function(int {}, char {}, bool {})));
+static_assert(noexcept(supl::nothrow_function()));
+
+// throwing_function
+static_assert(
+  not noexcept(supl::throwing_function(int {}, char {}, bool {})));
+static_assert(not noexcept(supl::throwing_function()));
+
 auto test_exception_safety() -> supl::test_section
 {
   supl::test_section section;

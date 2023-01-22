@@ -73,9 +73,38 @@ struct throws_on_move {
   ~throws_on_move() = default;
 };
 
+/* {{{ doc */
+/**
+ * @brief Type which is guaranteed to throw on copy or move.
+ *
+ * @details Immediately throws a `supl::guaranteed_error` upon
+ * copy construction, copy assignment,
+ * move construction, or move assignment.
+*/
+/* }}} */
 struct throws_on_copy_and_move
     : throws_on_copy
     , throws_on_move { };
+
+/* {{{ doc */
+/**
+ * @brief Unevaluatable function which is always `noexcept`
+ *
+ * @tparam Ret Return type
+ */
+/* }}} */
+template <typename Ret = void, typename... Ts>
+auto nothrow_function(Ts&&...) noexcept(true) -> Ret;
+
+/* {{{ doc */
+/**
+ * @brief Unevaluatable function which is never `noexcept`
+ *
+ * @tparam Ret Return type
+ */
+/* }}} */
+template <typename Ret = void, typename... Ts>
+auto throwing_function(Ts&&...) noexcept(false) -> Ret;
 
 }  // namespace supl
 

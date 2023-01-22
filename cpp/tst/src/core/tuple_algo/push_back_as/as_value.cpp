@@ -1,16 +1,14 @@
 #include <supl/test_results.hpp>
-#include <supl/tuple_algo.hpp>
 
 auto main() -> int
 {
   supl::test_results results;
 
   const std::tuple test_input {3, 3.14, 'd'};
-
-  const std::tuple expected_output {3, 3.14, 'd', true, 42, nullptr};
-
+  const int new_data {81};
+  const std::tuple expected_output {3, 3.14, 'd', 81};
   const auto actual_output {
-    supl::tuple::push_back(test_input, true, 42, nullptr)};
+    supl::tuple::push_back_as<int>(test_input, new_data)};
 
   results.enforce_exactly_equal(actual_output, expected_output);
 

@@ -4,9 +4,9 @@ auto main() -> int
 {
   supl::test_results results;
 
-  const std::tuple<int, char, bool> test {42, 'c', false};
+  const std::tuple<int, char, bool> test_input {42, 'c', false};
 
-  supl::tuple::for_each(test,
+  supl::tuple::for_each(test_input,
                         [&results, index {0}](const auto& i) mutable {
                           using I = std::decay_t<decltype(i)>;
 

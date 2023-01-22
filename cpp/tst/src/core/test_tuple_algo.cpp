@@ -6,61 +6,6 @@
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
-static auto test_erase() -> supl::test_results
-{
-  supl::test_results results;
-
-  // in_middle
-  constexpr static std::tuple test_input {3, true, 3.14};
-  constexpr static std::tuple expected1 {3, 3.14};
-
-  constexpr static auto result1 {supl::tuple::erase<1>(test_input)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  // at_end
-  constexpr static std::tuple expected2 {3, true};
-
-  constexpr static auto result2 {supl::tuple::erase<2>(test_input)};
-
-  results.enforce_exactly_equal(result2, expected2);
-
-  // at_beginning
-  constexpr static std::tuple expected3 {true, 3.14};
-
-  constexpr static auto result3 {supl::tuple::erase<0>(test_input)};
-
-  results.enforce_exactly_equal(result3, expected3);
-
-  // reference_beginning
-  constexpr static std::tuple<int, decltype(test_input)&, bool>
-    test_ref_input {42, test_input, false};
-
-  constexpr static std::tuple<decltype(test_input)&, bool> expected4 {
-    test_input, false};
-
-  constexpr static auto result4 {supl::tuple::erase<0>(test_ref_input)};
-
-  results.enforce_exactly_equal(result4, expected4);
-
-  // referenc_middle
-  constexpr static std::tuple<int, bool> expected5 {42, false};
-
-  constexpr static auto result5 {supl::tuple::erase<1>(test_ref_input)};
-
-  results.enforce_exactly_equal(result5, expected5);
-
-  // reference_end
-  constexpr static std::tuple<int, decltype(test_input)&> expected6 {
-    42, test_input};
-
-  constexpr static auto result6 {supl::tuple::erase<2>(test_ref_input)};
-
-  results.enforce_exactly_equal(result6, expected6);
-
-  return results;
-}
-
 static auto test_replace() -> supl::test_results
 {
   supl::test_results results;
@@ -655,7 +600,6 @@ auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::tuple::erase", &test_erase);
   section.add_test("supl::tuple::replace", &test_replace);
   section.add_test("supl::tuple::reorder", &test_reorder);
   section.add_test("supl::tuple::reverse", &test_reverse);

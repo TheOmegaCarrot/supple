@@ -10,6 +10,7 @@ static auto test_erase() -> supl::test_results
 {
   supl::test_results results;
 
+  // in_middle
   constexpr static std::tuple test_input {3, true, 3.14};
   constexpr static std::tuple expected1 {3, 3.14};
 
@@ -17,46 +18,45 @@ static auto test_erase() -> supl::test_results
 
   results.enforce_exactly_equal(result1, expected1);
 
-  const std::tuple expected2 {3, true};
+  // at_end
+  constexpr static std::tuple expected2 {3, true};
 
-  const auto result2 {supl::tuple::erase<2>(test_input)};
+  constexpr static auto result2 {supl::tuple::erase<2>(test_input)};
 
   results.enforce_exactly_equal(result2, expected2);
 
-  const std::tuple expected3 {true, 3.14};
+  // at_beginning
+  constexpr static std::tuple expected3 {true, 3.14};
 
-  const auto result3 {supl::tuple::erase<0>(test_input)};
+  constexpr static auto result3 {supl::tuple::erase<0>(test_input)};
 
   results.enforce_exactly_equal(result3, expected3);
 
+  // reference_beginning
   constexpr static std::tuple<int, decltype(test_input)&, bool>
     test_ref_input {42, test_input, false};
 
-  const std::tuple<decltype(test_input)&, bool> expected4 {test_input,
-                                                           false};
+  constexpr static std::tuple<decltype(test_input)&, bool> expected4 {
+    test_input, false};
 
-  const auto result4 {supl::tuple::erase<0>(test_ref_input)};
+  constexpr static auto result4 {supl::tuple::erase<0>(test_ref_input)};
 
   results.enforce_exactly_equal(result4, expected4);
 
-  const std::tuple<int, bool> expected5 {42, false};
+  // referenc_middle
+  constexpr static std::tuple<int, bool> expected5 {42, false};
 
-  const auto result5 {supl::tuple::erase<1>(test_ref_input)};
+  constexpr static auto result5 {supl::tuple::erase<1>(test_ref_input)};
 
   results.enforce_exactly_equal(result5, expected5);
 
+  // reference_end
   constexpr static std::tuple<int, decltype(test_input)&> expected6 {
     42, test_input};
 
   constexpr static auto result6 {supl::tuple::erase<2>(test_ref_input)};
 
   results.enforce_exactly_equal(result6, expected6);
-
-  constexpr static std::tuple expected7 {3, 3.14};
-
-  constexpr static auto result7 {supl::tuple::erase<1>(test_input)};
-
-  results.enforce_exactly_equal(result7, expected7);
 
   return results;
 }

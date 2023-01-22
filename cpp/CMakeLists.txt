@@ -148,7 +148,7 @@ file(GLOB_RECURSE test_files
 enable_testing()
 
 # make ctest give useful output to console on test failure
-list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
+list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure" "--progress")
 
 function(test_for numeric_standard)
     set(TEST_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/tests)

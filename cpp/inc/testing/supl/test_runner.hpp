@@ -16,6 +16,7 @@
 #ifndef SUPPLE_TESTING_TEST_RUNNER_HPP
 #define SUPPLE_TESTING_TEST_RUNNER_HPP
 
+#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -57,9 +58,9 @@ public:
               << "Failed tests: " << num_failing_test_functions << '\n';
 
     if ( num_failing_test_functions == 0 ) {
-      return 0;
+      return EXIT_SUCCESS;
     } else {
-      return 1;
+      return EXIT_FAILURE;
     }
   }
 };

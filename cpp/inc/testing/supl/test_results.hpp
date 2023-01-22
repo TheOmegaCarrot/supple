@@ -17,6 +17,7 @@
 #define SUPPLE_TESTING_TEST_RESULTS_HPP
 
 #include <cmath>
+#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -246,6 +247,16 @@ public:
   {
     for ( const std::string& detail : m_case_details ) {
       std::cout << detail;
+    }
+  }
+
+  [[nodiscard]] auto print_and_return() const noexcept -> int
+  {
+    this->print_case_details();
+    if ( this->test_passes() ) {
+      return EXIT_SUCCESS;
+    } else {
+      return EXIT_FAILURE;
     }
   }
 };

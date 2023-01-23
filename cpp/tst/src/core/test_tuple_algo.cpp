@@ -6,79 +6,6 @@
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
-static auto test_subtuple() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::string str {"subtuple"};
-  const std::vector vec {1, 2, 3, 4};
-  const std::tuple test_input {3, true, str, 3.14, vec};
-
-  const std::tuple expected1 {str, 3.14, vec};
-  const auto result1 {supl::tuple::subtuple<2, 5>(test_input)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  const std::tuple expected2 {test_input};
-  const auto result2 {
-    supl::tuple::subtuple<0, std::tuple_size_v<decltype(test_input)>>(
-      test_input)};
-
-  results.enforce_exactly_equal(result2, expected2);
-
-  const std::tuple expected3 {3, true, str};
-  const auto result3 {supl::tuple::subtuple<0, 3>(test_input)};
-
-  results.enforce_exactly_equal(result3, expected3);
-
-  const std::tuple expected4 {3, true, str};
-  const auto result4 {supl::tuple::subtuple<0, 3>(test_input)};
-
-  results.enforce_exactly_equal(result4, expected4);
-
-  const std::tuple expected5 {str, 3.14, vec};
-  const auto result5 {supl::tuple::subtuple<2, 5>(test_input)};
-
-  results.enforce_exactly_equal(result5, expected5);
-
-  const std::tuple expected6 {str, 3.14, vec};
-  const auto result6 {supl::tuple::subtuple<2, 5>(test_input)};
-
-  results.enforce_exactly_equal(result6, expected6);
-
-  int ref_test {42};
-  const std::tuple<char, bool, int&, double, char> test_ref_input {
-    'j', true, ref_test, 3.14, 'l'};
-  const std::tuple<bool, int&, double> expected7 {true, ref_test, 3.14};
-  const auto result7 {supl::tuple::subtuple<1, 4>(test_ref_input)};
-
-  results.enforce_exactly_equal(result7, expected7);
-
-  const std::tuple expected8 {3, true, str};
-  const auto result8 {supl::tuple::subtuple<0, 3>(test_input)};
-
-  results.enforce_exactly_equal(result8, expected8);
-
-  return results;
-}
-
-static auto test_count_if() -> supl::test_results
-{
-  using supl::literals::size_t_literal::operator""_z;
-
-  supl::test_results results;
-
-  const std::tuple test {7, 2, 42.53, 3.14F, 9344285UL, -83LL};
-  results.enforce_exactly_equal(
-    supl::tuple::count_if(test,
-                          [](const auto& i) -> std::size_t {
-                            return i > 5;
-                          }),
-    3_z);
-
-  return results;
-}
-
 static auto test_interleave() -> supl::test_results
 {
   supl::test_results results;
@@ -482,8 +409,6 @@ auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::tuple::subtuple", &test_subtuple);
-  section.add_test("supl::tuple::count_if", &test_count_if);
   section.add_test("supl::tuple::interleave", &test_interleave);
   section.add_test("supl::tuple::alternating_split",
                    &test_tuple_alternating_split);

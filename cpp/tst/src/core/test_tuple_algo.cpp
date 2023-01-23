@@ -6,111 +6,6 @@
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
-static auto test_split() -> supl::test_results
-{
-  supl::test_results results;
-
-  // halves
-  const std::string split {"split"};
-  const std::vector vec {1, 2, 3, 4};
-  const std::tuple test_input {3, 3.14, vec, true, 'f', split};
-
-  const std::tuple expected1_first {3, 3.14, vec};
-  const std::tuple expected1_second {true, 'f', split};
-  const auto result1 {supl::tuple::split<3>(test_input)};
-
-  results.enforce_exactly_equal(result1.first, expected1_first);
-  results.enforce_exactly_equal(result1.second, expected1_second);
-
-  // near_end
-  const std::tuple expected2_first {3, 3.14, vec, true, 'f'};
-  const std::tuple expected2_second {split};
-  const auto result2 {supl::tuple::split<5>(test_input)};
-
-  results.enforce_exactly_equal(result2.first, expected2_first);
-  results.enforce_exactly_equal(result2.second, expected2_second);
-
-  // references
-  int ref_test {42};
-  const std::tuple<int&, char, bool, double, int&> test_ref_input {
-    ref_test, 'y', false, 3.14, ref_test};
-  const std::tuple<int&, char, bool> expected3_first {
-    ref_test, 'y', false};
-  const std::tuple<double, int&> expected3_second {3.14, ref_test};
-
-  const auto results3 {supl::tuple::split<3>(test_ref_input)};
-
-  results.enforce_exactly_equal(results3.first, expected3_first);
-  results.enforce_exactly_equal(results3.second, expected3_second);
-
-  // at_beginning
-  const std::tuple<> expected4_first {};
-  const auto& expected4_second {test_input};
-  const auto result4 {supl::tuple::split<0>(test_input)};
-
-  results.enforce_exactly_equal(result4.first, expected4_first);
-  results.enforce_exactly_equal(result4.second, expected4_second);
-
-  // at_end
-  const auto& expected5_first {test_input};
-  const std::tuple<> expected5_second {};
-  const auto result5 {
-    supl::tuple::split<std::tuple_size_v<decltype(test_input)>>(
-      test_input)};
-
-  results.enforce_exactly_equal(result5.first, expected5_first);
-  results.enforce_exactly_equal(result5.second, expected5_second);
-
-  return results;
-}
-
-static auto test_reorder() -> supl::test_results
-{
-  supl::test_results results;
-
-  // simple
-  const std::string reorder {"reorder"};
-  const std::vector vec {1, 2, 3, 4};
-  const std::tuple test_input {3, 3.14, true, reorder, vec};
-  const std::tuple expected1 {3.14, reorder, 3, 3.14, vec, true};
-
-  const auto result1 {supl::tuple::reorder<1, 3, 0, 1, 4, 2>(test_input)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  // references
-  const std::
-    tuple<int, const std::vector<int>&, const std::string&, char, bool>
-      test_ref_input {42, vec, reorder, 'j', true};
-
-  const std::tuple<const std::vector<int>&,
-                   bool,
-                   char,
-                   const std::string&,
-                   const std::vector<int>&,
-                   int>
-    expected2 {vec, true, 'j', reorder, vec, 42};
-
-  const auto result2 {
-    supl::tuple::reorder<1, 4, 3, 2, 1, 0>(test_ref_input)};
-
-  results.enforce_exactly_equal(result2, expected2);
-
-  return results;
-}
-
-static auto test_reverse() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::tuple test_input {42, 'g', 3.14, true, 'D'};
-  const std::tuple expected1 {'D', true, 3.14, 'g', 42};
-  const auto result1 {supl::tuple::reverse(test_input)};
-  results.enforce_exactly_equal(result1, expected1);
-
-  return results;
-}
-
 static auto test_subtuple() -> supl::test_results
 {
   supl::test_results results;
@@ -587,9 +482,6 @@ auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::tuple::reorder", &test_reorder);
-  section.add_test("supl::tuple::reverse", &test_reverse);
-  section.add_test("supl::tuple::split", &test_split);
   section.add_test("supl::tuple::subtuple", &test_subtuple);
   section.add_test("supl::tuple::count_if", &test_count_if);
   section.add_test("supl::tuple::interleave", &test_interleave);

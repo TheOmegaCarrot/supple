@@ -43,6 +43,24 @@ static auto test_split() -> supl::test_results
   results.enforce_exactly_equal(results3.first, expected3_first);
   results.enforce_exactly_equal(results3.second, expected3_second);
 
+  // at_beginning
+  const std::tuple<> expected4_first {};
+  const auto& expected4_second {test_input};
+  const auto result4 {supl::tuple::split<0>(test_input)};
+
+  results.enforce_exactly_equal(result4.first, expected4_first);
+  results.enforce_exactly_equal(result4.second, expected4_second);
+
+  // at_end
+  const auto& expected5_first {test_input};
+  const std::tuple<> expected5_second {};
+  const auto result5 {
+    supl::tuple::split<std::tuple_size_v<decltype(test_input)>>(
+      test_input)};
+
+  results.enforce_exactly_equal(result5.first, expected5_first);
+  results.enforce_exactly_equal(result5.second, expected5_second);
+
   return results;
 }
 

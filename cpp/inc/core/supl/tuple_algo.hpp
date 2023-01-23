@@ -982,7 +982,7 @@ template <std::size_t Idx, typename Tuple>
   tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
   -> tl::split_t<Tuple, Idx>
 {
-  static_assert(Idx < tl::size_v<Tuple>, "Index out of bounds");
+  static_assert(Idx <= tl::size_v<Tuple>, "Index out of bounds");
 
   constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
   constexpr auto post_seq {

@@ -10,6 +10,7 @@ static auto test_interleave() -> supl::test_results
 {
   supl::test_results results;
 
+  // small
   const std::tuple test1_1 {42, 'g', 3.14};
   const std::tuple test1_2 {2.6F, true, 8L};
 
@@ -18,6 +19,7 @@ static auto test_interleave() -> supl::test_results
 
   results.enforce_exactly_equal(result1, expected1);
 
+  // large
   using std::string_literals::operator""s;
 
   const std::tuple test2_1 {42, 'g', 3.14, 81, 5.31F, 4UL, false, '7'};
@@ -54,6 +56,7 @@ static auto test_tuple_alternating_split() -> supl::test_results
 {
   supl::test_results results;
 
+  // even
   const std::tuple test_input_1 {1, 'J', true, 3.14, 'c', 42};
   const std::tuple expected1_first {1, true, 'c'};
   const std::tuple expected1_second {'J', 3.14, 42};
@@ -64,6 +67,7 @@ static auto test_tuple_alternating_split() -> supl::test_results
   results.enforce_exactly_equal(result1_first, expected1_first);
   results.enforce_exactly_equal(result1_second, expected1_second);
 
+  // odd
   const std::tuple test_input_2 {1, true, 'c', 3.14, 42};
   const std::tuple expected2_first {1, 'c'};
   const std::tuple expected2_second {true, 3.14};
@@ -80,6 +84,7 @@ static auto test_front_n() -> supl::test_results
 {
   supl::test_results results;
 
+  // zero
   const std::tuple test_input {42, '&', 3.14};
 
   const std::tuple<> expected0 {};
@@ -87,16 +92,19 @@ static auto test_front_n() -> supl::test_results
 
   results.enforce_exactly_equal(result0, expected0);
 
+  // one
   const std::tuple expected1 {42};
   const auto result1 {supl::tuple::front_n<1>(test_input)};
 
   results.enforce_exactly_equal(result1, expected1);
 
+  // two
   const std::tuple expected2 {42, '&'};
   const auto result2 {supl::tuple::front_n<2>(test_input)};
 
   results.enforce_exactly_equal(result2, expected2);
 
+  // all
   const std::tuple expected3 {42, '&', 3.14};
   const auto result3 {supl::tuple::front_n<3>(test_input)};
 
@@ -147,6 +155,7 @@ static auto test_back_n() -> supl::test_results
 {
   supl::test_results results;
 
+  // zero
   const std::tuple test_input {42, '&', 3.14};
 
   const std::tuple<> expected0 {};
@@ -154,16 +163,19 @@ static auto test_back_n() -> supl::test_results
 
   results.enforce_exactly_equal(result0, expected0);
 
+  // one
   const std::tuple expected1 {3.14};
   const auto result1 {supl::tuple::back_n<1>(test_input)};
 
   results.enforce_exactly_equal(result1, expected1);
 
+  // two
   const std::tuple expected2 {'&', 3.14};
   const auto result2 {supl::tuple::back_n<2>(test_input)};
 
   results.enforce_exactly_equal(result2, expected2);
 
+  // all
   const std::tuple expected3 {42, '&', 3.14};
   const auto result3 {supl::tuple::back_n<3>(test_input)};
 

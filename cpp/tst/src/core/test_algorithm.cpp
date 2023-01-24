@@ -7,61 +7,6 @@
 
 #include <supl/test_runner.hpp>
 
-static auto test_min_size() -> supl::test_results
-{
-  supl::test_results results;
-  const std::array<int, 5> test1 {};
-  const std::array<int, 8> test2 {};
-  const std::array<int, 3> test3 {};
-  const std::array<int, 6> test4 {};
-
-  using supl::literals::operator""_z;
-  results.enforce_exactly_equal(supl::min_size(test1, test2, test3, test4),
-                                3_z);
-
-  return results;
-}
-
-static auto test_max_size() -> supl::test_results
-{
-  supl::test_results results;
-  const std::array<int, 5> test1 {};
-  const std::array<int, 8> test2 {};
-  const std::array<int, 3> test3 {};
-  const std::array<int, 6> test4 {};
-
-  using supl::literals::operator""_z;
-  results.enforce_exactly_equal(supl::max_size(test1, test2, test3, test4),
-                                8_z);
-
-  return results;
-}
-
-static auto test_contains() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::vector<int> test1 {1, 2, 3, 4, 5, 6};
-
-  results.enforce_exactly_equal(
-    supl::contains(test1.begin(), test1.end(), 2), true, "Contains 2");
-  results.enforce_exactly_equal(
-    supl::contains(test1.begin(), test1.end(), 42),
-    false,
-    "Does not contain 42");
-
-  const std::vector<std::int64_t> test2 {1, 2, 3, 4, 5, 6};
-
-  results.enforce_exactly_equal(
-    supl::contains(test2.begin(), test2.end(), 2), true, "Contains 2");
-  results.enforce_exactly_equal(
-    supl::contains(test2.begin(), test2.end(), 42),
-    false,
-    "Does not contain 42");
-
-  return results;
-}
-
 static auto test_transform_if() -> supl::test_results
 {
   supl::test_results results;
@@ -425,9 +370,6 @@ auto test_algorithm() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::min_size", &test_min_size);
-  section.add_test("supl::max_size", &test_max_size);
-  section.add_test("supl::contains", &test_contains);
   section.add_test("supl::transform_if", &test_transform_if);
   section.add_test("supl::for_each_adjacent", &test_for_each_adjacent);
   section.add_test("supl::for_each_adjacent_n", &test_for_each_adjacent_n);

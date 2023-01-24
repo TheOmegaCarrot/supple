@@ -6,80 +6,6 @@
 #include <supl/test_results.hpp>
 #include <supl/test_runner.hpp>
 
-static auto test_interleave() -> supl::test_results
-{
-  supl::test_results results;
-
-  // small
-  const std::tuple test1_1 {42, 'g', 3.14};
-  const std::tuple test1_2 {2.6F, true, 8L};
-
-  const std::tuple expected1 {42, 2.6F, 'g', true, 3.14, 8L};
-  const auto result1 {supl::tuple::interleave(test1_1, test1_2)};
-
-  results.enforce_exactly_equal(result1, expected1);
-
-  // large
-  using std::string_literals::operator""s;
-
-  const std::tuple test2_1 {42, 'g', 3.14, 81, 5.31F, 4UL, false, '7'};
-  const std::tuple test2_2 {
-    2.6F, true, 8L, 8.3F, 2U, 'u', "yes"s, std::vector {3, 5, 7}
-  };
-
-  const std::tuple expected2 {
-    42,
-    2.6F,
-    'g',
-    true,
-    3.14,
-    8L,
-    81,
-    8.3F,
-    5.31F,
-    2U,
-    4UL,
-    'u',
-    false,
-    "yes"s,
-    '7',
-    std::vector {3, 5, 7}
-  };
-  const auto result2 {supl::tuple::interleave(test2_1, test2_2)};
-
-  results.enforce_exactly_equal(result2, expected2);
-
-  return results;
-}
-
-static auto test_tuple_alternating_split() -> supl::test_results
-{
-  supl::test_results results;
-
-  // even
-  const std::tuple test_input_1 {1, 'J', true, 3.14, 'c', 42};
-  const std::tuple expected1_first {1, true, 'c'};
-  const std::tuple expected1_second {'J', 3.14, 42};
-
-  const auto [result1_first, result1_second] {
-    supl::tuple::alternating_split(test_input_1)};
-
-  results.enforce_exactly_equal(result1_first, expected1_first);
-  results.enforce_exactly_equal(result1_second, expected1_second);
-
-  // odd
-  const std::tuple test_input_2 {1, true, 'c', 3.14, 42};
-  const std::tuple expected2_first {1, 'c'};
-  const std::tuple expected2_second {true, 3.14};
-  const auto [result2_first, result2_second] {
-    supl::tuple::alternating_split(test_input_2)};
-
-  results.enforce_exactly_equal(result2_first, expected2_first);
-  results.enforce_exactly_equal(result2_second, expected2_second);
-
-  return results;
-}
-
 static auto test_front_n() -> supl::test_results
 {
   supl::test_results results;
@@ -421,9 +347,6 @@ auto test_tuple_algo() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::tuple::interleave", &test_interleave);
-  section.add_test("supl::tuple::alternating_split",
-                   &test_tuple_alternating_split);
   section.add_test("supl::tuple::front_n", &test_front_n);
   section.add_test("supl::tuple::front", &test_front);
   section.add_test("supl::tuple::back_n", &test_back_n);

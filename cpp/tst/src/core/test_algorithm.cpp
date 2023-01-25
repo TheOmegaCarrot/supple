@@ -11,6 +11,7 @@ static auto test_transform_if() -> supl::test_results
 {
   supl::test_results results;
 
+  // integers
   const std::vector<int> test_input {1, 2, 3, 4, 5, 6, 7, 8};
   std::vector<int> test_output;
   const std::vector<int> reference_output {6, 12, 18, 24};
@@ -39,6 +40,7 @@ static auto test_transform_if() -> supl::test_results
 
   // this section mostly to test enforce_floating_point_approx
 
+  // floating
   const std::vector<double> test_double_input {1.0, 2.0, 3.0, 5.0, 8.0};
   std::vector<double> test_double_output;
   const std::vector<double> double_reference_output {15.0, 24.0};

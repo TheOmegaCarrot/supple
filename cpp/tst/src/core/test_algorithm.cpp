@@ -125,24 +125,28 @@ static auto test_tuple_elementwise_compare_any() -> supl::test_results
 {
   supl::test_results results;
 
+  // none
   const std::tuple test1_1 {1, 2, 3};
   const std::tuple test1_2 {4, 5, 6};
   results.enforce_false(
     supl::impl::tuple_elementwise_compare_any(test1_1, test1_2),
     supl::to_string(test1_1) + " && " + supl::to_string(test1_2));
 
+  // first
   const std::tuple test2_1 {1, 2, 3};
   const std::tuple test2_2 {1, 4, 5};
   results.enforce_true(
     supl::impl::tuple_elementwise_compare_any(test2_1, test2_2),
     supl::to_string(test2_1) + " && " + supl::to_string(test2_2));
 
+  // middle
   const std::tuple test3_1 {1, 2, 3};
   const std::tuple test3_2 {4, 2, 5};
   results.enforce_true(
     supl::impl::tuple_elementwise_compare_any(test3_1, test3_2),
     supl::to_string(test3_1) + " && " + supl::to_string(test3_2));
 
+  // last
   const std::tuple test4_1 {1, 2, 3};
   const std::tuple test4_2 {4, 5, 3};
   results.enforce_true(
@@ -156,6 +160,7 @@ static auto test_for_each_all() -> supl::test_results
 {
   supl::test_results results;
 
+  // equal_sized_ranges
   const std::array test1_1 {4, 9, 16, 25};
   const std::array test1_2 {2, 3, 4, 5};
   const std::array test1_3 {5, 6, 7, 8};
@@ -175,6 +180,7 @@ static auto test_for_each_all() -> supl::test_results
 
   results.enforce_equal(test_output1, reference_output1);
 
+  // unequal_sized_ranges
   const std::array test2_1 {4, 9, 16, 25};
   const std::array test2_2 {2, 3, 4, 5};
   const std::array test2_3 {5, 6, 7, 8, 0x00F};
@@ -295,6 +301,7 @@ static auto test_generate() -> supl::test_results
 {
   supl::test_results results;
 
+  // compare_to_std
   std::vector<int> test(10);
   std::vector<int> ref(10);
 
@@ -321,6 +328,7 @@ static auto test_generate() -> supl::test_results
       results.enforce_exactly_equal(t, r, case_string);
     });
 
+  // use_in_constexpr
   constexpr static std::array cexpr_arr {[]() {
     std::array<int, 10> retval {};
     supl::generate(retval.begin(), retval.end(), [i = 0]() mutable {
@@ -341,6 +349,7 @@ static auto test_copy() -> supl::test_results
 {
   supl::test_results results;
 
+  // use_in_constexpr
   constexpr static std::array from_arr {1, 2, 3, 4, 5, 6};
 
   constexpr static std::array expected1 {1, 2, 3, 4};
@@ -353,6 +362,7 @@ static auto test_copy() -> supl::test_results
 
   results.enforce_exactly_equal(result1, expected1);
 
+  // returned_iterator
   const std::array expected2 {1, 2, 3, 4};
   const std::array result2 {[&]() {
     std::array<int, 4> retval {};

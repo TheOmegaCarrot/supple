@@ -4,6 +4,8 @@ auto main() -> int
 {
   supl::test_results results;
 
+  // TODO: test more cases!! Zero element? One element? Two element?
+
   const std::tuple test_input {42, false, 3.14, 'w'};
 
   const std::tuple expected_output {false, 3.14, 'w', 42};

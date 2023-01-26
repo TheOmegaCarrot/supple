@@ -513,6 +513,18 @@ template <typename VarFunc, typename... Iterators>
 constexpr void for_each_all(VarFunc&& func,
                             Iterators... iterators) noexcept
 {
+  static_assert(sizeof...(Iterators) % 2 == 0,
+                "Expected even number of iterators");
+
+  static_assert(
+    std::is_same_v<decltype(tuple::alternating_split(
+                              std::tuple<Iterators&...> {iterators...})
+                              .first),  // <- even indices in pack (begins)
+                   decltype(tuple::alternating_split(
+                              std::tuple<Iterators&...> {iterators...})
+                              .second)>,  // <- odd indices in pack (ends)
+    "Begin-end pairs must be the same type of iterator");
+
   for ( auto [begins, ends] {tuple::alternating_split(
           std::tuple<Iterators&...> {iterators...})};
         not impl::tuple_elementwise_compare_any(begins, ends);

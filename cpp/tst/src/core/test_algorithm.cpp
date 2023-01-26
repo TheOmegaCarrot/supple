@@ -7,100 +7,6 @@
 
 #include <supl/test_runner.hpp>
 
-static auto test_for_each_both() -> supl::test_results
-{
-  supl::test_results results;
-
-  const std::array<int, 5> test_input_1 {1, 2, 3, 4, 5};
-  const std::array<int, 4> test_input_2 {10, 20, 30, 40};
-  std::vector<int> test_output;
-  const std::vector reference_output {11, 22, 33, 44};
-
-  supl::for_each_both(test_input_1.cbegin(),
-                      test_input_1.cend(),
-                      test_input_2.cbegin(),
-                      test_input_2.cend(),
-                      [&test_output](const auto& i, const auto& j) {
-                        test_output.push_back(i + j);
-                      });
-
-  results.enforce_exactly_equal(test_output, reference_output);
-
-  return results;
-}
-
-static auto test_for_each_both_n() -> supl::test_results
-{
-  supl::test_results results;
-  const std::array<int, 5> test_input_1 {1, 2, 3, 4, 5};
-  const std::array<int, 4> test_input_2 {10, 20, 30, 40};
-  std::vector<int> test_output;
-  const std::vector reference_output {11, 22};
-
-  supl::for_each_both_n(test_input_1.cbegin(),
-                        test_input_2.cbegin(),
-                        2,
-                        [&test_output](const auto& i, const auto& j) {
-                          test_output.push_back(i + j);
-                        });
-
-  results.enforce_exactly_equal(test_output, reference_output);
-
-  return results;
-}
-
-static auto test_all_of_pack() -> supl::test_results
-{
-  supl::test_results results;
-
-  results.enforce_true(supl::all_of(supl::greater_than(3), 4, 8, 3.14, 42),
-                       "All pass case");
-
-  results.enforce_false(supl::all_of(supl::greater_than(3), 4, 8, 3.14, 1),
-                        "One argument fails");
-
-  results.enforce_true(supl::all_of(supl::less_than(8)),
-                       "No argument case");
-
-  return results;
-}
-
-static auto test_any_of_pack() -> supl::test_results
-{
-  supl::test_results results;
-
-  results.enforce_true(
-    supl::any_of(supl::greater_than(42), 2, 18, 1, 4.82, 85.2, 3),
-    "One pass case");
-
-  results.enforce_false(
-    supl::any_of(supl::greater_than(42), 8, 3.14, 18, 27),
-    "None pass case");
-
-  results.enforce_false(supl::any_of(supl::less_than(8)),
-                        "No argument case");
-
-  return results;
-}
-
-static auto test_none_of_pack() -> supl::test_results
-{
-  supl::test_results results;
-
-  results.enforce_false(
-    supl::none_of(supl::greater_than(42), 2, 18, 1, 4.82, 85.2, 3),
-    "One pass case");
-
-  results.enforce_true(
-    supl::none_of(supl::greater_than(42), 8, 3.14, 18, 27),
-    "None pass case");
-
-  results.enforce_true(supl::none_of(supl::less_than(8)),
-                       "No argument case");
-
-  return results;
-}
-
 static auto test_generate() -> supl::test_results
 {
   supl::test_results results;
@@ -186,11 +92,6 @@ auto test_algorithm() -> supl::test_section
 {
   supl::test_section section;
 
-  section.add_test("supl::for_each_both", &test_for_each_both);
-  section.add_test("supl::for_each_both_n", &test_for_each_both_n);
-  section.add_test("supl::all_of (pack)", &test_all_of_pack);
-  section.add_test("supl::any_of (pack)", &test_any_of_pack);
-  section.add_test("supl::none_of (pack)", &test_none_of_pack);
   section.add_test("supl::generate", &test_generate);
   section.add_test("supl::copy", &test_copy);
 

@@ -21,9 +21,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "invoke.hpp"
-#include "predicates.hpp"  // guaranteed include
-
 namespace supl {
 
 /* {{{ doc */

@@ -1,7 +1,6 @@
 image: ubuntu
 
 before_script:
-  - apt-get update --yes
   - apt-get install --yes cmake gcc g++
 
 stages:
@@ -11,12 +10,17 @@ stages:
 build-job:
   stage: build
   script:
-    - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug
-    - cmake --build bld --parallel $(nproc)
+    - cmake -S cpp -B build -DCMAKE_BUILD_TYPE=Debug
+    - cmake --build build --parallel $(nproc)
+  artifacts:
+    paths:
+      - build
 
 unit-test-job:
   stage: test
+  variables:
+    - CTEST_OUTPUT_ON_FAILURE: "1"
+    - CTEST_PARALLEL_LEVEL: "$(nproc)"
+    - CTEST_PROGRESS_OUTPUT: "1"
   script:
-    - cmake -S cpp -B bld -DCMAKE_BUILD_TYPE=Debug
-    - cmake --build bld --parallel $(nproc)
-    - cmake --build bld --target test
+    - cmake --build build --target test

@@ -2,7 +2,7 @@ image: ubuntu
 
 before_script:
   - apt-get update --yes
-  - apt-get install --yes cmake gcc g++ ninja-build
+  - apt-get install --yes cmake gcc g++
 
 stages:
   - build
@@ -11,8 +11,8 @@ stages:
 build-job:
   stage: build
   script:
-    - cmake -S cpp -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja
-    - cmake --build build
+    - cmake -S cpp -B build -DCMAKE_BUILD_TYPE=Debug
+    - cmake --build build --parallel $(nproc)
   artifacts:
     paths:
       - build

@@ -617,6 +617,31 @@ static_assert(
   supl::tl::none_of_v<supl::tl::type_list<float, double, float>,
                       std::is_integral>);
 
+///////////////////////////////////////////// count_if
+
+static_assert(supl::tl::count_if_v<
+                supl::tl::type_list<int, char, bool, std::nullptr_t, void>,
+                std::is_integral>
+              == 3);
+
+static_assert(supl::tl::count_if_v<
+                supl::tl::type_list<int, char, bool, std::nullptr_t, void>,
+                std::is_void>
+              == 1);
+
+static_assert(supl::tl::count_if_v<
+                supl::tl::type_list<int, char, bool, std::nullptr_t, void>,
+                std::is_fundamental>
+              == 5);
+
+static_assert(supl::tl::count_if_v<
+                supl::tl::type_list<int, char, bool, std::nullptr_t, void>,
+                std::is_const>
+              == 0);
+
+static_assert(supl::tl::count_if_v<supl::tl::type_list<>, std::is_const>
+              == 0);
+
 ///////////////////////////////////////////// transform
 
 static_assert(

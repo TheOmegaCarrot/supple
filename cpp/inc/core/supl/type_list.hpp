@@ -575,6 +575,35 @@ struct none_of<LIST<>, PRED> : std::true_type { };
 template <typename LIST, template <typename> typename PRED>
 constexpr inline bool none_of_v = none_of<LIST, PRED>::value;
 
+///////////////////////////////////////////// count_if
+
+template <typename LIST,
+          template <typename>
+          typename PRED,
+          std::size_t Running_Count = 0>
+struct count_if;
+
+template <template <typename...> typename LIST,
+          template <typename>
+          typename PRED,
+          std::size_t Running_Count>
+struct count_if<LIST<>, PRED, Running_Count>
+    : index_constant<Running_Count> { };
+
+template <template <typename...> typename LIST,
+          typename First,
+          typename... Pack,
+          template <typename>
+          typename PRED,
+          std::size_t Running_Count>
+struct count_if<LIST<First, Pack...>, PRED, Running_Count>
+    : std::conditional_t<PRED<First>::value,
+                         count_if<LIST<Pack...>, PRED, Running_Count + 1>,
+                         count_if<LIST<Pack...>, PRED, Running_Count>> { };
+
+template <typename LIST, template <typename> typename PRED>
+constexpr inline std::size_t count_if_v = count_if<LIST, PRED>::value;
+
 ///////////////////////////////////////////// transform
 
 /* {{{ doc */

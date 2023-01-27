@@ -18,9 +18,9 @@ build-job:
 
 unit-test-job:
   stage: test
-  variables:
-    - CTEST_OUTPUT_ON_FAILURE: "1"
-    - CTEST_PARALLEL_LEVEL: "$(nproc)"
-    - CTEST_PROGRESS_OUTPUT: "1"
+  # variables:
+  #   - CTEST_OUTPUT_ON_FAILURE: "1"
+  #   - CTEST_PARALLEL_LEVEL: "$(nproc)"
+  #   - CTEST_PROGRESS_OUTPUT: "1"
   script:
     - cmake --build build --target test

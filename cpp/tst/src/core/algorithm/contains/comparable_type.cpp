@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #include <supl/algorithm.hpp>
 #include <supl/test_results.hpp>
 

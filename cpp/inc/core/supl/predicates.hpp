@@ -480,31 +480,15 @@ template <typename Pred1, typename Pred2>
     pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2)));
 }
 
-namespace impl {
-  template <typename T>
-  struct is_predicate_impl : std::false_type { };
-
-  template <typename T>
-  struct is_predicate_impl<predicate<T>> : std::true_type { };
-
-  template <typename T>
-  struct is_predicate : is_predicate_impl<std::decay_t<T>> { };
-
-  template <typename T>
-  constexpr inline bool is_predicate_v = is_predicate<T>::value;
-
-}  // namespace impl
-
 /* {{{ doc */
 /**
  * @brief Logical negation of a predicate
  */
 /* }}} */
-template <typename Pred,
-          typename = std::enable_if_t<impl::is_predicate_v<Pred>>>
-[[nodiscard]] constexpr auto operator!(Pred&& pred) noexcept
+template <typename T>
+[[nodiscard]] constexpr auto operator!(const predicate<T>& pred) noexcept
 {
-  return pred_not(std::forward<Pred>(pred));
+  return pred_not(pred);
 }
 
 /* {{{ doc */
@@ -512,14 +496,11 @@ template <typename Pred,
  * @brief Logical conjunction (and) of two predicates
  */
 /* }}} */
-template <typename Pred1,
-          typename Pred2,
-          typename = std::enable_if_t<impl::is_predicate_v<Pred1>
-                                      && impl::is_predicate_v<Pred2>>>
-[[nodiscard]] constexpr auto operator&&(Pred1&& pred1,
-                                        Pred2&& pred2) noexcept
+template <typename T, typename U>
+[[nodiscard]] constexpr auto operator&&(const predicate<T>& pred1,
+                                        const predicate<U>& pred2) noexcept
 {
-  return pred_and(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
+  return pred_and(pred1, pred2);
 }
 
 /* {{{ doc */
@@ -527,14 +508,11 @@ template <typename Pred1,
  * @brief Logical disjunction (inclusive or) of two predicates
  */
 /* }}} */
-template <typename Pred1,
-          typename Pred2,
-          typename = std::enable_if_t<impl::is_predicate_v<Pred1>
-                                      && impl::is_predicate_v<Pred2>>>
-[[nodiscard]] constexpr auto operator||(Pred1&& pred1,
-                                        Pred2&& pred2) noexcept
+template <typename T, typename U>
+[[nodiscard]] constexpr auto operator||(const predicate<T>& pred1,
+                                        const predicate<U>& pred2) noexcept
 {
-  return pred_or(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
+  return pred_or(pred1, pred2);
 }
 
 /* {{{ doc */
@@ -542,14 +520,11 @@ template <typename Pred1,
  * @brief Logical xor of two predicates
  */
 /* }}} */
-template <typename Pred1,
-          typename Pred2,
-          typename = std::enable_if_t<impl::is_predicate_v<Pred1>
-                                      && impl::is_predicate_v<Pred2>>>
-[[nodiscard]] constexpr auto operator^(Pred1&& pred1,
-                                       Pred2&& pred2) noexcept
+template <typename T, typename U>
+[[nodiscard]] constexpr auto operator^(const predicate<T>& pred1,
+                                       const predicate<U>& pred2) noexcept
 {
-  return pred_xor(std::forward<Pred1>(pred1), std::forward<Pred2>(pred2));
+  return pred_xor(pred1, pred2);
 }
 
 // There is no technical reason not to add operator equivalents
@@ -560,10 +535,11 @@ template <typename Pred1,
 // if you copy-paste from the above binary operators,
 // and define it in a `namespace supl` block, for reduced visibility
 
-template <typename Arg, typename Pred>
-[[nodiscard]] constexpr auto operator|(Arg&& arg, Pred&& pred) noexcept
+template <typename Arg, typename T>
+[[nodiscard]] constexpr auto operator|(Arg&& arg,
+                                       const predicate<T>& pred) noexcept
 {
-  return pred(std::forward<Arg>(arg));
+  return pred(arg);
 }
 
 }  // namespace supl

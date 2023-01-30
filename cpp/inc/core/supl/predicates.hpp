@@ -106,7 +106,6 @@ template <typename... Ts>
     return predicate {
       [parent_args_tup = std::tuple<std::decay_t<Ts>...> {args...}](
         const auto& new_arg) constexpr noexcept -> bool {
-        /* return tuple::any_of(parent_args_tup, equal_to(new_arg)); */
         return std::apply(
           [&new_arg](auto&&... inner_args) {
             return ((new_arg == inner_args) || ...);

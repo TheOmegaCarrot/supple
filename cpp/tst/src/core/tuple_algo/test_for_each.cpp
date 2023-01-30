@@ -2,7 +2,6 @@
 #include <type_traits>
 
 #include <supl/test_results.hpp>
-#include <supl/tuple_algo.hpp>
 
 auto main() -> int
 {

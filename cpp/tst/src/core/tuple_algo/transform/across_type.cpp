@@ -2,7 +2,6 @@
 #include <vector>
 
 #include <supl/test_results.hpp>
-#include <supl/utility.hpp>
 
 template <typename... Ls>
 struct overload : Ls... {

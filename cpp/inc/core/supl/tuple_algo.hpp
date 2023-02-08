@@ -1097,12 +1097,13 @@ interleave(const Tuple1& tup1, const Tuple2& tup2) noexcept(
 
 namespace impl {
   template <typename Tuple, std::size_t... Idxs>
-  [[nodiscard]] constexpr auto
-  alternating_split_impl(const Tuple& tup, std::index_sequence<Idxs...>)
-
-    noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-      -> std::pair<std::tuple<tl::at_index_t<Idxs * 2, Tuple>...>,
-                   std::tuple<tl::at_index_t<Idxs * 2 + 1, Tuple>...>>
+  [[nodiscard]] constexpr auto alternating_split_impl(
+    const Tuple& tup,
+    std::index_sequence<
+      Idxs...>) noexcept(tl::all_of_v<Tuple,
+                                      std::is_nothrow_copy_constructible>)
+    -> std::pair<std::tuple<tl::at_index_t<Idxs * 2, Tuple>...>,
+                 std::tuple<tl::at_index_t<Idxs * 2 + 1, Tuple>...>>
   {
     return {{std::get<Idxs * 2>(tup)...},
             {std::get<Idxs * 2 + 1>(tup)...}};

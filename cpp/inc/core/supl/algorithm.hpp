@@ -510,8 +510,11 @@ namespace impl {
  */
 /* }}} */
 template <typename VarFunc, typename... Iterators>
-constexpr void for_each_all(VarFunc&& func,
-                            Iterators... iterators) noexcept
+constexpr void
+for_each_all(VarFunc&& func, Iterators... iterators) noexcept(
+  std::is_nothrow_invocable_v<
+    VarFunc,
+    typename std::iterator_traits<Iterators>::value_type...>)
 {
   static_assert(sizeof...(Iterators) % 2 == 0,
                 "Expected even number of iterators");

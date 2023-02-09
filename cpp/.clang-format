@@ -48,6 +48,7 @@ BraceWrapping:
   SplitEmptyRecord: false
   SplitEmptyNamespace: true
 
+BreakAfterAttributes: Leave
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BreakBeforeConceptDeclarations: true
@@ -92,6 +93,13 @@ IndentWrappedFunctionNames: false
 
 InsertBraces: false
 
+InsertNewlineAtEOF: true
+
+IntegerLiteralSeparator:
+  Binary: 0
+  Decimal: 0
+  Hex: 0
+
 KeepEmptyLinesAtTheStartOfBlocks: true
 
 LambdaBodyIndentation: Signature
@@ -117,6 +125,8 @@ PenaltyIndentedWhitespace: 0
 PointerAlignment: Left
 ReferenceAlignment: Pointer
 
+RemoveSemicolon: false
+
 QualifierAlignment: Left
 # QualifierOrder: ['constexpr', 'static', 'inline', 'const', 'volatile', 'type']
 
@@ -125,6 +135,7 @@ ReflowComments:  false
 RemoveBracesLLVM: false
 
 RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: Keyword
 
 SeparateDefinitionBlocks:  Always
 

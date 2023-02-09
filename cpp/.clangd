@@ -2,3 +2,10 @@
 CompileFlags:
   Add: [-xc++, -std=c++17]
   Compiler: clang++
+InlayHints:
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
+  Designators: Yes
+Hover:
+  ShowAKA: Yes

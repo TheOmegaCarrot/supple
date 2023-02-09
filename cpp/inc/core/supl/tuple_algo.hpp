@@ -632,12 +632,11 @@ push_front_as(const Tuple& tup, Param&& data) noexcept(
 
 namespace impl {
   template <typename Tuple, std::size_t... Inds>
-  [[nodiscard]] constexpr auto pop_front_impl(const Tuple& tup,
-                                              std::index_sequence<Inds...>)
-
-    noexcept(tl::all_of_v<tl::pop_front_t<Tuple>,
-                          std::is_nothrow_copy_constructible>)
-      -> tl::pop_front_t<Tuple>
+  [[nodiscard]] constexpr auto
+  pop_front_impl(const Tuple& tup, std::index_sequence<Inds...>) noexcept(
+    tl::all_of_v<tl::pop_front_t<Tuple>,
+                 std::is_nothrow_copy_constructible>)
+    -> tl::pop_front_t<Tuple>
   {
     return {std::get<Inds + 1>(tup)...};
   }
@@ -1301,12 +1300,12 @@ namespace impl {
   template <template <typename> typename Transform,
             typename Tuple,
             std::size_t... Idxs>
-  [[nodiscard]] constexpr auto
-  type_transform_impl(const Tuple& tup, std::index_sequence<Idxs...>)
-
-    noexcept(tl::all_of_v<tl::transform_t<Tuple, Transform>,
-                          std::is_nothrow_copy_constructible>)
-      -> tl::transform_t<Tuple, Transform>
+  [[nodiscard]] constexpr auto type_transform_impl(
+    const Tuple& tup,
+    std::index_sequence<
+      Idxs...>) noexcept(tl::all_of_v<tl::transform_t<Tuple, Transform>,
+                                      std::is_nothrow_copy_constructible>)
+    -> tl::transform_t<Tuple, Transform>
   {
     return {
       static_cast<typename Transform<tl::at_index_t<Idxs, Tuple>>::type>(
@@ -1437,3 +1436,4 @@ template <typename... Ts>
 }  // namespace supl::tuple
 
 #endif
+

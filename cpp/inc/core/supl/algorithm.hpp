@@ -18,7 +18,6 @@
 #define SUPPLE_CORE_ALGORITHM_HPP
 
 #include <algorithm>
-#include <bits/utility.h>
 #include <cstddef>
 #include <iterator>
 #include <type_traits>
@@ -559,6 +558,13 @@ namespace impl {
   }
 }  // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Chained `for_each`
+ *
+ * @details
+ */
+/* }}} */
 template <typename Func, typename... Iterators>
 constexpr void for_each_chain(Func&& func, Iterators... iterators) noexcept
 {

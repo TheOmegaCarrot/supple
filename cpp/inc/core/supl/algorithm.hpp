@@ -734,6 +734,19 @@ constexpr auto copy(InItr begin, const InItr end, OutItr out) noexcept(
   return out;
 }
 
+template <typename InItr, typename OutItr>
+constexpr auto
+copy_n(InItr begin, const std::size_t n, OutItr out) noexcept(
+  std::is_nothrow_copy_constructible_v<
+    typename std::iterator_traits<InItr>::value_type>) -> OutItr
+{
+  for ( std::size_t i {0}; i != n; ++i, ++out, ++begin ) {
+    *out = *begin;
+  }
+
+  return out;
+}
+
 }  // namespace supl
 
 #endif

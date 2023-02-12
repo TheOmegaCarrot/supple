@@ -25,14 +25,10 @@ auto main() -> int
 
   constexpr static std::array expected_output {[&input_iota]() {
     std::array<int, input_size> tmp {};
-    // supl could probably use a simple constexpr transform
-    supl::transform_if(input_iota.begin(),
-                       input_iota.end(),
-                       tmp.begin(),
-                       supl::true_pred,
-                       [](auto&& arg) {
-                         return arg * 2;
-                       });
+    supl::transform(
+      input_iota.begin(), input_iota.end(), tmp.begin(), [](auto&& arg) {
+        return arg * 2;
+      });
     return tmp;
   }()};
 

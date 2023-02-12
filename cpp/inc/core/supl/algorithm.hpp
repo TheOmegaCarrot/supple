@@ -709,6 +709,19 @@ constexpr void generate(Itr begin, const Itr end, Gen&& gen) noexcept(
   }
 }
 
+template <typename Itr, typename OutItr, typename TransformFunc>
+constexpr void transform(
+  Itr begin,
+  const Itr end,
+  OutItr output_itr,
+  TransformFunc&& func) noexcept(noexcept(supl::invoke(func, *begin)))
+{
+  for ( ; begin != end; ++begin ) {
+    *output_itr = supl::invoke(func, *begin);
+    ++output_itr;
+  }
+}
+
 template <typename InItr, typename OutItr>
 constexpr auto copy(InItr begin, const InItr end, OutItr out) noexcept(
   std::is_nothrow_copy_constructible_v<

@@ -192,7 +192,7 @@ constexpr void transform_if(
 {
   for ( ; begin != end; ++begin ) {
     if ( supl::invoke(pred, *begin) ) {
-      output_itr = supl::invoke(func, *begin);
+      *output_itr = supl::invoke(func, *begin);
       ++output_itr;
     }
   }
@@ -480,7 +480,7 @@ namespace impl {
  * ex. `for_each_all(callable, begin1, end1, begin2, end2, begin3, end3)`
  * Failure to meet this precondition may be a compile-time error
  * if types mismatch,
- * or a segmentation fault if types match,
+ * or a undefined behavior if types match,
  * but do not correspond to the same range.
  *
  * @pre `func` must be invocable with the value types of each iterator pair.
@@ -540,6 +540,16 @@ constexpr void for_each_all(VarFunc&& func,
   }
 }
 
+template <typename Itr, typename Func>
+constexpr void for_each(Itr begin,
+                        const Itr end,
+                        Func&& func) noexcept(noexcept(func(*begin)))
+{
+  for ( ; begin != end; ++begin ) {
+    func(*begin);
+  }
+}
+
 namespace impl {
   template <typename Func, typename Itr_Tuple, std::size_t... Idxs>
   constexpr void for_each_chain_impl(
@@ -551,9 +561,9 @@ namespace impl {
   {
     // TODO: Re-implement for_each to be constexpr-capable,
     // and use that
-    (std::for_each(std::get<Idxs>(begins),
-                   std::get<Idxs>(ends),
-                   std::forward<Func>(func)),
+    (::supl::for_each(std::get<Idxs>(begins),
+                      std::get<Idxs>(ends),
+                      std::forward<Func>(func)),
      ...);
   }
 }  // namespace impl
@@ -562,7 +572,22 @@ namespace impl {
 /**
  * @brief Chained `for_each`
  *
- * @details
+ * @details `for_each_chain(func, a.begin(), a.end(), b.begin(), b.end())`
+ * is equivalent to `for_each(func, a.begin(), a.end()),
+ * for_each(func, b.begin(), b.end()),`
+ *
+ * @pre Must be passed a pack of matching iterator pairs.
+ * ex. `for_each_all(callable, begin1, end1, begin2, end2, begin3, end3)`
+ * Failure to meet this precondition may be a compile-time error
+ * if types mismatch,
+ * or a undefined behavior if types match,
+ * but do not correspond to the same range.
+ *
+ * @pre `func` must be invocable with each of the value types of each iterator pair.
+ *
+ * @param func Unary callable invocable with the value type of each input range
+ *
+ * @param iterators Pack of iterators in begin-end pairs
  */
 /* }}} */
 template <typename Func, typename... Iterators>

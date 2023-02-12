@@ -540,6 +540,11 @@ constexpr void for_each_all(VarFunc&& func,
   }
 }
 
+/* {{{ doc */
+/**
+ * @brief constexpr re-implementation of `std::for_each`
+ */
+/* }}} */
 template <typename Itr, typename Func>
 constexpr void for_each(Itr begin,
                         const Itr end,

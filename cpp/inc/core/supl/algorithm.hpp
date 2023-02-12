@@ -564,8 +564,6 @@ namespace impl {
     Itr_Tuple& ends,
     std::index_sequence<Idxs...>) noexcept
   {
-    // TODO: Re-implement for_each to be constexpr-capable,
-    // and use that
     (::supl::for_each(std::get<Idxs>(begins),
                       std::get<Idxs>(ends),
                       std::forward<Func>(func)),

@@ -596,7 +596,11 @@ namespace impl {
  */
 /* }}} */
 template <typename Func, typename... Iterators>
-constexpr void for_each_chain(Func&& func, Iterators... iterators) noexcept
+constexpr void
+for_each_chain(Func&& func, Iterators... iterators) noexcept(
+  (noexcept(func(
+     std::declval<typename std::iterator_traits<Iterators>::value_type>()))
+   && ...))
 {
   static_assert(sizeof...(Iterators) % 2 == 0,
                 "Expected even number of iterators");

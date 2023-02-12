@@ -18,6 +18,7 @@
 #define SUPPLE_CORE_ALGORITHM_HPP
 
 #include <algorithm>
+#include <bits/utility.h>
 #include <cstddef>
 #include <iterator>
 #include <type_traits>
@@ -540,6 +541,48 @@ constexpr void for_each_all(VarFunc&& func,
   }
 }
 
+namespace impl {
+  template <typename Func, typename Itr_Tuple, std::size_t... Idxs>
+  constexpr void for_each_chain_impl(
+    Func&& func,
+    // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
+    Itr_Tuple& begins,
+    Itr_Tuple& ends,
+    std::index_sequence<Idxs...>) noexcept
+  {
+    // TODO: Re-implement for_each to be constexpr-capable,
+    // and use that
+    (std::for_each(std::get<Idxs>(begins),
+                   std::get<Idxs>(ends),
+                   std::forward<Func>(func)),
+     ...);
+  }
+}  // namespace impl
+
+template <typename Func, typename... Iterators>
+constexpr void for_each_chain(Func&& func, Iterators... iterators) noexcept
+{
+  static_assert(sizeof...(Iterators) % 2 == 0,
+                "Expected even number of iterators");
+
+  static_assert(
+    std::is_same_v<decltype(tuple::alternating_split(
+                              std::tuple<Iterators&...> {iterators...})
+                              .first),  // <- even indices in pack (begins)
+                   decltype(tuple::alternating_split(
+                              std::tuple<Iterators&...> {iterators...})
+                              .second)>,  // <- odd indices in pack (ends)
+    "Begin-end pairs must be the same type of iterator");
+
+  auto [begins, ends] {
+    tuple::alternating_split(std::tuple<Iterators&...>(iterators...))};
+  impl::for_each_chain_impl(
+    std::forward<Func>(func),
+    begins,
+    ends,
+    std::make_index_sequence<sizeof...(Iterators) / 2> {});
+}
+
 /* {{{ doc */
 /**
  * @brief Determine if all arguments satisfy a predicate
@@ -645,3 +688,4 @@ constexpr auto copy(InItr begin, const InItr end, OutItr out) noexcept(
 }  // namespace supl
 
 #endif
+

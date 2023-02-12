@@ -922,26 +922,11 @@ using deduplicate_t = typename deduplicate<LIST>::type;
 
 namespace impl {
 
-  template <typename LIST1, typename LIST2>
-  struct equal_size_checked;
+  template <typename T, typename U>
+  auto equal_impl(T, U) -> std::false_type;
 
-  template <template <typename...> typename LIST1,
-            template <typename...>
-            typename LIST2,
-            typename... Pack1,
-            typename... Pack2>
-  struct equal_size_checked<LIST1<Pack1...>, LIST2<Pack2...>>
-      : std::conditional_t<
-          std::is_same_v<front_t<LIST1<Pack1...>>,
-                         front_t<LIST2<Pack2...>>>,
-          equal_size_checked<pop_front_t<LIST1<Pack1...>>,
-                             pop_front_t<LIST2<Pack2...>>>,
-          std::false_type> { };
-
-  template <template <typename...> typename LIST1,
-            template <typename...>
-            typename LIST2>
-  struct equal_size_checked<LIST1<>, LIST2<>> : std::true_type { };
+  template <typename T>
+  auto equal_impl(T, T) -> std::true_type;
 
 }  // namespace impl
 
@@ -958,10 +943,16 @@ namespace impl {
  */
 /* }}} */
 template <typename LIST1, typename LIST2>
-struct equal
-    : std::conditional_t<size_v<LIST1> == size_v<LIST2>,
-                         impl::equal_size_checked<LIST1, LIST2>,
-                         std::false_type> { };
+struct equal;
+
+template <template <typename...> typename LIST1,
+          template <typename...>
+          typename LIST2,
+          typename... Pack1,
+          typename... Pack2>
+struct equal<LIST1<Pack1...>, LIST2<Pack2...>>
+    : decltype(impl::equal_impl(std::declval<type_list<Pack1...>>(),
+                                std::declval<type_list<Pack2...>>())) { };
 
 template <typename LIST1, typename LIST2>
 constexpr inline bool equal_v = equal<LIST1, LIST2>::value;
@@ -1022,3 +1013,4 @@ using enumerate_t = typename enumerate<LIST>::type;
 }  // namespace supl::tl
 
 #endif
+

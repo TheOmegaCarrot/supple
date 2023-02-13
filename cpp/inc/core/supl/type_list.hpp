@@ -570,15 +570,7 @@ constexpr inline bool any_of_v = any_of<LIST, PRED>::value;
  */
 /* }}} */
 template <typename LIST, template <typename> typename PRED>
-struct none_of
-    : std::conditional_t<PRED<front_t<LIST>>::value,
-                         std::false_type,
-                         none_of<pop_front_t<LIST>, PRED>> { };
-
-template <template <typename...> typename LIST,
-          template <typename>
-          typename PRED>
-struct none_of<LIST<>, PRED> : std::true_type { };
+using none_of = std::negation<any_of<LIST, PRED>>;
 
 template <typename LIST, template <typename> typename PRED>
 constexpr inline bool none_of_v = none_of<LIST, PRED>::value;

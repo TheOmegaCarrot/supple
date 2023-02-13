@@ -520,10 +520,14 @@ using replace_t = typename replace<LIST, Idx, T>::type;
  */
 /* }}} */
 template <typename LIST, template <typename> typename PRED>
-struct all_of
-    : std::conditional_t<PRED<front_t<LIST>>::value,
-                         all_of<pop_front_t<LIST>, PRED>,
-                         std::false_type> { };
+struct all_of;
+
+template <template <typename...> typename LIST,
+          typename... Pack,
+          template <typename>
+          typename PRED>
+struct all_of<LIST<Pack...>, PRED>
+    : std::bool_constant<(PRED<Pack>::value && ...)> { };
 
 template <template <typename...> typename LIST,
           template <typename>
@@ -541,10 +545,14 @@ constexpr inline bool all_of_v = all_of<LIST, PRED>::value;
  */
 /* }}} */
 template <typename LIST, template <typename> typename PRED>
-struct any_of
-    : std::conditional_t<PRED<front_t<LIST>>::value,
-                         std::true_type,
-                         any_of<pop_front_t<LIST>, PRED>> { };
+struct any_of;
+
+template <template <typename...> typename LIST,
+          typename... Pack,
+          template <typename>
+          typename PRED>
+struct any_of<LIST<Pack...>, PRED>
+    : std::bool_constant<(PRED<Pack>::value || ...)> { };
 
 template <template <typename...> typename LIST,
           template <typename>

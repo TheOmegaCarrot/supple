@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 if(NOT DEFINED CMAKE_BUILD_TYPE)
-  message("-- Build type not specified")
+  message("-- Build type not specified - defaulting to Debug")
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 

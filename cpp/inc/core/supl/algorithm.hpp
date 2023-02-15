@@ -631,7 +631,14 @@ for_each_chain(Func&& func, Iterators... iterators) noexcept(
  * `false` otherwise. Returns `true` for zero arguments.
  */
 /* }}} */
-template <typename Pred, typename... Args>
+template <
+  typename Pred,
+  typename... Args,
+  typename = std::enable_if<
+    (std::is_same_v<bool,
+                    decltype(std::declval<Pred>()(std::declval<Args>()))>
+     && ...)
+    || sizeof...(Args) == 0>>
 [[nodiscard]] constexpr auto all_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
    && ...)) -> bool
@@ -654,7 +661,14 @@ template <typename Pred, typename... Args>
  * `false` otherwise. Returns `false` for zero arguments.
  */
 /* }}} */
-template <typename Pred, typename... Args>
+template <
+  typename Pred,
+  typename... Args,
+  typename = std::enable_if<
+    (std::is_same_v<bool,
+                    decltype(std::declval<Pred>()(std::declval<Args>()))>
+     && ...)
+    || sizeof...(Args) == 0>>
 [[nodiscard]] constexpr auto any_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
    && ...)) -> bool
@@ -677,7 +691,19 @@ template <typename Pred, typename... Args>
  * `false` otherwise. Returns `true` for zero arguments.
  */
 /* }}} */
-template <typename Pred, typename... Args>
+template <
+  typename Pred,
+  typename... Args,
+  typename = std::enable_if<
+    (std::is_same_v<bool,
+                    decltype(std::declval<Pred>()(std::declval<Args>()))>
+     && ...)
+    || sizeof...(Args) == 0>,
+  typename = std::enable_if<
+    (std::is_same_v<bool,
+                    decltype(std::declval<Pred>()(std::declval<Args>()))>
+     && ...)
+    || sizeof...(Args) == 0>>
 [[nodiscard]] constexpr auto none_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(invoke(std::forward<Pred>(pred), std::forward<Args>(args)))
    && ...)) -> bool

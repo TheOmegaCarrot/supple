@@ -1,8 +1,37 @@
 #include <cstddef>
+#include <tuple>
 #include <type_traits>
+#include <variant>
 
 #include <supl/metaprogramming.hpp>
 #include <supl/type_list.hpp>
+
+///////////////////////////////////////////// translate
+
+static_assert(
+  std::is_same_v<supl::tl::translate_t<std::tuple<int, char, bool>,
+                                       supl::tl::type_list>,
+                 supl::tl::type_list<int, char, bool>>);
+
+static_assert(
+  std::is_same_v<supl::tl::translate_t<std::variant<int, char, bool>,
+                                       supl::tl::type_list>,
+                 supl::tl::type_list<int, char, bool>>);
+
+static_assert(std::is_same_v<
+              supl::tl::translate_t<supl::tl::type_list<int, char, bool>,
+                                    supl::tl::type_list>,
+              supl::tl::type_list<int, char, bool>>);
+
+static_assert(std::is_same_v<
+              supl::tl::translate_t<supl::tl::type_list<int, char, bool>,
+                                    std::tuple>,
+              std::tuple<int, char, bool>>);
+
+static_assert(std::is_same_v<
+              supl::tl::translate_t<std::tuple<int, const char*, bool&&>,
+                                    supl::tl::type_list>,
+              supl::tl::type_list<int, const char*, bool&&>>);
 
 ///////////////////////////////////////////// func_wrapper
 
@@ -1159,3 +1188,4 @@ static_assert(
 
 auto main() -> int
 { }
+

@@ -34,6 +34,32 @@ namespace supl::tl {
 template <typename... Pack>
 struct type_list { };
 
+///////////////////////////////////////////// translate
+
+/* {{{ doc */
+/**
+ * @brief Translate one type list to a different type of type list
+ *
+ * @details For example:
+ * `static_assert(
+ * std::is_same_v<
+ * supl::tl::translate_t<std::tuple<int, char, bool>, supl::tl::type_list>,
+ * supl::tl::type_list<int, char, bool>>)`
+ */
+/* }}} */
+template <typename FROM_LIST, template <typename...> typename TO_LIST>
+struct translate;
+
+template <template <typename...> typename FROM_LIST,
+          template <typename...>
+          typename TO_LIST,
+          typename... Pack>
+struct translate<FROM_LIST<Pack...>, TO_LIST>
+    : type_identity<TO_LIST<Pack...>> { };
+
+template <typename FROM_LIST, template <typename...> typename TO_LIST>
+using translate_t = typename translate<FROM_LIST, TO_LIST>::type;
+
 ///////////////////////////////////////////// func_wrapper
 
 /* {{{ doc */

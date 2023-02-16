@@ -946,16 +946,6 @@ using deduplicate_t = typename deduplicate<LIST>::type;
 
 ///////////////////////////////////////////// equal
 
-namespace impl {
-
-  template <typename T, typename U>
-  auto equal_impl(T, U) -> std::false_type;
-
-  template <typename T>
-  auto equal_impl(T, T) -> std::true_type;
-
-}  // namespace impl
-
 /* {{{ doc */
 /**
  * @brief Determine if two type_list-like types contain the same list.
@@ -977,8 +967,7 @@ template <template <typename...> typename LIST1,
           typename... Pack1,
           typename... Pack2>
 struct equal<LIST1<Pack1...>, LIST2<Pack2...>>
-    : decltype(impl::equal_impl(std::declval<type_list<Pack1...>>(),
-                                std::declval<type_list<Pack2...>>())) { };
+    : std::is_same<type_list<Pack1...>, type_list<Pack2...>> { };
 
 template <typename LIST1, typename LIST2>
 constexpr inline bool equal_v = equal<LIST1, LIST2>::value;

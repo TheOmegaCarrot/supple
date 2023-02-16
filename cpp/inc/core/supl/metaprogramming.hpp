@@ -84,9 +84,7 @@ using remove_cvref_t = typename remove_cvref<T>::type;
 /* }}} */
 template <typename T, typename... Pack>
 struct is_type_in_pack
-    : std::conditional_t<(std::is_same_v<T, Pack> || ...),
-                         std::true_type,
-                         std::false_type> { };
+    : std::bool_constant<(std::is_same_v<T, Pack> || ...)> { };
 
 /* {{{ doc */
 /**
@@ -185,9 +183,7 @@ using peel_last_t = typename peel_last<Pack...>::type;
 /* }}} */
 template <typename... Pack>
 using is_pack_uniform =
-  std::conditional_t<(std::is_same_v<peel_first_t<Pack...>, Pack> && ...),
-                     std::true_type,
-                     std::false_type>;
+  std::bool_constant<(std::is_same_v<peel_first_t<Pack...>, Pack> && ...)>;
 
 /* {{{ doc */
 /**
@@ -889,3 +885,4 @@ struct sequential_applicator {
 }  // namespace supl
 
 #endif
+

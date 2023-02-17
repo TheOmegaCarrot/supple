@@ -1,3 +1,15 @@
+/* {{{ doc */
+/**
+ * @file core.h
+ *
+ * @brief Include all headers in core module
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLE_CORE_CORE_H
 #define SUPPLE_CORE_CORE_H
 
@@ -15,3 +27,4 @@
 #include "utility.hpp"
 
 #endif
+

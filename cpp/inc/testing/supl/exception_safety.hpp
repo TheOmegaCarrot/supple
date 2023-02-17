@@ -1,3 +1,18 @@
+/* {{{ doc */
+/**
+ * @file exception_safety.hpp
+ *
+ * @brief Types which throw
+ *
+ * @details The types in this header are intended to be used
+ * to test exception safety.
+ *
+ * @author Ethan Hancock
+ *
+ * @copyright MIT Public License
+ */
+/* }}} */
+
 #ifndef SUPPLE_TESTING_EXCEPTION_SAFETY_HPP
 #define SUPPLE_TESTING_EXCEPTION_SAFETY_HPP
 
@@ -109,3 +124,4 @@ auto throwing_function(Ts&&...) noexcept(false) -> Ret;
 }  // namespace supl
 
 #endif
+

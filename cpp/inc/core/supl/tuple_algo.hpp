@@ -34,6 +34,33 @@
 #include "metaprogramming.hpp"
 #include "type_list.hpp"
 
+namespace supl {
+
+/* {{{ doc */
+/**
+ * @brief `get` ADL two-step using `std::get` for index
+ */
+/* }}} */
+template <std::size_t Idx, typename Gettable>
+constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
+{
+  using std::get;
+  return get<Idx>(std::forward<Gettable>(tup));
+}
+
+/* {{{ doc */
+/**
+ * @brief `get` ADL two-step using `std::get` for type
+ */
+/* }}} */
+template <typename Type, typename Gettable>
+constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
+{
+  using std::get;
+  return get<Type>(std::forward<Gettable>(tup));
+}
+}  // namespace supl
+
 namespace supl::tuple {
 
 namespace impl {
@@ -59,10 +86,11 @@ namespace impl {
     Tuple&& tup,
     Func&& func,
     std::index_sequence<
-      Inds...>) noexcept(noexcept((supl::invoke(func, std::get<Inds>(tup)),
+      Inds...>) noexcept(noexcept((supl::invoke(func,
+                                                ::supl::get<Inds>(tup)),
                                    ...)))
   {
-    (supl::invoke(func, std::get<Inds>(tup)), ...);
+    (supl::invoke(func, ::supl::get<Inds>(tup)), ...);
   }
 
 }  // namespace impl
@@ -107,10 +135,11 @@ namespace impl {
     std::index_sequence<Idxs...>,
     index_constant<
       Begin>) noexcept(noexcept((supl::invoke(func,
-                                              std::get<Idxs + Begin>(tup)),
+                                              ::supl::get<Idxs + Begin>(
+                                                tup)),
                                  ...)))
   {
-    (supl::invoke(func, std::get<Idxs + Begin>(tup)), ...);
+    (supl::invoke(func, ::supl::get<Idxs + Begin>(tup)), ...);
   }
 
 }  // namespace impl
@@ -181,15 +210,17 @@ namespace impl {
     const Tuple<Elems...>& tup,
     Func&& func,
     std::index_sequence<
-      Inds...>) noexcept((noexcept(supl::invoke(func, std::get<Inds>(tup)))
+      Inds...>) noexcept((noexcept(supl::invoke(func,
+                                                ::supl::get<Inds>(tup)))
                           && ...)
                          && (std::is_nothrow_constructible_v<
-                               decltype(supl::invoke(func,
-                                                     std::get<Inds>(tup)))>
+                               decltype(supl::invoke(
+                                 func,
+                                 ::supl::get<Inds>(tup)))>
                              && ...))
-    -> Tuple<decltype(func(std::get<Inds>(tup)))...>
+    -> Tuple<decltype(func(::supl::get<Inds>(tup)))...>
   {
-    return {supl::invoke(func, std::get<Inds>(tup))...};
+    return {supl::invoke(func, ::supl::get<Inds>(tup))...};
   }
 
 }  // namespace impl
@@ -230,16 +261,18 @@ namespace impl {
     const Tuple& tup,
     Pred&& pred,
     std::index_sequence<
-      Inds...>) noexcept(noexcept((supl::invoke(pred, std::get<Inds>(tup))
+      Inds...>) noexcept(noexcept((supl::invoke(pred,
+                                                ::supl::get<Inds>(tup))
                                    || ...))) -> bool
   {
     static_assert(
       std::conjunction_v<
-        std::is_invocable_r<bool, Pred, decltype(std::get<Inds>(tup))>...>,
+        std::
+          is_invocable_r<bool, Pred, decltype(::supl::get<Inds>(tup))>...>,
       "Predicate must be invocable returning a bool with every "
       "type in the tuple");
 
-    return (supl::invoke(pred, std::get<Inds>(tup)) || ...);
+    return (supl::invoke(pred, ::supl::get<Inds>(tup)) || ...);
   }
 
 }  // namespace impl
@@ -281,16 +314,18 @@ namespace impl {
     const Tuple& tup,
     Pred&& pred,
     std::index_sequence<
-      Inds...>) noexcept(noexcept((supl::invoke(pred, std::get<Inds>(tup))
+      Inds...>) noexcept(noexcept((supl::invoke(pred,
+                                                ::supl::get<Inds>(tup))
                                    && ...))) -> bool
   {
     static_assert(
       std::conjunction_v<
-        std::is_invocable_r<bool, Pred, decltype(std::get<Inds>(tup))>...>,
+        std::
+          is_invocable_r<bool, Pred, decltype(::supl::get<Inds>(tup))>...>,
       "Predicate must be invocable returning a bool with every "
       "type in the tuple");
 
-    return (supl::invoke(pred, std::get<Inds>(tup)) && ...);
+    return (supl::invoke(pred, ::supl::get<Inds>(tup)) && ...);
   }
 
 }  // namespace impl
@@ -364,11 +399,11 @@ namespace impl {
       Inds...>) noexcept(noexcept((static_cast<std::
                                                  size_t>(
                                      supl::invoke(pred,
-                                                  std::get<Inds>(tup)))
+                                                  ::supl::get<Inds>(tup)))
                                    + ...))) -> std::size_t
   {
     return (
-      static_cast<std::size_t>(supl::invoke(pred, std::get<Inds>(tup)))
+      static_cast<std::size_t>(supl::invoke(pred, ::supl::get<Inds>(tup)))
       + ...);
   }
 
@@ -414,7 +449,7 @@ namespace impl {
                                && ...))
     -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
   {
-    return {std::get<Inds>(tup)..., std::forward<Ts>(data)...};
+    return {::supl::get<Inds>(tup)..., std::forward<Ts>(data)...};
   }
 
 }  // namespace impl
@@ -461,7 +496,7 @@ namespace impl {
                        std::is_nothrow_constructible_v<As, Param>)
     -> tl::push_back_t<Tuple, As>
   {
-    return {std::get<Idxs>(tup)..., std::forward<Param>(data)};
+    return {::supl::get<Idxs>(tup)..., std::forward<Param>(data)};
   }
 
 }  // namespace impl
@@ -506,7 +541,7 @@ namespace impl {
     tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
     -> tl::pop_back_t<Tuple>
   {
-    return {std::get<Inds>(tup)...};
+    return {::supl::get<Inds>(tup)...};
   }
 
 }  // namespace impl
@@ -546,7 +581,7 @@ namespace impl {
                                && ...))
     -> tl::push_front_t<Tuple<Pack...>, remove_cvref_t<Ts>...>
   {
-    return {std::forward<Ts>(data)..., std::get<Inds>(tup)...};
+    return {std::forward<Ts>(data)..., ::supl::get<Inds>(tup)...};
   }
 
 }  // namespace impl
@@ -592,7 +627,7 @@ namespace impl {
                        std::is_nothrow_constructible_v<As, Param>)
     -> tl::push_front_t<Tuple, As>
   {
-    return {std::forward<Param>(data), std::get<Idxs>(tup)...};
+    return {std::forward<Param>(data), ::supl::get<Idxs>(tup)...};
   }
 
 }  // namespace impl
@@ -638,7 +673,7 @@ namespace impl {
                  std::is_nothrow_copy_constructible>)
     -> tl::pop_front_t<Tuple>
   {
-    return {std::get<Inds + 1>(tup)...};
+    return {::supl::get<Inds + 1>(tup)...};
   }
 
 }  // namespace impl
@@ -673,7 +708,7 @@ namespace impl {
                                       std::is_nothrow_copy_constructible>)
     -> tl::rotate_left_t<Tuple>
   {
-    return {std::get<Idxs + 1>(tup)..., std::get<0>(tup)};
+    return {::supl::get<Idxs + 1>(tup)..., ::supl::get<0>(tup)};
   }
 
 }  // namespace impl
@@ -696,7 +731,8 @@ namespace impl {
                                       std::is_nothrow_copy_constructible>)
     -> tl::rotate_right_t<Tuple>
   {
-    return {std::get<tl::size_v<Tuple> - 1>(tup), std::get<Idxs>(tup)...};
+    return {::supl::get<tl::size_v<Tuple> - 1>(tup),
+            ::supl::get<Idxs>(tup)...};
   }
 
 }  // namespace impl
@@ -727,9 +763,9 @@ namespace impl {
   {
     constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-    return {std::get<pre_idxs>(tup)...,
+    return {::supl::get<pre_idxs>(tup)...,
             std::forward<Ts>(data)...,
-            std::get<post_idxs + idx>(tup)...};
+            ::supl::get<post_idxs + idx>(tup)...};
   }
 
 }  // namespace impl
@@ -786,8 +822,8 @@ namespace impl {
   {
     constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-    return {std::get<pre_idxs>(tup)...,
-            std::get<post_idxs + idx + 1>(tup)...};
+    return {::supl::get<pre_idxs>(tup)...,
+            ::supl::get<post_idxs + idx + 1>(tup)...};
   }
 
 }  // namespace impl
@@ -838,9 +874,9 @@ namespace impl {
                          std::is_nothrow_copy_constructible>)
     -> tl::replace_t<Tuple, Idx, remove_cvref_t<T>>
   {
-    return {std::get<Pre_Idxs>(tup)...,
+    return {::supl::get<Pre_Idxs>(tup)...,
             std::forward<T>(data),
-            std::get<Post_Idxs + Idx + 1>(tup)...};
+            ::supl::get<Post_Idxs + Idx + 1>(tup)...};
   }
 
 }  // namespace impl
@@ -900,12 +936,12 @@ template <std::size_t Idx, typename T, typename Tuple>
 /* }}} */
 template <std::size_t... Idxs, typename Tuple>
 [[nodiscard]] constexpr auto reorder(const Tuple& tup) noexcept(
-  (std::is_nothrow_copy_constructible_v<decltype(std::get<Idxs>(tup))>
+  (std::is_nothrow_copy_constructible_v<decltype(::supl::get<Idxs>(tup))>
    && ...)) -> tl::reorder_t<Tuple, Idxs...>
 {
   static_assert(((Idxs < tl::size_v<Tuple>) &&...));
 
-  return {std::get<Idxs>(tup)...};
+  return {::supl::get<Idxs>(tup)...};
 }
 
 namespace impl {
@@ -915,7 +951,7 @@ namespace impl {
     tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
     -> tl::reverse_t<Tuple>
   {
-    return {std::get<tl::size_v<Tuple> - Idxs - 1>(tup)...};
+    return {::supl::get<tl::size_v<Tuple> - Idxs - 1>(tup)...};
   }
 }  // namespace impl
 
@@ -952,8 +988,8 @@ namespace impl {
                                   std::is_nothrow_copy_constructible>)
     -> tl::split_t<Tuple, Idx>
   {
-    return {{std::get<Pre_Idxs>(tup)...},
-            {std::get<Post_Idxs + Idx>(tup)...}};
+    return {{::supl::get<Pre_Idxs>(tup)...},
+            {::supl::get<Post_Idxs + Idx>(tup)...}};
   }
 
 }  // namespace impl
@@ -1002,10 +1038,10 @@ namespace impl {
     index_constant<
       End>) noexcept((std::
                         is_nothrow_copy_constructible_v<
-                          decltype(std::get<Inds + Begin>(tup))>
+                          decltype(::supl::get<Inds + Begin>(tup))>
                       && ...)) -> tl::sublist_t<Tuple, Begin, End>
   {
-    return {std::get<Inds + Begin>(tup)...};
+    return {::supl::get<Inds + Begin>(tup)...};
   }
 }  // namespace impl
 
@@ -1056,7 +1092,7 @@ namespace impl {
 
     // GOAL: remove `tuple_cat`
     return {std::tuple_cat(
-      std::tuple {std::get<Idxs>(tup1), std::get<Idxs>(tup2)}...)};
+      std::tuple {::supl::get<Idxs>(tup1), ::supl::get<Idxs>(tup2)}...)};
   }
 
 }  // namespace impl
@@ -1104,8 +1140,8 @@ namespace impl {
     -> std::pair<std::tuple<tl::at_index_t<Idxs * 2, Tuple>...>,
                  std::tuple<tl::at_index_t<Idxs * 2 + 1, Tuple>...>>
   {
-    return {{std::get<Idxs * 2>(tup)...},
-            {std::get<Idxs * 2 + 1>(tup)...}};
+    return {{::supl::get<Idxs * 2>(tup)...},
+            {::supl::get<Idxs * 2 + 1>(tup)...}};
   }
 }  // namespace impl
 
@@ -1140,7 +1176,7 @@ namespace impl {
                  std::is_nothrow_copy_constructible>)
     -> tl::front_n_t<Tuple, sizeof...(Idxs)>
   {
-    return {std::get<Idxs>(tup)...};
+    return {::supl::get<Idxs>(tup)...};
   }
 
 }  // namespace impl
@@ -1176,14 +1212,14 @@ template <std::size_t Count, typename Tuple>
 /**
  * @brief Get first element of tuple
  *
- * @note This is redundant to `std::get<0>`,
+ * @note This is redundant to `::supl::get<0>`,
  * but has been added anyways for interface consistency.
  */
 /* }}} */
 template <typename Tuple>
 [[nodiscard]] constexpr auto front(Tuple&& tup) noexcept -> decltype(auto)
 {
-  return std::get<0>(tup);
+  return ::supl::get<0>(tup);
 }
 
 namespace impl {
@@ -1196,7 +1232,7 @@ namespace impl {
                                      std::is_nothrow_copy_constructible>)
     -> tl::back_n_t<Tuple, sizeof...(Idxs)>
   {
-    return {std::get<Idxs + Offset>(tup)...};
+    return {::supl::get<Idxs + Offset>(tup)...};
   }
 
 }  // namespace impl
@@ -1238,7 +1274,7 @@ template <std::size_t Count, typename Tuple>
 template <typename Tuple>
 [[nodiscard]] constexpr auto back(Tuple&& tup) noexcept -> decltype(auto)
 {
-  return std::get<tl::size_v<Tuple> - 1>(tup);
+  return ::supl::get<tl::size_v<Tuple> - 1>(tup);
 }
 
 namespace impl {
@@ -1256,7 +1292,7 @@ namespace impl {
                                  std::is_nothrow_copy_constructible>)
     -> Tuple<List_Pack...>
   {
-    return {std::get<Idxs>(tup)...};
+    return {::supl::get<Idxs>(tup)...};
   }
 }  // namespace impl
 
@@ -1309,7 +1345,7 @@ namespace impl {
   {
     return {
       static_cast<typename Transform<tl::at_index_t<Idxs, Tuple>>::type>(
-        std::get<Idxs>(tup))...};
+        ::supl::get<Idxs>(tup))...};
   }
 
 }  // namespace impl
@@ -1362,7 +1398,7 @@ namespace impl {
                                                           Old_Types>
                           && ...)) -> Tuple<New_Types...>
   {
-    return {static_cast<Old_Types>(std::get<Idxs>(tup))...};
+    return {static_cast<Old_Types>(::supl::get<Idxs>(tup))...};
   }
 
 }  // namespace impl
@@ -1436,3 +1472,4 @@ template <typename... Ts>
 }  // namespace supl::tuple
 
 #endif
+

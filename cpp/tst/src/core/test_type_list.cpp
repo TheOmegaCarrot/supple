@@ -896,39 +896,42 @@ static_assert(
     supl::tl::split_t<
       supl::tl::type_list<int, char, bool, float, double, unsigned>,
       3>,
-    std::pair<supl::tl::type_list<int, char, bool>,
-              supl::tl::type_list<float, double, unsigned>>>);
-
-static_assert(std::is_same_v<
-              supl::tl::split_t<supl::tl::type_list<int>, 1>,
-              std::pair<supl::tl::type_list<int>, supl::tl::type_list<>>>);
-
-static_assert(std::is_same_v<
-              supl::tl::split_t<supl::tl::type_list<int>, 0>,
-              std::pair<supl::tl::type_list<>, supl::tl::type_list<int>>>);
-
-static_assert(std::is_same_v<
-              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 0>,
-              std::pair<supl::tl::type_list<>,
-                        supl::tl::type_list<int, char, bool>>>);
-
-static_assert(std::is_same_v<
-              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 3>,
-              std::pair<supl::tl::type_list<int, char, bool>,
-                        supl::tl::type_list<>>>);
+    supl::tl::type_pair<supl::tl::type_list<int, char, bool>,
+                        supl::tl::type_list<float, double, unsigned>>>);
 
 static_assert(
   std::is_same_v<
-    supl::tl::split_t<supl::tl::type_list<int, char, bool>, 1>,
-    std::pair<supl::tl::type_list<int>, supl::tl::type_list<char, bool>>>);
+    supl::tl::split_t<supl::tl::type_list<int>, 1>,
+    supl::tl::type_pair<supl::tl::type_list<int>, supl::tl::type_list<>>>);
+
+static_assert(
+  std::is_same_v<
+    supl::tl::split_t<supl::tl::type_list<int>, 0>,
+    supl::tl::type_pair<supl::tl::type_list<>, supl::tl::type_list<int>>>);
+
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 0>,
+              supl::tl::type_pair<supl::tl::type_list<>,
+                                  supl::tl::type_list<int, char, bool>>>);
+
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 3>,
+              supl::tl::type_pair<supl::tl::type_list<int, char, bool>,
+                                  supl::tl::type_list<>>>);
+
+static_assert(std::is_same_v<
+              supl::tl::split_t<supl::tl::type_list<int, char, bool>, 1>,
+              supl::tl::type_pair<supl::tl::type_list<int>,
+                                  supl::tl::type_list<char, bool>>>);
 
 static_assert(
   std::is_same_v<
     supl::tl::split_t<
       supl::tl::type_list<int, char, bool, float, double, unsigned>,
       5>,
-    std::pair<supl::tl::type_list<int, char, bool, float, double>,
-              supl::tl::type_list<unsigned>>>);
+    supl::tl::type_pair<
+      supl::tl::type_list<int, char, bool, float, double>,
+      supl::tl::type_list<unsigned>>>);
 
 ///////////////////////////////////////////// swap
 

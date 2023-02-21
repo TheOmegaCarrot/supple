@@ -986,7 +986,8 @@ namespace impl {
     index_constant<
       Idx>) noexcept(tl::all_of_v<Tuple,
                                   std::is_nothrow_copy_constructible>)
-    -> tl::split_t<Tuple, Idx>
+    -> std::pair<typename tl::split_t<Tuple, Idx>::first,
+                 typename tl::split_t<Tuple, Idx>::second>
   {
     return {{::supl::get<Pre_Idxs>(tup)...},
             {::supl::get<Post_Idxs + Idx>(tup)...}};
@@ -1015,7 +1016,8 @@ namespace impl {
 template <std::size_t Idx, typename Tuple>
 [[nodiscard]] constexpr auto split(const Tuple& tup) noexcept(
   tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-  -> tl::split_t<Tuple, Idx>
+  -> std::pair<typename tl::split_t<Tuple, Idx>::first,
+               typename tl::split_t<Tuple, Idx>::second>
 {
   static_assert(Idx <= tl::size_v<Tuple>, "Index out of bounds");
 

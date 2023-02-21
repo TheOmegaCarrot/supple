@@ -34,6 +34,21 @@ namespace supl::tl {
 template <typename... Pack>
 struct type_list { };
 
+///////////////////////////////////////////// type_pair
+
+/* {{{ doc */
+/**
+ * @brief Type system equivalent to `std::pair`
+ *
+ * @details Provides inner type aliases `first` and `second`
+ */
+/* }}} */
+template <typename First, typename Second>
+struct type_pair {
+  using first = First;
+  using second = Second;
+};
+
 ///////////////////////////////////////////// translate
 
 /* {{{ doc */
@@ -747,18 +762,18 @@ using reverse_t = typename reverse<LIST>::type;
 
 /* {{{ doc */
 /**
- * @brief Splits a type list into a `std::pair` of two type lists
+ * @brief Splits a type list into a `tl::type_pair` of two type lists
  *
  * @tparam Idx Index of the element just after the split point
  *
  * ex. `split_t<type_list<int, char, bool, void>, 3>
- * -> std::pair<type_list<int, char, bool>, type_list<void>>`
+ * -> tl::type_pair<type_list<int, char, bool>, type_list<void>>`
  */
 /* }}} */
 template <typename LIST, std::size_t Idx>
 struct split
     : type_identity<
-        std::pair<front_n_t<LIST, Idx>, drop_front_n_t<LIST, Idx>>> {
+        type_pair<front_n_t<LIST, Idx>, drop_front_n_t<LIST, Idx>>> {
   static_assert(Idx <= size_v<LIST>, "Index out of bounds");
 };
 
@@ -1015,7 +1030,8 @@ namespace impl {
  * @brief Associate each element of a type list with its index
  *
  * @details Example:
- * `enumerate_t<type_list<int, char>> -> type_list<std::pair<int, index_constant>>`
+ * `enumerate_t<type_list<int, char>>
+ * -> type_list<type_index_pair<int, 0>, type_index_pair<char, 1>>`
  */
 /* }}} */
 template <typename LIST>

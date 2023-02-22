@@ -176,7 +176,7 @@ namespace impl {
   template <typename T>
   void to_stream_tuple_impl(std::ostream& out, const T& value) noexcept
   {
-    if constexpr ( std::tuple_size<T>::value > 1 ) {
+    if constexpr ( std::tuple_size_v<T> > 1 ) {
 
       out << "( ";
       tuple::for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
@@ -449,3 +449,4 @@ inline namespace literals {
 }  // namespace supl
 
 #endif
+

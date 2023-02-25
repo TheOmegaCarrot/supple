@@ -66,6 +66,7 @@ class ostream_state_restorer
 {
 private:
 
+  // NOLINTNEXTLINE(*ref*)
   std::ostream& m_stream;
   std::ios_base::fmtflags m_flags;
 
@@ -364,6 +365,7 @@ class stream_adapter
 {
 private:
 
+  // NOLINTNEXTLINE(*ref*)
   const T& m_value;
 
 public:

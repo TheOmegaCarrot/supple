@@ -235,8 +235,8 @@ template <typename T>
  * `between(a, b)` is identical to `between(b, a)`.
  */
 /* }}} */
-template <typename T>
-[[nodiscard]] constexpr auto between(T&& bound1, T&& bound2) noexcept
+template <typename T, typename U>
+[[nodiscard]] constexpr auto between(T&& bound1, U&& bound2) noexcept
 {
   return predicate {[lower_bound {std::min(bound1, bound2)},
                      upper_bound {std::max(bound1, bound2)}](
@@ -544,3 +544,4 @@ template <typename Arg, typename T>
 }  // namespace supl
 
 #endif
+

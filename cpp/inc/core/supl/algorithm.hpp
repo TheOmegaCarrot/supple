@@ -236,7 +236,7 @@ constexpr void for_each_adjacent(
   Itr follower {begin};
 
   for ( ; leader != end; ++leader, ++follower ) {
-    supl::invoke(func, *leader, *follower);
+    supl::invoke(func, *follower, *leader);
   }
 }
 

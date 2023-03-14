@@ -1171,6 +1171,63 @@ template <typename Tuple>
 }
 
 namespace impl {
+  template <std::size_t Chunk_Size,
+            template <typename...>
+            typename Tuple,
+            typename... Elems,
+            std::size_t... Chunk_Seq>
+  [[nodiscard]] constexpr auto chunk_impl(
+    const Tuple<Elems...>& tup,
+    std::index_sequence<
+      Chunk_Seq...>) noexcept(tl::
+                                all_of_v<
+                                  tl::type_list<Elems...>,
+                                  std::is_nothrow_copy_constructible>)
+  {
+    return Tuple {subtuple<Chunk_Size * Chunk_Seq,
+                           (Chunk_Size * Chunk_Seq) + Chunk_Size>(tup)...};
+  }
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Split a tuple into chunks, preserving order
+ *
+ * @details Example:
+ * `chunk<2>(std::tuple{42, 3.14, true, 'r'})
+ * == std::tuple{std::tuple{int, 3.14}, std::tuple{true, 'r}}`
+ *
+ * @tparam Chunk_Size Size of the output chunks
+ *
+ * @tparam Tuple Template type of tuple
+ *
+ * @tparam Elems Types of tuple elements
+ *
+ * @param tup Input tuple
+ */
+/* }}} */
+template <std::size_t Chunk_Size,
+          template <typename...>
+          typename Tuple,
+          typename... Elems>
+[[nodiscard]] constexpr auto chunk(const Tuple<Elems...>& tup) noexcept(
+  tl::all_of_v<tl::type_list<Elems...>,
+               std::is_nothrow_copy_constructible>)
+{
+  static_assert(Chunk_Size != 0, "Chunk size cannot be 0");
+  static_assert(sizeof...(Elems) % Chunk_Size == 0,
+                "Size of tuple must be a multiple of chunk size");
+
+  if constexpr ( sizeof...(Elems) == 0 ) {
+    // if empty tuple input, return empty tuple
+    return Tuple<> {};
+  } else {
+    return impl::chunk_impl<Chunk_Size>(
+      tup, std::make_index_sequence<sizeof...(Elems) / Chunk_Size> {});
+  }
+}
+
+namespace impl {
   template <typename Tuple, std::size_t... Idxs>
   [[nodiscard]] constexpr auto
   front_n_impl(const Tuple& tup, std::index_sequence<Idxs...>) noexcept(

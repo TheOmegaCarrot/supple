@@ -1195,7 +1195,7 @@ namespace impl {
  *
  * @details Example:
  * `chunk<2>(std::tuple{42, 3.14, true, 'r'})
- * == std::tuple{std::tuple{int, 3.14}, std::tuple{true, 'r}}`
+ * == std::tuple{std::tuple{42, 3.14}, std::tuple{true, 'r}}`
  *
  * @tparam Chunk_Size Size of the output chunks
  *

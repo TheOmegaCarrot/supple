@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
+#include <optional>
 #include <sstream>
 #include <string_view>
 #include <type_traits>
@@ -149,6 +150,20 @@ struct is_variant : impl::is_variant_impl<remove_cvref_t<T>> { };
 template <typename T>
 constexpr inline bool is_variant_v = is_variant<T>::value;
 
+namespace impl {
+  template <typename T>
+  struct is_optional_impl : std::false_type { };
+
+  template <typename T>
+  struct is_optional_impl<std::optional<T>> : std::true_type { };
+}  // namespace impl
+
+template <typename T>
+struct is_optional : impl::is_optional_impl<remove_cvref_t<T>> { };
+
+template <typename T>
+constexpr inline bool is_optional_v = is_optional<T>::value;
+
 /* {{{ doc */
 /**
  * @brief Determines if a type can be called with `supl::to_stream`
@@ -162,7 +177,8 @@ struct is_to_stream_valid
                        is_pair<remove_cvref_t<T>>,
                        is_iterable<remove_cvref_t<T>>,
                        is_std_monostate<remove_cvref_t<T>>,
-                       is_variant<remove_cvref_t<T>>> { };
+                       is_variant<remove_cvref_t<T>>,
+                       is_optional<remove_cvref_t<T>>> { };
 
 template <typename T>
 constexpr inline bool is_to_stream_valid_v = is_to_stream_valid<T>::value;
@@ -247,6 +263,17 @@ namespace impl {
     }
   }
 
+  template <typename T>
+  void to_stream_optional_impl(std::ostream& out,
+                               const T& optional) noexcept
+  {
+    if ( optional.has_value() ) {
+      to_stream(out, optional.value());
+    } else {
+      to_stream(out, "<empty optional>");
+    }
+  }
+
 }  // namespace impl
 
 /* {{{ doc */
@@ -297,6 +324,7 @@ namespace impl {
  * - `T` provides an iterator pair which dereference to a valid type
  * - `T` is `std::monostate`
  * - `T` is an `std::variant` where every possible alternative is a valid type
+ * - `T` is an `std::optional` of a valid type
  * - `to_stream` has been specialized for T
  * If this precondition is not satisfied, it is a compile-time error.
  *
@@ -345,6 +373,10 @@ void to_stream(std::ostream& out, const T& value) noexcept
   } else if constexpr ( is_variant_v<T> ) {
 
     impl::to_stream_variant_impl(out, value);
+
+  } else if constexpr ( is_optional_v<T> ) {
+
+    impl::to_stream_optional_impl(out, value);
   }
 }
 

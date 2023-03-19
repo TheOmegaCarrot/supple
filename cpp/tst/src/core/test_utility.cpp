@@ -282,6 +282,24 @@ static auto test_to_string() -> supl::test_results
   results.enforce_exactly_equal(supl::to_string(test_variant),
                                 "<valueless_by_exception>"s);
 
+  std::optional<
+    std::variant<int, char, std::tuple<int, char, std::vector<int>>>>
+    test_optional {};
+
+  results.enforce_equal(supl::to_string(test_optional),
+                        "<empty optional>");
+
+  test_optional = 5;
+
+  results.enforce_equal(supl::to_string(test_optional), "5");
+
+  test_optional = std::tuple {
+    5, 'g', std::vector {1, 2, 3}
+  };
+
+  results.enforce_equal(supl::to_string(test_optional),
+                        "( 5, g, [ 1, 2, 3 ] )");
+
   return results;
 }
 
@@ -448,3 +466,4 @@ auto main() -> int
 
   return runner.run();
 }
+

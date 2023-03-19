@@ -7,12 +7,6 @@ endif()
 
 project(supl LANGUAGES CXX)
 
-if(AUTOMATED_BUILD)
-  set(LINK_COMPILE_COMMANDS NO)
-endif()
-
-option(LINK_COMPILE_COMMANDS
-       "Cmake should link compile commands into source directory" YES)
 option(SANITIZE_DEBUG "Sanitizers should be used in debug builds" YES)
 option(SANITIZE_RELEASE "Sanitizers should be used in release builds" NO)
 option(FULL_TESTS "Test C++20 and 23 as well" NO)
@@ -26,14 +20,6 @@ option(DO_CLANG_TIDY "Run clang-tidy during build" NO)
 option(DO_TIME_TRACE "Run time trace during build" YES)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-if(LINK_COMPILE_COMMANDS)
-  # compile_commands needed in source directory
-  message("-- Linking compile_commands.json")
-  file(CREATE_LINK "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
-       "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json" COPY_ON_ERROR
-       SYMBOLIC)
-endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # set warnings for GCC

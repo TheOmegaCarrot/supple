@@ -11,7 +11,7 @@ stages:
 build-job:
   stage: build
   script:
-    - cmake -S cpp -B build -DCMAKE_BUILD_TYPE=Debug
+    - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
     - cmake --build build --parallel $(nproc)
   artifacts:
     paths:

@@ -1,0 +1,5 @@
+function(supple_status_message message)
+  if(SUPPLE_STATUS)
+    message(STATUS ${message})
+  endif()
+endfunction()

@@ -483,4 +483,3 @@ inline namespace literals {
 }  // namespace supl
 
 #endif
-

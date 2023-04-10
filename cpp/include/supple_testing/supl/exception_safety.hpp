@@ -124,4 +124,3 @@ auto throwing_function(Ts&&...) noexcept(false) -> Ret;
 }  // namespace supl
 
 #endif
-

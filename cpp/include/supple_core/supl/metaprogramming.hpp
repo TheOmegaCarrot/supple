@@ -885,4 +885,3 @@ struct sequential_applicator {
 }  // namespace supl
 
 #endif
-

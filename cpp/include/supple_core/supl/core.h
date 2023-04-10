@@ -27,4 +27,3 @@
 #include "utility.hpp"
 
 #endif
-

@@ -19,4 +19,3 @@
 #include "test_section.hpp"
 
 #endif
-

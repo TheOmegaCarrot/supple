@@ -778,4 +778,3 @@ copy_n(InItr begin, const std::size_t n, OutItr out) noexcept(
 }  // namespace supl
 
 #endif
-

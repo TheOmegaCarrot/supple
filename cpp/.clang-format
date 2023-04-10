@@ -93,7 +93,7 @@ IndentWrappedFunctionNames: false
 
 InsertBraces: false
 
-InsertNewlineAtEOF: true
+InsertNewlineAtEOF: false
 
 IntegerLiteralSeparator:
   Binary: 0

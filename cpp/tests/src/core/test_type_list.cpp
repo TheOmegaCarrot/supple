@@ -1191,4 +1191,3 @@ static_assert(
 
 auto main() -> int
 { }
-

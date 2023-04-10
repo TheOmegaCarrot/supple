@@ -11,11 +11,11 @@ string(REGEX REPLACE "@CMAKE_INSTALL_LIBDIR@/cmake/supple-@PROJECT_VERSION@$" "@
 
 add_library(supple::core INTERFACE IMPORTED)
 target_include_directories(supple::core
-  INTERFACE ${supple_include_path}/supple_core)
+  INTERFACE ${supple_include_path}/supple/core)
 target_compile_features(supple::core INTERFACE cxx_std_17)
 
 add_library(supple::testing INTERFACE IMPORTED)
-target_include_directories(supple::testing INTERFACE ${supple_include_path}/supple_testing)
+target_include_directories(supple::testing INTERFACE ${supple_include_path}/supple/testing)
 target_link_libraries(supple::testing INTERFACE supple::core)
 target_compile_features(supple::testing INTERFACE cxx_std_17)
 

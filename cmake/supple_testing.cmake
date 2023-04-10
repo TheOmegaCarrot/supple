@@ -20,8 +20,8 @@ function(supple_add_test input_test_file)
     target_link_libraries(${test_exe_name} PRIVATE supple_compiler_flags)
 
     target_include_directories(
-      ${test_exe_name} PRIVATE ${SUPPLE_TOP_DIR}/cpp/include/supple_core
-                               ${SUPPLE_TOP_DIR}/cpp/include/supple_testing)
+      ${test_exe_name} PRIVATE ${SUPPLE_TOP_DIR}/cpp/include/supple/core
+                               ${SUPPLE_TOP_DIR}/cpp/include/supple/testing)
 
     set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
       ${SUPPLE_TEST_BIN_DIR})

@@ -42,13 +42,13 @@ include(GNUInstallDirs)
 
 add_library(supple_internal_core INTERFACE)
 target_include_directories(supple_internal_core INTERFACE 
-  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple_core
+  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple/core
   )
 target_compile_features(supple_internal_core INTERFACE cxx_std_17)
 
 add_library(supple_internal_testing INTERFACE)
 target_include_directories(supple_internal_testing INTERFACE 
-  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple_testing
+  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple/testing
   )
 target_link_libraries(supple_internal_testing INTERFACE supple::core)
 target_compile_features(supple_internal_testing INTERFACE cxx_std_17)
@@ -85,8 +85,8 @@ install(FILES
   )
 
 install(DIRECTORY 
-  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple_core
-  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple_testing
+  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple
+  ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   )
 

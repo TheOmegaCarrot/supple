@@ -1,0 +1,10 @@
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/addition.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/add_to_string.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/arithmetic.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/division.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/multiplication.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/subtraction.cpp)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/add_ostream)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/rel_ops)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sym_rel_ops)

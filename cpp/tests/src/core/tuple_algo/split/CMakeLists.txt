@@ -1,0 +1,7 @@
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/at_beginning.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/at_end.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/halves.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/near_beginning.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/near_end.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/references.cpp)
+

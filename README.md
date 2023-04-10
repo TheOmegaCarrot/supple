@@ -20,7 +20,7 @@ I've made things just as a learning exercise.
 # How do I use this?
 
 You can simply add this repository as a submodule, and `add_subdirectory` in cmake,
-or you may install it into your `CMAKE_PREFIX_PATH`.
+or you may install it into your `CMAKE_PREFIX_PATH` and use `find_package`.
 The package currently defines three targets: `supple::core`, `supple::testing`, and `supple::full`.
 
 * `supple::full` will always link all targets.
@@ -49,3 +49,5 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 cmake --build build --target test
 ```
+
+Run `cmake -S . -B build -LH` for details on more options.

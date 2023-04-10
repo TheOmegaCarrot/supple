@@ -97,6 +97,7 @@ struct throws_on_move {
  * move construction, or move assignment.
 */
 /* }}} */
+// NOLINTNEXTLINE(*exception*)
 struct throws_on_copy_and_move
     : throws_on_copy
     , throws_on_move { };

@@ -352,6 +352,7 @@ void to_stream(std::ostream& out, const T& value) noexcept
 
   } else if constexpr ( is_printable_v<T> ) {
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     out << value;
 
   } else if constexpr ( is_tuple_v<T> ) {

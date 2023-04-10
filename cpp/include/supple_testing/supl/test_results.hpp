@@ -113,6 +113,7 @@ public:
 
     std::stringstream details;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     if ( result != expected ) {
       m_fail_count += 1;
 

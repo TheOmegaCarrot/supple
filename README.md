@@ -19,17 +19,17 @@ I've made things just as a learning exercise.
 
 # How do I use this?
 
-You can simply clone this repository into your `CMAKE_PREFIX_PATH`,
-find the package `supple`.
+You can simply add this repository as a submodule, and `add_subdirectory` in cmake,
+or you may install it into your `CMAKE_PREFIX_PATH`.
 The package currently defines three targets: `supple::core`, `supple::testing`, and `supple::full`.
 
 * `supple::full` will always link all targets.
 * `supple::core` contains the majority of the library's functionality.
 * `supple::testing` contains the testing framework.
 
-Alternatively, you can simply copy `cpp/inc/<module-name>` into your project, and include headers directly,
+Alternatively, you can simply copy `cpp/include/supple/<module-name>` into your project, and include headers directly,
 listing the `<module-name>` directory as `-isystem`.
-For example: if you copy `cpp/inc/core` to `my_cool_project/include/core`,
+For example: if you copy `cpp/include/supple/core` to `my_cool_project/include/core`,
 then you should pass the compiler option `-isystem include/core`.
 
 ---
@@ -45,19 +45,7 @@ please file a bug report.
 To run the tests:
 
 ```
-cmake -S cpp -B build -DCMAKE_BUILD_TYPE=Debug
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 cmake --build build --target test
 ```
-
----
-
-# What's with the name?
-
-This project was formerly known as `supplementaries`,
-but after I became aware of [another software project](https://github.com/MehVahdJukaar/Supplementaries)
-of the same name, I figured I ought to change the name.
-
-"Supple" was didn't require me to change the namespace,
-and "supple" is how I'd been pronouncing the namespace
-anyhow.

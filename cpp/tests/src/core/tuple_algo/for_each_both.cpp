@@ -40,28 +40,38 @@ auto unequal_size() -> supl::test_results
 {
   supl::test_results results;
 
+  int call_count {0};
+
   std::tuple tup1 {1, 'g', true};
   std::tuple tup2 {8UL, 42U, nullptr, '^'};
 
-  const overload check_fn {[&results](int a, unsigned long b) {
-                             results.enforce_equal(a, 1);
-                             results.enforce_equal(b, 8UL);
-                           },
-                           [&results](char a, unsigned b) {
-                             results.enforce_equal(a, 'g');
-                             results.enforce_equal(b, 42U);
-                           },
-                           [&results](bool a, std::nullptr_t b) {
-                             results.enforce_true(a);
-                             results.enforce_equal(b, nullptr);
-                           }};
+  const overload check_fn {
+    [&results, &call_count](int a, unsigned long b) {
+      results.enforce_equal(a, 1);
+      results.enforce_equal(b, 8UL);
+      ++call_count;
+    },
+    [&results, &call_count](char a, unsigned b) {
+      results.enforce_equal(a, 'g');
+      results.enforce_equal(b, 42U);
+      ++call_count;
+    },
+    [&results, &call_count](bool a, std::nullptr_t b) {
+      results.enforce_true(a);
+      results.enforce_equal(b, nullptr);
+      ++call_count;
+    }};
 
   supl::tuple::for_each_both(tup1, tup2, check_fn);
+
+  results.enforce_equal(call_count, 3);
 
   std::tuple tup3 {1, 'g', true, '^'};
   std::tuple tup4 {8UL, 42U, nullptr};
 
   supl::tuple::for_each_both(tup3, tup4, check_fn);
+
+  results.enforce_equal(call_count, 6);
 
   return results;
 }

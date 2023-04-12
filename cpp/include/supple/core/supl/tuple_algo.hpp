@@ -125,6 +125,44 @@ constexpr void for_each(Tuple&& tup, Func&& func) noexcept(noexcept(
 }
 
 namespace impl {
+  template <typename Tuple1,
+            typename Tuple2,
+            typename Func,
+            std::size_t... Idxs>
+  constexpr void for_each_both_impl(
+    Tuple1&& tup1,
+    Tuple2&& tup2,
+    Func&& func,
+    std::index_sequence<
+      Idxs...>) noexcept(noexcept((::supl::invoke(func,
+                                                  std::get<Idxs>(tup1),
+                                                  std::get<Idxs>(tup2)),
+                                   ...)))
+  {
+    (::supl::invoke(func, std::get<Idxs>(tup1), std::get<Idxs>(tup2)),
+     ...);
+  }
+}  // namespace impl
+
+template <typename Tuple1, typename Tuple2, typename Func>
+constexpr void
+for_each_both(Tuple1&& tup1, Tuple2&& tup2, Func&& func) noexcept(
+  noexcept(impl::for_each_both_impl(
+    tup1,
+    tup2,
+    func,
+    std::make_index_sequence<std::min(tl::size_v<Tuple1>,
+                                      tl::size_v<Tuple2>)> {})))
+{
+  constexpr auto seq {std::make_index_sequence<std::min(
+    tl::size_v<Tuple1>, tl::size_v<Tuple2>)> {}};
+  impl::for_each_both_impl(std::forward<Tuple1>(tup1),
+                           std::forward<Tuple2>(tup2),
+                           std::forward<Func>(func),
+                           seq);
+}
+
+namespace impl {
   template <typename Tuple,
             typename Func,
             std::size_t... Idxs,

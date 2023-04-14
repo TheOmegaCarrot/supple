@@ -254,8 +254,6 @@ private:
     }
   };  // Iterator_Model
 
-  Iterator_Concept* m_value;
-
 public:
 
   constexpr inline static std::size_t small_buffer_size {2
@@ -264,8 +262,10 @@ public:
 private:
 
   // NOLINTNEXTLINE(*array*)
-  std::byte m_small_buffer[small_buffer_size];
+  alignas(std::max_align_t) std::byte m_small_buffer[small_buffer_size];
   bool m_using_small_buffer;
+
+  Iterator_Concept* m_value;
 
   void p_throw_if_null() const
   {

@@ -118,7 +118,9 @@ public:
  * This is checked by a static_assert.
  *
  * Post-incement and decrement are especially inefficient, as those
- * operations require heap allocation.
+ * operations may require heap allocation.
+ * This class does implement a small buffer optimization,
+ * and uses a buffer of size `(2 * sizeof(void*))`.
  *
  * Equality comparison between two of these type erased iterators
  * which are contain iterators of different underlying type is guaranteed
@@ -144,6 +146,7 @@ public:
  */
 /* }}} */
 template <typename Value_Type>
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 class iterator
 {
 private:
@@ -271,6 +274,17 @@ private:
     }
   }
 
+  void p_delete_value() noexcept
+  {
+    if ( m_using_small_buffer ) {
+      m_value->~Iterator_Concept();
+      m_value = nullptr;
+    } else {
+      delete m_value;
+      m_value = nullptr;
+    }
+  }
+
 public:
 
   using value_type = std::remove_const_t<Value_Type>;
@@ -281,21 +295,35 @@ public:
 
   iterator() noexcept = default;
 
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
   iterator(const iterator& src) noexcept
       : m_using_small_buffer {src.m_using_small_buffer}
   {
+    if ( src.m_value == nullptr ) {
+      m_value = nullptr;
+      m_using_small_buffer = false;
+    }
+
     if ( src.m_using_small_buffer ) {
-      m_value = src.m_value->iterator_impl_placement_clone(m_small_buffer);
+      m_value = src.m_value->iterator_impl_placement_clone(
+        static_cast<std::byte*>(m_small_buffer));
     } else {
       m_value = src.m_value->iterator_impl_new_clone();
     }
   }
 
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
   iterator(iterator&& src) noexcept
       : m_using_small_buffer {src.m_using_small_buffer}
   {
+    if ( src.m_value == nullptr ) {
+      m_value = nullptr;
+      m_using_small_buffer = false;
+    }
+
     if ( src.m_using_small_buffer ) {
-      m_value = src.m_value->iterator_impl_placement_clone(m_small_buffer);
+      m_value = src.m_value->iterator_impl_placement_clone(
+        static_cast<std::byte*>(m_small_buffer));
     } else {
       m_value = src.m_value;
       src.m_value = nullptr;
@@ -304,22 +332,41 @@ public:
 
   auto operator=(const iterator& rhs) noexcept -> iterator&
   {
-    if ( this != &rhs ) {
-      if ( rhs.m_using_small_buffer ) {
-        m_value =
-          rhs.m_value->iterator_impl_placement_clone(m_small_buffer);
-      } else {
-        m_value = rhs.m_value->iterator_impl_new_clone();
-      }
+    if ( this == &rhs ) {
+      return *this;
     }
+
+    if ( rhs.m_value == nullptr ) {
+      m_value = nullptr;
+      m_using_small_buffer = false;
+    }
+
+    if ( rhs.m_using_small_buffer ) {
+      m_value = rhs.m_value->iterator_impl_placement_clone(
+        static_cast<std::byte*>(m_small_buffer));
+    } else {
+      m_value = rhs.m_value->iterator_impl_new_clone();
+    }
+
     return *this;
   }
 
   auto operator=(iterator&& rhs) noexcept -> iterator&
   {
+    if ( this == &rhs ) {
+      return *this;
+    }
+
+    if ( rhs.m_value == nullptr ) {
+      m_value = nullptr;
+      m_using_small_buffer = false;
+    }
+
     m_using_small_buffer = rhs.m_using_small_buffer;
+
     if ( rhs.m_using_small_buffer ) {
-      m_value = rhs.m_value->iterator_impl_placement_clone(m_small_buffer);
+      m_value = rhs.m_value->iterator_impl_placement_clone(
+        static_cast<std::byte*>(m_small_buffer));
     } else {
       m_value = rhs.m_value;
       rhs.m_value = nullptr;
@@ -328,16 +375,13 @@ public:
 
   ~iterator()
   {
-    if ( m_using_small_buffer ) {
-      m_value->~Iterator_Concept();
-    } else {
-      delete m_value;
-    }
+    this->p_delete_value();
   }
 
   template <typename T,
             typename = std::enable_if_t<
               ! std::is_same_v<std::decay_t<T>, iterator>>>
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
   explicit iterator(T&& value) noexcept
   {
     if constexpr ( sizeof(T) <= small_buffer_size ) {

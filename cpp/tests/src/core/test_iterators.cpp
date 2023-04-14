@@ -55,6 +55,14 @@ static auto test_iterator() -> supl::test_results
 
   // increment and decrement
   supl::iterator test_1 {test_vector.begin()};
+
+  if constexpr ( sizeof(std::vector<int>::const_iterator)
+                 <= supl::iterator<const int>::small_buffer_size ) {
+    results.enforce_true(test_1.using_small_buffer());
+  } else {
+    results.enforce_false(test_1.using_small_buffer());
+  }
+
   results.enforce_exactly_equal(*test_1, 1);
   ++test_1;
   results.enforce_exactly_equal(*test_1, 2);
@@ -91,8 +99,16 @@ static auto test_iterator() -> supl::test_results
   results.enforce_exactly_equal(test_a != test_b, false);
   ++test_b;
 
-  // different type - bad cast
   test_b = test_deque.begin();
+
+  if constexpr ( sizeof(std::deque<int>::const_iterator)
+                 <= supl::iterator<const int>::small_buffer_size ) {
+    results.enforce_true(test_1.using_small_buffer());
+  } else {
+    results.enforce_false(test_1.using_small_buffer());
+  }
+
+  // different type - bad cast
   results.enforce_exactly_equal(test_a == test_b, false);
   results.enforce_exactly_equal(test_a != test_b, true);
 

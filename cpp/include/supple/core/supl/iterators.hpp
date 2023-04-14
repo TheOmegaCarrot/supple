@@ -169,8 +169,11 @@ private:
       -> bool = 0;
     virtual auto operator!=(const iterator& rhs) const noexcept
       -> bool = 0;
-    [[nodiscard]] virtual auto iterator_impl_clone() const noexcept
-      -> std::unique_ptr<Iterator_Concept> = 0;
+    [[nodiscard]] virtual auto iterator_impl_new_clone() const noexcept
+      -> Iterator_Concept* = 0;
+    [[nodiscard]] virtual auto
+    iterator_impl_placement_clone(std::byte* buffer) const noexcept
+      -> Iterator_Concept* = 0;
   };  // Iterator_Concept
 
   template <typename Erased_Iterator_Type>
@@ -221,7 +224,7 @@ private:
     {
       if ( auto* rhs_cast {
              dynamic_cast<Iterator_Model<Erased_Iterator_Type>*>(
-               rhs.m_value.get())};
+               rhs.m_value)};
            rhs_cast != nullptr ) {
         return this->m_erased == rhs_cast->m_erased;
       } else {
@@ -234,14 +237,32 @@ private:
       return ! this->operator==(rhs);
     }
 
-    [[nodiscard]] auto iterator_impl_clone() const noexcept
-      -> std::unique_ptr<Iterator_Concept> override
+    [[nodiscard]] auto iterator_impl_new_clone() const noexcept
+      -> Iterator_Concept* override
     {
-      return std::make_unique<Iterator_Model>(m_erased);
+      return new Iterator_Model(m_erased);
+    }
+
+    [[nodiscard]] auto
+    iterator_impl_placement_clone(std::byte* buffer) const noexcept
+      -> Iterator_Concept* override
+    {
+      return ::new (buffer) Iterator_Model(m_erased);
     }
   };  // Iterator_Model
 
-  std::unique_ptr<Iterator_Concept> m_value;
+  Iterator_Concept* m_value;
+
+public:
+
+  constexpr inline static std::size_t small_buffer_size {2
+                                                         * sizeof(void*)};
+
+private:
+
+  // NOLINTNEXTLINE(*array*)
+  std::byte m_small_buffer[small_buffer_size];
+  bool m_using_small_buffer;
 
   void p_throw_if_null() const
   {
@@ -261,29 +282,73 @@ public:
   iterator() noexcept = default;
 
   iterator(const iterator& src) noexcept
-      : m_value {src.m_value->iterator_impl_clone()}
-  { }
+      : m_using_small_buffer {src.m_using_small_buffer}
+  {
+    if ( src.m_using_small_buffer ) {
+      m_value = src.m_value->iterator_impl_placement_clone(m_small_buffer);
+    } else {
+      m_value = src.m_value->iterator_impl_new_clone();
+    }
+  }
 
-  iterator(iterator&&) noexcept = default;
+  iterator(iterator&& src) noexcept
+      : m_using_small_buffer {src.m_using_small_buffer}
+  {
+    if ( src.m_using_small_buffer ) {
+      m_value = src.m_value->iterator_impl_placement_clone(m_small_buffer);
+    } else {
+      m_value = src.m_value;
+      src.m_value = nullptr;
+    }
+  }
 
   auto operator=(const iterator& rhs) noexcept -> iterator&
   {
     if ( this != &rhs ) {
-      m_value = rhs.m_value->iterator_impl_clone();
+      if ( rhs.m_using_small_buffer ) {
+        m_value =
+          rhs.m_value->iterator_impl_placement_clone(m_small_buffer);
+      } else {
+        m_value = rhs.m_value->iterator_impl_new_clone();
+      }
     }
     return *this;
   }
 
-  auto operator=(iterator&&) noexcept -> iterator& = default;
-  ~iterator() = default;
+  auto operator=(iterator&& rhs) noexcept -> iterator&
+  {
+    m_using_small_buffer = rhs.m_using_small_buffer;
+    if ( rhs.m_using_small_buffer ) {
+      m_value = rhs.m_value->iterator_impl_placement_clone(m_small_buffer);
+    } else {
+      m_value = rhs.m_value;
+      rhs.m_value = nullptr;
+    }
+  }
+
+  ~iterator()
+  {
+    if ( m_using_small_buffer ) {
+      m_value->~Iterator_Concept();
+    } else {
+      delete m_value;
+    }
+  }
 
   template <typename T,
             typename = std::enable_if_t<
               ! std::is_same_v<std::decay_t<T>, iterator>>>
   explicit iterator(T&& value) noexcept
-      : m_value(std::make_unique<Iterator_Model<std::decay_t<T>>>(
-        std::forward<T>(value)))
-  { }
+  {
+    if constexpr ( sizeof(T) <= small_buffer_size ) {
+      m_using_small_buffer = true;
+      m_value =
+        ::new (m_small_buffer) Iterator_Model<std::decay_t<T>>(value);
+    } else {
+      m_using_small_buffer = false;
+      m_value = new Iterator_Model<std::decay_t<T>>(value);
+    }
+  }
 
   template <typename T,
             typename = std::enable_if_t<
@@ -313,8 +378,15 @@ public:
                      typename std::iterator_traits<T>::value_type>,
       "Can only assign to iterator of the same value type");
 
-    m_value = std::make_unique<Iterator_Model<std::decay_t<T>>>(
-      std::forward<T>(rhs));
+    if constexpr ( sizeof(T) <= small_buffer_size ) {
+      m_using_small_buffer = true;
+      m_value =
+        ::new (m_small_buffer) Iterator_Model<std::decay_t<T>>(rhs);
+    } else {
+      m_using_small_buffer = false;
+      m_value = new Iterator_Model<std::decay_t<T>>(rhs);
+    }
+
     return *this;
   }
 
@@ -383,6 +455,11 @@ public:
   [[nodiscard]] auto is_null() const noexcept -> bool
   {
     return ! m_value;
+  }
+
+  [[nodiscard]] auto using_small_buffer() const noexcept -> bool
+  {
+    return m_using_small_buffer;
   }
 };
 

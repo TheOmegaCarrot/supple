@@ -50,13 +50,13 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
               -Wno-unsafe-buffer-usage)
 
   # Use clang-tidy if not an automated build by cmake-all.sh
-  if(DO_CLANG_TIDY)
+  if(SUPPLE_DO_CLANG_TIDY)
     supple_status_message("Using clang-tidy")
     set(CMAKE_CXX_CLANG_TIDY
         "clang-tidy;--config-file=${CMAKE_CURRENT_SOURCE_DIR}/cpp/.clang-tidy")
   endif()
 
-  if(DO_TIME_TRACE)
+  if(SUPPLE_DO_TIME_TRACE)
     supple_status_message("Running time trace")
     target_compile_options(supple_compiler_flags INTERFACE -ftime-trace)
   endif()
@@ -95,7 +95,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
                                            "Clang")
 
   # GCC and Clang are the only compilers I have which support sanitizers
-  if(SANITIZE_DEBUG AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+  if(SUPPLE_SANITIZE_DEBUG AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     supple_status_message("Using sanitizers in debug")
     set(SANITIZERS address,leak,undefined)
 
@@ -107,7 +107,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL
 
   endif()
 
-  if(SANITIZE_RELEASE AND CMAKE_BUILD_TYPE STREQUAL "Release")
+  if(SUPPLE_SANITIZE_RELEASE AND CMAKE_BUILD_TYPE STREQUAL "Release")
     supple_status_message("Using sanitizers in release")
     set(SANITIZERS address,leak,undefined)
 

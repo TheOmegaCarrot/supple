@@ -5,8 +5,7 @@ function(supple_add_test input_test_file)
   get_filename_component(filename ${input_test_file} NAME_WLE)
   get_filename_component(raw_path ${input_test_file} DIRECTORY)
 
-  string(REGEX REPLACE ".*/cpp/tests/src/" "" shortened_path
-                 ${raw_path})
+  string(REGEX REPLACE ".*/cpp/tests/src/" "" shortened_path ${raw_path})
 
   string(REPLACE "/" "_" nearly_corrected_path ${shortened_path})
   string(REGEX REPLACE "^_" "" corrected_path ${nearly_corrected_path})
@@ -24,7 +23,7 @@ function(supple_add_test input_test_file)
                                ${SUPPLE_TOP_DIR}/cpp/include/supple/testing)
 
     set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-      ${SUPPLE_TEST_BIN_DIR})
+                                                      ${SUPPLE_TEST_BIN_DIR})
 
     # remove test_ prefix for prettier test output
     string(REPLACE "test_" "" test_name ${test_exe_name})

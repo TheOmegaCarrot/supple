@@ -12,7 +12,6 @@ function(supple_add_test input_test_file)
 
   foreach(numeric_standard ${SUPPLE_TEST_STANDARDS})
     set(test_exe_name ${corrected_path}_${filename}_${numeric_standard})
-    message(DEBUG "numeric_standard: ${numeric_standard}")
 
     add_executable(${test_exe_name} ${input_test_file})
 

@@ -23,6 +23,8 @@ function(supple_add_test_must_not_compile input_test_file)
     set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
                                                       ${SUPPLE_TEST_BIN_DIR})
 
+    target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
+
     # remove test_ prefix for prettier test output
     string(REPLACE "test_" "" test_name ${test_exe_name})
 

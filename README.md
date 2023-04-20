@@ -55,7 +55,7 @@ cmake --build build --target test
 You can set the option `-DSUPPLE_COMPILE_TESTS=NO` when configuring. For example:
 
 ```
-cmake -S . -B build -DSUPPLE_COMPILE_TESTS=NO -DCMAKE_PREFIX_PATH=/wherever/you/want
+cmake -S . -B build -DSUPPLE_COMPILE_TESTS=NO -DCMAKE_INSTALL_PREFIX=/wherever/you/want
 ```
 
 Run `cmake -S . -B build -LH` for details on more options.

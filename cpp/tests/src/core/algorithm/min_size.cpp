@@ -1,3 +1,5 @@
+#include <array>
+
 #include "supl/algorithm.hpp"
 #include "supl/test_results.hpp"
 #include "supl/utility.hpp"

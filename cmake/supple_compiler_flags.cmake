@@ -135,7 +135,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
               -Wmultichar
               -Wmultistatement-macros
               -Wnarrowing
-              # -Wnoexcept
+              # -Wnoexcept # seems to give a lot of false positives?
               -Wnoexcept-type
               -Wnonnull
               -Wnonnull-compare

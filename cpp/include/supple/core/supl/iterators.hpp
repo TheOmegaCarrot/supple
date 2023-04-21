@@ -158,23 +158,23 @@ private:
     Iterator_Concept() noexcept = default;
     Iterator_Concept(const Iterator_Concept&) noexcept = default;
     Iterator_Concept(Iterator_Concept&&) noexcept = default;
-    auto operator=(const Iterator_Concept&) noexcept
+    inline auto operator=(const Iterator_Concept&) noexcept
       -> Iterator_Concept& = default;
-    auto operator=(Iterator_Concept&&) noexcept
+    inline auto operator=(Iterator_Concept&&) noexcept
       -> Iterator_Concept& = default;
     virtual ~Iterator_Concept() noexcept = default;
 
-    virtual void operator++() noexcept = 0;
-    virtual void operator--() noexcept = 0;
-    virtual auto operator*() noexcept -> Value_Type& = 0;
-    virtual auto operator->() noexcept -> Value_Type* = 0;
-    virtual auto operator==(const iterator& rhs) const noexcept
+    virtual inline void operator++() noexcept = 0;
+    virtual inline void operator--() noexcept = 0;
+    virtual inline auto operator*() noexcept -> Value_Type& = 0;
+    virtual inline auto operator->() noexcept -> Value_Type* = 0;
+    virtual inline auto operator==(const iterator& rhs) const noexcept
       -> bool = 0;
-    virtual auto operator!=(const iterator& rhs) const noexcept
+    virtual inline auto operator!=(const iterator& rhs) const noexcept
       -> bool = 0;
-    [[nodiscard]] virtual auto iterator_impl_new_clone() const noexcept
-      -> Iterator_Concept* = 0;
-    [[nodiscard]] virtual auto
+    [[nodiscard]] virtual inline auto
+    iterator_impl_new_clone() const noexcept -> Iterator_Concept* = 0;
+    [[nodiscard]] virtual inline auto
     iterator_impl_placement_clone(std::byte* buffer) const noexcept
       -> Iterator_Concept* = 0;
   };  // Iterator_Concept
@@ -191,9 +191,10 @@ private:
     Iterator_Model() noexcept = default;
     Iterator_Model(const Iterator_Model&) noexcept = default;
     Iterator_Model(Iterator_Model&&) noexcept = default;
-    auto operator=(const Iterator_Model&) noexcept
+    inline auto operator=(const Iterator_Model&) noexcept
       -> Iterator_Model& = default;
-    auto operator=(Iterator_Model&&) noexcept -> Iterator_Model& = default;
+    inline auto operator=(Iterator_Model&&) noexcept
+      -> Iterator_Model& = default;
     ~Iterator_Model() noexcept override = default;
 
     template <typename Type,
@@ -203,27 +204,28 @@ private:
         : m_erased {std::forward<Type>(value)}
     { }
 
-    void operator++() noexcept override
+    inline void operator++() noexcept override
     {
       ++m_erased;
     }
 
-    void operator--() noexcept override
+    inline void operator--() noexcept override
     {
       --m_erased;
     }
 
-    auto operator*() noexcept -> Value_Type& override
+    inline auto operator*() noexcept -> Value_Type& override
     {
       return *m_erased;
     }
 
-    auto operator->() noexcept -> Value_Type* override
+    inline auto operator->() noexcept -> Value_Type* override
     {
       return &*m_erased;
     }
 
-    auto operator==(const iterator& rhs) const noexcept -> bool override
+    inline auto operator==(const iterator& rhs) const noexcept
+      -> bool override
     {
       if ( auto* rhs_cast {
              dynamic_cast<Iterator_Model<Erased_Iterator_Type>*>(
@@ -235,18 +237,19 @@ private:
       }
     }
 
-    auto operator!=(const iterator& rhs) const noexcept -> bool override
+    inline auto operator!=(const iterator& rhs) const noexcept
+      -> bool override
     {
       return ! this->operator==(rhs);
     }
 
-    [[nodiscard]] auto iterator_impl_new_clone() const noexcept
+    [[nodiscard]] inline auto iterator_impl_new_clone() const noexcept
       -> Iterator_Concept* override
     {
       return new Iterator_Model(m_erased);
     }
 
-    [[nodiscard]] auto
+    [[nodiscard]] inline auto
     iterator_impl_placement_clone(std::byte* buffer) const noexcept
       -> Iterator_Concept* override
     {
@@ -267,14 +270,14 @@ private:
 
   Iterator_Concept* m_value;
 
-  void p_throw_if_null() const
+  inline void p_throw_if_null() const
   {
     if ( ! m_value ) {
       throw bad_iterator_access {};
     }
   }
 
-  void p_delete_value() noexcept
+  inline void p_delete_value() noexcept
   {
     if ( m_using_small_buffer ) {
       m_value->~Iterator_Concept();
@@ -330,7 +333,7 @@ public:
     }
   }
 
-  auto operator=(const iterator& rhs) noexcept -> iterator&
+  inline auto operator=(const iterator& rhs) noexcept -> iterator&
   {
     if ( this == &rhs ) {
       return *this;
@@ -351,7 +354,7 @@ public:
     return *this;
   }
 
-  auto operator=(iterator&& rhs) noexcept -> iterator&
+  inline auto operator=(iterator&& rhs) noexcept -> iterator&
   {
     if ( this == &rhs ) {
       return *this;
@@ -397,7 +400,7 @@ public:
   template <typename T,
             typename = std::enable_if_t<
               ! std::is_same_v<std::decay_t<T>, iterator>>>
-  auto operator=(T&& rhs) noexcept -> iterator&
+  inline auto operator=(T&& rhs) noexcept -> iterator&
   {
 
     // if behaving as non-const iterator,
@@ -434,14 +437,14 @@ public:
     return *this;
   }
 
-  auto operator++() -> iterator&
+  inline auto operator++() -> iterator&
   {
     this->p_throw_if_null();
     m_value->operator++();
     return *this;
   }
 
-  auto operator++(int) -> iterator
+  inline auto operator++(int) -> iterator
   {
     this->p_throw_if_null();
     iterator tmp = *this;
@@ -449,14 +452,14 @@ public:
     return tmp;
   }
 
-  auto operator--() -> iterator&
+  inline auto operator--() -> iterator&
   {
     this->p_throw_if_null();
     m_value->operator--();
     return *this;
   }
 
-  auto operator--(int) -> iterator
+  inline auto operator--(int) -> iterator
   {
     this->p_throw_if_null();
     iterator tmp = *this;
@@ -464,25 +467,25 @@ public:
     return tmp;
   }
 
-  auto operator*() const -> Value_Type&
+  inline auto operator*() const -> Value_Type&
   {
     this->p_throw_if_null();
     return m_value->operator*();
   }
 
-  auto operator->() const -> Value_Type*
+  inline auto operator->() const -> Value_Type*
   {
     this->p_throw_if_null();
     return m_value->operator->();
   }
 
-  auto operator==(const iterator& rhs) const -> bool
+  inline auto operator==(const iterator& rhs) const -> bool
   {
     this->p_throw_if_null();
     return m_value->operator==(rhs);
   }
 
-  auto operator!=(const iterator& rhs) const -> bool
+  inline auto operator!=(const iterator& rhs) const -> bool
   {
     this->p_throw_if_null();
     return ! this->operator==(rhs);
@@ -496,12 +499,12 @@ public:
    * an iterator. False if an iterator is held.
    */
   /* }}} */
-  [[nodiscard]] auto is_null() const noexcept -> bool
+  [[nodiscard]] inline auto is_null() const noexcept -> bool
   {
     return ! m_value;
   }
 
-  [[nodiscard]] auto using_small_buffer() const noexcept -> bool
+  [[nodiscard]] inline auto using_small_buffer() const noexcept -> bool
   {
     return m_using_small_buffer;
   }

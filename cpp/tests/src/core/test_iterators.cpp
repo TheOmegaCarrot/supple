@@ -151,9 +151,9 @@ static auto test_iterator() -> supl::test_results
     throw "This should be unreachable - supl::iterator null cast "
           "test";
   } catch ( supl::bad_iterator_access& e ) {
-    results.enforce_exactly_equal<const char*>(
-      e.what(),
-      "Illegal access to null supl::iterator",
+    results.enforce_equal(
+      std::string_view {e.what()},
+      std::string_view {"Illegal access to null supl::iterator"},
       "Incorrect error message");
   }
 

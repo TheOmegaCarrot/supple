@@ -37,8 +37,7 @@ then you should pass the compiler option `-isystem include/core`.
 # How do I run the tests?
 
 You may want to run the tests to ensure that this library works with your toolchain.
-Please note that use with MSVC is entirely untested and unsupported.
-This library is tested with gcc 9, 10, 11, 12, 13, and trunk, clang 11, 12, 13, 14, 15, 16, and trunk, and Intel icc 2021 and icpx 2023.
+This library is tested with gcc 9, 10, 11, 12, 13, and trunk, clang 11, 12, 13, 14, 15, 16, and trunk, Intel icc 2021 and icpx 2023, and MSVC 19.35.
 If any tests fail with any other compiler which properly supports C++17,
 please file a bug report.
 

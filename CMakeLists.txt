@@ -36,9 +36,12 @@ option(SUPPLE_OMIT_20
 option(SUPPLE_OMIT_23
        "C++23 tests should be omitted - ignored if FULL_TESTS is false" NO)
 
-# Options specific to compiling with clang
 option(SUPPLE_DO_CLANG_TIDY "Run clang-tidy during build" NO)
-option(SUPPLE_DO_TIME_TRACE "Run time trace during build" NO)
+
+# Options specific to compiling with clang
+option(SUPPLE_DO_TIME_TRACE
+       "Run clang time trace during build - ignored if compiler is not clang"
+       NO)
 
 supple_status_message("Build type: ${CMAKE_BUILD_TYPE}")
 

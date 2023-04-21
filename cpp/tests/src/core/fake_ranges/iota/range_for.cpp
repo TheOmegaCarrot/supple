@@ -1,3 +1,5 @@
+#include <array>
+
 #include "supl/fake_ranges.hpp"
 #include "supl/test_results.hpp"
 

@@ -15,13 +15,11 @@ auto main() -> int
 {
   supl::test_results results;
 
-  using std::literals::operator""s;
-
   const consumer_to_stream test1 {};
 
   std::stringstream str1;
   str1 << test1;
-  results.enforce_exactly_equal(str1.str(), "42"s);
+  results.enforce_equal(str1.str(), "42");
 
   return results.print_and_return();
 }

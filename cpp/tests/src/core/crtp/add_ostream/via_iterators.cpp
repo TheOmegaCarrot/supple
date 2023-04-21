@@ -21,13 +21,11 @@ auto main() -> int
 {
   supl::test_results results;
 
-  using std::literals::operator""s;
-
   const consumer_iterators test2 {};
 
   std::stringstream str2;
   str2 << test2;
-  results.enforce_exactly_equal(str2.str(), "[ 1, 2, 42, 18 ]"s);
+  results.enforce_equal(str2.str(), "[ 1, 2, 42, 18 ]");
 
   return results.print_and_return();
 }

@@ -24,8 +24,6 @@ auto main() -> int
 {
   supl::test_results results;
 
-  using std::literals::operator""s;
-
   const consumer_both test3 {};
 
   std::stringstream discard;
@@ -35,7 +33,7 @@ auto main() -> int
 
   std::stringstream str3;
   str3 << test3;
-  results.enforce_exactly_equal(str3.str(), "1"s);
+  results.enforce_equal(str3.str(), "1");
 
   return results.print_and_return();
 }

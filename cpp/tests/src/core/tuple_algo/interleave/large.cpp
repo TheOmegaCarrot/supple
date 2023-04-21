@@ -4,12 +4,17 @@ auto main() -> int
 {
   supl::test_results results;
 
-  using std::string_literals::operator""s;
-
   const std::tuple test_input_1 {
     42, 'g', 3.14, 81, 5.31F, 4UL, false, '7'};
   const std::tuple test_input_2 {
-    2.6F, true, 8L, 8.3F, 2U, 'u', "yes"s, std::vector {3, 5, 7}
+    2.6F,
+    true,
+    8L,
+    8.3F,
+    2U,
+    'u',
+    std::string {"yes"},
+    std::vector {3, 5, 7}
   };
 
   const std::tuple expected_output {
@@ -26,7 +31,7 @@ auto main() -> int
     4UL,
     'u',
     false,
-    "yes"s,
+    std::string {"yes"},
     '7',
     std::vector {3, 5, 7}
   };

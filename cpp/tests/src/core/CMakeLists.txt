@@ -1,4 +1,3 @@
-supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_invoke.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_iterators.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_metaprogramming.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_type_list.cpp)

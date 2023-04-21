@@ -30,7 +30,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "invoke.hpp"
 #include "metaprogramming.hpp"
 #include "type_list.hpp"
 
@@ -86,11 +85,9 @@ namespace impl {
     Tuple&& tup,
     Func&& func,
     std::index_sequence<
-      Inds...>) noexcept(noexcept((supl::invoke(func,
-                                                ::supl::get<Inds>(tup)),
-                                   ...)))
+      Inds...>) noexcept(noexcept((func(::supl::get<Inds>(tup)), ...)))
   {
-    (supl::invoke(func, ::supl::get<Inds>(tup)), ...);
+    (func(::supl::get<Inds>(tup)), ...);
   }
 
 }  // namespace impl
@@ -134,13 +131,11 @@ namespace impl {
     Tuple2&& tup2,
     Func&& func,
     std::index_sequence<
-      Idxs...>) noexcept(noexcept((::supl::invoke(func,
-                                                  std::get<Idxs>(tup1),
-                                                  std::get<Idxs>(tup2)),
+      Idxs...>) noexcept(noexcept((func(std::get<Idxs>(tup1),
+                                        std::get<Idxs>(tup2)),
                                    ...)))
   {
-    (::supl::invoke(func, std::get<Idxs>(tup1), std::get<Idxs>(tup2)),
-     ...);
+    (func(std::get<Idxs>(tup1), std::get<Idxs>(tup2)), ...);
   }
 }  // namespace impl
 
@@ -172,12 +167,10 @@ namespace impl {
     Func&& func,
     std::index_sequence<Idxs...>,
     index_constant<
-      Begin>) noexcept(noexcept((supl::invoke(func,
-                                              ::supl::get<Idxs + Begin>(
-                                                tup)),
+      Begin>) noexcept(noexcept((func(::supl::get<Idxs + Begin>(tup)),
                                  ...)))
   {
-    (supl::invoke(func, ::supl::get<Idxs + Begin>(tup)), ...);
+    (func(::supl::get<Idxs + Begin>(tup)), ...);
   }
 
 }  // namespace impl
@@ -248,17 +241,13 @@ namespace impl {
     const Tuple<Elems...>& tup,
     Func&& func,
     std::index_sequence<
-      Inds...>) noexcept((noexcept(supl::invoke(func,
-                                                ::supl::get<Inds>(tup)))
-                          && ...)
+      Inds...>) noexcept((noexcept(func(::supl::get<Inds>(tup))) && ...)
                          && (std::is_nothrow_constructible_v<
-                               decltype(supl::invoke(
-                                 func,
-                                 ::supl::get<Inds>(tup)))>
+                               decltype(func(::supl::get<Inds>(tup)))>
                              && ...))
     -> Tuple<decltype(func(::supl::get<Inds>(tup)))...>
   {
-    return {supl::invoke(func, ::supl::get<Inds>(tup))...};
+    return {func(::supl::get<Inds>(tup))...};
   }
 
 }  // namespace impl
@@ -299,9 +288,8 @@ namespace impl {
     const Tuple& tup,
     Pred&& pred,
     std::index_sequence<
-      Inds...>) noexcept(noexcept((supl::invoke(pred,
-                                                ::supl::get<Inds>(tup))
-                                   || ...))) -> bool
+      Inds...>) noexcept(noexcept((pred(::supl::get<Inds>(tup)) || ...)))
+    -> bool
   {
     static_assert(
       std::conjunction_v<
@@ -310,7 +298,7 @@ namespace impl {
       "Predicate must be invocable returning a bool with every "
       "type in the tuple");
 
-    return (supl::invoke(pred, ::supl::get<Inds>(tup)) || ...);
+    return (pred(::supl::get<Inds>(tup)) || ...);
   }
 
 }  // namespace impl
@@ -352,9 +340,8 @@ namespace impl {
     const Tuple& tup,
     Pred&& pred,
     std::index_sequence<
-      Inds...>) noexcept(noexcept((supl::invoke(pred,
-                                                ::supl::get<Inds>(tup))
-                                   && ...))) -> bool
+      Inds...>) noexcept(noexcept((pred(::supl::get<Inds>(tup)) && ...)))
+    -> bool
   {
     static_assert(
       std::conjunction_v<
@@ -363,7 +350,7 @@ namespace impl {
       "Predicate must be invocable returning a bool with every "
       "type in the tuple");
 
-    return (supl::invoke(pred, ::supl::get<Inds>(tup)) && ...);
+    return (pred(::supl::get<Inds>(tup)) && ...);
   }
 
 }  // namespace impl
@@ -430,19 +417,16 @@ template <typename Tuple, typename Pred>
 
 namespace impl {
   template <typename Tuple, typename Pred, std::size_t... Inds>
-  constexpr auto count_if_impl(
-    const Tuple& tup,
-    Pred&& pred,
-    std::index_sequence<
-      Inds...>) noexcept(noexcept((static_cast<std::
-                                                 size_t>(
-                                     supl::invoke(pred,
-                                                  ::supl::get<Inds>(tup)))
-                                   + ...))) -> std::size_t
+  constexpr auto
+  count_if_impl(const Tuple& tup,
+                Pred&& pred,
+                std::index_sequence<
+                  Inds...>) noexcept(noexcept((static_cast<std::
+                                                             size_t>(pred(
+                                                 ::supl::get<Inds>(tup)))
+                                               + ...))) -> std::size_t
   {
-    return (
-      static_cast<std::size_t>(supl::invoke(pred, ::supl::get<Inds>(tup)))
-      + ...);
+    return (static_cast<std::size_t>(pred(::supl::get<Inds>(tup))) + ...);
   }
 
 }  // namespace impl

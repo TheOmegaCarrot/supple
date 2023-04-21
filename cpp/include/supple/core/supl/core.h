@@ -17,7 +17,6 @@
 #include "crtp.hpp"
 #include "fake_ranges.hpp"
 #include "functional.hpp"
-#include "invoke.hpp"
 #include "iterators.hpp"
 #include "metaprogramming.hpp"
 #include "predicates.hpp"

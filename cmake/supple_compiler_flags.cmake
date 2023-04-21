@@ -85,7 +85,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
                       -Rno-debug-disables-optimization)
 
 elseif(MSVC)
-  # I do not have access to MSVC, and thus cannot test it
+  target_compile_options(
+    supple_compiler_flags INTERFACE /permissive-)
   supple_status_message("WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
   supple_status_message("WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
   supple_status_message("WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")

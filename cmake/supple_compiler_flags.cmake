@@ -140,7 +140,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 -Winherited-variadic-ctor
                 -Winit-list-lifetime
                 -Winit-self
-                -Winline
+                # -Winline # I don't need warnings every time something doesn't get inlined
                 -Winterference-size
                 -Wint-in-bool-context
                 -Wint-to-pointer-cast

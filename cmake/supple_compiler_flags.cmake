@@ -87,9 +87,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
 elseif(MSVC)
   target_compile_options(
     supple_compiler_flags INTERFACE /permissive-)
-  supple_status_message("WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
-  supple_status_message("WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
-  supple_status_message("WARNING: Use of MSVC is UNSUPPORTED and UNTESTED")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL

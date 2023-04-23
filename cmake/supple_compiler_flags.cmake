@@ -52,7 +52,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 -Waddress-of-packed-member
                 -Waggressive-loop-optimizations
                 -Waligned-new=all
-                -Wall
                 -Walloca
                 -Walloc-zero
                 -Warith-conversion
@@ -112,7 +111,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 -Wenum-conversion
                 -Wexceptions
                 -Wexpansion-to-defined
-                -Wextra
                 -Wextra-semi
                 -Wfloat-conversion
                 -Wfloat-equal
@@ -191,7 +189,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 -Wpacked-bitfield-compat
                 -Wpacked-not-aligned
                 -Wparentheses
-                -Wpedantic
                 -Wpessimizing-move
                 -Wplacement-new=2
                 -Wpmf-conversions

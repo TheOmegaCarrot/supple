@@ -16,6 +16,7 @@
 #ifndef SUPPLE_CORE_TYPE_LIST_HPP
 #define SUPPLE_CORE_TYPE_LIST_HPP
 
+#include <algorithm>
 #include <cstddef>
 #include <type_traits>
 #include <utility>

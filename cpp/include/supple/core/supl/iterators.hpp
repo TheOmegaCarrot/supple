@@ -195,7 +195,7 @@ private:
       -> Iterator_Model& = default;
     inline auto operator=(Iterator_Model&&) noexcept
       -> Iterator_Model& = default;
-    ~Iterator_Model() noexcept override = default;
+    ~Iterator_Model() noexcept final = default;
 
     template <typename Type,
               typename = std::enable_if<
@@ -204,28 +204,28 @@ private:
         : m_erased {std::forward<Type>(value)}
     { }
 
-    inline void operator++() noexcept override
+    inline void operator++() noexcept final
     {
       ++m_erased;
     }
 
-    inline void operator--() noexcept override
+    inline void operator--() noexcept final
     {
       --m_erased;
     }
 
-    inline auto operator*() noexcept -> Value_Type& override
+    inline auto operator*() noexcept -> Value_Type& final
     {
       return *m_erased;
     }
 
-    inline auto operator->() noexcept -> Value_Type* override
+    inline auto operator->() noexcept -> Value_Type* final
     {
       return &*m_erased;
     }
 
     inline auto operator==(const iterator& rhs) const noexcept
-      -> bool override
+      -> bool final
     {
       if ( auto* rhs_cast {
              dynamic_cast<Iterator_Model<Erased_Iterator_Type>*>(
@@ -238,20 +238,20 @@ private:
     }
 
     inline auto operator!=(const iterator& rhs) const noexcept
-      -> bool override
+      -> bool final
     {
       return ! this->operator==(rhs);
     }
 
     [[nodiscard]] inline auto iterator_impl_new_clone() const noexcept
-      -> Iterator_Concept* override
+      -> Iterator_Concept* final
     {
       return new Iterator_Model(m_erased);
     }
 
     [[nodiscard]] inline auto
     iterator_impl_placement_clone(std::byte* buffer) const noexcept
-      -> Iterator_Concept* override
+      -> Iterator_Concept* final
     {
       return ::new (buffer) Iterator_Model(m_erased);
     }

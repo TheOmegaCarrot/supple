@@ -16,12 +16,9 @@ build-job:
   artifacts:
     paths:
       - build
-
+    expire_in: 20min
+    
 unit-test-job:
   stage: test
-  # variables:
-  #   - CTEST_OUTPUT_ON_FAILURE: "1"
-  #   - CTEST_PARALLEL_LEVEL: "$(nproc)"
-  #   - CTEST_PROGRESS_OUTPUT: "1"
   script:
     - cmake --build build --target test

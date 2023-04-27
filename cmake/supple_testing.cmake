@@ -7,11 +7,12 @@ function(supple_add_test_must_not_compile input_test_file)
 
   string(REGEX REPLACE ".*/cpp/tests/src/" "" shortened_path ${raw_path})
 
-  string(REPLACE "/" "_" nearly_corrected_path ${shortened_path})
-  string(REGEX REPLACE "^_" "" corrected_path ${nearly_corrected_path})
+  string(REPLACE "/" "-" nearly_corrected_path ${shortened_path})
+  string(REGEX REPLACE "^-" "" corrected_path ${nearly_corrected_path})
 
   foreach(numeric_standard ${SUPPLE_TEST_STANDARDS})
-    set(test_exe_name ${corrected_path}_${filename}_${numeric_standard})
+    set(test_exe_name ${corrected_path}-${filename}-${numeric_standard})
+    string(REPLACE "-" "." test_exe_name ${test_exe_name})
 
     add_executable(${test_exe_name} EXCLUDE_FROM_ALL ${input_test_file})
 
@@ -25,17 +26,14 @@ function(supple_add_test_must_not_compile input_test_file)
 
     target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
 
-    # remove test_ prefix for prettier test output
-    string(REPLACE "test_" "" test_name ${test_exe_name})
-
     add_test(
-      NAME ${test_name}
+      NAME ${test_exe_name}
       COMMAND ${CMAKE_COMMAND} --build . --target ${test_exe_name} --config $<CONFIGURATION>
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
       )
 
     set_tests_properties(
-      ${test_name}
+      ${test_exe_name}
       PROPERTIES WILL_FAIL TRUE
       )
 
@@ -50,11 +48,12 @@ function(supple_add_test input_test_file)
 
   string(REGEX REPLACE ".*/cpp/tests/src/" "" shortened_path ${raw_path})
 
-  string(REPLACE "/" "_" nearly_corrected_path ${shortened_path})
-  string(REGEX REPLACE "^_" "" corrected_path ${nearly_corrected_path})
+  string(REPLACE "/" "-" nearly_corrected_path ${shortened_path})
+  string(REGEX REPLACE "^-" "" corrected_path ${nearly_corrected_path})
 
   foreach(numeric_standard ${SUPPLE_TEST_STANDARDS})
-    set(test_exe_name ${corrected_path}_${filename}_${numeric_standard})
+    set(test_exe_name ${corrected_path}-${filename}-${numeric_standard})
+    string(REPLACE "-" "." test_exe_name ${test_exe_name})
 
     add_executable(${test_exe_name} ${input_test_file})
 
@@ -69,11 +68,8 @@ function(supple_add_test input_test_file)
 
     target_compile_features(${test_exe_name} PUBLIC cxx_std_${numeric_standard})
 
-    # remove test_ prefix for prettier test output
-    string(REPLACE "test_" "" test_name ${test_exe_name})
-
     add_test(
-      NAME ${test_name}
+      NAME ${test_exe_name}
       COMMAND ${test_exe_name}
       WORKING_DIRECTORY ${SUPPLE_TEST_BIN_DIR})
   endforeach()

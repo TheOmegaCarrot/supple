@@ -15,9 +15,7 @@ auto main() -> int
 {
   supl::test_results results;
 
-  using std::literals::operator""s;
-
-  results.enforce_exactly_equal(consumer {}.to_string(), "42"s);
+  results.enforce_equal(consumer {}.to_string(), "42");
 
   return results.print_and_return();
 }

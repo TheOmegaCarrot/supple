@@ -37,8 +37,7 @@ then you should pass the compiler option `-isystem include/core`.
 # How do I run the tests?
 
 You may want to run the tests to ensure that this library works with your toolchain.
-Please note that use with MSVC is entirely untested and unsupported.
-This library is tested with gcc 9, 10, 11, 12, clang 11, 12, 13, 14, 15, 16 and Intel icc 2021 and icpx 2023.
+This library is tested with gcc 9, 10, 11, 12, 13, and trunk, clang 11, 12, 13, 14, 15, 16, and trunk, Intel icc 2021 and icpx 2023, and MSVC 19.35.
 If any tests fail with any other compiler which properly supports C++17,
 please file a bug report.
 
@@ -48,6 +47,14 @@ To run the tests:
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 cmake --build build --target test
+```
+
+# What if I want to install this without running the tests?
+
+You can set the option `-DSUPPLE_COMPILE_TESTS=NO` when configuring. For example:
+
+```
+cmake -S . -B build -DSUPPLE_COMPILE_TESTS=NO -DCMAKE_INSTALL_PREFIX=/wherever/you/want
 ```
 
 Run `cmake -S . -B build -LH` for details on more options.

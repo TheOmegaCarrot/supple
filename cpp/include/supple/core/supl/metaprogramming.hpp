@@ -182,8 +182,11 @@ using peel_last_t = typename peel_last<Pack...>::type;
  */
 /* }}} */
 template <typename... Pack>
-using is_pack_uniform =
-  std::bool_constant<(std::is_same_v<peel_first_t<Pack...>, Pack> && ...)>;
+struct is_pack_uniform { };
+
+template <typename T, typename... Pack>
+struct is_pack_uniform<T, Pack...>
+    : std::bool_constant<(std::is_same_v<T, Pack> && ...)> { };
 
 /* {{{ doc */
 /**

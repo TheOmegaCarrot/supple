@@ -2,7 +2,8 @@
 
 # What is this?
 
-This is a small header-only library providing various handy utilities.
+This is a small header-only library providing various handy utilities,
+with no dependencies beyond a compliant C++ standard library.
 Some may not be handy, and may just be me having a neat idea.
 Some loosely inspired by the STL, some just my ideas.
 This library is written for C++17, but does work with later standards.

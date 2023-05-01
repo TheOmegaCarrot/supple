@@ -11,6 +11,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(supple_message)
 
+if(CMAKE_BUILD_TYPE STREQUAL "")
+  message(FATAL_ERROR "Build type not specified!")
+endif()
+
 set(SUPPLE_MAIN_PROJECT NO)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   set(SUPPLE_MAIN_PROJECT YES)

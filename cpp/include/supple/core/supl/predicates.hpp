@@ -18,6 +18,7 @@
 #ifndef SUPPLE_CORE_PREDICATES_HPP
 #define SUPPLE_CORE_PREDICATES_HPP
 
+#include <algorithm>
 #include <functional>
 #include <tuple>
 #include <type_traits>

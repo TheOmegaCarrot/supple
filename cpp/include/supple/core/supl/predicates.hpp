@@ -105,8 +105,8 @@ template <typename... Ts>
     return false_pred;
   } else {
     return predicate {
-      [parent_args_tup = std::tuple<std::decay_t<Ts>...> {args...}](
-        const auto& new_arg) constexpr noexcept -> bool {
+      [parent_args_tup = std::tuple<std::decay_t<Ts>...> {std::forward<Ts>(
+         args)...}](const auto& new_arg) constexpr noexcept -> bool {
         return std::apply(
           [&new_arg](auto&&... inner_args) {
             return ((new_arg == inner_args) || ...);

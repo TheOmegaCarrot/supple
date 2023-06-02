@@ -576,7 +576,7 @@ namespace impl {
  * for_each(func, b.begin(), b.end()),`
  *
  * @pre Must be passed a pack of matching iterator pairs.
- * ex. `for_each_all(callable, begin1, end1, begin2, end2, begin3, end3)`
+ * ex. `for_each_chain(callable, begin1, end1, begin2, end2, begin3, end3)`
  * Failure to meet this precondition may be a compile-time error
  * if types mismatch,
  * or a undefined behavior if types match,

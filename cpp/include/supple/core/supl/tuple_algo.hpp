@@ -455,6 +455,12 @@ count_if(const Tuple& tup, Pred&& pred) noexcept(noexcept(
                       std::make_index_sequence<tl::size_v<Tuple>> {})))
   -> std::size_t
 {
+  // This (and much of this file) could be much nicer in C++20
+  // no impl function, just IILE
+  /* return [&]<std::size_t... Inds>(std::index_sequence<Inds...>) { */
+  /*   return (static_cast<std::size_t>(pred(::supl::get<Inds>(tup))) + ...); */
+  /* }(std::make_index_sequence<tl::size_v<Tuple>> {}); */
+
   constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
   return impl::count_if_impl(tup, std::forward<Pred>(pred), seq);
 }

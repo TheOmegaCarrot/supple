@@ -690,11 +690,6 @@ template <
     (std::is_same_v<bool,
                     decltype(std::declval<Pred>()(std::declval<Args>()))>
      && ...)
-    || sizeof...(Args) == 0>,
-  typename = std::enable_if<
-    (std::is_same_v<bool,
-                    decltype(std::declval<Pred>()(std::declval<Args>()))>
-     && ...)
     || sizeof...(Args) == 0>>
 [[nodiscard]] constexpr auto none_of(Pred&& pred, Args&&... args) noexcept(
   (noexcept(pred(std::forward<Args>(args))) && ...)) -> bool

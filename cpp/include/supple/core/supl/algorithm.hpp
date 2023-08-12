@@ -23,7 +23,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "functional.hpp"
 #include "metaprogramming.hpp"
 #include "tuple_algo.hpp"
 

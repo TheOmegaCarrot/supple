@@ -25,10 +25,7 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <numeric>
 #include <utility>
-
-#include "algorithm.hpp"
 
 namespace supl::fr {
 

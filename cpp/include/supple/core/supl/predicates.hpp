@@ -19,7 +19,6 @@
 #define SUPPLE_CORE_PREDICATES_HPP
 
 #include <algorithm>
-#include <functional>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -301,8 +300,8 @@ template <typename... Preds>
       std::forward<Preds>(preds)...}}](
       auto&& arg) constexpr noexcept -> bool {
       return std::apply(
-        [&arg](auto&&... inner_preds) constexpr noexcept(noexcept(
-          (inner_preds(std::forward<decltype(arg)>(arg)) && ...))) {
+        [&arg](auto&&... inner_preds) constexpr noexcept(
+          noexcept((inner_preds(std::forward<decltype(arg)>(arg))&&...))) {
           return (inner_preds(std::forward<decltype(arg)>(arg)) && ...);
         },
         pred_tup);

@@ -14,7 +14,6 @@
 #define SUPPLE_CORE_ITERATORS_HPP
 
 #include <cstddef>
-#include <functional>
 #include <iterator>
 #include <memory>
 #include <type_traits>

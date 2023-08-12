@@ -13,6 +13,8 @@
 #ifndef SUPPLE_CORE_METAPROGRAMMING_HPP
 #define SUPPLE_CORE_METAPROGRAMMING_HPP
 
+#include <cstddef>
+#include <iosfwd>
 #include <iterator>
 #include <memory>
 #include <tuple>

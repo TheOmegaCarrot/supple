@@ -14,6 +14,7 @@
 #ifndef SUPPLE_CORE_CRTP_HPP
 #define SUPPLE_CORE_CRTP_HPP
 
+#include <ios>
 #include <sstream>
 #include <string>
 #include <type_traits>

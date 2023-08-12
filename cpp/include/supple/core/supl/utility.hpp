@@ -19,11 +19,15 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <ios>
+#include <iosfwd>
 #include <iterator>
 #include <optional>
 #include <sstream>
+#include <string>
 #include <string_view>
 #include <type_traits>
+#include <utility>
 #include <variant>
 
 #include "iterators.hpp"

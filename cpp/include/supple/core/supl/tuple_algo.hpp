@@ -518,10 +518,9 @@ namespace impl {
   [[nodiscard]] constexpr auto push_back_as_impl(
     const Tuple& tup,
     std::index_sequence<Idxs...>,
-    Param&&
-      data) noexcept(tl::all_of_v<Tuple,
-                                  std::is_nothrow_copy_constructible>&&
-                       std::is_nothrow_constructible_v<As, Param>)
+    Param&& data) noexcept(tl::all_of_v<Tuple,
+                                        std::is_nothrow_copy_constructible>
+                           && std::is_nothrow_constructible_v<As, Param>)
     -> tl::push_back_t<Tuple, As>
   {
     return {::supl::get<Idxs>(tup)..., std::forward<Param>(data)};
@@ -554,8 +553,8 @@ namespace impl {
 template <typename As, typename Param, typename Tuple>
 [[nodiscard]] constexpr auto
 push_back_as(const Tuple& tup, Param&& data) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>&&
-    std::is_nothrow_constructible_v<As, Param>)
+  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+  && std::is_nothrow_constructible_v<As, Param>)
   -> tl::push_back_t<Tuple, As>
 {
   constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
@@ -649,10 +648,9 @@ namespace impl {
   [[nodiscard]] constexpr auto push_front_as_impl(
     const Tuple& tup,
     std::index_sequence<Idxs...>,
-    Param&&
-      data) noexcept(tl::all_of_v<Tuple,
-                                  std::is_nothrow_copy_constructible>&&
-                       std::is_nothrow_constructible_v<As, Param>)
+    Param&& data) noexcept(tl::all_of_v<Tuple,
+                                        std::is_nothrow_copy_constructible>
+                           && std::is_nothrow_constructible_v<As, Param>)
     -> tl::push_front_t<Tuple, As>
   {
     return {std::forward<Param>(data), ::supl::get<Idxs>(tup)...};
@@ -685,8 +683,8 @@ namespace impl {
 template <typename As, typename Param, typename Tuple>
 [[nodiscard]] constexpr auto
 push_front_as(const Tuple& tup, Param&& data) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>&&
-    std::is_nothrow_constructible_v<As, Param>)
+  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+  && std::is_nothrow_constructible_v<As, Param>)
   -> tl::push_front_t<Tuple, As>
 {
   constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
@@ -1113,10 +1111,10 @@ namespace impl {
     const Tuple2& tup2,
     std::index_sequence<
       Idxs...>) noexcept(tl::all_of_v<Tuple1,
-                                      std::is_nothrow_copy_constructible>&&
-                           tl::all_of_v<
-                             Tuple2,
-                             std::is_nothrow_copy_constructible>)
+                                      std::is_nothrow_copy_constructible>
+                         && tl::all_of_v<
+                           Tuple2,
+                           std::is_nothrow_copy_constructible>)
     -> tl::interleave_t<Tuple1, Tuple2>
   {
 
@@ -1149,8 +1147,8 @@ namespace impl {
 template <typename Tuple1, typename Tuple2>
 [[nodiscard]] constexpr auto
 interleave(const Tuple1& tup1, const Tuple2& tup2) noexcept(
-  tl::all_of_v<Tuple1, std::is_nothrow_copy_constructible>&&
-    tl::all_of_v<Tuple2, std::is_nothrow_copy_constructible>)
+  tl::all_of_v<Tuple1, std::is_nothrow_copy_constructible>
+  && tl::all_of_v<Tuple2, std::is_nothrow_copy_constructible>)
   -> tl::interleave_t<Tuple1, Tuple2>
 {
   static_assert(tl::size_v<Tuple1> == tl::size_v<Tuple2>,

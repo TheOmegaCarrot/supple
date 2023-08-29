@@ -19,8 +19,7 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <ios>
-#include <iosfwd>
+#include <iostream>
 #include <iterator>
 #include <optional>
 #include <sstream>
@@ -67,7 +66,6 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
 /* }}} */
 class ostream_state_restorer
 // Tested by functioning properly in to_stream
-// as a function-local class
 {
 private:
 

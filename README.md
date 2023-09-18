@@ -24,7 +24,7 @@ You can simply add this repository as a submodule, and `add_subdirectory` in cma
 or you may install it into your `CMAKE_PREFIX_PATH` and use `find_package`.
 The package currently defines three targets: `supple::core`, `supple::testing`, and `supple::full`.
 
-* `supple::full` will always link all targets.
+* `supple::full` will always link all targets except `supple::testing`.
 * `supple::core` contains the majority of the library's functionality.
 * `supple::testing` contains the testing framework.
 

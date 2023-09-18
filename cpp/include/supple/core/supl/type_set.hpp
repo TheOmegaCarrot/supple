@@ -1,0 +1,4 @@
+#ifndef SUPPLE_CORE_TYPE_SET_HPP
+#define SUPPLE_CORE_TYPE_SET_HPP
+
+#endif

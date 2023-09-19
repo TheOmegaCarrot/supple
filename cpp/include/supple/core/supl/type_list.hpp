@@ -1126,7 +1126,11 @@ namespace impl {
             typename LIST2,
             typename... Pack1,
             typename... Pack2>
-  struct is_subset_impl<LIST1<Pack1...>, LIST2<Pack2...>> { };
+  struct is_subset_impl<LIST1<Pack1...>, LIST2<Pack2...>>
+    : std::bool_constant<
+    (contains_v<Pack1, LIST2<Pack2...> > && ...)
+    >
+  { };
 
 }  // namespace impl
 
@@ -1144,19 +1148,22 @@ namespace impl {
 /* }}} */
 template <typename LIST1, typename LIST2>
 struct is_subset
-    // clang-format off
+// clang-format off
     : std::conditional_t< empty_v<LIST1>,
         std::true_type,
-        std::conditional_t< tl::equal_v<LIST1,LIST2>,
-          std::true_type,
-          std::conditional_t< size_v<LIST1> == size_v<LIST2>,
-            is_permutation<LIST1,LIST2>,
-            impl::is_subset_impl<LIST1,LIST2>
-          >
-        > 
-      >{
-
-  // clang-format on
+        std::conditional_t< empty_v<LIST2>,
+          std::false_type,
+          std::conditional_t< tl::equal_v<LIST1,LIST2>,
+            std::true_type,
+            std::conditional_t< size_v<LIST1> == size_v<LIST2>,
+              is_permutation<LIST1,LIST2>,
+              impl::is_subset_impl<LIST1,LIST2>
+            >
+          > 
+        >
+      >
+// clang-format on
+{
   static_assert(! has_duplicates_v<LIST1>,
                 "Precondition not satisfied, first type list contains "
                 "duplicate types");

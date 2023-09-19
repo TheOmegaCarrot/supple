@@ -2,6 +2,7 @@
 #define SUPPLE_NAMED_PARAMS_NAMED_PARAMS_HPP
 
 #include <tuple>
+#include <optional>
 
 #include <supl/type_list.hpp>
 
@@ -23,7 +24,7 @@ public:
 
 private:
 
-  std::tuple<Legal_Params...> m_params;
+  std::tuple<std::optional<Legal_Params>...> m_params;
 
 public:
 

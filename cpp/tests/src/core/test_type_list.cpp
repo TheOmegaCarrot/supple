@@ -1351,6 +1351,11 @@ static_assert(supl::tl::is_subset_v<
     supl::tl::type_list<>
     >);
 
+static_assert(! supl::tl::is_subset_v<
+    supl::tl::type_list<bool, int, char>,
+    supl::tl::type_list<>
+    >);
+
 static_assert(supl::tl::is_subset_v<
     supl::tl::type_list<>,
     supl::tl::type_list<bool, int, char>
@@ -1370,6 +1375,16 @@ static_assert(supl::tl::is_subset_v<
     supl::tl::type_list<int, bool>,
     supl::tl::type_list<int, char, bool>
     >);
+
+static_assert(supl::tl::is_subset_v<
+    supl::tl::type_list<int>,
+    supl::tl::type_list<int, char, bool>
+    >);
+
+
+
+
+
 
 
 

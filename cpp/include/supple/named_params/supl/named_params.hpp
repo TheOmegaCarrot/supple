@@ -18,8 +18,7 @@ class named_params
 {
 public:
 
-  using param_type_list = tl::type_list<Legal_Params...>;
-  static_assert(! tl::has_duplicates_v<param_type_list>,
+  static_assert(! tl::has_duplicates_v<tl::type_list<Legal_Params...> >,
                 "Named parameter type list contains duplicate types");
 
 private:
@@ -28,12 +27,16 @@ private:
 
 public:
 
-  template <typename... Passed_Params,
-            typename = std::enable_if_t<
-              (is_type_in_pack_v<Passed_Params, Legal_Params...> && ...)> >
+  template <typename... Passed_Params>
   explicit named_params(Passed_Params&&... passed_params)
   {
-    // need to init m_params
+    static_assert(! tl::has_duplicates_v<tl::type_list<Passed_Params...> >,
+                  "Passed parameter type list contains duplicates");
+
+    /* static_assert(tl::is_subset_v<tl::type_list<Passed_Params...>, */
+    /*                               tl::type_list<Legal_Params...> >, */
+    /*               "Passed parameters are not a subset of legal parameters"); */
+
   }
 };
 

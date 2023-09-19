@@ -1344,6 +1344,36 @@ static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, i
 static_assert(supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int, void>,
                                          supl::tl::type_list<int, void, char, int, int>>);
 
+///////////////////////////////////////////// is_subset
+
+static_assert(supl::tl::is_subset_v<
+    supl::tl::type_list<>,
+    supl::tl::type_list<>
+    >);
+
+static_assert(supl::tl::is_subset_v<
+    supl::tl::type_list<>,
+    supl::tl::type_list<bool, int, char>
+    >);
+
+static_assert(supl::tl::is_subset_v<
+    supl::tl::type_list<int, char, bool>,
+    supl::tl::type_list<bool, int, char>
+    >);
+
+static_assert(supl::tl::is_subset_v<
+    supl::tl::type_list<int, char, bool>,
+    supl::tl::type_list<int, char, bool>
+    >);
+
+static_assert(supl::tl::is_subset_v<
+    supl::tl::type_list<int, bool>,
+    supl::tl::type_list<int, char, bool>
+    >);
+
+
+
+
 
 auto main() -> int
 { }

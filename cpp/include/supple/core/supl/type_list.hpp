@@ -1104,13 +1104,69 @@ namespace impl {
 /* }}} */
 template <typename LIST1, typename LIST2>
 struct is_permutation
-    : std::conditional_t<tl::size_v<LIST1> == tl::size_v<LIST2>,
-                         impl::is_permutation_impl<LIST1, LIST2>,
-                         std::false_type> { };
+    : std::conditional_t<
+        tl::size_v<LIST1> == tl::size_v<LIST2>,
+        std::conditional_t<tl::equal_v<LIST1, LIST2>,
+                           std::true_type,
+                           impl::is_permutation_impl<LIST1, LIST2>>,
+        std::false_type> { };
 
 template <typename LIST1, typename LIST2>
 constexpr inline bool is_permutation_v =
   is_permutation<LIST1, LIST2>::value;
+
+///////////////////////////////////////////// is_subset
+
+namespace impl {
+  template <typename LIST1, typename LIST2>
+  struct is_subset_impl;
+
+  template <template <typename...> typename LIST1,
+            template <typename...>
+            typename LIST2,
+            typename... Pack1,
+            typename... Pack2>
+  struct is_subset_impl<LIST1<Pack1...>, LIST2<Pack2...>> { };
+
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Determines if `LIST1` is a subset of `LIST2`.
+ * `LIST1` is a subset of `LIST2` iff any of the below hold:
+ * * `LIST1` is empty
+ * * They are equal
+ * * One is a permutation of the other
+ * * Every type appearing in LIST1 appears in LIST2
+ *
+ * @pre `LIST1` and `LIST2` must not contain duplicate types.
+ */
+/* }}} */
+template <typename LIST1, typename LIST2>
+struct is_subset
+    // clang-format off
+    : std::conditional_t< empty_v<LIST1>,
+        std::true_type,
+        std::conditional_t< tl::equal_v<LIST1,LIST2>,
+          std::true_type,
+          std::conditional_t< size_v<LIST1> == size_v<LIST2>,
+            is_permutation<LIST1,LIST2>,
+            impl::is_subset_impl<LIST1,LIST2>
+          >
+        > 
+      >{
+
+  // clang-format on
+  static_assert(! has_duplicates_v<LIST1>,
+                "Precondition not satisfied, first type list contains "
+                "duplicate types");
+  static_assert(! has_duplicates_v<LIST2>,
+                "Precondition not satisfied, second type list contains "
+                "duplicate types");
+};
+
+template <typename LIST1, typename LIST2>
+constexpr inline bool is_subset_v = is_subset<LIST1, LIST2>::value;
 
 }  // namespace supl::tl
 

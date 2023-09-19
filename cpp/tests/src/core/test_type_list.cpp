@@ -1381,14 +1381,15 @@ static_assert(supl::tl::is_subset_v<
     supl::tl::type_list<int, char, bool>
     >);
 
+static_assert(! supl::tl::is_subset_v<
+    supl::tl::type_list<int, float>,
+    supl::tl::type_list<int, char, bool>
+    >);
 
-
-
-
-
-
-
-
+static_assert(supl::tl::is_subset_v<
+    supl::tl::type_list<int, float>,
+    supl::tl::type_list<int, char, bool, float>
+    >);
 
 auto main() -> int
 { }

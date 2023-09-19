@@ -619,6 +619,14 @@ constexpr inline bool none_of_v = none_of<LIST, PRED>::value;
 
 ///////////////////////////////////////////// count_if
 
+/* {{{ doc */
+/**
+ * @brief Counts the number of elements in `LIST` for which `PRED` returns `true`.
+ * See tests for examples.
+ * 
+ * @pre `PRED` must be a unary type metafunction returning `bool`.
+ */
+/* }}} */
 template <typename LIST, template <typename> typename PRED>
 struct count_if;
 
@@ -638,6 +646,29 @@ struct count_if<LIST<>, PRED> : index_constant<0> { };
 template <typename LIST, template <typename> typename PRED>
 constexpr inline std::size_t count_if_v = count_if<LIST, PRED>::value;
 
+///////////////////////////////////////////// count
+
+/* {{{ doc */
+/**
+ * @brief Counts the number of times in type `Query` appears in type list `LIST`.
+ */
+/* }}} */
+template <typename LIST, typename Query>
+struct count;
+
+template <template <typename...> typename LIST,
+          typename... Pack,
+          typename Query>
+struct count<LIST<Pack...>, Query>
+    : index_constant<(static_cast<std::size_t>(std::is_same_v<Pack, Query>)
+                      + ...)> { };
+
+template <template <typename...> typename LIST, typename Query>
+struct count<LIST<>, Query> : index_constant<0> { };
+
+template <typename LIST, typename Query>
+constexpr inline std::size_t count_v = count<LIST, Query>::value;
+
 ///////////////////////////////////////////// transform
 
 /* {{{ doc */
@@ -648,18 +679,18 @@ constexpr inline std::size_t count_if_v = count_if<LIST, PRED>::value;
  * -> type_list<const int, const char, const bool>`
  */
 /* }}} */
-template <typename LIST, template <typename> typename PRED>
+template <typename LIST, template <typename> typename FUNC>
 struct transform;
 
 template <template <typename...> typename LIST,
           template <typename>
-          typename PRED,
+          typename FUNC,
           typename... Pack>
-struct transform<LIST<Pack...>, PRED>
-    : type_identity<LIST<typename PRED<Pack>::type...>> { };
+struct transform<LIST<Pack...>, FUNC>
+    : type_identity<LIST<typename FUNC<Pack>::type...>> { };
 
-template <typename LIST, template <typename> typename PRED>
-using transform_t = typename transform<LIST, PRED>::type;
+template <typename LIST, template <typename> typename FUNC>
+using transform_t = typename transform<LIST, FUNC>::type;
 
 ///////////////////////////////////////////// rotate_left
 
@@ -1041,6 +1072,44 @@ using enumerate =
 
 template <typename LIST>
 using enumerate_t = typename enumerate<LIST>::type;
+
+///////////////////////////////////////////// is_permutation
+
+namespace impl {
+  template <typename LIST1, typename LIST2>
+  struct is_permutation_impl;
+
+  template <template <typename...> typename LIST1,
+            template <typename...>
+            typename LIST2,
+            typename... Pack1,
+            typename... Pack2>
+  // clang-format off
+  struct is_permutation_impl<LIST1<Pack1...>, LIST2<Pack2...>>
+      : std::bool_constant<
+      (tl::contains_v<Pack1, LIST2<Pack2...>> && ...)
+      && (tl::contains_v<Pack2, LIST1<Pack1...>> && ...)
+      /* && (tl::count_if_v<LIST1<Pack1...>, is_same_as<Pack2>::func > && ...) */
+      > { };
+
+  // clang-format on
+
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Returns `true` if `LIST1` is a permutation of `LIST2`.
+ */
+/* }}} */
+template <typename LIST1, typename LIST2>
+struct is_permutation
+    : std::conditional_t<tl::size_v<LIST1> == tl::size_v<LIST2>,
+                         impl::is_permutation_impl<LIST1, LIST2>,
+                         std::false_type> { };
+
+template <typename LIST1, typename LIST2>
+constexpr inline bool is_permutation_v =
+  is_permutation<LIST1, LIST2>::value;
 
 }  // namespace supl::tl
 

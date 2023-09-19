@@ -3,7 +3,6 @@
 #include <type_traits>
 #include <variant>
 
-#include "supl/metaprogramming.hpp"
 #include "supl/type_list.hpp"
 
 ///////////////////////////////////////////// translate
@@ -671,6 +670,36 @@ static_assert(supl::tl::count_if_v<
 static_assert(supl::tl::count_if_v<supl::tl::type_list<>, std::is_const>
               == 0);
 
+///////////////////////////////////////////// count
+
+static_assert(supl::tl::count_v<
+    supl::tl::type_list<int, char, bool>, int
+    > == 1);
+
+static_assert(supl::tl::count_v<
+    supl::tl::type_list<int, char, bool>, char
+    > == 1);
+
+static_assert(supl::tl::count_v<
+    supl::tl::type_list<int, char, bool>, bool
+    > == 1);
+
+static_assert(supl::tl::count_v<
+    supl::tl::type_list<int, char, int, bool>, int
+    > == 2);
+
+static_assert(supl::tl::count_v<
+    supl::tl::type_list<int, int, int, bool>, int
+    > == 3);
+
+static_assert(supl::tl::count_v<
+    supl::tl::type_list<int, int, int, bool>, char
+    > == 0);
+
+static_assert(supl::tl::count_v<
+    supl::tl::type_list<>, char
+    > == 0);
+
 ///////////////////////////////////////////// transform
 
 static_assert(
@@ -1188,6 +1217,125 @@ static_assert(
       supl::tl::type_index_pair<bool, 2>,
       supl::tl::type_index_pair<void*, 3>,
       supl::tl::type_index_pair<const unsigned short&, 4>>>);
+
+///////////////////////////////////////////// is_permutation
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<bool, char, float, int>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<bool, char, int, float>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<bool, float, char, int>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<bool, float, int, char>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<bool, int, char, float>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<bool, int, float, char>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<char, bool, float, int>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<char, bool, int, float>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<char, float, bool, int>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<char, float, int, bool>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<char, int, bool, float>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<char, int, float, bool>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<float, bool, char, int>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<float, bool, int, char>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<float, char, bool, int>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<float, char, int, bool>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<float, int, bool, char>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<float, int, char, bool>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<int, bool, char, float>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<int, bool, float, char>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<int, char, bool, float>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<int, char, float, bool>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<int, float, bool, char>>);
+
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, char, bool, float>,
+                             supl::tl::type_list<int, float, char, bool>>);
+
+static_assert(supl::tl::is_permutation_v<supl::tl::type_list<>,
+                                         supl::tl::type_list<>>);
+
+static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<int>,
+                                           supl::tl::type_list<>>);
+
+static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<>,
+                                           supl::tl::type_list<int>>);
+
+static_assert(! supl::tl::is_permutation_v<
+              supl::tl::type_list<int, char, bool, float>,
+              supl::tl::type_list<char, float, bool, long>>);
+
+static_assert(supl::tl::is_permutation_v<supl::tl::type_list<int, int, char, int>,
+                                         supl::tl::type_list<int, char, int, int>>);
+
+/* static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<int, char, char, int>, */
+/*                                          supl::tl::type_list<int, char, int, int>>); */
+
+
 
 auto main() -> int
 { }

@@ -1089,7 +1089,8 @@ namespace impl {
       : std::bool_constant<
       (tl::contains_v<Pack1, LIST2<Pack2...>> && ...)
       && (tl::contains_v<Pack2, LIST1<Pack1...>> && ...)
-      /* && (tl::count_if_v<LIST1<Pack1...>, is_same_as<Pack2>::func > && ...) */
+      && ((tl::count_v<LIST1<Pack1...>, Pack2 > == tl::count_v<LIST2<Pack2...>, Pack2>) && ...)
+      && ((tl::count_v<LIST2<Pack2...>, Pack2 > == tl::count_v<LIST1<Pack1...>, Pack2>) && ...)
       > { };
 
   // clang-format on

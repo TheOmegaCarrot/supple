@@ -1332,9 +1332,17 @@ static_assert(! supl::tl::is_permutation_v<
 static_assert(supl::tl::is_permutation_v<supl::tl::type_list<int, int, char, int>,
                                          supl::tl::type_list<int, char, int, int>>);
 
-/* static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<int, char, char, int>, */
-/*                                          supl::tl::type_list<int, char, int, int>>); */
+static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<int, char, char, int>,
+                                         supl::tl::type_list<int, char, int, int>>);
 
+static_assert(supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int>,
+                                         supl::tl::type_list<int, char, int, int>>);
+
+static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int, void>,
+                                         supl::tl::type_list<int, char, int, int>>);
+
+static_assert(supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int, void>,
+                                         supl::tl::type_list<int, void, char, int, int>>);
 
 
 auto main() -> int

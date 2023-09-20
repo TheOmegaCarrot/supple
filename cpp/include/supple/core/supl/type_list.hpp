@@ -1127,10 +1127,8 @@ namespace impl {
             typename... Pack1,
             typename... Pack2>
   struct is_subset_impl<LIST1<Pack1...>, LIST2<Pack2...>>
-    : std::bool_constant<
-    (contains_v<Pack1, LIST2<Pack2...> > && ...)
-    >
-  { };
+      : std::bool_constant<(contains_v<Pack1, LIST2<Pack2...>> && ...)> {
+  };
 
 }  // namespace impl
 
@@ -1148,7 +1146,7 @@ namespace impl {
 /* }}} */
 template <typename LIST1, typename LIST2>
 struct is_subset
-// clang-format off
+    // clang-format off
     : std::conditional_t< empty_v<LIST1>,
         std::true_type,
         std::conditional_t< empty_v<LIST2>,

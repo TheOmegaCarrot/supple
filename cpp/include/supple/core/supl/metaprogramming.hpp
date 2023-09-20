@@ -736,7 +736,8 @@ using make_const_ref_t = typename make_const_ref<T>::type;
 template <typename T>
 struct is_same_as {
   template <typename U>
-  struct func : std::is_same<T, U> {};
+  struct func : std::is_same<T, U> { };
+
   /* using func = std::is_same<T, U>; */
 
   template <typename U>

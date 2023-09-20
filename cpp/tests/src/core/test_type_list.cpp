@@ -672,33 +672,25 @@ static_assert(supl::tl::count_if_v<supl::tl::type_list<>, std::is_const>
 
 ///////////////////////////////////////////// count
 
-static_assert(supl::tl::count_v<
-    supl::tl::type_list<int, char, bool>, int
-    > == 1);
+static_assert(supl::tl::count_v<supl::tl::type_list<int, char, bool>, int>
+              == 1);
 
-static_assert(supl::tl::count_v<
-    supl::tl::type_list<int, char, bool>, char
-    > == 1);
+static_assert(supl::tl::count_v<supl::tl::type_list<int, char, bool>, char>
+              == 1);
 
-static_assert(supl::tl::count_v<
-    supl::tl::type_list<int, char, bool>, bool
-    > == 1);
+static_assert(supl::tl::count_v<supl::tl::type_list<int, char, bool>, bool>
+              == 1);
 
-static_assert(supl::tl::count_v<
-    supl::tl::type_list<int, char, int, bool>, int
-    > == 2);
+static_assert(
+  supl::tl::count_v<supl::tl::type_list<int, char, int, bool>, int> == 2);
 
-static_assert(supl::tl::count_v<
-    supl::tl::type_list<int, int, int, bool>, int
-    > == 3);
+static_assert(
+  supl::tl::count_v<supl::tl::type_list<int, int, int, bool>, int> == 3);
 
-static_assert(supl::tl::count_v<
-    supl::tl::type_list<int, int, int, bool>, char
-    > == 0);
+static_assert(
+  supl::tl::count_v<supl::tl::type_list<int, int, int, bool>, char> == 0);
 
-static_assert(supl::tl::count_v<
-    supl::tl::type_list<>, char
-    > == 0);
+static_assert(supl::tl::count_v<supl::tl::type_list<>, char> == 0);
 
 ///////////////////////////////////////////// transform
 
@@ -1329,67 +1321,56 @@ static_assert(! supl::tl::is_permutation_v<
               supl::tl::type_list<int, char, bool, float>,
               supl::tl::type_list<char, float, bool, long>>);
 
-static_assert(supl::tl::is_permutation_v<supl::tl::type_list<int, int, char, int>,
-                                         supl::tl::type_list<int, char, int, int>>);
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<int, int, char, int>,
+                             supl::tl::type_list<int, char, int, int>>);
 
-static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<int, char, char, int>,
-                                         supl::tl::type_list<int, char, int, int>>);
+static_assert(
+  ! supl::tl::is_permutation_v<supl::tl::type_list<int, char, char, int>,
+                               supl::tl::type_list<int, char, int, int>>);
 
-static_assert(supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int>,
-                                         supl::tl::type_list<int, char, int, int>>);
+static_assert(
+  supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int>,
+                             supl::tl::type_list<int, char, int, int>>);
 
-static_assert(! supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int, void>,
-                                         supl::tl::type_list<int, char, int, int>>);
+static_assert(! supl::tl::is_permutation_v<
+              supl::tl::type_list<char, int, int, int, void>,
+              supl::tl::type_list<int, char, int, int>>);
 
-static_assert(supl::tl::is_permutation_v<supl::tl::type_list<char, int, int, int, void>,
-                                         supl::tl::type_list<int, void, char, int, int>>);
+static_assert(supl::tl::is_permutation_v<
+              supl::tl::type_list<char, int, int, int, void>,
+              supl::tl::type_list<int, void, char, int, int>>);
 
 ///////////////////////////////////////////// is_subset
 
-static_assert(supl::tl::is_subset_v<
-    supl::tl::type_list<>,
-    supl::tl::type_list<>
-    >);
+static_assert(
+  supl::tl::is_subset_v<supl::tl::type_list<>, supl::tl::type_list<>>);
 
-static_assert(! supl::tl::is_subset_v<
-    supl::tl::type_list<bool, int, char>,
-    supl::tl::type_list<>
-    >);
+static_assert(! supl::tl::is_subset_v<supl::tl::type_list<bool, int, char>,
+                                      supl::tl::type_list<>>);
 
-static_assert(supl::tl::is_subset_v<
-    supl::tl::type_list<>,
-    supl::tl::type_list<bool, int, char>
-    >);
+static_assert(supl::tl::is_subset_v<supl::tl::type_list<>,
+                                    supl::tl::type_list<bool, int, char>>);
 
-static_assert(supl::tl::is_subset_v<
-    supl::tl::type_list<int, char, bool>,
-    supl::tl::type_list<bool, int, char>
-    >);
+static_assert(supl::tl::is_subset_v<supl::tl::type_list<int, char, bool>,
+                                    supl::tl::type_list<bool, int, char>>);
 
-static_assert(supl::tl::is_subset_v<
-    supl::tl::type_list<int, char, bool>,
-    supl::tl::type_list<int, char, bool>
-    >);
+static_assert(supl::tl::is_subset_v<supl::tl::type_list<int, char, bool>,
+                                    supl::tl::type_list<int, char, bool>>);
 
-static_assert(supl::tl::is_subset_v<
-    supl::tl::type_list<int, bool>,
-    supl::tl::type_list<int, char, bool>
-    >);
+static_assert(supl::tl::is_subset_v<supl::tl::type_list<int, bool>,
+                                    supl::tl::type_list<int, char, bool>>);
 
-static_assert(supl::tl::is_subset_v<
-    supl::tl::type_list<int>,
-    supl::tl::type_list<int, char, bool>
-    >);
+static_assert(supl::tl::is_subset_v<supl::tl::type_list<int>,
+                                    supl::tl::type_list<int, char, bool>>);
 
-static_assert(! supl::tl::is_subset_v<
-    supl::tl::type_list<int, float>,
-    supl::tl::type_list<int, char, bool>
-    >);
+static_assert(
+  ! supl::tl::is_subset_v<supl::tl::type_list<int, float>,
+                          supl::tl::type_list<int, char, bool>>);
 
-static_assert(supl::tl::is_subset_v<
-    supl::tl::type_list<int, float>,
-    supl::tl::type_list<int, char, bool, float>
-    >);
+static_assert(
+  supl::tl::is_subset_v<supl::tl::type_list<int, float>,
+                        supl::tl::type_list<int, char, bool, float>>);
 
 auto main() -> int
 { }

@@ -3,11 +3,25 @@
 
 #include <optional>
 #include <tuple>
+/* #include <memory> */
 
 #include <supl/metaprogramming.hpp>
 #include <supl/type_list.hpp>
 
 namespace supl {
+
+/* {{{ doc */
+/**
+ * @brief Determines if type `T` appears in pack `Pack`.
+ * Removes cv-qualification and removes references from types before comparison.
+ */
+/* }}} */
+template <typename T, typename... Pack>
+struct in_param_list
+: is_type_in_pack<T, remove_cvref_t<Pack>...> {};
+
+template<typename T, typename ...Pack>
+constexpr inline bool in_param_list_v = in_param_list<T,Pack...>::value;
 
 /* {{{ doc */
 /**
@@ -37,8 +51,15 @@ public:
   template <typename... Passed_Params>
   explicit constexpr named_params(
     Passed_Params&&... passed_params) noexcept
-  // how do I initialize m_params????
-  // delegating constructor + pack deduction??
+  /* : m_params{ */
+  /*   [inner_param_ptrs{std::tuple<remove_cvref_t<Passed_Params>*...>{std::addressof(passed_params)...}}]() { */
+  // maybe I can do some wacky tuple manipulation
+  // to save a copy or move of each parameter,
+  // but really, prvalues of trivial types are expected to be
+  // the typical arguments,
+  // and this *is* an early version mostly as a proof of concept
+  /*   } */
+  /* } */
   {
     static_assert(! tl::has_duplicates_v<
                     tl::type_list<remove_cvref_t<Passed_Params>...>>,
@@ -50,15 +71,37 @@ public:
       "Invalid parameter: passed parameters are not a subset of legal "
       "parameters");
 
-    /* std::tuple<std::optional<remove_cvref_t<Passed_Params>>...> */
-    /*   unfortunate_temp {std::forward<Passed_Params>(passed_params)...}; */
+    // suboptimal, but correct storage of parameters
+
+    std::tuple<std::optional<remove_cvref_t<Passed_Params>>...>
+      unfortunate_temp {std::forward<Passed_Params>(passed_params)...};
 
     // Populate m_params by moving from unfortunate_temp
-    // In C++17, only assignment
-    /* ((std::get<std::optional<remove_cvref_t<Passed_Params>>>(m_params) = */
-    /*     std::move(std::get<std::optional<remove_cvref_t<Passed_Params>>>( */
-    /*       unfortunate_temp))), */
-    /*  ...); */
+    // In C++17, std::optional only has constexpr assignment if RHS is an optional of the same type
+    ((std::get<std::optional<remove_cvref_t<Passed_Params>>>(m_params) =
+        std::move(std::get<std::optional<remove_cvref_t<Passed_Params>>>(
+          unfortunate_temp))),
+     ...);
+
+    // I want to eliminate the above abomination,
+    // though it is the simplest way I could see to populate m_params
+  }
+
+  /* {{{ doc */
+  /**
+   * @brief Determines if parameter type `T` was passed as an argument.
+   * May perform a runtime check, but is simple to use.
+   * For a guaranteed compile-time check, use `supl::in_param_list`.
+   */
+  /* }}} */
+  template <typename T>
+  [[nodiscard]] constexpr auto was_passed() const noexcept -> bool
+  {
+    static_assert(
+      tl::contains_v<T, tl::type_list<Legal_Params...>>,
+      "Argument to was_passed() is not an element of the set of valid "
+      "parameters as specified in template parameters to named_params");
+    return std::get<std::optional<T>>(m_params).has_value();
   }
 };
 

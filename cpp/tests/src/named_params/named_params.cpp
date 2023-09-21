@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <iostream>
 
 #include "supl/named_params.hpp"
 
@@ -7,6 +8,17 @@
 
 struct foo_size {
   std::size_t value;
+
+  void to_stream(std::ostream& out) const noexcept
+  {
+    out<<value;
+  }
+
+  friend constexpr auto operator !=(const foo_size& lhs, const foo_size& rhs) noexcept -> bool
+  {
+    return lhs.value != rhs.value;
+  }
+
 };
 
 enum struct foo_type : char {
@@ -15,8 +27,32 @@ enum struct foo_type : char {
   third
 };
 
+template<>
+void supl::to_stream<foo_type>(std::ostream& out, const foo_type& value) noexcept
+{
+  switch(value) {
+    case foo_type::foo:
+      out << "foo_type::foo";
+      break;
+    case foo_type::bar:
+      out << "foo_type::bar";
+      break;
+    case foo_type::third:
+      out << "foo_type::third";
+      break;
+  }
+}
+
 struct foo_count {
   std::size_t value;
+  void to_stream(std::ostream& out) const noexcept
+  {
+    out<<value;
+  }
+  friend constexpr auto operator !=(const foo_count& lhs, const foo_count& rhs) noexcept -> bool
+  {
+    return lhs.value != rhs.value;
+  }
 };
 
 static auto test_construction() -> supl::test_results
@@ -78,12 +114,45 @@ static auto test_was_passed() -> supl::test_results
 {
   supl::test_results results;
 
-  constexpr static supl::named_params<foo_type, foo_size> test1 {
+  constexpr static supl::named_params<foo_type, foo_size> test {
     foo_type::bar};
 
-  results.enforce_true(test1.was_passed<foo_type>());
+  results.enforce_true(test.was_passed<foo_type>());
 
-  results.enforce_false(test1.was_passed<foo_size>());
+  results.enforce_false(test.was_passed<foo_size>());
+
+  return results;
+}
+
+static auto test_get() -> supl::test_results
+{
+  supl::test_results results;
+
+  constexpr static supl::named_params<foo_type, foo_size> test {
+    foo_type::bar};
+
+  results.enforce_equal(test.get<foo_type>(), foo_type::bar);
+
+  try {
+    [[maybe_unused]] const auto& should_fail {test.get<foo_size>()};
+    results.fail("Unchecked get did not throw as expected");
+  } catch(const supl::missing_named_parameter_exception&) {
+    // no-op to silence warning about empty catch block
+    [](){}();
+  }
+
+  return results;
+}
+
+static auto test_get_or() -> supl::test_results
+{
+  supl::test_results results;
+
+  constexpr static supl::named_params<foo_type, foo_size> test {
+    foo_type::bar};
+
+  results.enforce_equal(test.get_or<foo_type>(foo_type::third), foo_type::bar);
+  results.enforce_equal(test.get_or<foo_size>(foo_size{3}), foo_size{3});
 
   return results;
 }
@@ -94,6 +163,8 @@ auto test_named_params() -> supl::test_section
 
   section.add_test("named_params construction", &test_construction);
   section.add_test("named_params::was_passed", &test_was_passed);
+  section.add_test("named_params::get", &test_get);
+  section.add_test("named_params::get_or", &test_get_or);
 
   return section;
 }

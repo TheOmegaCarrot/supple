@@ -17,11 +17,18 @@ namespace supl {
  */
 /* }}} */
 template <typename T, typename... Pack>
-struct in_param_list
-: is_type_in_pack<T, remove_cvref_t<Pack>...> {};
+struct in_param_list : is_type_in_pack<T, remove_cvref_t<Pack>...> { };
 
-template<typename T, typename ...Pack>
-constexpr inline bool in_param_list_v = in_param_list<T,Pack...>::value;
+template <typename T, typename... Pack>
+constexpr inline bool in_param_list_v = in_param_list<T, Pack...>::value;
+
+class missing_named_parameter_exception final : public std::exception
+{
+  [[nodiscard]] auto what() const noexcept -> const char* override
+  {
+    return "Attempt to access missing named parameter";
+  }
+};
 
 /* {{{ doc */
 /**
@@ -103,6 +110,28 @@ public:
       "parameters as specified in template parameters to named_params");
     return std::get<std::optional<T>>(m_params).has_value();
   }
+
+  /* {{{ doc */
+  /**
+   * @brief Unchecked get. Throws if parameter was not passed.
+   */
+  /* }}} */
+  template <typename T>
+  [[nodiscard]] constexpr auto get() const -> const T&
+  {
+    if ( this->was_passed<T>() ) {
+      return std::get<std::optional<T>>(m_params).value();
+    } else {
+      throw missing_named_parameter_exception {};
+    }
+  }
+
+  template<typename T, typename U, typename=std::enable_if_t<std::is_convertible_v<std::remove_reference_t<U>,T>>>
+  [[nodiscard]] constexpr auto get_or(U&& fallback) const -> T
+  {
+      return std::get<std::optional<T>>(m_params).value_or(std::forward<U>(fallback));
+  }
+
 };
 
 }  // namespace supl

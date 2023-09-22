@@ -1,2 +1,2 @@
-
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/iterators)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/core)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/named_params)

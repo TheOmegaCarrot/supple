@@ -30,6 +30,31 @@ class missing_named_parameter_exception final : public std::exception
   }
 };
 
+namespace impl {
+
+  template<typename T, typename = void>
+  struct has_value_member : std::false_type {};
+
+  template<typename T>
+  struct has_value_member<T, std::void_t<decltype(std::declval<T>().value)>>  : std::true_type {};
+
+  template<typename T>
+  constexpr inline bool has_value_member_v = has_value_member<T>::value;
+
+  template<typename T>
+    [[nodiscard]] constexpr auto unwrap_value_struct_or_pass_enum(T&& arg) noexcept
+    {
+      static_assert( std::is_enum_v<std::remove_reference_t<T>> || has_value_member_v<std::remove_reference_t<T>> );
+
+      if constexpr ( std::is_enum_v<std::remove_reference_t<T>> ) {
+        return arg;
+      } else {
+        // need forward_like
+        /* return forward_like<T>(arg.value) */
+      }
+    }
+}
+
 /* {{{ doc */
 /**
  * @brief Named parameters wrapper object.
@@ -117,7 +142,7 @@ public:
    */
   /* }}} */
   template <typename T>
-  [[nodiscard]] constexpr auto get() const -> const T&
+  [[nodiscard]] constexpr auto get() const -> const auto&
   {
     if ( this->was_passed<T>() ) {
       return std::get<std::optional<T>>(m_params).value();
@@ -126,8 +151,8 @@ public:
     }
   }
 
-  template<typename T, typename U, typename=std::enable_if_t<std::is_convertible_v<std::remove_reference_t<U>,T>>>
-  [[nodiscard]] constexpr auto get_or(U&& fallback) const -> T
+  template<typename T, typename U>
+  [[nodiscard]] constexpr auto get_or(U&& fallback) const
   {
       return std::get<std::optional<T>>(m_params).value_or(std::forward<U>(fallback));
   }

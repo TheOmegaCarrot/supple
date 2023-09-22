@@ -8,17 +8,6 @@
 
 struct foo_size {
   std::size_t value;
-
-  void to_stream(std::ostream& out) const noexcept
-  {
-    out<<value;
-  }
-
-  friend constexpr auto operator !=(const foo_size& lhs, const foo_size& rhs) noexcept -> bool
-  {
-    return lhs.value != rhs.value;
-  }
-
 };
 
 enum struct foo_type : char {
@@ -45,14 +34,6 @@ void supl::to_stream<foo_type>(std::ostream& out, const foo_type& value) noexcep
 
 struct foo_count {
   std::size_t value;
-  void to_stream(std::ostream& out) const noexcept
-  {
-    out<<value;
-  }
-  friend constexpr auto operator !=(const foo_count& lhs, const foo_count& rhs) noexcept -> bool
-  {
-    return lhs.value != rhs.value;
-  }
 };
 
 static auto test_construction() -> supl::test_results

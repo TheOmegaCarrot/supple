@@ -16,10 +16,11 @@ enum struct foo_type : char {
   third
 };
 
-template<>
-void supl::to_stream<foo_type>(std::ostream& out, const foo_type& value) noexcept
+template <>
+void supl::to_stream<foo_type>(std::ostream& out,
+                               const foo_type& value) noexcept
 {
-  switch(value) {
+  switch ( value ) {
     case foo_type::foo:
       out << "foo_type::foo";
       break;
@@ -117,9 +118,9 @@ static auto test_get() -> supl::test_results
   try {
     [[maybe_unused]] const auto& should_fail {test.get<foo_size>()};
     results.fail("Unchecked get did not throw as expected");
-  } catch(const supl::missing_named_parameter_exception&) {
+  } catch ( const supl::missing_named_parameter_exception& ) {
     // no-op to silence warning about empty catch block
-    [](){}();
+    []() {}();
   }
 
   return results;
@@ -132,8 +133,9 @@ static auto test_get_or() -> supl::test_results
   constexpr static supl::named_params<foo_type, foo_size> test {
     foo_type::bar};
 
-  results.enforce_equal(test.get_or<foo_type>(foo_type::third), foo_type::bar);
-  results.enforce_equal(test.get_or<foo_size>(foo_size{3}), foo_size{3});
+  results.enforce_equal(test.get_or<foo_type>(foo_type::third),
+                        foo_type::bar);
+  results.enforce_equal(test.get_or<foo_size>(3), std::size_t {3});
 
   return results;
 }

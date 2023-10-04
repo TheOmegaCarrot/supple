@@ -32,28 +32,35 @@ class missing_named_parameter_exception final : public std::exception
 
 namespace impl {
 
-  template<typename T, typename = void>
-  struct has_value_member : std::false_type {};
+  template <typename T, typename = void>
+  struct has_value_member : std::false_type { };
 
-  template<typename T>
-  struct has_value_member<T, std::void_t<decltype(std::declval<T>().value)>>  : std::true_type {};
+  template <typename T>
+  struct has_value_member<T,
+                          std::void_t<decltype(std::declval<T>().value)>>
+      : std::true_type { };
 
-  template<typename T>
+  template <typename T>
   constexpr inline bool has_value_member_v = has_value_member<T>::value;
 
-  template<typename T>
-    [[nodiscard]] constexpr auto unwrap_value_struct_or_pass_enum(T&& arg) noexcept
-    {
-      static_assert( std::is_enum_v<std::remove_reference_t<T>> || has_value_member_v<std::remove_reference_t<T>> );
+  template <typename T>
+  [[nodiscard]] constexpr auto
+  unwrap_value_struct_or_pass_enum(T&& arg) noexcept
+  {
+    static_assert(std::is_enum_v<std::remove_reference_t<T>>
+                    || has_value_member_v<std::remove_reference_t<T>>,
+                  "Named parameter type must be an enum or an object with "
+                  "a public member 'value'");
 
-      if constexpr ( std::is_enum_v<std::remove_reference_t<T>> ) {
-        return arg;
-      } else {
-        // need forward_like
-        /* return forward_like<T>(arg.value) */
-      }
+    if constexpr ( std::is_enum_v<std::remove_reference_t<T>> ) {
+      return arg;
+    } else if constexpr ( has_value_member_v<
+                            std::remove_reference_t<T>> ) {
+      return arg.value;
     }
-}
+  }
+
+}  // namespace impl
 
 /* {{{ doc */
 /**
@@ -142,21 +149,30 @@ public:
    */
   /* }}} */
   template <typename T>
-  [[nodiscard]] constexpr auto get() const -> const auto&
+  [[nodiscard]] constexpr auto get() const
   {
     if ( this->was_passed<T>() ) {
-      return std::get<std::optional<T>>(m_params).value();
+      return impl::unwrap_value_struct_or_pass_enum(
+        std::get<std::optional<T>>(m_params).value());
     } else {
       throw missing_named_parameter_exception {};
     }
   }
 
-  template<typename T, typename U>
-  [[nodiscard]] constexpr auto get_or(U&& fallback) const
+  template <typename T,
+            typename U,
+            typename RET = std::remove_reference_t<
+              decltype(impl::unwrap_value_struct_or_pass_enum(
+                std::get<std::optional<T>>(m_params).value()))>>
+  [[nodiscard]] constexpr auto get_or(U&& fallback) const noexcept -> RET
   {
-      return std::get<std::optional<T>>(m_params).value_or(std::forward<U>(fallback));
+    if ( this->was_passed<T>() ) {
+      return impl::unwrap_value_struct_or_pass_enum(
+        std::get<std::optional<T>>(m_params).value());
+    } else {
+      return static_cast<RET>(fallback);
+    }
   }
-
 };
 
 }  // namespace supl

@@ -158,16 +158,24 @@ public:
     }
   }
 
-  template <typename T,
-            typename U,
+  /* {{{ doc */
+  /**
+   * @brief Checked get with a fallback value to be used if no value is available.
+   *
+   * @param fallback Value to be returned if no value exists.
+   */
+  /* }}} */
+  template <typename Param_Type,
+            typename Fallback_Type,
             typename RET = std::remove_reference_t<
               decltype(impl::unwrap_value_struct_or_pass_enum(
-                std::get<std::optional<T>>(m_params).value()))>>
-  [[nodiscard]] constexpr auto get_or(U&& fallback) const noexcept -> RET
+                std::get<std::optional<Param_Type>>(m_params).value()))>>
+  [[nodiscard]] constexpr auto
+  get_or(Fallback_Type&& fallback) const noexcept -> RET
   {
-    if ( this->was_passed<T>() ) {
+    if ( this->was_passed<Param_Type>() ) {
       return impl::unwrap_value_struct_or_pass_enum(
-        std::get<std::optional<T>>(m_params).value());
+        std::get<std::optional<Param_Type>>(m_params).value());
     } else {
       return static_cast<RET>(fallback);
     }

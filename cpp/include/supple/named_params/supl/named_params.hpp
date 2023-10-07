@@ -95,8 +95,7 @@ public:
   // maybe I can do some wacky tuple manipulation
   // to save a copy or move of each parameter,
   // but really, prvalues of trivial types are expected to be
-  // the typical arguments,
-  // and this *is* an early version mostly as a proof of concept
+  // the typical arguments
   /*   } */
   /* } */
   {

@@ -57,12 +57,6 @@ struct foo_config {
         && (lhs.count == rhs.count);
   }
 
-  constexpr friend auto operator!=(const foo_config& lhs,
-                                   const foo_config& rhs) noexcept
-  {
-    return ! (lhs == rhs);
-  }
-
   void to_stream(std::ostream& out) const noexcept
   {
     out << supl::stream_adapter {std::tie(type, size, count)};

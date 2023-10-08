@@ -114,7 +114,9 @@ public:
     std::stringstream details;
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    if ( result != expected ) {
+    if ( result == expected ) {
+      m_case_details.emplace_back();
+    } else {
       m_fail_count += 1;
 
       details << "\nCase " << m_case_count << ":\t" << message
@@ -122,8 +124,6 @@ public:
               << "\n\n\tGot:\n\t" << supl::stream_adapter(result)
               << "\n\n";
       m_case_details.push_back(details.str());
-    } else {
-      m_case_details.emplace_back();
     }
   }
 

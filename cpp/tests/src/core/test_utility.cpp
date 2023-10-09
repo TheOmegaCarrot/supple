@@ -277,7 +277,10 @@ static auto test_to_string() -> supl::test_results
   try {
     force_valueless_by_exception forcer {};
     test_variant.emplace<force_valueless_by_exception>(std::move(forcer));
-  } catch ( ... ) { }
+  } catch ( ... ) {
+    // no-op to satisfy clang-tidy
+    []() {}();
+  }
 
   results.enforce_exactly_equal(supl::to_string(test_variant),
                                 "<valueless_by_exception>"s);

@@ -1,6 +1,6 @@
 # vim:ft=yaml
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,readability-*,performance-*,portability-*,bugprone-*,modernize-*,misc-*,cert-*,google-explicit-constructor,-misc-non-private-member-variables-in-classes,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-readability-avoid-const-params-in-decls,-readability-identifier-length,-readability-named-parameter,-bugprone-unhandled-exception-at-new,-cppcoreguidelines-owning-memory,-readability-else-after-return,-readability-redundant-member-init,-clang-diagnostic-unused-macros,-misc-use-anonymous-namespace,-cppcoreguidelines-missing-std-forward'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,readability-*,performance-*,portability-*,bugprone-*,modernize-*,misc-*,cert-*,google-explicit-constructor,-misc-non-private-member-variables-in-classes,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-readability-avoid-const-params-in-decls,-readability-identifier-length,-readability-named-parameter,-bugprone-unhandled-exception-at-new,-cppcoreguidelines-owning-memory,-readability-else-after-return,-readability-redundant-member-init,-clang-diagnostic-unused-macros,-misc-use-anonymous-namespace,-cppcoreguidelines-missing-std-forward,-modernize-type-traits,-misc-include-cleaner'
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*'
 UseColor: true

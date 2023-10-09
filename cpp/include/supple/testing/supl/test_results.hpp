@@ -63,7 +63,8 @@ public:
    * @brief Enforce that two values are equal and of the same type.
    *
    * @tparam T Type of expected value.
-   * Must be a class which is a valid input to `supl::to_stream`.
+   * Must be equality comparable.
+   * Must be a type which is a valid input to `supl::to_stream`.
    * See documentation for `to_stream` for details.
    *
    * @param result Value produced by code under test
@@ -86,14 +87,16 @@ public:
   /**
    * @brief Enforce that two values are equal.
    * Values are permitted to be of different type,
-   * so long as they are inequality comparable,
-   * with `T` as the left-hand side of operator `!=`.
+   * so long as they are equality comparable,
+   * with `T` as the left-hand side of operator `==`.
    *
    * @tparam T Type of value under test.
+   * `T == U` must be valid.
    * Must be a class which is a valid input to `supl::to_stream`.
    * See documentation for `to_stream` for details.
    *
    * @tparam U Type of expected value.
+   * `T == U` must be valid.
    * Must be a class which is a valid input to `supl::to_stream`.
    * See documentation for `to_stream` for details.
    *

@@ -64,6 +64,25 @@ static auto test_explicit_copy() -> supl::test_results
   return results;
 }
 
+static auto test_ctie() -> supl::test_results
+{
+  supl::test_results results;
+
+  int test1 {42};
+  double test2 {3.1415};
+  bool test3 {false};
+  char test4 {'@'};
+
+  std::tuple<const int&, const double&, const bool&, const char&>
+    correct_value {test1, test2, test3, test4};
+
+  auto tested_value {supl::ctie(test1, test2, test3, test4)};
+
+  results.enforce_exactly_equal(tested_value, correct_value);
+
+  return results;
+}
+
 static auto test_to_stream() -> supl::test_results
 {
   supl::test_results results;
@@ -449,6 +468,7 @@ auto test_utility() -> supl::test_section
   supl::test_section section;
 
   section.add_test("supl::explicit_copy", &test_explicit_copy);
+  section.add_test("supl::ctie", &test_ctie);
   section.add_test("supl::to_stream", &test_to_stream);
   section.add_test("specialize to_stream", &test_to_stream_specialize);
   section.add_test("supl::to_string", &test_to_string);

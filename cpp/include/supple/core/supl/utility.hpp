@@ -55,6 +55,20 @@ explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
   return t;
 }
 
+/* {{{ doc */
+/**
+ * @brief Like `std::tie`, but returns a tuple of const references
+ *
+ * @return Tuple of const references to arguments
+ */
+/* }}} */
+template <typename... Args>
+[[nodiscard]] constexpr auto ctie(const Args&... args) noexcept
+  -> std::tuple<const Args&...>
+{
+  return {args...};
+}
+
 ///////////////////////////////////////////// to_stream and related
 
 /* {{{ doc */

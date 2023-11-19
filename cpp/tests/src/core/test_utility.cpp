@@ -4,6 +4,7 @@
 #include <forward_list>
 #include <list>
 #include <map>
+#include <numeric>
 #include <set>
 #include <sstream>
 #include <type_traits>
@@ -12,6 +13,7 @@
 #include <variant>
 #include <vector>
 
+#include "supl/algorithm.hpp"
 #include "supl/utility.hpp"
 
 #include "supl/test_results.hpp"
@@ -79,6 +81,50 @@ static auto test_ctie() -> supl::test_results
   auto tested_value {supl::ctie(test1, test2, test3, test4)};
 
   results.enforce_exactly_equal(tested_value, correct_value);
+
+  return results;
+}
+
+static auto test_range_wrapper() -> supl::test_results
+{
+  supl::test_results results;
+
+  // ensure empty behaves as it should
+  const std::vector<int> empty_vec {};
+  for ( [[maybe_unused]] auto i :
+        supl::range_wrapper {empty_vec.begin(), empty_vec.end()} ) {
+    results.fail("Should be empty range");
+  }
+
+  // motivation: multimap<T>:: equal_range
+  const std::multimap<int, char> test_multimap {
+    {5, '5'},
+    {6, '6'},
+    {6, 'a'},
+    {6, 'b'},
+    {6, 'c'},
+    {7, '7'}
+  };
+
+  const std::vector<std::pair<const int, char>> expected_subrange {
+    {6, '6'},
+    {6, 'a'},
+    {6, 'b'},
+    {6, 'c'}
+  };
+
+  const supl::range_wrapper map_wrapper {test_multimap.equal_range(6)};
+
+  // The order of the key-value pairs whose keys
+  // compare equivalent is the order of insertion and does not change.
+  supl::for_each_both(
+    map_wrapper.begin(),
+    map_wrapper.end(),
+    expected_subrange.begin(),
+    expected_subrange.end(),
+    [&results](const auto& actual, const auto& expected) {
+      results.enforce_equal(actual, expected);
+    });
 
   return results;
 }
@@ -469,6 +515,7 @@ auto test_utility() -> supl::test_section
 
   section.add_test("supl::explicit_copy", &test_explicit_copy);
   section.add_test("supl::ctie", &test_ctie);
+  section.add_test("supl::range_wrapper", &test_range_wrapper);
   section.add_test("supl::to_stream", &test_to_stream);
   section.add_test("specialize to_stream", &test_to_stream_specialize);
   section.add_test("supl::to_string", &test_to_string);

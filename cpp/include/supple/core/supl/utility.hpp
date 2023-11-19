@@ -69,6 +69,47 @@ template <typename... Args>
   return {args...};
 }
 
+template <typename T>
+class range_wrapper
+{
+private:
+
+  T m_begin;
+  T m_end;
+
+public:
+
+  constexpr explicit range_wrapper(T begin, T end)
+      : m_begin {begin}
+      , m_end {end}
+  { }
+
+  constexpr explicit range_wrapper(std::pair<T, T> itr_pair)
+      : m_begin {std::move(itr_pair.first)}
+      , m_end {std::move(itr_pair.second)}
+  { }
+
+  [[nodiscard]] constexpr auto begin() const -> T
+  {
+    return m_begin;
+  }
+
+  [[nodiscard]] constexpr auto cbegin() const -> T
+  {
+    return m_begin;
+  }
+
+  [[nodiscard]] constexpr auto end() const -> T
+  {
+    return m_end;
+  }
+
+  [[nodiscard]] constexpr auto cend() const -> T
+  {
+    return m_end;
+  }
+};
+
 ///////////////////////////////////////////// to_stream and related
 
 /* {{{ doc */

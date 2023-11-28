@@ -118,17 +118,16 @@ public:
 
   /* {{{ doc */
   /**
-   * @brief Unchecked get. Throws if parameter was not passed.
+   * @brief Unchecked get. Compile-time error if parameter was not passed.
    */
   /* }}} */
   template <typename T>
   [[nodiscard]] constexpr auto get() const
   {
-    if constexpr ( tl::contains_v<T, tl::type_list<Params...>> ) {
-      return impl::unwrap_value_struct_or_pass_enum(std::get<T>(m_params));
-    } else {
-      throw missing_named_parameter_exception {};
-    }
+    static_assert(tl::contains_v<T, tl::type_list<Params...>>,
+                  "No parameter of that type");
+
+    return impl::unwrap_value_struct_or_pass_enum(std::get<T>(m_params));
   }
 
   /* {{{ doc */

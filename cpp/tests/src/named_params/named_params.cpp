@@ -125,7 +125,7 @@ static auto test_example() -> supl::test_results
 ///////////// END EXAMPLE
 
 // legal set
-using ls = supl::tl::type_list<foo_type, foo_count, foo_config>;
+using ls = supl::tl::type_list<foo_type, foo_count, foo_size>;
 
 static auto test_construction() -> supl::test_results
 {
@@ -212,13 +212,9 @@ static auto test_get() -> supl::test_results
 
   results.enforce_equal(test.get<foo_type>(), foo_type::bar);
 
-  try {
-    [[maybe_unused]] const auto& should_fail {test.get<foo_size>()};
-    results.fail("Unchecked get did not throw as expected");
-  } catch ( const supl::missing_named_parameter_exception& ) {
-    // no-op to silence warning about empty catch block
-    []() {}();
-  }
+  // should not compile
+  // TODO: Add test to verify this does not compile
+  // [[maybe_unused]] const auto& should_fail {test.get<foo_size>()};
 
   return results;
 }

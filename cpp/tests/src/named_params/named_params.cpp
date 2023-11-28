@@ -73,7 +73,8 @@ static auto configure_foo(Named_Params&&... raw_named_params)
   // -
   // I could put these types in any order
   // without changing the behavior
-  supl::named_params<foo_type, foo_size, foo_count> named_parameters {
+  supl::named_params named_parameters {
+    supl::tl::type_list<foo_type, foo_size, foo_count> {},
     // just forward the raw named parameters in
     std::forward<Named_Params>(raw_named_params)...};
 
@@ -81,10 +82,10 @@ static auto configure_foo(Named_Params&&... raw_named_params)
     // get_or will get the `foo_type` parameter that was passed,
     // or the fallback value if none was provided
     // here, if no `foo_type` was specified, `foo_type::bar` will be used
-    named_parameters.get_or<foo_type>(foo_type::bar),
+    named_parameters.template get_or<foo_type>(foo_type::bar),
     // pass in the underlying value type as the fallback
-    named_parameters.get_or<foo_size>(5),
-    named_parameters.get_or<foo_count>(42)};
+    named_parameters.template get_or<foo_size>(5),
+    named_parameters.template get_or<foo_count>(42)};
 }
 
 // This test also demonstrates the behavior of named parameters at the call site
@@ -123,6 +124,9 @@ static auto test_example() -> supl::test_results
 
 ///////////// END EXAMPLE
 
+// legal set
+using ls = supl::tl::type_list<foo_type, foo_count, foo_config>;
+
 static auto test_construction() -> supl::test_results
 {
   supl::test_results results;
@@ -131,49 +135,56 @@ static auto test_construction() -> supl::test_results
   //
   // constexpr construction of the object without a compilation error
   // is the purpose of this test function
-  using np = supl::named_params<foo_size, foo_type, foo_count>;
 
-  [[maybe_unused]] constexpr static np test1 {
-    foo_type::bar, foo_size {5}, foo_count {16}};
+  [[maybe_unused]] constexpr static supl::named_params test1 {
+    ls {}, foo_type::bar, foo_size {5}, foo_count {16}};
 
-  [[maybe_unused]] constexpr static np test2 {
-    foo_size {8}, foo_count {500}, foo_type::foo};
+  [[maybe_unused]] constexpr static supl::named_params test2 {
+    ls {}, foo_size {8}, foo_count {500}, foo_type::foo};
 
-  [[maybe_unused]] constexpr static np test3 {
-    foo_count {508}, foo_type::third, foo_size {12}};
+  [[maybe_unused]] constexpr static supl::named_params test3 {
+    ls {}, foo_count {508}, foo_type::third, foo_size {12}};
 
   [[maybe_unused]] constexpr static supl::named_params<foo_type> test4 {
-    foo_type::foo};
+    ls {}, foo_type::foo};
 
   [[maybe_unused]] constexpr static supl::named_params<foo_size> test5 {
-    foo_size {12}};
+    ls {}, foo_size {12}};
 
   [[maybe_unused]] constexpr static supl::named_params<foo_count> test6 {
-    foo_count {12}};
+    ls {}, foo_count {12}};
 
-  [[maybe_unused]] constexpr static supl::named_params<> test7 {};
+  [[maybe_unused]] constexpr static supl::named_params<> test7 {
+    ls {},
+  };
 
-  [[maybe_unused]] constexpr static np test8 {};
+  [[maybe_unused]] constexpr static supl::named_params test8 {
+    ls {},
+  };
 
   // now without constexpr
 
-  [[maybe_unused]] np test10 {foo_type::bar, foo_size {5}, foo_count {16}};
+  [[maybe_unused]] supl::named_params test10 {
+    ls {}, foo_type::bar, foo_size {5}, foo_count {16}};
 
-  [[maybe_unused]] np test20 {
-    foo_size {8}, foo_count {500}, foo_type::foo};
+  [[maybe_unused]] supl::named_params test20 {
+    ls {}, foo_size {8}, foo_count {500}, foo_type::foo};
 
-  [[maybe_unused]] np test30 {
-    foo_count {508}, foo_type::third, foo_size {12}};
+  [[maybe_unused]] supl::named_params test30 {
+    ls {}, foo_count {508}, foo_type::third, foo_size {12}};
 
-  [[maybe_unused]] supl::named_params<foo_type> test40 {foo_type::foo};
+  [[maybe_unused]] supl::named_params<foo_type> test40 {ls {},
+                                                        foo_type::foo};
 
-  [[maybe_unused]] supl::named_params<foo_size> test50 {foo_size {12}};
+  [[maybe_unused]] supl::named_params<foo_size> test50 {ls {},
+                                                        foo_size {12}};
 
-  [[maybe_unused]] supl::named_params<foo_count> test60 {foo_count {12}};
+  [[maybe_unused]] supl::named_params<foo_count> test60 {ls {},
+                                                         foo_count {12}};
 
-  [[maybe_unused]] supl::named_params<> test70 {};
+  [[maybe_unused]] supl::named_params<> test70 {ls {}};
 
-  [[maybe_unused]] np test80 {};
+  [[maybe_unused]] supl::named_params test80 {ls {}};
 
   return results;
 }
@@ -182,8 +193,8 @@ static auto test_was_passed() -> supl::test_results
 {
   supl::test_results results;
 
-  constexpr static supl::named_params<foo_type, foo_size> test {
-    foo_type::bar};
+  constexpr static supl::named_params test {
+    supl::tl::type_list<foo_type, foo_size> {}, foo_type::bar};
 
   results.enforce_true(test.was_passed<foo_type>());
 
@@ -196,8 +207,8 @@ static auto test_get() -> supl::test_results
 {
   supl::test_results results;
 
-  constexpr static supl::named_params<foo_type, foo_size> test {
-    foo_type::bar};
+  constexpr static supl::named_params test {
+    supl::tl::type_list<foo_type, foo_size> {}, foo_type::bar};
 
   results.enforce_equal(test.get<foo_type>(), foo_type::bar);
 
@@ -216,8 +227,8 @@ static auto test_get_or() -> supl::test_results
 {
   supl::test_results results;
 
-  constexpr static supl::named_params<foo_type, foo_size> test {
-    foo_type::bar};
+  constexpr static supl::named_params test {
+    supl::tl::type_list<foo_type, foo_size> {}, foo_type::bar};
 
   results.enforce_equal(test.get_or<foo_type>(foo_type::third),
                         foo_type::bar);

@@ -1,7 +1,6 @@
 #ifndef SUPPLE_NAMED_PARAMS_NAMED_PARAMS_HPP
 #define SUPPLE_NAMED_PARAMS_NAMED_PARAMS_HPP
 
-#include <optional>
 #include <tuple>
 /* #include <memory> */
 
@@ -68,61 +67,40 @@ namespace impl {
  * Type template parameters define the legal set of argument types.
  */
 /* }}} */
-template <typename... Legal_Params>
+template <typename... Params>
 class named_params
 {
 public:
-
-  static_assert(! tl::has_duplicates_v<tl::type_list<Legal_Params...>>,
-                "Named parameter type list contains duplicate types");
-
-  static_assert((std::is_same_v<Legal_Params, remove_cvref_t<Legal_Params>>
-                 && ...),
-                "Named parameter type list must be cv-unqualified and "
-                "must not be references");
-
 private:
 
-  std::tuple<std::optional<Legal_Params>...> m_params;
+  std::tuple<Params...> m_params;
 
 public:
 
-  template <typename... Passed_Params>
+  template <typename... Legal_Set, typename... Passed_Params>
   explicit constexpr named_params(
+    tl::type_list<Legal_Set...>,
     Passed_Params&&... passed_params) noexcept
-  /* : m_params{ */
-  /*   [inner_param_ptrs{std::tuple<remove_cvref_t<Passed_Params>*...>{std::addressof(passed_params)...}}]() { */
-  // maybe I can do some wacky tuple manipulation
-  // to save a copy or move of each parameter,
-  // but really, prvalues of trivial types are expected to be
-  // the typical arguments
-  /*   } */
-  /* } */
+      : m_params {std::forward<Passed_Params>(passed_params)...}
   {
+
+    static_assert(! tl::has_duplicates_v<tl::type_list<Legal_Set...>>,
+                  "Named parameter type list contains duplicate types");
+
+    static_assert(
+      (std::is_same_v<Legal_Set, remove_cvref_t<Legal_Set>> && ...),
+      "Named parameter type list Legal_Set must be cv-unqualified and "
+      "must not be references");
+
     static_assert(! tl::has_duplicates_v<
                     tl::type_list<remove_cvref_t<Passed_Params>...>>,
                   "Passed parameter list contains duplicates");
 
     static_assert(
       tl::is_subset_v<tl::type_list<remove_cvref_t<Passed_Params>...>,
-                      tl::type_list<Legal_Params...>>,
+                      tl::type_list<Legal_Set...>>,
       "Invalid parameter: passed parameters are not a subset of legal "
       "parameters");
-
-    // suboptimal, but correct storage of parameters
-
-    std::tuple<std::optional<remove_cvref_t<Passed_Params>>...>
-      unfortunate_temp {std::forward<Passed_Params>(passed_params)...};
-
-    // Populate m_params by moving from unfortunate_temp
-    // In C++17, std::optional only has constexpr assignment if RHS is an optional of the same type
-    ((std::get<std::optional<remove_cvref_t<Passed_Params>>>(m_params) =
-        std::move(std::get<std::optional<remove_cvref_t<Passed_Params>>>(
-          unfortunate_temp))),
-     ...);
-
-    // I want to eliminate the above abomination,
-    // though it is the simplest way I could see to populate m_params
   }
 
   /* {{{ doc */
@@ -135,11 +113,7 @@ public:
   template <typename T>
   [[nodiscard]] constexpr auto was_passed() const noexcept -> bool
   {
-    static_assert(
-      tl::contains_v<T, tl::type_list<Legal_Params...>>,
-      "Argument to was_passed() is not an element of the set of valid "
-      "parameters as specified in template parameters to named_params");
-    return std::get<std::optional<T>>(m_params).has_value();
+    return tl::contains_v<T, tl::type_list<Params...>>;
   }
 
   /* {{{ doc */
@@ -150,9 +124,8 @@ public:
   template <typename T>
   [[nodiscard]] constexpr auto get() const
   {
-    if ( this->was_passed<T>() ) {
-      return impl::unwrap_value_struct_or_pass_enum(
-        std::get<std::optional<T>>(m_params).value());
+    if constexpr ( tl::contains_v<T, tl::type_list<Params...>> ) {
+      return impl::unwrap_value_struct_or_pass_enum(std::get<T>(m_params));
     } else {
       throw missing_named_parameter_exception {};
     }
@@ -165,22 +138,24 @@ public:
    * @param fallback Value to be returned if no value exists.
    */
   /* }}} */
-  template <typename Param_Type,
-            typename Fallback_Type,
-            typename RET = std::remove_reference_t<
-              decltype(impl::unwrap_value_struct_or_pass_enum(
-                std::get<std::optional<Param_Type>>(m_params).value()))>>
+  template <typename Param_Type, typename Fallback_Type>
   [[nodiscard]] constexpr auto
-  get_or(Fallback_Type&& fallback) const noexcept -> RET
+  get_or(Fallback_Type&& fallback) const noexcept
   {
-    if ( this->was_passed<Param_Type>() ) {
+    if constexpr ( tl::contains_v<Param_Type, tl::type_list<Params...>> ) {
       return impl::unwrap_value_struct_or_pass_enum(
-        std::get<std::optional<Param_Type>>(m_params).value());
+        std::get<Param_Type>(m_params));
     } else {
-      return static_cast<RET>(fallback);
+      return static_cast<
+        remove_cvref_t<decltype(impl::unwrap_value_struct_or_pass_enum(
+          std::declval<Param_Type>()))>>(fallback);
     }
   }
 };
+
+template <typename... Legal_Set, typename... Passed_Params>
+named_params(tl::type_list<Legal_Set...>, Passed_Params...)
+  -> named_params<remove_cvref_t<Passed_Params>...>;
 
 }  // namespace supl
 

@@ -127,6 +127,44 @@ constexpr auto max_size(const Container& cont,
   return std::max(max_size(cont), max_size(conts...));
 }
 
+template<typename T>
+constexpr auto min(T&& head) noexcept
+{
+  return std::forward<T>(head);
+}
+
+/* {{{ doc */
+/**
+ * @brief Variadic min
+ *
+ * @return Minimum argument, as determined by `std::min`
+ */
+/* }}} */
+template<typename T, typename... Ts>
+constexpr auto min(T&& head, Ts&&... tail) noexcept
+{
+  return std::min(std::forward<T>(head), ::supl::min(std::forward<Ts>(tail)...));
+}
+
+template<typename T>
+constexpr auto max(T&& head) noexcept
+{
+  return std::forward<T>(head);
+}
+
+/* {{{ doc */
+/**
+ * @brief Variadic max
+ *
+ * @return Maximum argument, as determined by `std::min`
+ */
+/* }}} */
+template<typename T, typename... Ts>
+constexpr auto max(T&& head, Ts&&... tail) noexcept
+{
+  return std::max(std::forward<T>(head), ::supl::max(std::forward<Ts>(tail)...));
+}
+
 template <typename Itr>
 constexpr auto
 contains(const Itr begin,

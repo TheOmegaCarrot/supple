@@ -157,6 +157,14 @@ for_each_both(Tuple1&& tup1, Tuple2&& tup2, Func&& func) noexcept(
                            seq);
 }
 
+/* template <typename Func, typename... Tuples> */
+/* constexpr void */
+/* for_each_all(Func&& func, Tuples&&... tuples) noexcept(noexcept( */
+/*       impl::for_each_all_impl( */
+/*         func, tuples..., std::make_index_sequence<> */
+/*         ) */
+/*       )) */
+
 namespace impl {
   template <typename Tuple,
             typename Func,

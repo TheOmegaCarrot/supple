@@ -24,7 +24,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "internal/min_max.hpp"
+#include "internal/algorithm/min_max.hpp"  //NOLINT
 
 #include "metaprogramming.hpp"
 #include "tuple_algo.hpp"

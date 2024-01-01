@@ -30,7 +30,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "internal/min_max.hpp"
+#include "internal/algorithm/min_max.hpp"
 #include "metaprogramming.hpp"
 #include "type_list.hpp"
 

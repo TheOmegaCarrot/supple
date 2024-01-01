@@ -197,45 +197,6 @@ for_each_both(Tuple1&& tup1, Tuple2&& tup2, Func&& func) noexcept(
 }
 
 namespace impl {
-  template <typename Func, typename... Tuples, std::size_t... Idxs>
-  constexpr void for_each_all_impl(
-    Func&& func,
-    std::index_sequence<Idxs...>,
-    Tuples&&... tuples) noexcept(noexcept((func(std::get<Idxs>(tuples)),
-                                           ...)))
-  {
-    (func(std::get<Idxs>(tuples)), ...);
-  }
-}  // namespace impl
-
-/* {{{ doc */
-/**
- * @brief Applies `func` to elements of every tuple passed in parameter order.
- * This operation may also be known as "zip".
- *
- * @details Iteration ceases when the end of any tuple is reached
- *
- * @pre `func` must be invocable with the element types of each tuple when zipped.
- * Failure to satisfy this precondition is a compile-time error.
- * This precondition is most easily satisfied by passing a generic lambda or
- * a function object with a templated `operator()`.
- * 
- */
-/* }}} */
-template <typename Func, typename... Tuples>
-constexpr void for_each_all(Func&& func, Tuples&&... tuples) noexcept(
-  noexcept(impl::for_each_all_impl(
-    func,
-    std::make_index_sequence<min(tl::size_v<Tuples>...)> {},
-    tuples...)))
-{
-  impl::for_each_all_impl(
-    func,
-    std::make_index_sequence<min(tl::size_v<Tuples>...)> {},
-    tuples...);
-}
-
-namespace impl {
   template <typename Tuple,
             typename Func,
             std::size_t... Idxs,

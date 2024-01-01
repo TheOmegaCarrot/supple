@@ -123,6 +123,44 @@ constexpr void for_each(Tuple&& tup, Func&& func) noexcept(noexcept(
 }
 
 namespace impl {
+  template <typename Tuple, typename Func, std::size_t... Idxs>
+  constexpr void for_each_reverse_impl(Tuple&& tup,
+                                       Func&& func,
+                                       std::index_sequence<Idxs...>)
+  {
+    ((func(::supl::get<tl::size_v<Tuple> - Idxs - 1>(tup))), ...);
+  }
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Applies a visitor function to every member of a tuple in reverse order.
+ *
+ * @tparam Tuple Tuple type.
+ *
+ * @tparam Func Visitor function type.
+ *
+ * @param tup Tuple to apply a visitor function to every element of.
+ *
+ * @param func Visitor function.
+ *
+ * @pre `Func` must be invocable with every element of `tup`.
+ * Failure to meet this precondition is a compile-time error.
+ */
+/* }}} */
+template <typename Tuple, typename Func>
+constexpr void for_each_reverse(Tuple&& tup, Func&& func) noexcept(
+  noexcept(impl::for_each_reverse_impl(
+    tup,
+    func,
+    std::make_index_sequence<tl::size_v<Tuple>> {})))
+{
+  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+  return impl::for_each_reverse_impl(
+    std::forward<Tuple>(tup), std::forward<Func>(func), seq);
+}
+
+namespace impl {
   template <typename Tuple1,
             typename Tuple2,
             typename Func,

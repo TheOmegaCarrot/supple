@@ -24,6 +24,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "internal/min_max.hpp"
+
 #include "metaprogramming.hpp"
 #include "tuple_algo.hpp"
 
@@ -125,44 +127,6 @@ constexpr auto max_size(const Container& cont,
                         const Containers&... conts) noexcept -> std::size_t
 {
   return std::max(max_size(cont), max_size(conts...));
-}
-
-template<typename T>
-constexpr auto min(T&& head) noexcept
-{
-  return std::forward<T>(head);
-}
-
-/* {{{ doc */
-/**
- * @brief Variadic min
- *
- * @return Minimum argument, as determined by `std::min`
- */
-/* }}} */
-template<typename T, typename... Ts>
-constexpr auto min(T&& head, Ts&&... tail) noexcept
-{
-  return std::min(std::forward<T>(head), ::supl::min(std::forward<Ts>(tail)...));
-}
-
-template<typename T>
-constexpr auto max(T&& head) noexcept
-{
-  return std::forward<T>(head);
-}
-
-/* {{{ doc */
-/**
- * @brief Variadic max
- *
- * @return Maximum argument, as determined by `std::min`
- */
-/* }}} */
-template<typename T, typename... Ts>
-constexpr auto max(T&& head, Ts&&... tail) noexcept
-{
-  return std::max(std::forward<T>(head), ::supl::max(std::forward<Ts>(tail)...));
 }
 
 template <typename Itr>
@@ -509,12 +473,13 @@ namespace impl {
  * @brief Applies `func` to elements of every passed range in parameter order.
  *
  * @details Iteration ceases when any `end` iterator is reached.
+ * This operation may also be known as "zip".
  *
  * @pre Must be passed a pack of matching iterator pairs.
  * ex. `for_each_all(callable, begin1, end1, begin2, end2, begin3, end3)`
  * Failure to meet this precondition may be a compile-time error
  * if types mismatch,
- * or a undefined behavior if types match,
+ * or undefined behavior if types match,
  * but do not correspond to the same range.
  *
  * @pre `func` must be invocable with the value types of each iterator pair.

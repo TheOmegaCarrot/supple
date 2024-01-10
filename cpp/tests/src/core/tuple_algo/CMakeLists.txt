@@ -12,6 +12,7 @@ supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/reverse.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/rotate_left.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/rotate_right.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_for_each.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/zip.cpp)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/alternating_split)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/back)

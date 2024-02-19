@@ -20,8 +20,7 @@ function(supple_add_test_must_not_compile input_test_file)
 
     target_include_directories(
       ${test_exe_name} PRIVATE
-      ${SUPPLE_TOP_DIR}/cpp/include/supple/core
-      ${SUPPLE_TOP_DIR}/cpp/include/supple/named_params)
+      ${SUPPLE_TOP_DIR}/cpp/include/supple/core)
 
     set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
                                                       ${SUPPLE_TEST_BIN_DIR})
@@ -63,7 +62,6 @@ function(supple_add_test input_test_file)
 
     target_include_directories(
       ${test_exe_name} PRIVATE ${SUPPLE_TOP_DIR}/cpp/include/supple/core
-                               ${SUPPLE_TOP_DIR}/cpp/include/supple/named_params
                                ${SUPPLE_TOP_DIR}/cpp/include/supple/testing)
 
     set_target_properties(${test_exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY

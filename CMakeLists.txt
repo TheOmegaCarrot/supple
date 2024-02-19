@@ -57,12 +57,6 @@ target_include_directories(
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple/core)
 target_compile_features(supple_internal_core INTERFACE cxx_std_17)
 
-add_library(supple_internal_named_params INTERFACE)
-target_include_directories(
-  supple_internal_named_params
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/supple/named_params)
-target_compile_features(supple_internal_named_params INTERFACE cxx_std_17)
-
 add_library(supple_internal_testing INTERFACE)
 target_include_directories(
   supple_internal_testing
@@ -71,11 +65,10 @@ target_link_libraries(supple_internal_testing INTERFACE supple_internal_core)
 target_compile_features(supple_internal_testing INTERFACE cxx_std_17)
 
 add_library(supple_internal_full INTERFACE)
-target_link_libraries(supple_internal_full INTERFACE supple_internal_core supple_internal_named_params)
+target_link_libraries(supple_internal_full INTERFACE supple_internal_core)
 target_compile_features(supple_internal_full INTERFACE cxx_std_17)
 
 add_library(supple::core ALIAS supple_internal_core)
-add_library(supple::named_params ALIAS supple_internal_named_params)
 add_library(supple::testing ALIAS supple_internal_testing)
 add_library(supple::full ALIAS supple_internal_full)
 

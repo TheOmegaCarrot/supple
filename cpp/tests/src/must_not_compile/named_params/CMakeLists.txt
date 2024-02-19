@@ -1,2 +1,0 @@
-supple_add_test_must_not_compile(${CMAKE_CURRENT_SOURCE_DIR}/instantiate_type_with_duplicates.cpp)
-

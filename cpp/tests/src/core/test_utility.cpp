@@ -85,6 +85,23 @@ static auto test_ctie() -> supl::test_results
   return results;
 }
 
+static auto test_make_from_tuple_uniform() -> supl::test_results
+{
+  supl::test_results results;
+
+  const auto paren {
+    std::make_from_tuple<std::vector<int>>(std::tuple {5, 300})};
+  const auto uniform {
+    supl::make_from_tuple_uniform<std::vector<int>>(std::tuple {5, 300})};
+
+  results.enforce_equal(paren, std::vector {300, 300, 300, 300, 300});
+  results.enforce_equal(uniform, std::vector {5, 300});
+
+  results.enforce_false(paren == uniform);
+
+  return results;
+}
+
 static auto test_range_wrapper() -> supl::test_results
 {
   supl::test_results results;
@@ -515,6 +532,8 @@ auto test_utility() -> supl::test_section
 
   section.add_test("supl::explicit_copy", &test_explicit_copy);
   section.add_test("supl::ctie", &test_ctie);
+  section.add_test("supl::make_from_tuple_uniform",
+                   &test_make_from_tuple_uniform);
   section.add_test("supl::range_wrapper", &test_range_wrapper);
   section.add_test("supl::to_stream", &test_to_stream);
   section.add_test("specialize to_stream", &test_to_stream_specialize);

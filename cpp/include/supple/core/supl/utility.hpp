@@ -69,6 +69,42 @@ template <typename... Args>
   return {args...};
 }
 
+namespace impl {
+  template <typename T, typename Tuple, std::size_t... idxs>
+  [[nodiscard]] constexpr auto make_from_tuple_uniform_impl(
+    Tuple&& tuple,
+    std::index_sequence<
+      idxs...>) noexcept(std::
+                           is_nothrow_constructible_v<
+                             T,
+                             tl::at_index_t<idxs, Tuple>...>)
+  {
+    return T {std::get<idxs>(std::forward<Tuple>(tuple))...};
+  }
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Comparable to std::make_from_tuple, but uses uniform initialization (initialization with {})
+ * Will use std::initializer_list constructors when applicable
+ *
+ * @param tuple Tuple of constructor arguments
+ *
+ * @return T constructed using the elements of tuple as arguments using uniform initialization
+ */
+/* }}} */
+template <typename T, typename Tuple>
+[[nodiscard]] constexpr auto
+make_from_tuple_uniform(Tuple&& tuple) noexcept(
+  noexcept(impl::make_from_tuple_uniform_impl<T>(
+    std::forward<Tuple>(tuple),
+    std::make_index_sequence<tl::size_v<Tuple>> {}))) -> T
+{
+  return impl::make_from_tuple_uniform_impl<T>(
+    std::forward<Tuple>(tuple),
+    std::make_index_sequence<tl::size_v<Tuple>> {});
+}
+
 template <typename T>
 class range_wrapper
 {

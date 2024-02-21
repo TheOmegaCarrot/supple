@@ -132,6 +132,53 @@ public:
 
   /* {{{ doc */
   /**
+   * @brief Enforce that two values are not equal.
+   * Values are permitted to be of different type,
+   * so long as they are equality comparable,
+   * with `T` as the left-hand side of operator `==`.
+   *
+   * @tparam T Type of value under test.
+   * `T == U` must be valid.
+   * Must be a class which is a valid input to `supl::to_stream`.
+   * See documentation for `to_stream` for details.
+   *
+   * @tparam U Type of expected value.
+   * `T == U` must be valid.
+   * Must be a class which is a valid input to `supl::to_stream`.
+   * See documentation for `to_stream` for details.
+   *
+   * @param result Value produced by code under test
+   *
+   * @param unexpected Value which `result` must not equal
+   *
+   * @param message A string which will be printed if the test fails
+   */
+  /* }}} */
+  template <typename T, typename U>
+  void enforce_not_equal(const T& result,
+                         const U& unexpected,
+                         const std::string_view message = "") noexcept
+  {
+    m_case_count += 1;
+
+    std::stringstream details;
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+    if ( result == unexpected ) {
+      m_fail_count += 1;
+
+      details << "\nCase " << m_case_count << ":\t" << message
+              << "\n\n\tExpected not to get:\n\t"
+              << supl::stream_adapter(unexpected) << "\n\n\tGot:\n\t"
+              << supl::stream_adapter(result) << "\n\n";
+      m_case_details.push_back(details.str());
+    } else {
+      m_case_details.emplace_back();
+    }
+  }
+
+  /* {{{ doc */
+  /**
    * @brief Enforce that a condition is true.
    *
    * @param result Value produced by code under test

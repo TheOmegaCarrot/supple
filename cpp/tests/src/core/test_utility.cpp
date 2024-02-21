@@ -97,7 +97,7 @@ static auto test_make_from_tuple_uniform() -> supl::test_results
   results.enforce_equal(paren, std::vector {300, 300, 300, 300, 300});
   results.enforce_equal(uniform, std::vector {5, 300});
 
-  results.enforce_false(paren == uniform);
+  results.enforce_not_equal(uniform, paren);
 
   return results;
 }

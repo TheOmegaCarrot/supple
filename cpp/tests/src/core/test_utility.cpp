@@ -526,6 +526,55 @@ static auto test_to_stream_specialize() -> supl::test_results
   return results;
 }
 
+static auto test_adapted_ostream() -> supl::test_results
+{
+  supl::test_results results;
+
+  using namespace std::literals;
+
+  std::stringstream stream1;
+  supl::adapted_ostream adapted_stream1 {stream1};
+  const std::tuple test1 {1, "hello", true};
+  adapted_stream1 << test1;
+  results.enforce_exactly_equal(
+    dynamic_cast<std::stringstream&>(adapted_stream1.underlying()).str(),
+    "( 1, hello, true )"s,
+    "tuple");
+
+  std::stringstream stream2;
+  supl::adapted_ostream adapted_stream2 {stream2};
+  const std::pair test2 {42, "Neat"s};
+  adapted_stream2 << test2;
+  results.enforce_exactly_equal(
+    dynamic_cast<std::stringstream&>(adapted_stream2.underlying()).str(),
+    "( 42, Neat )"s,
+    "pair");
+
+  std::stringstream stream3;
+  supl::adapted_ostream adapted_stream3 {stream3};
+  const std::vector test3 {1, 2, 42, 81};
+  adapted_stream3 << test3;
+  results.enforce_exactly_equal(
+    dynamic_cast<std::stringstream&>(adapted_stream3.underlying()).str(),
+    "[ 1, 2, 42, 81 ]"s,
+    "vector");
+
+  std::stringstream stream4;
+  supl::adapted_ostream adapted_stream4 {stream4};
+  const std::list<std::pair<int, bool>> test4 {
+    {1,  true},
+    {2, false},
+    {5,  true}
+  };
+  adapted_stream4 << test4;
+  results.enforce_exactly_equal(
+    dynamic_cast<std::stringstream&>(adapted_stream4.underlying()).str(),
+    "[ ( 1, true ), ( 2, false ), ( 5, true ) ]"s,
+    "List of tuples");
+
+  return results;
+}
+
 auto test_utility() -> supl::test_section
 {
   supl::test_section section;
@@ -543,6 +592,7 @@ auto test_utility() -> supl::test_section
                    &test_size_t_literals);
   section.add_test("supl::literals::ptrdiff_t_literal::operator\"\"_pd",
                    &test_ptrdiff_t_literals);
+  section.add_test("supl::adapted_ostream", &test_adapted_ostream);
 
   return section;
 }

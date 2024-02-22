@@ -534,6 +534,52 @@ template <typename T>
   return out.str();
 }
 
+/* {{{ doc */
+/**
+ * @brief Thin wrapper for a std::ostream object,
+ * whose stream insertion operator calls supl::to_stream.
+ * The advantage of this is the wider array of types which may be inserted.
+ */
+/* }}} */
+class adapted_ostream
+{
+private:
+
+  std::ostream& m_underlying;
+
+public:
+
+  adapted_ostream() = delete;
+
+  explicit adapted_ostream(std::ostream& arg) noexcept
+      : m_underlying {arg}
+  { }
+
+  adapted_ostream(const adapted_ostream&) = delete;
+  adapted_ostream(adapted_ostream&&) = delete;
+  auto operator=(const adapted_ostream&) -> adapted_ostream& = delete;
+  auto operator=(adapted_ostream&&) -> adapted_ostream& = delete;
+  ~adapted_ostream() = default;
+
+  /* {{{ doc */
+  /**
+   * @brief Get the underlying ostream object
+   */
+  /* }}} */
+  [[nodiscard]] auto underlying() const -> std::ostream&
+  {
+    return m_underlying;
+  }
+
+  template <typename T>
+  friend auto operator<<(adapted_ostream& lhs, const T& rhs)
+    -> adapted_ostream&
+  {
+    to_stream(lhs.m_underlying, rhs);
+    return lhs;
+  }
+};
+
 ///////////////////////////////////////////// end to_stream and related
 
 inline namespace literals {

@@ -835,9 +835,9 @@ struct binary_partial_apply {
  *
  * In short: both of these are valid:
  *
- * sequential_compose_t<int, std::add_const, std::add_pointer> -> const int*
+ * sequential_apply_t<int, std::add_const, std::add_pointer> -> const int*
  *
- * sequential_compose_v<int, std::add_const, std::is_const> -> true
+ * sequential_apply_v<int, std::add_const, std::is_const> -> true
  */
 /* }}} */
 template <typename T,

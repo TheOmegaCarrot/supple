@@ -434,9 +434,9 @@ constexpr void for_each_both_n(
 /* }}} */
 template <typename VarFunc, typename... Begins>
 constexpr void
-for_each_all_n(VarFunc&& func,
-               const std::size_t n,
-               Begins... begins) noexcept(noexcept(func(*begins...)))
+zip_apply_n(VarFunc&& func,
+            const std::size_t n,
+            Begins... begins) noexcept(noexcept(func(*begins...)))
 {
   for ( std::size_t i {0}; i != n; ++i ) {
     func(*begins...);
@@ -473,10 +473,9 @@ namespace impl {
  * @brief Applies `func` to elements of every passed range in parameter order.
  *
  * @details Iteration ceases when any `end` iterator is reached.
- * This operation may also be known as "zip".
  *
  * @pre Must be passed a pack of matching iterator pairs.
- * ex. `for_each_all(callable, begin1, end1, begin2, end2, begin3, end3)`
+ * ex. `zip_apply(callable, begin1, end1, begin2, end2, begin3, end3)`
  * Failure to meet this precondition may be a compile-time error
  * if types mismatch,
  * or undefined behavior if types match,
@@ -494,7 +493,7 @@ namespace impl {
  * int main() {
  * std::vector<int> int_vec {...};
  * std::vector<long> long_vec {...};
- * for_each_all(&function,
+ * zip_apply(&function,
  * int_vec.begin(),
  * int_vec.end(),
  * long_vec.begin(),
@@ -509,8 +508,7 @@ namespace impl {
  */
 /* }}} */
 template <typename VarFunc, typename... Iterators>
-constexpr void for_each_all(VarFunc&& func,
-                            Iterators... iterators) noexcept
+constexpr void zip_apply(VarFunc&& func, Iterators... iterators) noexcept
 {
   static_assert(sizeof...(Iterators) % 2 == 0,
                 "Expected even number of iterators");

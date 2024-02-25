@@ -13,7 +13,7 @@ auto main() -> int
   std::vector<int> test_output2;
   const std::vector reference_output2 {11, 18, 27, 38};
 
-  supl::for_each_all(
+  supl::zip_apply(
     [&test_output2](const int a, const int b, const int c) {
       test_output2.push_back(a + b + c);
     },

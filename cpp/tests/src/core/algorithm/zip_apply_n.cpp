@@ -13,7 +13,7 @@ auto main() -> int
   std::vector<int> test_output;
   const std::vector reference_output {2, 3, 4};
 
-  supl::for_each_all_n(
+  supl::zip_apply_n(
     [&test_output](const int a, const int b) {
       test_output.push_back(a / b);
     },

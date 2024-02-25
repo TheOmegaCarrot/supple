@@ -4,17 +4,22 @@
 
 This is a small header-only library providing various handy utilities,
 with no dependencies beyond a compliant C++ standard library.
-Some may not be handy, and may just be me having a neat idea.
-Some loosely inspired by the STL, some just my ideas.
+Some utilities inspired by the STL, some are just my ideas.
 This library is written for C++17, but does work with later standards.
 
 ---
 
-# Why is this?
+# What Kinds of Things are Offered?
 
-I've made things I've felt might come in handy,
-I've made things because I think they're neat,
-I've made things just as a learning exercise.
+This library is largely an assortment of small utilities, such as:
+- More STL-like algorithms
+- Support for directly formatting more types using `<iostream>`, without polluting the global namespace
+- Sequence container operations on tuples
+- Template metaprogramming utilities
+    - Including type list operations
+- Composable unary predicates
+- CRTP helper classes
+- A macro-free simple testing framework
 
 ---
 
@@ -30,17 +35,17 @@ The package currently defines three targets: `supple::core`, `supple::testing`, 
 
 Alternatively, you can simply copy `cpp/include/supple/<module-name>` into your project, and include headers directly,
 listing the `<module-name>` directory as `-isystem`.
-For example: if you copy `cpp/include/supple/core` to `my_cool_project/include/core`,
-then you should pass the compiler option `-isystem include/core`.
+For example: if you copy `cpp/include/supple/core` to `my_project/include/supple/core`,
+then you should pass the compiler option `-isystem include/supple/core`.
 
 ---
 
 # How do I run the tests?
 
 You may want to run the tests to ensure that this library works with your toolchain.
-This library is tested with gcc 9, 10, 11, 12, 13, and trunk, clang 11, 12, 13, 14, 15, 16, and trunk, Intel icc 2021 and icpx 2023, and MSVC 19.35.
-If any tests fail with any other compiler which properly supports C++17,
-please file a bug report.
+This library is tested with gcc 9, 10, 11, 12, and 13, clang 11, 12, 13, 14, 15, 16, and 17, Intel icc 2021, Intel icpx 2023 and 2024, and MSVC 19.35.
+If any tests fail with any compiler which properly supports C++17,
+please open an issue.
 
 To run the tests:
 

@@ -82,6 +82,19 @@ using size_of = index_constant<sizeof(T)>;
 template <typename T>
 constexpr inline std::size_t size_of_v = sizeof(T);
 
+///////////////////////////////////////////// align_of
+
+/* {{{ doc */
+/**
+ * @brief Metafunction wrapping alignof
+ */
+/* }}} */
+template <typename T>
+using align_of = index_constant<alignof(T)>;
+
+template <typename T>
+constexpr inline std::size_t align_of_v = alignof(T);
+
 ///////////////////////////////////////////// remove_cvref
 
 template <typename T>

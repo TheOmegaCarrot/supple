@@ -35,6 +35,16 @@ static_assert(
   std::is_same_v<supl::sum_type_t<short, short, short, short, int>, int>,
   "short + short + short + short + int == int");
 
+///////////////////////////////////////////// size_of
+
+static_assert(supl::size_of<int>::value == sizeof(int));
+static_assert(supl::size_of_v<int> == sizeof(int));
+
+///////////////////////////////////////////// align_of
+
+static_assert(supl::align_of<int>::value == alignof(int));
+static_assert(supl::align_of_v<int> == alignof(int));
+
 ///////////////////////////////////////////// remove_cvref
 
 static_assert(std::is_same_v<int, supl::remove_cvref_t<int>>);

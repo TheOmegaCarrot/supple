@@ -69,6 +69,19 @@ using sum_type = type_identity<decltype((... + std::declval<Ts>()))>;
 template <typename... Ts>
 using sum_type_t = typename sum_type<Ts...>::type;
 
+///////////////////////////////////////////// size_of
+
+/* {{{ doc */
+/**
+ * @brief Metafunction wrapping sizeof
+ */
+/* }}} */
+template <typename T>
+using size_of = index_constant<sizeof(T)>;
+
+template <typename T>
+constexpr inline std::size_t size_of_v = sizeof(T);
+
 ///////////////////////////////////////////// remove_cvref
 
 template <typename T>

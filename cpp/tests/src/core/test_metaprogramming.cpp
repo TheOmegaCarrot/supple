@@ -524,5 +524,61 @@ static_assert(
                    template func_t<volatile char* const>,
                  const volatile char* const&>);
 
+///////////////////////////////////////////// least_of
+
+static_assert(std::is_same_v<std::uint16_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::less,
+                                              std::uint16_t,
+                                              std::uint32_t,
+                                              std::uint64_t>>);
+static_assert(std::is_same_v<std::uint16_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::less,
+                                              std::uint64_t,
+                                              std::uint32_t,
+                                              std::uint16_t>>);
+
+static_assert(std::is_same_v<std::uint16_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::less,
+                                              std::uint32_t,
+                                              std::uint64_t,
+                                              std::uint16_t>>);
+
+static_assert(std::is_same_v<std::uint16_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::less,
+                                              std::uint16_t,
+                                              std::uint64_t,
+                                              std::uint32_t>>);
+
+static_assert(std::is_same_v<std::uint64_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::greater,
+                                              std::uint16_t,
+                                              std::uint32_t,
+                                              std::uint64_t>>);
+static_assert(std::is_same_v<std::uint64_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::greater,
+                                              std::uint64_t,
+                                              std::uint32_t,
+                                              std::uint16_t>>);
+
+static_assert(std::is_same_v<std::uint64_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::greater,
+                                              std::uint32_t,
+                                              std::uint64_t,
+                                              std::uint16_t>>);
+
+static_assert(std::is_same_v<std::uint64_t,
+                             supl::least_of_t<supl::size_of,
+                                              std::greater,
+                                              std::uint16_t,
+                                              std::uint64_t,
+                                              std::uint32_t>>);
+
 auto main() -> int
 { }

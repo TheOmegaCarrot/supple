@@ -1187,14 +1187,28 @@ constexpr inline bool is_subset_v = is_subset<LIST1, LIST2>::value;
 ///////////////////////////////////////////// sort_by
 
 /* namespace impl { */
+/*   template <template <typename> typename PROJ, */
+/*             template <typename> */
+/*             typename COMP, */
+/*             typename LIST, */
+/*             typename BUILDER> */
+/*   struct sort_by_impl; */
 
-/* } */
+/*   template <template <typename> typename PROJ, */
+/*             template <typename> */
+/*             typename COMP, */
+/*             template <typename...> */
+/*             typename LIST, */
+/*             typename... Elems, */
+/*             typename... Built> */
+/*   struct sort_by_impl<PROJ, COMP, LIST<Elems...>, LIST<Built...>> : ; */
+/* }  // namespace impl */
 
 /* template <template <typename> typename PROJ, */
 /*           template <typename> */
 /*           typename COMP, */
 /*           typename LIST> */
-/* struct sort_by : impl::sort_by_impl<PROJ, COMP, > */
+/* struct sort_by : impl::sort_by_impl<PROJ, COMP, LIST, clear_t<LIST>> { }; */
 
 }  // namespace supl::tl
 

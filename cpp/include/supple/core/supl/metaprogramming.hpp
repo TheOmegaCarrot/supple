@@ -915,6 +915,49 @@ struct sequential_applicator {
   using func_t = typename func<T>::type;
 };
 
+///////////////////////////////////////////// least_of
+
+namespace impl {
+  template <template <typename> typename PROJ,
+            template <typename>
+            typename COMP,
+            typename Running,
+            typename... Pack>
+  struct least_of_impl;
+
+  template <template <typename> typename PROJ,
+            template <typename>
+            typename COMP,
+            typename Running,
+            typename Next,
+            typename... Pack>
+  struct least_of_impl<PROJ, COMP, Running, Next, Pack...>
+      : std::conditional_t<COMP<void> {}(PROJ<Running>::value,
+                                         PROJ<Next>::value),
+                           least_of_impl<PROJ, COMP, Running, Pack...>,
+                           least_of_impl<PROJ, COMP, Next, Pack...>> { };
+
+  template <template <typename> typename PROJ,
+            template <typename>
+            typename COMP,
+            typename Final>
+  struct least_of_impl<PROJ, COMP, Final> : type_identity<Final> { };
+
+}  // namespace impl
+
+template <template <typename> typename PROJ,
+          template <typename>
+          typename COMP,
+          typename... Pack>
+struct least_of
+    : impl::least_of_impl<PROJ, COMP, peel_first_t<Pack...>, Pack...> { };
+
+template <template <typename> typename PROJ,
+          template <typename>
+          typename COMP,
+          typename... Pack>
+using least_of_t = typename least_of<PROJ, COMP, Pack...>::type;
+
 }  // namespace supl
 
 #endif

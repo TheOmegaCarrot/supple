@@ -1390,7 +1390,7 @@ static_assert(
 
 /* static_assert( */
 /*   std::is_same_v< */
-/*     supl::tl::sort_by< */
+/*     supl::tl::sort_by_t< */
 /*       supl::size_of, */
 /*       std::less, */
 /*       supl::tl::type_list<std::int64_t, std::int8_t, std::int16_t>>, */

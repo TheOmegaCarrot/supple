@@ -198,6 +198,17 @@ using empty =
 template <typename LIST>
 constexpr inline bool empty_v = empty<LIST>::value;
 
+///////////////////////////////////////////// clear
+
+template <typename LIST>
+struct clear;
+
+template <template <typename...> typename LIST, typename... Elems>
+struct clear<LIST<Elems...>> : type_identity<LIST<>> { };
+
+template <typename LIST>
+using clear_t = typename clear<LIST>::type;
+
 ///////////////////////////////////////////// concat
 
 /* {{{ doc */
@@ -1172,6 +1183,18 @@ struct is_subset
 
 template <typename LIST1, typename LIST2>
 constexpr inline bool is_subset_v = is_subset<LIST1, LIST2>::value;
+
+///////////////////////////////////////////// sort_by
+
+/* namespace impl { */
+
+/* } */
+
+/* template <template <typename> typename PROJ, */
+/*           template <typename> */
+/*           typename COMP, */
+/*           typename LIST> */
+/* struct sort_by : impl::sort_by_impl<PROJ, COMP, > */
 
 }  // namespace supl::tl
 

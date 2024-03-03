@@ -134,6 +134,20 @@ static_assert(not supl::tl::empty_v<supl::tl::type_list<int>>);
 
 static_assert(not supl::tl::empty_v<supl::tl::type_list<int, bool, char>>);
 
+///////////////////////////////////////////// clear
+
+static_assert(std::is_same_v<
+              supl::tl::clear_t<
+                supl::tl::type_list<int, const char, volatile bool, void>>,
+              supl::tl::type_list<>>);
+
+static_assert(
+  std::is_same_v<supl::tl::clear_t<supl::tl::type_list<int, char, bool>>,
+                 supl::tl::type_list<>>);
+
+static_assert(std::is_same_v<supl::tl::clear_t<supl::tl::type_list<>>,
+                             supl::tl::type_list<>>);
+
 ///////////////////////////////////////////// concat
 
 static_assert(std::is_same_v<
@@ -1371,6 +1385,16 @@ static_assert(
 static_assert(
   supl::tl::is_subset_v<supl::tl::type_list<int, float>,
                         supl::tl::type_list<int, char, bool, float>>);
+
+///////////////////////////////////////////// sort_by
+
+/* static_assert( */
+/*   std::is_same_v< */
+/*     supl::tl::sort_by< */
+/*       supl::size_of, */
+/*       std::less, */
+/*       supl::tl::type_list<std::int64_t, std::int8_t, std::int16_t>>, */
+/*     supl::tl::type_list<std::int8_t, std::int16_t, std::int64_t>>); */
 
 auto main() -> int
 { }

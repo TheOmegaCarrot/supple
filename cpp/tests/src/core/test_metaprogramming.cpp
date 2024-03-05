@@ -524,6 +524,14 @@ static_assert(
                    template func_t<volatile char* const>,
                  const volatile char* const&>);
 
+///////////////////////////////////////////// apply_if
+
+static_assert(
+  std::is_same_v<const int, supl::apply_if_t<true, std::add_const, int>>);
+
+static_assert(
+  std::is_same_v<int, supl::apply_if_t<false, std::add_const, int>>);
+
 ///////////////////////////////////////////// least_of
 
 static_assert(std::is_same_v<std::uint16_t,

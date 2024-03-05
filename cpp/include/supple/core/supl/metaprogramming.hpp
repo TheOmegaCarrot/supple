@@ -915,6 +915,14 @@ struct sequential_applicator {
   using func_t = typename func<T>::type;
 };
 
+///////////////////////////////////////////// apply_if
+
+template <bool Cond, template <typename> typename FUNC, typename T>
+using apply_if = std::conditional<Cond, typename FUNC<T>::type, T>;
+
+template <bool Cond, template <typename> typename FUNC, typename T>
+using apply_if_t = typename apply_if<Cond, FUNC, T>::type;
+
 ///////////////////////////////////////////// least_of
 
 namespace impl {
@@ -932,8 +940,8 @@ namespace impl {
             typename Next,
             typename... Pack>
   struct least_of_impl<PROJ, COMP, Running, Next, Pack...>
-      : std::conditional_t<COMP<void> {}(PROJ<Running>::value,
-                                         PROJ<Next>::value),
+      : std::conditional_t<COMP {}(PROJ<Running>::value,
+                                   PROJ<Next>::value),
                            least_of_impl<PROJ, COMP, Running, Pack...>,
                            least_of_impl<PROJ, COMP, Next, Pack...>> { };
 
@@ -945,6 +953,25 @@ namespace impl {
 
 }  // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief return the type which is the "least" after mapped to a value by `PROJ`,
+ * using `COMP` to determine ordering.
+ * For example:
+ * std::is_same_v<std::uint16_t,
+ *   supl::least_of_t<supl::size_of, std::less,
+ *   std::uint16_t, std::uint32_t, std::uint64_t>> == true;
+ *
+ * @tparam PROJ Projection before sorting, such as `supl::size_of` for
+ * mapping to `sizeof`
+ *
+ * @tparam COMP Comparator object (`std::less`, `std::greater`)
+ * Must be a function object whose call operator accepts values
+ * of type `decltype(PROJ<T>::value)`
+ *
+ * @tparam Pack Pack of types to be compared. Order is irrelevant.
+ */
+/* }}} */
 template <template <typename> typename PROJ,
           template <typename>
           typename COMP,

@@ -105,6 +105,17 @@ make_from_tuple_uniform(Tuple&& tuple) noexcept(
     std::make_index_sequence<tl::size_v<Tuple>> {});
 }
 
+template <typename Func, typename... Args>
+constexpr void
+repeat_n(std::intmax_t N, Func&& func, Args&&... args) noexcept(
+  noexcept(std::forward<Func>(func)(std::forward<Args>(args)...)))
+{
+
+  for ( std::intmax_t i {0}; i != N; ++i ) {
+    std::forward<Func>(func)(std::forward<Args>(args)...);
+  }
+}
+
 template <typename T>
 class range_wrapper
 {

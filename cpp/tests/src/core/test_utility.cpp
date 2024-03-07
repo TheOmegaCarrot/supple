@@ -102,6 +102,37 @@ static auto test_make_from_tuple_uniform() -> supl::test_results
   return results;
 }
 
+static auto test_repeat_n() -> supl::test_results
+{
+  supl::test_results results;
+
+  int value {0};
+
+  const auto func {[&value](int arg) noexcept {
+    value += arg;
+  }};
+
+  supl::repeat_n(3, func, 5);
+
+  results.enforce_equal(value, 15);
+
+  constexpr static int cexpr_value {[]() {
+    int retval {0};
+
+    const auto cexpr_func {[&retval](int arg) noexcept {
+      retval += arg;
+    }};
+
+    supl::repeat_n(3, cexpr_func, 5);
+
+    return retval;
+  }()};
+
+  results.enforce_equal(cexpr_value, 15);
+
+  return results;
+}
+
 static auto test_range_wrapper() -> supl::test_results
 {
   supl::test_results results;
@@ -583,6 +614,7 @@ auto test_utility() -> supl::test_section
   section.add_test("supl::ctie", &test_ctie);
   section.add_test("supl::make_from_tuple_uniform",
                    &test_make_from_tuple_uniform);
+  section.add_test("supl::repeat_n", &test_repeat_n);
   section.add_test("supl::range_wrapper", &test_range_wrapper);
   section.add_test("supl::to_stream", &test_to_stream);
   section.add_test("specialize to_stream", &test_to_stream_specialize);

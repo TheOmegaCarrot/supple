@@ -1,4 +1,5 @@
 #include <array>
+#include <cstdint>
 #include <forward_list>
 #include <iostream>
 #include <list>

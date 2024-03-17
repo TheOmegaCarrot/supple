@@ -40,6 +40,9 @@ option(SUPPLE_OMIT_20
 option(SUPPLE_OMIT_23
        "C++23 tests should be omitted - ignored if FULL_TESTS is false" NO)
 
+option(SUPPLE_OMIT_26
+       "C++26 tests should be omitted - ignored if FULL_TESTS is false" NO)
+
 option(SUPPLE_DO_CLANG_TIDY "Run clang-tidy during build" NO)
 
 # Options specific to compiling with clang

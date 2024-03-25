@@ -43,7 +43,7 @@ then you should pass the compiler option `-isystem include/supple/core`.
 # How do I run the tests?
 
 You may want to run the tests to ensure that this library works with your toolchain.
-This library is tested with gcc 9, 10, 11, 12, and 13, clang 11, 12, 13, 14, 15, 16, and 17, Intel icc 2021, Intel icpx 2023 and 2024, and MSVC 19.35.
+This library is tested with gcc 9, 10, 11, 12, and 13, clang 11, 12, 13, 14, 15, 16, and 17, Intel icc 2021, Intel icpx 2023 and 2024.
 If any tests fail with any compiler which properly supports C++17,
 please open an issue.
 

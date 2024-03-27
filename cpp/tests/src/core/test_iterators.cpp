@@ -54,10 +54,11 @@ static auto test_iterator() -> supl::test_results
   const std::deque test_deque {6, 7, 8, 9, 10};
 
   // increment and decrement
-  supl::iterator test_1 {test_vector.begin()};
+  supl::polymorphic_iterator test_1 {test_vector.begin()};
 
   if constexpr ( sizeof(std::vector<int>::const_iterator)
-                 <= supl::iterator<const int>::small_buffer_size ) {
+                 <= supl::polymorphic_iterator<
+                   const int>::small_buffer_size ) {
     results.enforce_true(test_1.using_small_buffer());
   } else {
     results.enforce_false(test_1.using_small_buffer());
@@ -73,12 +74,12 @@ static auto test_iterator() -> supl::test_results
                 typename std::iterator_traits<decltype(test_1)>::reference,
                 const int&>);
 
-  supl::iterator test_2 {test_1++};
+  supl::polymorphic_iterator test_2 {test_1++};
   results.enforce_exactly_equal(*test_1, 2);
   results.enforce_exactly_equal(*test_2, 1);
 
   ++test_2;
-  const supl::iterator test_3 {test_2--};
+  const supl::polymorphic_iterator test_3 {test_2--};
   results.enforce_exactly_equal(*test_2, 1);
   results.enforce_exactly_equal(*test_3, 2);
 
@@ -86,13 +87,13 @@ static auto test_iterator() -> supl::test_results
   results.enforce_exactly_equal(*test_1, 6);
   ++test_1;
 
-  const supl::iterator test_4 {test_1};
+  const supl::polymorphic_iterator test_4 {test_1};
   results.enforce_exactly_equal(*test_1, 7);
   results.enforce_exactly_equal(*test_4, 7);
 
   // equality
-  const supl::iterator test_a {test_vector.begin()};
-  supl::iterator test_b {test_vector.begin()};
+  const supl::polymorphic_iterator test_a {test_vector.begin()};
+  supl::polymorphic_iterator test_b {test_vector.begin()};
 
   // same type - good cast
   results.enforce_exactly_equal(test_a == test_b, true);
@@ -102,7 +103,8 @@ static auto test_iterator() -> supl::test_results
   test_b = test_deque.begin();
 
   if constexpr ( sizeof(std::deque<int>::const_iterator)
-                 <= supl::iterator<const int>::small_buffer_size ) {
+                 <= supl::polymorphic_iterator<
+                   const int>::small_buffer_size ) {
     results.enforce_true(test_1.using_small_buffer());
   } else {
     results.enforce_false(test_1.using_small_buffer());
@@ -125,13 +127,13 @@ static auto test_iterator() -> supl::test_results
 
   std::vector test_foo {foo {}};
 
-  const supl::iterator test_foo_itr {test_foo.begin()};
+  const supl::polymorphic_iterator test_foo_itr {test_foo.begin()};
   results.enforce_exactly_equal(test_foo_itr->the_thing(),
                                 std::string {"foo"});
 
   // const?
 
-  supl::iterator const_itr {test_vector.cbegin()};
+  supl::polymorphic_iterator const_itr {test_vector.cbegin()};
 
   results.enforce_exactly_equal(
     const_itr.is_null(), false, "Should not be null");
@@ -152,24 +154,25 @@ static auto test_iterator() -> supl::test_results
   // useful error message here - bad reassignment due to type mismatch
   /* test_1 = test_iterable_3.begin(); */
 
-  const supl::iterator constify {test_vector.begin()};
+  const supl::polymorphic_iterator constify {test_vector.begin()};
   results.enforce_exactly_equal(*constify, 1);
 
   // Null case
 
-  const supl::iterator<int> nulled {};
+  const supl::polymorphic_iterator<int> nulled {};
 
   results.enforce_exactly_equal(nulled.is_null(), true, "Should be null");
 
   try {
     [[maybe_unused]] auto illegal {*nulled};
     results.enforce_exactly_equal(true, false, "Should not be reached");
-    throw "This should be unreachable - supl::iterator null cast "
+    throw "This should be unreachable - supl::polymorphic_iterator null cast "
           "test";
   } catch ( supl::bad_iterator_access& e ) {
     results.enforce_equal(
       std::string_view {e.what()},
-      std::string_view {"Illegal access to null supl::iterator"},
+      std::string_view {
+        "Illegal access to null supl::polymorphic_iterator"},
       "Incorrect error message");
   }
 
@@ -182,7 +185,7 @@ auto test_iterators() -> supl::test_section
 
   section.add_test("supl::last", &test_last);
   section.add_test("supl::clast", &test_clast);
-  section.add_test("supl::iterator", &test_iterator);
+  section.add_test("supl::polymorphic_iterator", &test_iterator);
 
   return section;
 }

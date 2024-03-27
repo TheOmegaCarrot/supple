@@ -5,7 +5,7 @@
 auto main() -> int
 {
   const std::vector<int> cvec {1, 2, 3, 4};
-  supl::iterator<int> itr {};
+  supl::polymorphic_iterator<int> itr {};
 
   // bad assignment: would discard const
   itr = cvec.begin();

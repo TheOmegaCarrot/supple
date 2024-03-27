@@ -37,8 +37,8 @@ namespace supl {
  */
 /* }}} */
 template <typename Iterable>
-[[nodiscard]] constexpr auto last(const Iterable& container) noexcept
-  -> decltype(std::begin(container))
+[[nodiscard]] constexpr auto
+last(const Iterable& container) noexcept -> decltype(std::begin(container))
 {
   auto begin {std::begin(container)};
   auto end {std::end(container)};
@@ -147,7 +147,7 @@ public:
 /* }}} */
 template <typename Value_Type>
 // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-class iterator
+class polymorphic_iterator
 {
 private:
 
@@ -160,27 +160,26 @@ private:
     Iterator_Concept(Iterator_Concept&&) noexcept = default;
     inline auto operator=(const Iterator_Concept&) noexcept
       -> Iterator_Concept& = default;
-    inline auto operator=(Iterator_Concept&&) noexcept
-      -> Iterator_Concept& = default;
+    inline auto
+    operator=(Iterator_Concept&&) noexcept -> Iterator_Concept& = default;
     virtual ~Iterator_Concept() noexcept = default;
 
     virtual inline void operator++() noexcept = 0;
     virtual inline void operator--() noexcept = 0;
     virtual inline auto operator*() noexcept -> Value_Type& = 0;
     virtual inline auto operator->() noexcept -> Value_Type* = 0;
-    virtual inline auto operator==(const iterator& rhs) const noexcept
-      -> bool = 0;
-    virtual inline auto operator!=(const iterator& rhs) const noexcept
-      -> bool = 0;
+    virtual inline auto
+    operator==(const polymorphic_iterator& rhs) const noexcept -> bool = 0;
+    virtual inline auto
+    operator!=(const polymorphic_iterator& rhs) const noexcept -> bool = 0;
     [[nodiscard]] virtual inline auto
     iterator_impl_new_clone() const noexcept -> Iterator_Concept* = 0;
-    [[nodiscard]] virtual inline auto
-    iterator_impl_placement_clone(std::byte* buffer) const noexcept
-      -> Iterator_Concept* = 0;
+    [[nodiscard]] virtual inline auto iterator_impl_placement_clone(
+      std::byte* buffer) const noexcept -> Iterator_Concept* = 0;
   };  // Iterator_Concept
 
   template <typename Erased_Iterator_Type>
-  class Iterator_Model : public Iterator_Concept
+  class Iterator_Model final : public Iterator_Concept
   {
   private:
 
@@ -191,10 +190,10 @@ private:
     Iterator_Model() noexcept = default;
     Iterator_Model(const Iterator_Model&) noexcept = default;
     Iterator_Model(Iterator_Model&&) noexcept = default;
-    inline auto operator=(const Iterator_Model&) noexcept
-      -> Iterator_Model& = default;
-    inline auto operator=(Iterator_Model&&) noexcept
-      -> Iterator_Model& = default;
+    inline auto
+    operator=(const Iterator_Model&) noexcept -> Iterator_Model& = default;
+    inline auto
+    operator=(Iterator_Model&&) noexcept -> Iterator_Model& = default;
     ~Iterator_Model() noexcept final = default;
 
     template <typename Type,
@@ -224,7 +223,7 @@ private:
       return &*m_erased;
     }
 
-    inline auto operator==(const iterator& rhs) const noexcept
+    inline auto operator==(const polymorphic_iterator& rhs) const noexcept
       -> bool final
     {
       if ( auto* rhs_cast {
@@ -237,21 +236,20 @@ private:
       }
     }
 
-    inline auto operator!=(const iterator& rhs) const noexcept
+    inline auto operator!=(const polymorphic_iterator& rhs) const noexcept
       -> bool final
     {
       return ! this->operator==(rhs);
     }
 
-    [[nodiscard]] inline auto iterator_impl_new_clone() const noexcept
-      -> Iterator_Concept* final
+    [[nodiscard]] inline auto
+    iterator_impl_new_clone() const noexcept -> Iterator_Concept* final
     {
       return new Iterator_Model(m_erased);
     }
 
-    [[nodiscard]] inline auto
-    iterator_impl_placement_clone(std::byte* buffer) const noexcept
-      -> Iterator_Concept* final
+    [[nodiscard]] inline auto iterator_impl_placement_clone(
+      std::byte* buffer) const noexcept -> Iterator_Concept* final
     {
       return ::new (buffer) Iterator_Model(m_erased);
     }
@@ -296,10 +294,10 @@ public:
   using reference = Value_Type&;
   using iterator_category = std::bidirectional_iterator_tag;
 
-  iterator() noexcept = default;
+  polymorphic_iterator() noexcept = default;
 
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-  iterator(const iterator& src) noexcept
+  polymorphic_iterator(const polymorphic_iterator& src) noexcept
       : m_using_small_buffer {src.m_using_small_buffer}
   {
     if ( src.m_value == nullptr ) {
@@ -316,7 +314,7 @@ public:
   }
 
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-  iterator(iterator&& src) noexcept
+  polymorphic_iterator(polymorphic_iterator&& src) noexcept
       : m_using_small_buffer {src.m_using_small_buffer}
   {
     if ( src.m_value == nullptr ) {
@@ -333,7 +331,8 @@ public:
     }
   }
 
-  inline auto operator=(const iterator& rhs) noexcept -> iterator&
+  inline auto operator=(const polymorphic_iterator& rhs) noexcept
+    -> polymorphic_iterator&
   {
     if ( this == &rhs ) {
       return *this;
@@ -354,7 +353,8 @@ public:
     return *this;
   }
 
-  inline auto operator=(iterator&& rhs) noexcept -> iterator&
+  inline auto
+  operator=(polymorphic_iterator&& rhs) noexcept -> polymorphic_iterator&
   {
     if ( this == &rhs ) {
       return *this;
@@ -376,16 +376,16 @@ public:
     }
   }
 
-  ~iterator()
+  ~polymorphic_iterator()
   {
     this->p_delete_value();
   }
 
   template <typename T,
             typename = std::enable_if_t<
-              ! std::is_same_v<std::decay_t<T>, iterator>>>
+              ! std::is_same_v<std::decay_t<T>, polymorphic_iterator>>>
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-  explicit iterator(T&& value) noexcept
+  explicit polymorphic_iterator(T&& value) noexcept
   {
     if constexpr ( sizeof(T) <= small_buffer_size ) {
       m_using_small_buffer = true;
@@ -399,8 +399,8 @@ public:
 
   template <typename T,
             typename = std::enable_if_t<
-              ! std::is_same_v<std::decay_t<T>, iterator>>>
-  inline auto operator=(T&& rhs) noexcept -> iterator&
+              ! std::is_same_v<std::decay_t<T>, polymorphic_iterator>>>
+  inline auto operator=(T&& rhs) noexcept -> polymorphic_iterator&
   {
 
     // if behaving as non-const iterator,
@@ -437,32 +437,32 @@ public:
     return *this;
   }
 
-  inline auto operator++() -> iterator&
+  inline auto operator++() -> polymorphic_iterator&
   {
     this->p_throw_if_null();
     m_value->operator++();
     return *this;
   }
 
-  inline auto operator++(int) -> iterator
+  inline auto operator++(int) -> polymorphic_iterator
   {
     this->p_throw_if_null();
-    iterator tmp = *this;
+    polymorphic_iterator tmp = *this;
     m_value->operator++();
     return tmp;
   }
 
-  inline auto operator--() -> iterator&
+  inline auto operator--() -> polymorphic_iterator&
   {
     this->p_throw_if_null();
     m_value->operator--();
     return *this;
   }
 
-  inline auto operator--(int) -> iterator
+  inline auto operator--(int) -> polymorphic_iterator
   {
     this->p_throw_if_null();
-    iterator tmp = *this;
+    polymorphic_iterator tmp = *this;
     m_value->operator--();
     return tmp;
   }
@@ -479,13 +479,13 @@ public:
     return m_value->operator->();
   }
 
-  inline auto operator==(const iterator& rhs) const -> bool
+  inline auto operator==(const polymorphic_iterator& rhs) const -> bool
   {
     this->p_throw_if_null();
     return m_value->operator==(rhs);
   }
 
-  inline auto operator!=(const iterator& rhs) const -> bool
+  inline auto operator!=(const polymorphic_iterator& rhs) const -> bool
   {
     this->p_throw_if_null();
     return ! this->operator==(rhs);
@@ -511,8 +511,9 @@ public:
 };
 
 template <typename T>
-iterator(T) -> iterator<
-  std::remove_reference_t<typename std::iterator_traits<T>::reference>>;
+polymorphic_iterator(T)
+  -> polymorphic_iterator<
+    std::remove_reference_t<typename std::iterator_traits<T>::reference>>;
 
 }  // namespace supl
 

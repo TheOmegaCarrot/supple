@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16.0)
 
 project(
   supple
-  VERSION 0.7.0
+  VERSION 0.7.1
   LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

@@ -29,7 +29,7 @@ struct copy_counter {
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static inline int copy_count {0};
 
-  copy_counter([[maybe_unused]] const copy_counter& src)
+  copy_counter(const copy_counter&)
   {
     ++copy_count;
   }

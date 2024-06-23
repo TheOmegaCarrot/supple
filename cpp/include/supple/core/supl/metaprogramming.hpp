@@ -49,6 +49,25 @@ struct index_pair {
   constexpr inline static std::size_t second {t_second};
 };
 
+///////////////////////////////////////////// make_reverse_index_sequence
+
+namespace impl {
+  template <std::size_t... forward_idxs>
+  auto
+    make_reverse_index_sequence_impl(std::index_sequence<forward_idxs...>)
+      -> std::index_sequence<sizeof...(forward_idxs) - forward_idxs...>;
+}  // namespace impl
+
+/* {{{ doc */
+/**
+ * @brief Generate an index sequence of length `length`, in descending order
+ */
+/* }}} */
+template <std::size_t length>
+using make_reverse_index_sequence =
+  decltype(impl::make_reverse_index_sequence_impl(
+    std::make_index_sequence<length> {}));
+
 ///////////////////////////////////////////// sum_type
 
 /* {{{ doc */

@@ -122,6 +122,30 @@ using make_list = type_identity<LIST<Pack...>>;
 template <template <typename...> typename LIST, typename... Pack>
 using make_list_t = typename make_list<LIST, Pack...>::type;
 
+///////////////////////////////////////////// repeat
+
+namespace impl {
+  template <typename T, auto>
+  using repeat_helper = T;
+
+  template <template <typename...> typename LIST,
+            typename T,
+            std::size_t... Ns>
+  auto repeat_impl(std::index_sequence<Ns...>)
+    -> type_identity<LIST<repeat_helper<T, Ns>...>>;
+}  // namespace impl
+
+template <typename T,
+          std::size_t N,
+          template <typename...> typename LIST = type_list>
+using repeat =
+  decltype(impl::repeat_impl<LIST, T>(std::make_index_sequence<N> {}));
+
+template <typename T,
+          std::size_t N,
+          template <typename...> typename LIST = type_list>
+using repeat_t = typename repeat<T, N, LIST>::type;
+
 ///////////////////////////////////////////// contains
 
 /* {{{ doc */

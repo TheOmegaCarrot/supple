@@ -92,6 +92,34 @@ static_assert(
     supl::tl::
       type_list<int, char, bool, void*, const int, std::nullptr_t>>);
 
+///////////////////////////////////////////// repeat
+
+static_assert(
+  std::is_same_v<supl::tl::type_list<int, int, int, int>,
+                 supl::tl::repeat_t<int, 4, supl::tl::type_list>>);
+
+static_assert(
+  std::is_same_v<supl::tl::type_list<int&, int&, int&, int&>,
+                 supl::tl::repeat_t<int&, 4, supl::tl::type_list>>);
+
+static_assert(std::is_same_v<std::tuple<int&, int&, int&, int&>,
+                             supl::tl::repeat_t<int&, 4, std::tuple>>);
+
+static_assert(
+  std::is_same_v<
+    supl::tl::type_list<volatile int[], volatile int[], volatile int[]>,
+    supl::tl::repeat_t<volatile int[], 3, supl::tl::type_list>>);
+
+static_assert(
+  std::is_same_v<supl::tl::type_list<>,
+                 supl::tl::repeat_t<void, 0, supl::tl::type_list>>);
+
+static_assert(
+  std::is_same_v<
+    supl::tl::
+      type_list<int(char), int(char), int(char), int(char), int(char)>,
+    supl::tl::repeat_t<int(char), 5, supl::tl::type_list>>);
+
 ///////////////////////////////////////////// contains
 
 static_assert(

@@ -1030,7 +1030,7 @@ template <std::size_t... Idxs, typename Tuple>
   (std::is_nothrow_copy_constructible_v<decltype(::supl::get<Idxs>(tup))>
    && ...)) -> tl::reorder_t<Tuple, Idxs...>
 {
-  static_assert(((Idxs < tl::size_v<Tuple>) &&...));
+  static_assert(((Idxs < tl::size_v<Tuple>) && ...));
 
   return {::supl::get<Idxs>(tup)...};
 }
@@ -1263,8 +1263,7 @@ template <typename Tuple>
 
 namespace impl {
   template <std::size_t Chunk_Size,
-            template <typename...>
-            typename Tuple,
+            template <typename...> typename Tuple,
             typename... Elems,
             std::size_t... Chunk_Seq>
   [[nodiscard]] constexpr auto chunk_impl(
@@ -1298,8 +1297,7 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Chunk_Size,
-          template <typename...>
-          typename Tuple,
+          template <typename...> typename Tuple,
           typename... Elems>
 [[nodiscard]] constexpr auto chunk(const Tuple<Elems...>& tup) noexcept(
   tl::all_of_v<tl::type_list<Elems...>,
@@ -1430,8 +1428,7 @@ template <typename Tuple>
 namespace impl {
   template <std::size_t Idx1,
             std::size_t Idx2,
-            template <typename...>
-            typename Tuple,
+            template <typename...> typename Tuple,
             typename... List_Pack,
             typename... Tuple_Pack,
             std::size_t... Idxs>
@@ -1466,8 +1463,7 @@ namespace impl {
 /* }}} */
 template <std::size_t Idx1,
           std::size_t Idx2,
-          template <typename...>
-          typename Tuple,
+          template <typename...> typename Tuple,
           typename... Pack>
 [[nodiscard]] constexpr auto elem_swap(const Tuple<Pack...>& tup) noexcept(
   tl::all_of_v<Tuple<Pack...>, std::is_nothrow_copy_constructible>)
@@ -1537,8 +1533,7 @@ template <template <typename> typename Transform, typename Tuple>
 namespace impl {
 
   template <typename... New_Types,
-            template <typename...>
-            typename Tuple,
+            template <typename...> typename Tuple,
             typename... Old_Types,
             std::size_t... Idxs>
   [[nodiscard]] constexpr auto convert_impl(
@@ -1572,8 +1567,7 @@ namespace impl {
  */
 /* }}} */
 template <typename... New_Types,
-          template <typename...>
-          typename Tuple,
+          template <typename...> typename Tuple,
           typename... Old_Types>
 [[nodiscard]] constexpr auto
 convert(const Tuple<Old_Types...>& tup) noexcept(

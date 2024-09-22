@@ -16,7 +16,7 @@ auto test_throws_on_copy() -> supl::test_results
     results.fail("Did not throw after copy construction");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   try {
@@ -25,7 +25,7 @@ auto test_throws_on_copy() -> supl::test_results
     results.fail("Did not throw after copy assignment");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   try {
@@ -66,7 +66,7 @@ auto test_throws_on_move() -> supl::test_results
     results.fail("Did not throw after move construction");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   try {
@@ -76,7 +76,7 @@ auto test_throws_on_move() -> supl::test_results
     results.fail("Did not throw after move assignment");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   try {
@@ -116,7 +116,7 @@ auto test_throws_on_copy_and_move() -> supl::test_results
     results.fail("Did not throw after move construction");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   try {
@@ -126,7 +126,7 @@ auto test_throws_on_copy_and_move() -> supl::test_results
     results.fail("Did not throw after move assignment");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   try {
@@ -135,7 +135,7 @@ auto test_throws_on_copy_and_move() -> supl::test_results
     results.fail("Did not throw after copy construction");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   try {
@@ -144,7 +144,7 @@ auto test_throws_on_copy_and_move() -> supl::test_results
     results.fail("Did not throw after copy assignment");
   } catch ( const supl::guaranteed_exception& ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   return results;

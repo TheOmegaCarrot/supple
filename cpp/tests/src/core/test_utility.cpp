@@ -392,7 +392,7 @@ static auto test_to_string() -> supl::test_results
     test_variant.emplace<force_valueless_by_exception>(std::move(forcer));
   } catch ( ... ) {
     // no-op to satisfy clang-tidy
-    []() {}();
+    []() { }();
   }
 
   results.enforce_exactly_equal(supl::to_string(test_variant),

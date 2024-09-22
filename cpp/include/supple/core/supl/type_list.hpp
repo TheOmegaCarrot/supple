@@ -67,8 +67,7 @@ template <typename FROM_LIST, template <typename...> typename TO_LIST>
 struct translate;
 
 template <template <typename...> typename FROM_LIST,
-          template <typename...>
-          typename TO_LIST,
+          template <typename...> typename TO_LIST,
           typename... Pack>
 struct translate<FROM_LIST<Pack...>, TO_LIST>
     : type_identity<TO_LIST<Pack...>> { };
@@ -157,8 +156,7 @@ template <typename T, typename LIST>
 struct contains;
 
 template <typename T,
-          template <typename...>
-          typename LIST,
+          template <typename...> typename LIST,
           typename... Pack>
 struct contains<T, LIST<Pack...>> : is_type_in_pack<T, Pack...> { };
 
@@ -292,8 +290,7 @@ template <std::size_t Idx, typename LIST, std::size_t Current = 0>
 struct at_index;
 
 template <std::size_t Idx,
-          template <typename...>
-          typename LIST,
+          template <typename...> typename LIST,
           typename T,
           typename... Pack,
           std::size_t Current>
@@ -601,14 +598,12 @@ struct all_of;
 
 template <template <typename...> typename LIST,
           typename... Pack,
-          template <typename>
-          typename PRED>
+          template <typename> typename PRED>
 struct all_of<LIST<Pack...>, PRED>
     : std::bool_constant<(PRED<Pack>::value && ...)> { };
 
 template <template <typename...> typename LIST,
-          template <typename>
-          typename PRED>
+          template <typename> typename PRED>
 struct all_of<LIST<>, PRED> : std::true_type { };
 
 template <typename LIST, template <typename> typename PRED>
@@ -626,14 +621,12 @@ struct any_of;
 
 template <template <typename...> typename LIST,
           typename... Pack,
-          template <typename>
-          typename PRED>
+          template <typename> typename PRED>
 struct any_of<LIST<Pack...>, PRED>
     : std::bool_constant<(PRED<Pack>::value || ...)> { };
 
 template <template <typename...> typename LIST,
-          template <typename>
-          typename PRED>
+          template <typename> typename PRED>
 struct any_of<LIST<>, PRED> : std::false_type { };
 
 template <typename LIST, template <typename> typename PRED>
@@ -667,15 +660,13 @@ struct count_if;
 
 template <template <typename...> typename LIST,
           typename... Pack,
-          template <typename>
-          typename PRED>
+          template <typename> typename PRED>
 struct count_if<LIST<Pack...>, PRED>
     : index_constant<(static_cast<std::size_t>(PRED<Pack>::value) + ...)> {
 };
 
 template <template <typename...> typename LIST,
-          template <typename>
-          typename PRED>
+          template <typename> typename PRED>
 struct count_if<LIST<>, PRED> : index_constant<0> { };
 
 template <typename LIST, template <typename> typename PRED>
@@ -718,8 +709,7 @@ template <typename LIST, template <typename> typename FUNC>
 struct transform;
 
 template <template <typename...> typename LIST,
-          template <typename>
-          typename FUNC,
+          template <typename> typename FUNC,
           typename... Pack>
 struct transform<LIST<Pack...>, FUNC>
     : type_identity<LIST<typename FUNC<Pack>::type...>> { };
@@ -1044,8 +1034,7 @@ template <typename LIST1, typename LIST2>
 struct equal;
 
 template <template <typename...> typename LIST1,
-          template <typename...>
-          typename LIST2,
+          template <typename...> typename LIST2,
           typename... Pack1,
           typename... Pack2>
 struct equal<LIST1<Pack1...>, LIST2<Pack2...>>
@@ -1115,8 +1104,7 @@ namespace impl {
   struct is_permutation_impl;
 
   template <template <typename...> typename LIST1,
-            template <typename...>
-            typename LIST2,
+            template <typename...> typename LIST2,
             typename... Pack1,
             typename... Pack2>
   // clang-format off
@@ -1157,8 +1145,7 @@ namespace impl {
   struct is_subset_impl;
 
   template <template <typename...> typename LIST1,
-            template <typename...>
-            typename LIST2,
+            template <typename...> typename LIST2,
             typename... Pack1,
             typename... Pack2>
   struct is_subset_impl<LIST1<Pack1...>, LIST2<Pack2...>>

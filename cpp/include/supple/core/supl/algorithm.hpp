@@ -715,8 +715,9 @@ template <
  */
 /* }}} */
 template <typename Itr, typename Gen>
-constexpr void generate(Itr begin, const Itr end, Gen&& gen) noexcept(
-  noexcept(gen()) && noexcept(*begin))
+constexpr void
+generate(Itr begin, const Itr end, Gen&& gen) noexcept(noexcept(gen())
+                                                       && noexcept(*begin))
 {
   while ( begin != end ) {
     *begin = gen();

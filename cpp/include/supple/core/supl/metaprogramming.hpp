@@ -886,10 +886,8 @@ struct binary_partial_apply {
  */
 /* }}} */
 template <typename T,
-          template <typename>
-          typename FUNC,
-          template <typename>
-          typename... FUNC_PACK>
+          template <typename> typename FUNC,
+          template <typename> typename... FUNC_PACK>
 struct sequential_apply
     : sequential_apply<typename FUNC<T>::type, FUNC_PACK...> { };
 
@@ -897,18 +895,14 @@ template <typename T, template <typename> typename FUNC>
 struct sequential_apply<T, FUNC> : FUNC<T> { };
 
 template <typename T,
-          template <typename>
-          typename FUNC,
-          template <typename>
-          typename... FUNC_PACK>
+          template <typename> typename FUNC,
+          template <typename> typename... FUNC_PACK>
 using sequential_apply_t =
   typename sequential_apply<T, FUNC, FUNC_PACK...>::type;
 
 template <typename T,
-          template <typename>
-          typename FUNC,
-          template <typename>
-          typename... FUNC_PACK>
+          template <typename> typename FUNC,
+          template <typename> typename... FUNC_PACK>
 constexpr inline auto sequential_apply_v =
   sequential_apply<T, FUNC, FUNC_PACK...>::value;
 
@@ -946,15 +940,13 @@ using apply_if_t = typename apply_if<Cond, FUNC, T>::type;
 
 namespace impl {
   template <template <typename> typename PROJ,
-            template <typename>
-            typename COMP,
+            template <typename> typename COMP,
             typename Running,
             typename... Pack>
   struct least_of_impl;
 
   template <template <typename> typename PROJ,
-            template <typename>
-            typename COMP,
+            template <typename> typename COMP,
             typename Running,
             typename Next,
             typename... Pack>
@@ -965,8 +957,7 @@ namespace impl {
                            least_of_impl<PROJ, COMP, Next, Pack...>> { };
 
   template <template <typename> typename PROJ,
-            template <typename>
-            typename COMP,
+            template <typename> typename COMP,
             typename Final>
   struct least_of_impl<PROJ, COMP, Final> : type_identity<Final> { };
 
@@ -992,15 +983,13 @@ namespace impl {
  */
 /* }}} */
 template <template <typename> typename PROJ,
-          template <typename>
-          typename COMP,
+          template <typename> typename COMP,
           typename... Pack>
 struct least_of
     : impl::least_of_impl<PROJ, COMP, peel_first_t<Pack...>, Pack...> { };
 
 template <template <typename> typename PROJ,
-          template <typename>
-          typename COMP,
+          template <typename> typename COMP,
           typename... Pack>
 using least_of_t = typename least_of<PROJ, COMP, Pack...>::type;
 

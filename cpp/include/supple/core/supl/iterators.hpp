@@ -282,7 +282,7 @@ public:
               ! std::is_same_v<std::decay_t<T>, iterator>>>
   explicit iterator(T&& value) noexcept
       : m_value(std::make_unique<Iterator_Model<std::decay_t<T>>>(
-        std::forward<T>(value)))
+          std::forward<T>(value)))
   { }
 
   template <typename T,

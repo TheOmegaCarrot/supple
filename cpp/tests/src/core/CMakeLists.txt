@@ -1,5 +1,6 @@
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_iterators.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_metaprogramming.cpp)
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_integer_sequence.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_type_list.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_utility.cpp)
 

@@ -1,11 +1,12 @@
+supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_integer_sequence.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_iterators.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_metaprogramming.cpp)
-supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_integer_sequence.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_type_list.cpp)
 supple_add_test(${CMAKE_CURRENT_SOURCE_DIR}/test_utility.cpp)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/algorithm)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/crtp)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/fake_ranges)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/functional)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/predicates)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tuple_algo)

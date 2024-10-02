@@ -158,6 +158,108 @@ public:
   }
 };
 
+/*
+ * Goal:
+ *
+ * std::vector<int> vec {9, 8, 7, 6};
+ *
+ * for (auto[elem, idx] : enumerate{vec}) {
+ *    // {9, 0}
+ *    // {8, 1}
+ *    // {7, 2}
+ *    // {6, 3}
+ * }
+ */
+
+template <typename Iter>
+class enumerate
+{
+private:
+
+  Iter m_begin;
+  Iter m_end;
+
+public:
+
+  constexpr explicit enumerate(Iter begin, Iter end) noexcept
+      : m_begin(std::move(begin))
+      , m_end(std::move(end))
+  { }
+
+  class iterator
+  {
+  private:
+
+    Iter m_wrapped;
+    std::size_t m_count;
+
+  public:
+
+    iterator() = delete;
+
+    constexpr explicit iterator(Iter wrapped) noexcept
+        : m_wrapped {std::move(wrapped)}
+        , m_count {0}
+    { }
+
+    iterator(const iterator&) = default;
+    iterator(iterator&&) = default;
+    iterator& operator=(const iterator&) = default;
+    iterator& operator=(iterator&&) = default;
+    ~iterator() = default;
+
+    using value_type =
+      std::pair<typename std::iterator_traits<Iter>::reference,
+                std::size_t>;
+    using difference_type =
+      typename std::iterator_traits<Iter>::difference_type;
+    using pointer = value_type*;
+    using reference = value_type&;
+    using iterator_category = std::forward_iterator_tag;
+
+    constexpr friend bool operator==(const iterator& lhs,
+                                     const iterator& rhs) noexcept
+    {
+      return lhs.m_wrapped == rhs.m_wrapped;
+    }
+
+    constexpr friend bool operator!=(const iterator& lhs,
+                                     const iterator& rhs) noexcept
+    {
+      return ! (lhs == rhs);
+    }
+
+    constexpr iterator& operator++() noexcept
+    {
+      ++this->m_wrapped;
+      ++this->m_count;
+      return *this;
+    }
+
+    constexpr iterator operator++(int) noexcept
+    {
+      auto copy = *this;
+      ++*this;
+      return copy;
+    }
+
+    constexpr value_type operator*() noexcept
+    {
+      return {*m_wrapped, m_count};
+    }
+  };
+
+  [[nodiscard]] constexpr iterator begin()
+  {
+    return iterator {m_begin};
+  }
+
+  [[nodiscard]] constexpr iterator end()
+  {
+    return iterator {m_end};
+  }
+};
+
 ///////////////////////////////////////////// to_stream and related
 
 /* {{{ doc */

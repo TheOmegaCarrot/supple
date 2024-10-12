@@ -29,6 +29,7 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#include <variant>
 
 #include "internal/algorithm/min_max.hpp"
 #include "metaprogramming.hpp"
@@ -62,6 +63,29 @@ constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
 }  // namespace supl
 
 namespace supl::tuple {
+
+namespace impl {
+  template <typename T>
+  struct wrap_reference
+      : std::conditional<
+          std::is_reference_v<T>,
+          std::reference_wrapper<std::remove_reference_t<T>>,
+          T> { };
+
+  template <typename Tuple>
+  struct tuple_element_variant {
+    using list = tl::translate_t<Tuple, tl::type_list>;
+    using deduplicated = tl::deduplicate_t<list>;
+    using wrapped_references =
+      tl::transform_t<deduplicated, wrap_reference>;
+
+    using type = tl::translate_t<wrapped_references, std::variant>;
+  };
+
+  template <typename Tuple>
+  using tuple_element_variant_t =
+    typename tuple_element_variant<Tuple>::type;
+}  // namespace impl
 
 namespace impl {
 

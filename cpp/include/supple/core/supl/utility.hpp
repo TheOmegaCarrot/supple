@@ -541,7 +541,7 @@ public:
 template <typename T>
 [[nodiscard]] auto to_string(const T& value) -> std::string
 {
-  std::stringstream out;
+  std::ostringstream out;
   to_stream(out, value);
   return out.str();
 }

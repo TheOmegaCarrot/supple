@@ -24,3 +24,5 @@ static_assert(
     std::variant<const int, char, std::reference_wrapper<const bool>>,
     tuple_element_variant_t<std::tuple<const int, char, const bool&>>>);
 
+int main()
+{ }

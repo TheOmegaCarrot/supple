@@ -85,7 +85,31 @@ namespace impl {
   template <typename Tuple>
   using tuple_element_variant_t =
     typename tuple_element_variant<Tuple>::type;
+
+  namespace quarantined {
+    struct my_comma_operator_is_overloaded { };
+
+    template <typename T>
+    auto operator,(T&& lhs, my_comma_operator_is_overloaded) noexcept
+      -> decltype(auto)
+    {
+      return std::forward<T>(lhs);
+    }
+
+    template <typename T>
+    auto operator,(my_comma_operator_is_overloaded, T&& rhs) noexcept
+      -> decltype(auto)
+    {
+      return std::forward<T>(rhs);
+    }
+  }  // namespace quarantined
+
 }  // namespace impl
+
+/* template<typename Tuple> */
+/* auto runtime_get(Tuple&& tuple, std::size_t idx) /1* noexcept *1/ -> impl::tuple_element_variant_t<std::remove_reference_t<Tuple>> */
+/* { */
+/* } */
 
 namespace impl {
 

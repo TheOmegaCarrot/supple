@@ -65,6 +65,8 @@ constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
 namespace supl::tuple {
 
 namespace impl {
+  struct monostate { };
+
   template <typename T>
   struct wrap_reference
       : std::conditional<
@@ -78,6 +80,7 @@ namespace impl {
     using deduplicated = tl::deduplicate_t<list>;
     using wrapped_references =
       tl::transform_t<deduplicated, wrap_reference>;
+    using with_monostate = tl::push_front_t<wrapped_references, monostate>;
 
     using type = tl::translate_t<wrapped_references, std::variant>;
   };
@@ -86,30 +89,55 @@ namespace impl {
   using tuple_element_variant_t =
     typename tuple_element_variant<Tuple>::type;
 
-  namespace quarantined {
-    struct my_comma_operator_is_overloaded { };
+  template <typename Tuple>
+  using tuple_element_variant_rr_t =
+    tuple_element_variant_t<std::remove_reference_t<Tuple>>;
 
-    template <typename T>
-    auto operator,(T&& lhs, my_comma_operator_is_overloaded) noexcept
-      -> decltype(auto)
-    {
-      return std::forward<T>(lhs);
-    }
+  template <typename T>
+  [[noreturn]] inline auto runtime_get_helper() -> T
+  {
+    throw std::runtime_error {
+      "If this error is seen, something has gone very wrong with "
+      "supl::runtime_get"};
+  }
 
-    template <typename T>
-    auto operator,(my_comma_operator_is_overloaded, T&& rhs) noexcept
-      -> decltype(auto)
-    {
-      return std::forward<T>(rhs);
+  template <typename Variant, typename... Remainder>
+  auto runtime_get_helper(Variant&& variant, Remainder&&... remainder)
+    -> Variant
+  {
+    if ( variant.index() != 0 ) {
+      return variant;
+    } else {
+      return runtime_get_helper<Variant>(
+        std::forward<Remainder>(remainder)...);
     }
-  }  // namespace quarantined
+  }
+
+  template <typename Tuple, std::size_t... Idxs>
+  auto runtime_get_impl(Tuple&& tuple,
+                        std::size_t idx,
+                        std::index_sequence<Idxs...>)
+    -> tuple_element_variant_rr_t<Tuple>
+  {
+    using variant_t = tuple_element_variant_rr_t<Tuple>;
+    return [](auto&&... variants) -> variant_t {
+      return runtime_get_helper(
+        std::forward<decltype(variants)>(variants)...);
+    }((idx == Idxs ? variant_t {::supl::get<Idxs>(
+                       std::forward<Tuple>(tuple))}
+                   : variant_t {})...);
+  }
 
 }  // namespace impl
 
-/* template<typename Tuple> */
-/* auto runtime_get(Tuple&& tuple, std::size_t idx) /1* noexcept *1/ -> impl::tuple_element_variant_t<std::remove_reference_t<Tuple>> */
-/* { */
-/* } */
+template <typename Tuple>
+auto runtime_get(Tuple&& tuple, std::size_t idx)
+{
+  return impl::runtime_get_impl(
+    std::forward<Tuple>(tuple),
+    idx,
+    std::make_index_sequence<tl::size_v<Tuple>> {});
+}
 
 namespace impl {
 

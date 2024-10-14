@@ -65,6 +65,7 @@ constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
 namespace supl::tuple {
 
 namespace impl {
+
   struct monostate { };
 
   template <typename T>
@@ -82,7 +83,7 @@ namespace impl {
       tl::transform_t<deduplicated, wrap_reference>;
     using with_monostate = tl::push_front_t<wrapped_references, monostate>;
 
-    using type = tl::translate_t<wrapped_references, std::variant>;
+    using type = tl::translate_t<with_monostate, std::variant>;
   };
 
   template <typename Tuple>
@@ -96,15 +97,14 @@ namespace impl {
   template <typename T>
   [[noreturn]] inline auto runtime_get_helper() -> T
   {
-    throw std::runtime_error {
-      "If this error is seen, something has gone very wrong with "
-      "supl::runtime_get"};
+    throw std::runtime_error {"Error from supl::runtime_get"};
   }
 
   template <typename Variant, typename... Remainder>
   auto runtime_get_helper(Variant&& variant, Remainder&&... remainder)
     -> Variant
   {
+
     if ( variant.index() != 0 ) {
       return variant;
     } else {

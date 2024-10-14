@@ -120,12 +120,9 @@ namespace impl {
     -> tuple_element_variant_rr_t<Tuple>
   {
     using variant_t = tuple_element_variant_rr_t<Tuple>;
-    return [](auto&&... variants) -> variant_t {
-      return runtime_get_helper(
-        std::forward<decltype(variants)>(variants)...);
-    }((idx == Idxs ? variant_t {::supl::get<Idxs>(
-                       std::forward<Tuple>(tuple))}
-                   : variant_t {})...);
+    return runtime_get_helper((idx == Idxs ? variant_t {::supl::get<Idxs>(
+                                               std::forward<Tuple>(tuple))}
+                                           : variant_t {})...);
   }
 
 }  // namespace impl

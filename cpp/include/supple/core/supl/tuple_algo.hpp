@@ -104,7 +104,6 @@ namespace impl {
   auto runtime_get_helper(Variant&& variant, Remainder&&... remainder)
     -> Variant
   {
-
     if ( variant.index() != 0 ) {
       return variant;
     } else {

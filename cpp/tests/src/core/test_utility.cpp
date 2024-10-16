@@ -606,6 +606,19 @@ static auto test_adapted_ostream() -> supl::test_results
   return results;
 }
 
+namespace detail {
+// TODO: logging allocator
+
+// TODO: base class with derived types that log construction and destruction
+}  // namespace detail
+
+auto test_polymorphic_storage() -> supl::test_results
+{
+  supl::test_results results;
+
+  return results;
+}
+
 auto test_utility() -> supl::test_section
 {
   supl::test_section section;
@@ -625,6 +638,7 @@ auto test_utility() -> supl::test_section
   section.add_test("supl::literals::ptrdiff_t_literal::operator\"\"_pd",
                    &test_ptrdiff_t_literals);
   section.add_test("supl::adapted_ostream", &test_adapted_ostream);
+  section.add_test("supl::polymorphic_storage", &test_polymorphic_storage);
 
   return section;
 }

@@ -158,6 +158,101 @@ public:
   }
 };
 
+namespace impl {
+  template <typename... Ls>
+  struct overload : Ls... {
+    using Ls::operator()...;
+  };
+
+  template <typename... Ls>
+  overload(Ls...) -> overload<Ls...>;
+}  // namespace impl
+
+template <typename Base,
+          std::size_t buffer_size,
+          template <typename> typename ALLOCATOR = std::allocator>
+class polymorphic_storage
+{
+private:
+
+  using buffer_t = std::array<std::byte, buffer_size>;
+  using variant_t = std::variant<std::monostate, buffer_t, Base*>;
+  alignas(std::max_align_t) variant_t m_variant;
+  constexpr static inline std::size_t monostate_index {
+    tl::find_v<variant_t, std::monostate>};
+  constexpr static inline std::size_t buffer_index {
+    tl::find_v<variant_t, buffer_t>};
+  constexpr static inline std::size_t ptr_index {
+    tl::find_v<variant_t, Base*>};
+
+public:
+
+  using Allocator = ALLOCATOR<std::byte>;
+
+private:
+
+  Allocator m_allocator {};
+
+public:
+
+  polymorphic_storage() = default;
+
+  polymorphic_storage(Allocator allocator)
+      : m_allocator {std::move(allocator)}
+  { }
+
+  polymorphic_storage(const polymorphic_storage&) = delete;
+  polymorphic_storage(polymorphic_storage&&) = delete;
+  polymorphic_storage& operator=(const polymorphic_storage&) = delete;
+  polymorphic_storage& operator=(polymorphic_storage&&) = delete;
+
+  ~polymorphic_storage()
+  {
+    this->destruct();
+  }
+
+  auto ptr() -> Base*
+  {
+    return std::visit(impl::overload {[](std::monostate) {
+                                        return nullptr;
+                                      },
+                                      [](buffer_t& buffer) -> Base* {
+                                        return buffer.data();
+                                      },
+                                      [](Base* ptr) {
+                                        return ptr;
+                                      }},
+                      m_variant);
+  }
+
+  template <typename Derived, typename... Args>
+  void construct(Args&&... args)
+  {
+    if constexpr ( sizeof(Derived) <= buffer_size ) {
+      m_variant = buffer_t {};
+      void* raw_buffer = std::get<buffer_index>(m_variant).data();
+      ::new (raw_buffer) Derived(std::forward<Args>(args)...);
+    }
+  }
+
+  void destruct()
+  {
+    Base* ptr = this->ptr();
+
+    if ( ! ptr ) {
+      return;
+    }
+
+    ptr->~Base();
+
+    if ( m_variant.index() == ptr_index ) {
+      m_allocator.deallocate(ptr);
+    }
+
+    m_variant = std::monostate {};
+  }
+};
+
 ///////////////////////////////////////////// to_stream and related
 
 /* {{{ doc */

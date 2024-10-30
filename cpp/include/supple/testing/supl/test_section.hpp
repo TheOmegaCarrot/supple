@@ -22,11 +22,13 @@
 
 #include <supl/test_results.hpp>
 
-namespace supl {
+namespace supl
+{
 
-namespace constants {
-  constexpr inline int test_output_width {60};
-  constexpr inline char fill_char {'.'};
+namespace constants
+{
+    constexpr inline int test_output_width {60};
+    constexpr inline char fill_char {'.'};
 }  // namespace constants
 
 /* {{{ doc */
@@ -45,55 +47,61 @@ class test_section
 {
 private:
 
-  using test_function_t = test_results (*)();
+    using test_function_t = test_results (*)();
 
-  struct test_function_data_t {
-    std::string_view name;
-    test_function_t function;
-  };
+    struct test_function_data_t
+    {
+        std::string_view name;
+        test_function_t function;
+    };
 
-  std::vector<test_function_data_t> m_test_functions {};
+    std::vector<test_function_data_t> m_test_functions {};
 
 public:
 
-  test_section() = default;
+    test_section() = default;
 
-  /* {{{ doc */
-  /**
+    /* {{{ doc */
+    /**
    * @brief Append a function to the list of tests in a section
    *
    * @param test_name Name of the test
    *
    * @param test_function Test function to be ran
    */
-  /* }}} */
-  inline void add_test(std::string_view test_name,
-                       test_function_t test_function) noexcept
-  {
-    m_test_functions.push_back(
-      test_function_data_t {test_name, test_function});
-  }
+    /* }}} */
+    inline void add_test(
+      std::string_view test_name, test_function_t test_function
+    ) noexcept
+    {
+        m_test_functions.push_back(
+          test_function_data_t {test_name, test_function}
+        );
+    }
 
-  /* {{{ doc */
-  /**
+    /* {{{ doc */
+    /**
    * @brief Runs the tests
    */
-  /* }}} */
-  [[nodiscard]] auto run() const noexcept -> std::vector<test_results>
-  {
-    std::vector<test_results> results;
-    for ( auto&& test_data : m_test_functions ) {
-      const test_results test_result {test_data.function()};
-      if ( ! test_result.test_passes() ) {
-        std::cout << std::left << std::setw(constants::test_output_width)
-                  << std::setfill(constants::fill_char) << test_data.name
-                  << "FAIL" << '\n';
-        test_result.print_case_details();
-      }
-      results.push_back(test_result);
+    /* }}} */
+    [[nodiscard]] auto run() const noexcept -> std::vector<test_results>
+    {
+        std::vector<test_results> results;
+        for ( auto&& test_data : m_test_functions )
+        {
+            const test_results test_result {test_data.function()};
+            if ( ! test_result.test_passes() )
+            {
+                std::cout << std::left
+                          << std::setw(constants::test_output_width)
+                          << std::setfill(constants::fill_char)
+                          << test_data.name << "FAIL" << '\n';
+                test_result.print_case_details();
+            }
+            results.push_back(test_result);
+        }
+        return results;
     }
-    return results;
-  }
 };
 
 }  // namespace supl

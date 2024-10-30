@@ -21,7 +21,8 @@
 
 #include "utility.hpp"
 
-namespace supl {
+namespace supl
+{
 
 /* {{{ doc */
 /**
@@ -51,27 +52,28 @@ namespace supl {
  */
 /* }}} */
 template <typename T>
-struct rel_ops {
-  constexpr auto operator!=(const T& rhs) const noexcept -> bool
-  {
-    return ! (rhs == (*static_cast<const T*>(this)));
-  }
+struct rel_ops
+{
+    constexpr auto operator!=(const T& rhs) const noexcept -> bool
+    {
+        return ! (rhs == (*static_cast<const T*>(this)));
+    }
 
-  constexpr auto operator<=(const T& rhs) const noexcept -> bool
-  {
-    return ((*static_cast<const T*>(this)) < rhs)
-        || (rhs == (*static_cast<const T*>(this)));
-  }
+    constexpr auto operator<=(const T& rhs) const noexcept -> bool
+    {
+        return ((*static_cast<const T*>(this)) < rhs)
+               || (rhs == (*static_cast<const T*>(this)));
+    }
 
-  constexpr auto operator>(const T& rhs) const noexcept -> bool
-  {
-    return ! this->operator<=(rhs);
-  }
+    constexpr auto operator>(const T& rhs) const noexcept -> bool
+    {
+        return ! this->operator<=(rhs);
+    }
 
-  constexpr auto operator>=(const T& rhs) const noexcept -> bool
-  {
-    return this->operator>(rhs) || ! this->operator!=(rhs);
-  }
+    constexpr auto operator>=(const T& rhs) const noexcept -> bool
+    {
+        return this->operator>(rhs) || ! this->operator!=(rhs);
+    }
 };
 
 /* {{{ doc */
@@ -112,30 +114,31 @@ struct rel_ops {
  */
 /* }}} */
 template <typename T>
-struct sym_rel_ops {
-  friend constexpr auto operator!=(const T& lhs, const T& rhs) noexcept
-    -> bool
-  {
-    return ! (lhs == rhs);
-  }
+struct sym_rel_ops
+{
+    friend constexpr auto operator!=(const T& lhs, const T& rhs) noexcept
+      -> bool
+    {
+        return ! (lhs == rhs);
+    }
 
-  friend constexpr auto operator<=(const T& lhs, const T& rhs) noexcept
-    -> bool
-  {
-    return (lhs < rhs) || (lhs == rhs);
-  }
+    friend constexpr auto operator<=(const T& lhs, const T& rhs) noexcept
+      -> bool
+    {
+        return (lhs < rhs) || (lhs == rhs);
+    }
 
-  friend constexpr auto operator>(const T& lhs, const T& rhs) noexcept
-    -> bool
-  {
-    return ! (lhs <= rhs);
-  }
+    friend constexpr auto operator>(const T& lhs, const T& rhs) noexcept
+      -> bool
+    {
+        return ! (lhs <= rhs);
+    }
 
-  friend constexpr auto operator>=(const T& lhs, const T& rhs) noexcept
-    -> bool
-  {
-    return (lhs > rhs) || (lhs == rhs);
-  }
+    friend constexpr auto operator>=(const T& lhs, const T& rhs) noexcept
+      -> bool
+    {
+        return (lhs > rhs) || (lhs == rhs);
+    }
 };
 
 /* {{{ doc */
@@ -146,14 +149,15 @@ struct sym_rel_ops {
  */
 /* }}} */
 template <typename T>
-struct addition {
-  friend constexpr auto operator+(const T& lhs, const T& rhs) noexcept(
-    std::is_nothrow_copy_constructible_v<T>) -> T
-  {
-    T retval {lhs};
-    retval += rhs;
-    return retval;
-  }
+struct addition
+{
+    friend constexpr auto operator+(const T& lhs, const T& rhs)
+      noexcept(std::is_nothrow_copy_constructible_v<T>) -> T
+    {
+        T retval {lhs};
+        retval += rhs;
+        return retval;
+    }
 };
 
 /* {{{ doc */
@@ -164,14 +168,15 @@ struct addition {
  */
 /* }}} */
 template <typename T>
-struct subtraction {
-  friend constexpr auto operator-(const T& lhs, const T& rhs) noexcept(
-    std::is_nothrow_copy_constructible_v<T>) -> T
-  {
-    T retval {lhs};
-    retval -= rhs;
-    return retval;
-  }
+struct subtraction
+{
+    friend constexpr auto operator-(const T& lhs, const T& rhs)
+      noexcept(std::is_nothrow_copy_constructible_v<T>) -> T
+    {
+        T retval {lhs};
+        retval -= rhs;
+        return retval;
+    }
 };
 
 /* {{{ doc */
@@ -182,14 +187,15 @@ struct subtraction {
  */
 /* }}} */
 template <typename T>
-struct multiplication {
-  friend constexpr auto operator*(const T& lhs, const T& rhs) noexcept(
-    std::is_nothrow_copy_constructible_v<T>) -> T
-  {
-    T retval {lhs};
-    retval *= rhs;
-    return retval;
-  }
+struct multiplication
+{
+    friend constexpr auto operator*(const T& lhs, const T& rhs)
+      noexcept(std::is_nothrow_copy_constructible_v<T>) -> T
+    {
+        T retval {lhs};
+        retval *= rhs;
+        return retval;
+    }
 };
 
 /* {{{ doc */
@@ -200,14 +206,15 @@ struct multiplication {
  */
 /* }}} */
 template <typename T>
-struct division {
-  friend constexpr auto operator/(const T& lhs, const T& rhs) noexcept(
-    std::is_nothrow_copy_constructible_v<T>) -> T
-  {
-    T retval {lhs};
-    retval /= rhs;
-    return retval;
-  }
+struct division
+{
+    friend constexpr auto operator/(const T& lhs, const T& rhs)
+      noexcept(std::is_nothrow_copy_constructible_v<T>) -> T
+    {
+        T retval {lhs};
+        retval /= rhs;
+        return retval;
+    }
 };
 
 /* {{{ doc */
@@ -221,10 +228,12 @@ struct division {
 /* }}} */
 template <typename T>
 struct arithmetic
-    : addition<T>
-    , subtraction<T>
-    , multiplication<T>
-    , division<T> { };
+        : addition<T>
+        , subtraction<T>
+        , multiplication<T>
+        , division<T>
+{
+};
 
 /* {{{ doc */
 /**
@@ -249,34 +258,39 @@ struct arithmetic
  */
 /* }}} */
 template <typename T>
-struct add_to_string {
-  [[nodiscard]] auto to_string() const noexcept -> std::string
-  {
-    std::stringstream str;
-    static_cast<const T*>(this)->to_stream(str);
-    return str.str();
-  }
+struct add_to_string
+{
+    [[nodiscard]] auto to_string() const noexcept -> std::string
+    {
+        std::stringstream str;
+        static_cast<const T*>(this)->to_stream(str);
+        return str.str();
+    }
 };
 
-namespace impl {
+namespace impl
+{
 
-  template <typename T>
-  void to_stream_for_add_ostream_impl(std::ostream& out,
-                                      const T& value) noexcept
-  {
-    const ostream_state_restorer restorer(out);
+    template <typename T>
+    void to_stream_for_add_ostream_impl(
+      std::ostream& out, const T& value
+    ) noexcept
+    {
+        const ostream_state_restorer restorer(out);
 
-    out << std::boolalpha;
+        out << std::boolalpha;
 
-    if constexpr ( has_to_stream_v<T> ) {
+        if constexpr ( has_to_stream_v<T> )
+        {
 
-      value.to_stream(out);
+            value.to_stream(out);
+        }
+        else if constexpr ( is_iterable_v<T> )
+        {
 
-    } else if constexpr ( is_iterable_v<T> ) {
-
-      impl::to_stream_iterable_impl(out, value);
+            impl::to_stream_iterable_impl(out, value);
+        }
     }
-  }
 
 }  // namespace impl
 
@@ -297,13 +311,14 @@ namespace impl {
  */
 /* }}} */
 template <typename T>
-struct add_ostream {
-  friend inline auto operator<<(std::ostream& out, const T& value) noexcept
-    -> std::ostream&
-  {
-    impl::to_stream_for_add_ostream_impl(out, value);
-    return out;
-  }
+struct add_ostream
+{
+    friend inline auto
+    operator<<(std::ostream& out, const T& value) noexcept -> std::ostream&
+    {
+        impl::to_stream_for_add_ostream_impl(out, value);
+        return out;
+    }
 };
 
 }  // namespace supl

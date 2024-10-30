@@ -139,6 +139,20 @@ namespace impl
 
 }  // namespace impl
 
+/* {{{ doc */
+/**
+ * @brief Get the value from a tuple using an index which is not a constant expression.
+ *
+ * @param tuple Tuple to get a value from.
+ *
+ * @param idx Index of the value to get from the tuple.
+ *
+ * @throws std::runtime_error Thrown if index is out of bounds.
+ *
+ * @return A variant which contains the requested value.
+ *        If the requested value is a reference, then the variant will contain a std::reference_wrapper.
+ */
+/* }}} */
 template <typename Tuple>
 auto runtime_get(Tuple&& tuple, std::size_t idx)
 {

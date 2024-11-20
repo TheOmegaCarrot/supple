@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <iosfwd>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <tuple>
 #include <type_traits>
@@ -92,6 +93,28 @@ using sum_type = type_identity<decltype((... + std::declval<Ts>()))>;
 /* }}} */
 template <typename... Ts>
 using sum_type_t = typename sum_type<Ts...>::type;
+
+///////////////////////////////////////////// index_type_for
+
+template <std::size_t Max_Idx>
+using index_type_for_max = std::conditional<
+  Max_Idx <= std::numeric_limits<unsigned char>::max(), unsigned char,
+  std::conditional_t<
+    Max_Idx <= std::numeric_limits<unsigned short>::max(), unsigned short,
+    std::conditional_t<
+      Max_Idx <= std::numeric_limits<unsigned int>::max(), unsigned int,
+      std::conditional_t<
+        Max_Idx <= std::numeric_limits<unsigned long>::max(),
+        unsigned long, unsigned long long>>>>;
+
+template <std::size_t Max_Idx>
+using index_type_for_max_t = typename index_type_for_max<Max_Idx>::type;
+
+template <typename... Ts>
+using index_type_for = index_type_for_max<sizeof...(Ts)>;
+
+template <typename... Ts>
+using index_type_for_t = typename index_type_for<Ts...>::type;
 
 ///////////////////////////////////////////// size_of
 

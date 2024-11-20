@@ -492,6 +492,22 @@ static_assert(
   "short + short + short + short + int == int"
 );
 
+///////////////////////////////////////////// index_type_for
+
+template <typename T>
+struct parameterized_test_for_index_type_for
+{
+    static_assert(std::is_same_v<
+                  supl::index_type_for_max_t<
+                    std::numeric_limits<T>::max() - 1>,
+                  T>);
+};
+
+template struct parameterized_test_for_index_type_for<unsigned char>;
+template struct parameterized_test_for_index_type_for<unsigned short>;
+template struct parameterized_test_for_index_type_for<unsigned int>;
+template struct parameterized_test_for_index_type_for<unsigned long>;
+
 ///////////////////////////////////////////// size_of
 
 static_assert(supl::size_of<int>::value == sizeof(int));

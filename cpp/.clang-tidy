@@ -4,9 +4,7 @@ Checks:          'clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,readab
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*'
 UseColor: true
-AnalyzeTemporaryDtors: false
 FormatStyle:     none
-User:            ethan
 CheckOptions:
   - key:             performance-unnecessary-copy-initialization.ExcludedContainerTypes
     value:           ''

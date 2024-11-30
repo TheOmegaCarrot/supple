@@ -240,11 +240,25 @@ public:
     template <typename Derived, typename... Args>
     void construct(Args&&... args)
     {
+        static_assert(
+          std::is_base_of_v<Base, Derived>,
+          "Can only construct a type which is derived from Base"
+        );
+
+        this->destruct();
+
         if constexpr ( sizeof(Derived) <= buffer_size )
-        {
+        {  // construct in small buffer
             m_variant        = buffer_t {};
             void* raw_buffer = std::get<buffer_index>(m_variant).data();
             ::new (raw_buffer) Derived(std::forward<Args>(args)...);
+        }
+        else
+        {  // use allocator
+            std::byte* raw_allocation =
+              m_allocator.allocate(sizeof(Derived));
+            m_variant =
+              ::new (raw_allocation) Derived(std::forward<Args>(args)...);
         }
     }
 

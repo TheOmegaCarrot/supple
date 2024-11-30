@@ -1,22 +1,24 @@
 ---
 Language:        Cpp
 # BasedOnStyle:  LLVM
-AccessModifierOffset: -2
-AlignAfterOpenBracket: Align
+AccessModifierOffset: -4
+AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: Right
-AlignConsecutiveAssignments: None
-AlignConsecutiveBitFields: None
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveBitFields: Consecutive
 AlignConsecutiveDeclarations: None
 AlignConsecutiveMacros: None
 AlignEscapedNewlines: Right
-AlignOperands:   AlignAfterOperator
+AlignOperands:   Align
 AlignTrailingComments: false
 
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: Empty
+AllowBreakBeforeNoexceptSpecifier: OnlyWithParen
+AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: true
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: Empty
@@ -24,38 +26,41 @@ AllowShortLoopsOnASingleLine: false
 
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
-AlwaysBreakTemplateDeclarations: Yes
 
-BinPackArguments: false
-BinPackParameters: false
+BinPackArguments: true
+BinPackParameters: true
+BitFieldColonSpacing: Both
 
-BraceWrapping:
-  AfterCaseLabel:  false
-  AfterClass:      true
-  AfterControlStatement: Never
-  AfterEnum:       false
-  AfterFunction:   true
-  AfterNamespace:  false
-  AfterStruct:     false
-  AfterUnion:      false
-  AfterExternBlock: false
-  BeforeCatch:     false
-  BeforeElse:      false
-  BeforeLambdaBody: false
-  BeforeWhile:     false
-  IndentBraces:    false
-  SplitEmptyFunction: false
-  SplitEmptyRecord: false
-  SplitEmptyNamespace: true
+BreakBeforeBraces: Allman
+
+# BraceWrapping:
+#   AfterCaseLabel:  true
+#   AfterClass:      true
+#   AfterControlStatement: Never
+#   AfterEnum:       true
+#   AfterFunction:   true
+#   AfterNamespace:  false
+#   AfterStruct:     true
+#   AfterUnion:      true
+#   AfterExternBlock: false
+#   BeforeCatch:     false
+#   BeforeElse:      false
+#   BeforeLambdaBody: false
+#   BeforeWhile:     false
+#   IndentBraces:    false
+#   SplitEmptyFunction: false
+#   SplitEmptyRecord: false
+#   SplitEmptyNamespace: true
 
 BreakAfterAttributes: Leave
 BreakBeforeBinaryOperators: NonAssignment
-BreakBeforeBraces: Custom
-BreakBeforeConceptDeclarations: true
+BreakBeforeConceptDeclarations: Always
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 BreakStringLiterals: true
+BreakAfterReturnType: None
+BreakTemplateDeclarations: Yes
 
 ColumnLimit:     75
 
@@ -63,7 +68,7 @@ CommentPragmas:  '^ NOLINT.*'
 
 CompactNamespaces: false
 
-ConstructorInitializerIndentWidth: 4
+ConstructorInitializerIndentWidth: 8
 
 ContinuationIndentWidth: 2
 
@@ -88,7 +93,7 @@ IndentExternBlock: Indent
 IndentGotoLabels: false
 IndentPPDirectives: AfterHash
 IndentRequiresClause:  true
-IndentWidth: 2
+IndentWidth: 4
 IndentWrappedFunctionNames: false
 
 InsertBraces: false

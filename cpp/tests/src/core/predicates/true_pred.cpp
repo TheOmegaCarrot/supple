@@ -4,11 +4,12 @@
 
 auto main() -> int
 {
-  supl::test_results results;
+    supl::test_results results;
 
-  for ( const int i : supl::fr::iota(-50, 51) ) {
-    results.enforce_true(supl::true_pred(i));
-  }
+    for ( const int i : supl::fr::iota(-50, 51) )
+    {
+        results.enforce_true(supl::true_pred(i));
+    }
 
-  return results.print_and_return();
+    return results.print_and_return();
 }

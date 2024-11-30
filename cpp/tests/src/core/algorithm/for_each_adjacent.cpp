@@ -3,19 +3,21 @@
 
 auto main() -> int
 {
-  supl::test_results results;
+    supl::test_results results;
 
-  const std::vector<int> test_input {1, 2, 3, 4, 5, 6};
-  std::vector<int> test_output;
-  const std::vector<int> reference_output {3, 5, 7, 9, 11};
+    const std::vector<int> test_input {1, 2, 3, 4, 5, 6};
+    std::vector<int> test_output;
+    const std::vector<int> reference_output {3, 5, 7, 9, 11};
 
-  supl::for_each_adjacent(test_input.begin(),
-                          test_input.end(),
-                          [&test_output](const int i, const int j) {
-                            test_output.push_back(i + j);
-                          });
+    supl::for_each_adjacent(
+      test_input.begin(), test_input.end(),
+      [&test_output](const int i, const int j)
+      {
+          test_output.push_back(i + j);
+      }
+    );
 
-  results.enforce_exactly_equal(test_output, reference_output);
+    results.enforce_exactly_equal(test_output, reference_output);
 
-  return results.print_and_return();
+    return results.print_and_return();
 }

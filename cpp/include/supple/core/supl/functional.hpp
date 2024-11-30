@@ -20,7 +20,8 @@
 
 #include <utility>
 
-namespace supl {
+namespace supl
+{
 
 /* {{{ doc */
 /**
@@ -30,36 +31,39 @@ namespace supl {
  * and forwards it back.
  */
 /* }}} */
-struct identity {
-  template <typename T>
-  constexpr auto operator()(T&& t) const noexcept -> decltype(auto)
-  {
-    return std::forward<T>(t);
-  }
+struct identity
+{
+    template <typename T>
+    constexpr auto operator()(T&& t) const noexcept -> decltype(auto)
+    {
+        return std::forward<T>(t);
+    }
 };
 
 template <auto N, template <typename> typename OP>
-struct op_bind_left {
-  constexpr inline static auto op = OP {};
+struct op_bind_left
+{
+    constexpr inline static auto op = OP {};
 
-  template <typename T>
-  constexpr auto operator()(T&& arg) const
-    noexcept(noexcept(op(N, std::forward<T>(arg))))
-  {
-    return op(N, std::forward<T>(arg));
-  }
+    template <typename T>
+    constexpr auto operator()(T&& arg) const
+      noexcept(noexcept(op(N, std::forward<T>(arg))))
+    {
+        return op(N, std::forward<T>(arg));
+    }
 };
 
 template <template <typename> typename OP, auto N>
-struct op_bind_right {
-  constexpr inline static auto op = OP {};
+struct op_bind_right
+{
+    constexpr inline static auto op = OP {};
 
-  template <typename T>
-  constexpr auto operator()(T&& arg) const
-    noexcept(noexcept(op(std::forward<T>(arg), N)))
-  {
-    return op(std::forward<T>(arg), N);
-  }
+    template <typename T>
+    constexpr auto operator()(T&& arg) const
+      noexcept(noexcept(op(std::forward<T>(arg), N)))
+    {
+        return op(std::forward<T>(arg), N);
+    }
 };
 
 }  // namespace supl

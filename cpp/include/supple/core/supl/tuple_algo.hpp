@@ -35,7 +35,8 @@
 #include "metaprogramming.hpp"
 #include "type_list.hpp"
 
-namespace supl {
+namespace supl
+{
 
 /* {{{ doc */
 /**
@@ -45,8 +46,8 @@ namespace supl {
 template <std::size_t Idx, typename Gettable>
 constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
 {
-  using std::get;
-  return get<Idx>(std::forward<Gettable>(tup));
+    using std::get;
+    return get<Idx>(std::forward<Gettable>(tup));
 }
 
 /* {{{ doc */
@@ -57,88 +58,101 @@ constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
 template <typename Type, typename Gettable>
 constexpr auto get(Gettable&& tup) noexcept -> decltype(auto)
 {
-  using std::get;
-  return get<Type>(std::forward<Gettable>(tup));
+    using std::get;
+    return get<Type>(std::forward<Gettable>(tup));
 }
 }  // namespace supl
 
-namespace supl::tuple {
+namespace supl::tuple
+{
 
-namespace impl {
+namespace impl
+{
 
-  struct monostate { };
+    struct monostate
+    {
+    };
 
-  template <typename T>
-  struct wrap_reference
-      : std::conditional<
-          std::is_reference_v<T>,
-          std::reference_wrapper<std::remove_reference_t<T>>,
-          T> { };
+    template <typename T>
+    struct wrap_reference
+            : std::conditional<
+                std::is_reference_v<T>,
+                std::reference_wrapper<std::remove_reference_t<T>>, T>
+    {
+    };
 
-  template <typename Tuple>
-  struct tuple_element_variant {
-    using list = tl::translate_t<Tuple, tl::type_list>;
-    using deduplicated = tl::deduplicate_t<list>;
-    using wrapped_references =
-      tl::transform_t<deduplicated, wrap_reference>;
-    using with_monostate = tl::push_front_t<wrapped_references, monostate>;
+    template <typename Tuple>
+    struct tuple_element_variant
+    {
+        using list         = tl::translate_t<Tuple, tl::type_list>;
+        using deduplicated = tl::deduplicate_t<list>;
+        using wrapped_references =
+          tl::transform_t<deduplicated, wrap_reference>;
+        using with_monostate =
+          tl::push_front_t<wrapped_references, monostate>;
 
-    using type = tl::translate_t<with_monostate, std::variant>;
-  };
+        using type = tl::translate_t<with_monostate, std::variant>;
+    };
 
-  template <typename Tuple>
-  using tuple_element_variant_t =
-    typename tuple_element_variant<Tuple>::type;
+    template <typename Tuple>
+    using tuple_element_variant_t =
+      typename tuple_element_variant<Tuple>::type;
 
-  template <typename Tuple>
-  using tuple_element_variant_rr_t =
-    tuple_element_variant_t<std::remove_reference_t<Tuple>>;
+    template <typename Tuple>
+    using tuple_element_variant_rr_t =
+      tuple_element_variant_t<std::remove_reference_t<Tuple>>;
 
-  template <typename T>
-  [[noreturn]] inline auto runtime_get_helper() -> T
-  {
-    throw std::runtime_error {"Error from supl::runtime_get"};
-  }
-
-  template <typename Variant, typename... Remainder>
-  auto runtime_get_helper(Variant&& variant, Remainder&&... remainder)
-    -> Variant
-  {
-    if ( variant.index() != 0 ) {
-      return variant;
-    } else {
-      return runtime_get_helper<Variant>(
-        std::forward<Remainder>(remainder)...);
+    template <typename T>
+    [[noreturn]] inline auto runtime_get_helper() -> T
+    {
+        throw std::runtime_error {"Error from supl::runtime_get"};
     }
-  }
 
-  template <typename Tuple, std::size_t... Idxs>
-  auto runtime_get_impl(Tuple&& tuple,
-                        std::size_t idx,
-                        std::index_sequence<Idxs...>)
-    -> tuple_element_variant_rr_t<Tuple>
-  {
-    using variant_t = tuple_element_variant_rr_t<Tuple>;
-    return runtime_get_helper((idx == Idxs ? variant_t {::supl::get<Idxs>(
-                                               std::forward<Tuple>(tuple))}
-                                           : variant_t {})...);
-  }
+    template <typename Variant, typename... Remainder>
+    auto runtime_get_helper(Variant&& variant, Remainder&&... remainder)
+      -> Variant
+    {
+        if ( variant.index() != 0 )
+        {
+            return variant;
+        }
+        else
+        {
+            return runtime_get_helper<Variant>(
+              std::forward<Remainder>(remainder)...
+            );
+        }
+    }
+
+    template <typename Tuple, std::size_t... Idxs>
+    auto
+    runtime_get_impl(Tuple&& tuple, std::size_t idx, std::index_sequence<Idxs...>)
+      -> tuple_element_variant_rr_t<Tuple>
+    {
+        using variant_t = tuple_element_variant_rr_t<Tuple>;
+        return runtime_get_helper(
+          (idx == Idxs
+             ? variant_t {::supl::get<Idxs>(std::forward<Tuple>(tuple))}
+             : variant_t {})...
+        );
+    }
 
 }  // namespace impl
 
 template <typename Tuple>
 auto runtime_get(Tuple&& tuple, std::size_t idx)
 {
-  return impl::runtime_get_impl(
-    std::forward<Tuple>(tuple),
-    idx,
-    std::make_index_sequence<tl::size_v<Tuple>> {});
+    return impl::runtime_get_impl(
+      std::forward<Tuple>(tuple), idx,
+      std::make_index_sequence<tl::size_v<Tuple>> {}
+    );
 }
 
-namespace impl {
+namespace impl
+{
 
-  /* {{{ doc */
-  /**
+    /* {{{ doc */
+    /**
  * @brief Applies a visitor function to every member of a tuple. Not
  * intended to be called outside for_each_in_tuple.
  *
@@ -152,16 +166,14 @@ namespace impl {
  *
  * @param func Function to apply to a member of tuple.
  */
-  /* }}} */
-  template <typename Tuple, typename Func, std::size_t... Inds>
-  constexpr void for_each_impl(
-    Tuple&& tup,
-    Func&& func,
-    std::index_sequence<
-      Inds...>) noexcept(noexcept((func(::supl::get<Inds>(tup)), ...)))
-  {
-    (func(::supl::get<Inds>(tup)), ...);
-  }
+    /* }}} */
+    template <typename Tuple, typename Func, std::size_t... Inds>
+    constexpr void
+    for_each_impl(Tuple&& tup, Func&& func, std::index_sequence<Inds...>)
+      noexcept(noexcept((func(::supl::get<Inds>(tup)), ...)))
+    {
+        (func(::supl::get<Inds>(tup)), ...);
+    }
 
 }  // namespace impl
 
@@ -184,24 +196,26 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Func>
-constexpr void for_each(Tuple&& tup, Func&& func) noexcept(noexcept(
-  impl::for_each_impl(tup,
-                      std::forward<Func>(func),
-                      std::make_index_sequence<tl::size_v<Tuple>> {})))
+constexpr void for_each(Tuple&& tup, Func&& func)
+  noexcept(noexcept(impl::for_each_impl(
+    tup, std::forward<Func>(func),
+    std::make_index_sequence<tl::size_v<Tuple>> {}
+  )))
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  impl::for_each_impl(
-    std::forward<Tuple>(tup), std::forward<Func>(func), seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    impl::for_each_impl(
+      std::forward<Tuple>(tup), std::forward<Func>(func), seq
+    );
 }
 
-namespace impl {
-  template <typename Tuple, typename Func, std::size_t... Idxs>
-  constexpr void for_each_reverse_impl(Tuple&& tup,
-                                       Func&& func,
-                                       std::index_sequence<Idxs...>)
-  {
-    ((func(::supl::get<tl::size_v<Tuple> - Idxs - 1>(tup))), ...);
-  }
+namespace impl
+{
+    template <typename Tuple, typename Func, std::size_t... Idxs>
+    constexpr void
+    for_each_reverse_impl(Tuple&& tup, Func&& func, std::index_sequence<Idxs...>)
+    {
+        ((func(::supl::get<tl::size_v<Tuple> - Idxs - 1>(tup))), ...);
+    }
 }  // namespace impl
 
 /* {{{ doc */
@@ -221,94 +235,89 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Func>
-constexpr void for_each_reverse(Tuple&& tup, Func&& func) noexcept(
-  noexcept(impl::for_each_reverse_impl(
-    tup,
-    func,
-    std::make_index_sequence<tl::size_v<Tuple>> {})))
+constexpr void for_each_reverse(Tuple&& tup, Func&& func)
+  noexcept(noexcept(impl::for_each_reverse_impl(
+    tup, func, std::make_index_sequence<tl::size_v<Tuple>> {}
+  )))
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::for_each_reverse_impl(
-    std::forward<Tuple>(tup), std::forward<Func>(func), seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::for_each_reverse_impl(
+      std::forward<Tuple>(tup), std::forward<Func>(func), seq
+    );
 }
 
-namespace impl {
-  template <std::size_t Max_Index,
-            std::size_t Current_Idx = 0,
-            typename Func,
-            typename... Tuples>
-  constexpr void zip_impl(Func&& func, Tuples&&... tuples)
-  /* noexcept(TODO) */
-  {
-    if constexpr ( Max_Index == Current_Idx ) {
-      return;
-    } else {
-      func(std::get<Current_Idx>(tuples)...);
-      zip_impl<Max_Index, Current_Idx + 1>(
-        std::forward<Func>(func), std::forward<Tuples>(tuples)...);
+namespace impl
+{
+    template <
+      std::size_t Max_Index, std::size_t Current_Idx = 0, typename Func,
+      typename... Tuples>
+    constexpr void zip_impl(Func&& func, Tuples&&... tuples)
+    /* noexcept(TODO) */
+    {
+        if constexpr ( Max_Index == Current_Idx )
+        {
+            return;
+        }
+        else
+        {
+            func(std::get<Current_Idx>(tuples)...);
+            zip_impl<Max_Index, Current_Idx + 1>(
+              std::forward<Func>(func), std::forward<Tuples>(tuples)...
+            );
+        }
     }
-  }
 }  // namespace impl
 
 template <typename Func, typename... Tuples>
 constexpr void zip(Func&& func, Tuples&&... tuples) /* noexcept(TODO) */
 {
-  constexpr std::size_t max_index {min(tl::size_v<Tuples>...)};
-  impl::zip_impl<max_index>(std::forward<Func>(func),
-                            std::forward<Tuples>(tuples)...);
+    constexpr std::size_t max_index {min(tl::size_v<Tuples>...)};
+    impl::zip_impl<max_index>(
+      std::forward<Func>(func), std::forward<Tuples>(tuples)...
+    );
 }
 
-namespace impl {
-  template <typename Tuple1,
-            typename Tuple2,
-            typename Func,
-            std::size_t... Idxs>
-  constexpr void for_each_both_impl(
-    Tuple1&& tup1,
-    Tuple2&& tup2,
-    Func&& func,
-    std::index_sequence<
-      Idxs...>) noexcept(noexcept((func(std::get<Idxs>(tup1),
-                                        std::get<Idxs>(tup2)),
-                                   ...)))
-  {
-    (func(std::get<Idxs>(tup1), std::get<Idxs>(tup2)), ...);
-  }
+namespace impl
+{
+    template <
+      typename Tuple1, typename Tuple2, typename Func, std::size_t... Idxs>
+    constexpr void
+    for_each_both_impl(Tuple1&& tup1, Tuple2&& tup2, Func&& func, std::index_sequence<Idxs...>)
+      noexcept(
+        noexcept((func(std::get<Idxs>(tup1), std::get<Idxs>(tup2)), ...))
+      )
+    {
+        (func(std::get<Idxs>(tup1), std::get<Idxs>(tup2)), ...);
+    }
 }  // namespace impl
 
 template <typename Tuple1, typename Tuple2, typename Func>
-constexpr void
-for_each_both(Tuple1&& tup1, Tuple2&& tup2, Func&& func) noexcept(
-  noexcept(impl::for_each_both_impl(
-    tup1,
-    tup2,
-    func,
-    std::make_index_sequence<std::min(tl::size_v<Tuple1>,
-                                      tl::size_v<Tuple2>)> {})))
+constexpr void for_each_both(Tuple1&& tup1, Tuple2&& tup2, Func&& func)
+  noexcept(noexcept(impl::for_each_both_impl(
+    tup1, tup2, func,
+    std::make_index_sequence<
+      std::min(tl::size_v<Tuple1>, tl::size_v<Tuple2>)> {}
+  )))
 {
-  constexpr auto seq {std::make_index_sequence<std::min(
-    tl::size_v<Tuple1>, tl::size_v<Tuple2>)> {}};
-  impl::for_each_both_impl(std::forward<Tuple1>(tup1),
-                           std::forward<Tuple2>(tup2),
-                           std::forward<Func>(func),
-                           seq);
+    constexpr auto seq {std::make_index_sequence<
+      std::min(tl::size_v<Tuple1>, tl::size_v<Tuple2>)> {}};
+    impl::for_each_both_impl(
+      std::forward<Tuple1>(tup1), std::forward<Tuple2>(tup2),
+      std::forward<Func>(func), seq
+    );
 }
 
-namespace impl {
-  template <typename Tuple,
-            typename Func,
-            std::size_t... Idxs,
-            std::size_t Begin>
-  constexpr void for_each_in_subtuple_impl(
-    const Tuple& tup,
-    Func&& func,
-    std::index_sequence<Idxs...>,
-    index_constant<
-      Begin>) noexcept(noexcept((func(::supl::get<Idxs + Begin>(tup)),
-                                 ...)))
-  {
-    (func(::supl::get<Idxs + Begin>(tup)), ...);
-  }
+namespace impl
+{
+    template <
+      typename Tuple, typename Func, std::size_t... Idxs,
+      std::size_t Begin>
+    constexpr void
+    for_each_in_subtuple_impl(const Tuple& tup, Func&& func, std::index_sequence<Idxs...>, index_constant<Begin>)
+      noexcept(noexcept((func(::supl::get<Idxs + Begin>(tup)), ...)))
+    {
+        (func(::supl::get<Idxs + Begin>(tup)), ...);
+    }
 
 }  // namespace impl
 
@@ -330,29 +339,28 @@ namespace impl {
  * Failure to meet this precondition is a compile-time error.
  */
 /* }}} */
-template <std::size_t Begin,
-          std::size_t End,
-          typename Tuple,
-          typename Func>
-constexpr void
-for_each_in_subtuple(const Tuple& tup, Func&& func) noexcept(noexcept(
-  impl::for_each_in_subtuple_impl(tup,
-                                  std::forward<Func>(func),
-                                  std::make_index_sequence<End - Begin> {},
-                                  index_constant<Begin> {})))
+template <
+  std::size_t Begin, std::size_t End, typename Tuple, typename Func>
+constexpr void for_each_in_subtuple(const Tuple& tup, Func&& func)
+  noexcept(noexcept(impl::for_each_in_subtuple_impl(
+    tup, std::forward<Func>(func),
+    std::make_index_sequence<End - Begin> {}, index_constant<Begin> {}
+  )))
 {
-  static_assert(Begin < tl::size_v<Tuple>, "Begin out of bounds");
-  static_assert(End <= tl::size_v<Tuple>, "Begin out of bounds");
+    static_assert(Begin < tl::size_v<Tuple>, "Begin out of bounds");
+    static_assert(End <= tl::size_v<Tuple>, "Begin out of bounds");
 
-  constexpr auto seq {std::make_index_sequence<End - Begin> {}};
+    constexpr auto seq {std::make_index_sequence<End - Begin> {}};
 
-  impl::for_each_in_subtuple_impl(
-    tup, std::forward<Func>(func), seq, index_constant<Begin> {});
+    impl::for_each_in_subtuple_impl(
+      tup, std::forward<Func>(func), seq, index_constant<Begin> {}
+    );
 }
 
-namespace impl {
-  /* {{{ doc */
-  /**
+namespace impl
+{
+    /* {{{ doc */
+    /**
  * @brief Applies a visitor function to every member of a tuple,
  * and maps the returned values to a new tuple.
  * Not intended to be called outside transform
@@ -369,23 +377,19 @@ namespace impl {
  *
  * @return Tuple of values mapped from `tup` through `func`.
  */
-  /* }}} */
-  template <template <typename...> typename Tuple,
-            typename... Elems,
-            typename Func,
-            std::size_t... Inds>
-  constexpr auto transform_impl(
-    const Tuple<Elems...>& tup,
-    Func&& func,
-    std::index_sequence<
-      Inds...>) noexcept((noexcept(func(::supl::get<Inds>(tup))) && ...)
-                         && (std::is_nothrow_constructible_v<
-                               decltype(func(::supl::get<Inds>(tup)))>
-                             && ...))
-    -> Tuple<decltype(func(::supl::get<Inds>(tup)))...>
-  {
-    return {func(::supl::get<Inds>(tup))...};
-  }
+    /* }}} */
+    template <
+      template <typename...> typename Tuple, typename... Elems,
+      typename Func, std::size_t... Inds>
+    constexpr auto
+    transform_impl(const Tuple<Elems...>& tup, Func&& func, std::index_sequence<Inds...>)
+      noexcept(
+        (noexcept(func(::supl::get<Inds>(tup))) && ...)
+        && (std::is_nothrow_constructible_v<decltype(func(::supl::get<Inds>(tup)))> && ...)
+      ) -> Tuple<decltype(func(::supl::get<Inds>(tup)))...>
+    {
+        return {func(::supl::get<Inds>(tup))...};
+    }
 
 }  // namespace impl
 
@@ -409,34 +413,32 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Func>
-[[nodiscard]] constexpr auto
-transform(const Tuple& tup, Func&& func) noexcept(noexcept(
-  impl::transform_impl(tup,
-                       std::forward<Func>(func),
-                       std::make_index_sequence<tl::size_v<Tuple>> {})))
+[[nodiscard]] constexpr auto transform(const Tuple& tup, Func&& func)
+  noexcept(noexcept(impl::transform_impl(
+    tup, std::forward<Func>(func),
+    std::make_index_sequence<tl::size_v<Tuple>> {}
+  )))
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::transform_impl(tup, std::forward<Func>(func), seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::transform_impl(tup, std::forward<Func>(func), seq);
 }
 
-namespace impl {
-  template <typename Tuple, typename Pred, std::size_t... Inds>
-  [[nodiscard]] constexpr auto any_of_impl(
-    const Tuple& tup,
-    Pred&& pred,
-    std::index_sequence<
-      Inds...>) noexcept(noexcept((pred(::supl::get<Inds>(tup)) || ...)))
-    -> bool
-  {
-    static_assert(
-      std::conjunction_v<
-        std::
-          is_invocable_r<bool, Pred, decltype(::supl::get<Inds>(tup))>...>,
-      "Predicate must be invocable returning a bool with every "
-      "type in the tuple");
+namespace impl
+{
+    template <typename Tuple, typename Pred, std::size_t... Inds>
+    [[nodiscard]] constexpr auto
+    any_of_impl(const Tuple& tup, Pred&& pred, std::index_sequence<Inds...>)
+      noexcept(noexcept((pred(::supl::get<Inds>(tup)) || ...))) -> bool
+    {
+        static_assert(
+          std::conjunction_v<std::is_invocable_r<
+            bool, Pred, decltype(::supl::get<Inds>(tup))>...>,
+          "Predicate must be invocable returning a bool with every "
+          "type in the tuple"
+        );
 
-    return (pred(::supl::get<Inds>(tup)) || ...);
-  }
+        return (pred(::supl::get<Inds>(tup)) || ...);
+    }
 
 }  // namespace impl
 
@@ -461,34 +463,32 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Pred>
-[[nodiscard]] constexpr auto
-any_of(const Tuple& tup, Pred&& pred) noexcept(noexcept(impl::any_of_impl(
-  tup,
-  std::forward<Pred>(pred),
-  std::make_index_sequence<tl::size_v<Tuple>> {}))) -> bool
+[[nodiscard]] constexpr auto any_of(const Tuple& tup, Pred&& pred)
+  noexcept(noexcept(impl::any_of_impl(
+    tup, std::forward<Pred>(pred),
+    std::make_index_sequence<tl::size_v<Tuple>> {}
+  ))) -> bool
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::any_of_impl(tup, std::forward<Pred>(pred), seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::any_of_impl(tup, std::forward<Pred>(pred), seq);
 }
 
-namespace impl {
-  template <typename Tuple, typename Pred, std::size_t... Inds>
-  [[nodiscard]] constexpr auto all_of_impl(
-    const Tuple& tup,
-    Pred&& pred,
-    std::index_sequence<
-      Inds...>) noexcept(noexcept((pred(::supl::get<Inds>(tup)) && ...)))
-    -> bool
-  {
-    static_assert(
-      std::conjunction_v<
-        std::
-          is_invocable_r<bool, Pred, decltype(::supl::get<Inds>(tup))>...>,
-      "Predicate must be invocable returning a bool with every "
-      "type in the tuple");
+namespace impl
+{
+    template <typename Tuple, typename Pred, std::size_t... Inds>
+    [[nodiscard]] constexpr auto
+    all_of_impl(const Tuple& tup, Pred&& pred, std::index_sequence<Inds...>)
+      noexcept(noexcept((pred(::supl::get<Inds>(tup)) && ...))) -> bool
+    {
+        static_assert(
+          std::conjunction_v<std::is_invocable_r<
+            bool, Pred, decltype(::supl::get<Inds>(tup))>...>,
+          "Predicate must be invocable returning a bool with every "
+          "type in the tuple"
+        );
 
-    return (pred(::supl::get<Inds>(tup)) && ...);
-  }
+        return (pred(::supl::get<Inds>(tup)) && ...);
+    }
 
 }  // namespace impl
 
@@ -513,14 +513,14 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Pred>
-[[nodiscard]] constexpr auto
-all_of(const Tuple& tup, Pred&& pred) noexcept(noexcept(impl::all_of_impl(
-  tup,
-  std::forward<Pred>(pred),
-  std::make_index_sequence<tl::size_v<Tuple>> {}))) -> bool
+[[nodiscard]] constexpr auto all_of(const Tuple& tup, Pred&& pred)
+  noexcept(noexcept(impl::all_of_impl(
+    tup, std::forward<Pred>(pred),
+    std::make_index_sequence<tl::size_v<Tuple>> {}
+  ))) -> bool
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::all_of_impl(tup, std::forward<Pred>(pred), seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::all_of_impl(tup, std::forward<Pred>(pred), seq);
 }
 
 /* {{{ doc */
@@ -544,27 +544,25 @@ all_of(const Tuple& tup, Pred&& pred) noexcept(noexcept(impl::all_of_impl(
  */
 /* }}} */
 template <typename Tuple, typename Pred>
-[[nodiscard]] constexpr auto none_of(
-  const Tuple& tup,
-  Pred&& pred) noexcept(noexcept(any_of(tup, std::forward<Pred>(pred))))
-  -> bool
+[[nodiscard]] constexpr auto none_of(const Tuple& tup, Pred&& pred)
+  noexcept(noexcept(any_of(tup, std::forward<Pred>(pred)))) -> bool
 {
-  return not any_of(tup, std::forward<Pred>(pred));
+    return not any_of(tup, std::forward<Pred>(pred));
 }
 
-namespace impl {
-  template <typename Tuple, typename Pred, std::size_t... Inds>
-  constexpr auto
-  count_if_impl(const Tuple& tup,
-                Pred&& pred,
-                std::index_sequence<
-                  Inds...>) noexcept(noexcept((static_cast<std::
-                                                             size_t>(pred(
-                                                 ::supl::get<Inds>(tup)))
-                                               + ...))) -> std::size_t
-  {
-    return (static_cast<std::size_t>(pred(::supl::get<Inds>(tup))) + ...);
-  }
+namespace impl
+{
+    template <typename Tuple, typename Pred, std::size_t... Inds>
+    constexpr auto
+    count_if_impl(const Tuple& tup, Pred&& pred, std::index_sequence<Inds...>)
+      noexcept(noexcept(
+        (static_cast<std::size_t>(pred(::supl::get<Inds>(tup))) + ...)
+      )) -> std::size_t
+    {
+        return (
+          static_cast<std::size_t>(pred(::supl::get<Inds>(tup))) + ...
+        );
+    }
 
 }  // namespace impl
 
@@ -585,37 +583,36 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename Pred>
-[[nodiscard]] constexpr auto
-count_if(const Tuple& tup, Pred&& pred) noexcept(noexcept(
-  impl::count_if_impl(tup,
-                      std::forward<Pred>(pred),
-                      std::make_index_sequence<tl::size_v<Tuple>> {})))
-  -> std::size_t
+[[nodiscard]] constexpr auto count_if(const Tuple& tup, Pred&& pred)
+  noexcept(noexcept(impl::count_if_impl(
+    tup, std::forward<Pred>(pred),
+    std::make_index_sequence<tl::size_v<Tuple>> {}
+  ))) -> std::size_t
 {
-  // This (and much of this file) could be much nicer in C++20
-  // no impl function, just IILE
-  /* return [&]<std::size_t... Inds>(std::index_sequence<Inds...>) { */
-  /*   return (static_cast<std::size_t>(pred(::supl::get<Inds>(tup))) + ...); */
-  /* }(std::make_index_sequence<tl::size_v<Tuple>> {}); */
+    // This (and much of this file) could be much nicer in C++20
+    // no impl function, just IILE
+    /* return [&]<std::size_t... Inds>(std::index_sequence<Inds...>) { */
+    /*   return (static_cast<std::size_t>(pred(::supl::get<Inds>(tup))) + ...); */
+    /* }(std::make_index_sequence<tl::size_v<Tuple>> {}); */
 
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::count_if_impl(tup, std::forward<Pred>(pred), seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::count_if_impl(tup, std::forward<Pred>(pred), seq);
 }
 
-namespace impl {
+namespace impl
+{
 
-  template <typename Tuple, typename... Ts, std::size_t... Inds>
-  [[nodiscard]] constexpr auto push_back_impl(
-    const Tuple& tup,
-    std::index_sequence<Inds...>,
-    Ts&&... data) noexcept(tl::all_of_v<Tuple,
-                                        std::is_nothrow_copy_constructible>
-                           && (std::is_nothrow_copy_constructible_v<Ts>
-                               && ...))
-    -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
-  {
-    return {::supl::get<Inds>(tup)..., std::forward<Ts>(data)...};
-  }
+    template <typename Tuple, typename... Ts, std::size_t... Inds>
+    [[nodiscard]] constexpr auto push_back_impl(
+      const Tuple& tup, std::index_sequence<Inds...>, Ts&&... data
+    )
+      noexcept(
+        tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+        && (std::is_nothrow_copy_constructible_v<Ts> && ...)
+      ) -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
+    {
+        return {::supl::get<Inds>(tup)..., std::forward<Ts>(data)...};
+    }
 
 }  // namespace impl
 
@@ -636,32 +633,28 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename... Ts>
-[[nodiscard]] constexpr auto
-push_back(const Tuple& tup, Ts&&... data) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
-  && (std::is_nothrow_copy_constructible_v<Ts> && ...))
-  -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
+[[nodiscard]] constexpr auto push_back(const Tuple& tup, Ts&&... data)
+  noexcept(
+    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+    && (std::is_nothrow_copy_constructible_v<Ts> && ...)
+  ) -> tl::push_back_t<Tuple, remove_cvref_t<Ts>...>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::push_back_impl(tup, seq, std::forward<Ts>(data)...);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::push_back_impl(tup, seq, std::forward<Ts>(data)...);
 }
 
-namespace impl {
+namespace impl
+{
 
-  template <typename As,
-            typename Param,
-            typename Tuple,
-            std::size_t... Idxs>
-  [[nodiscard]] constexpr auto push_back_as_impl(
-    const Tuple& tup,
-    std::index_sequence<Idxs...>,
-    Param&& data) noexcept(tl::all_of_v<Tuple,
-                                        std::is_nothrow_copy_constructible>
-                           && std::is_nothrow_constructible_v<As, Param>)
-    -> tl::push_back_t<Tuple, As>
-  {
-    return {::supl::get<Idxs>(tup)..., std::forward<Param>(data)};
-  }
+    template <
+      typename As, typename Param, typename Tuple, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto push_back_as_impl(
+      const Tuple& tup, std::index_sequence<Idxs...>, Param&& data
+    ) noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible> && std::is_nothrow_constructible_v<As, Param>)
+      -> tl::push_back_t<Tuple, As>
+    {
+        return {::supl::get<Idxs>(tup)..., std::forward<Param>(data)};
+    }
 
 }  // namespace impl
 
@@ -688,25 +681,26 @@ namespace impl {
  */
 /* }}} */
 template <typename As, typename Param, typename Tuple>
-[[nodiscard]] constexpr auto
-push_back_as(const Tuple& tup, Param&& data) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
-  && std::is_nothrow_constructible_v<As, Param>)
-  -> tl::push_back_t<Tuple, As>
+[[nodiscard]] constexpr auto push_back_as(const Tuple& tup, Param&& data)
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible> && std::is_nothrow_constructible_v<As, Param>)
+    -> tl::push_back_t<Tuple, As>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::push_back_as_impl<As>(tup, seq, std::forward<Param>(data));
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::push_back_as_impl<As>(
+      tup, seq, std::forward<Param>(data)
+    );
 }
 
-namespace impl {
-  template <typename Tuple, std::size_t... Inds>
-  [[nodiscard]] constexpr auto
-  pop_back_impl(const Tuple& tup, std::index_sequence<Inds...>) noexcept(
-    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-    -> tl::pop_back_t<Tuple>
-  {
-    return {::supl::get<Inds>(tup)...};
-  }
+namespace impl
+{
+    template <typename Tuple, std::size_t... Inds>
+    [[nodiscard]] constexpr auto
+    pop_back_impl(const Tuple& tup, std::index_sequence<Inds...>)
+      noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+        -> tl::pop_back_t<Tuple>
+    {
+        return {::supl::get<Inds>(tup)...};
+    }
 
 }  // namespace impl
 
@@ -723,30 +717,31 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple>
-[[nodiscard]] constexpr auto pop_back(const Tuple& tup) noexcept(
-  tl::all_of_v<tl::pop_back_t<Tuple>, std::is_nothrow_copy_constructible>)
-  -> tl::pop_back_t<Tuple>
+[[nodiscard]] constexpr auto pop_back(const Tuple& tup)
+  noexcept(tl::all_of_v<
+           tl::pop_back_t<Tuple>, std::is_nothrow_copy_constructible>)
+    -> tl::pop_back_t<Tuple>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}};
-  return impl::pop_back_impl(tup, seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}
+    };
+    return impl::pop_back_impl(tup, seq);
 }
 
-namespace impl {
-  template <template <typename...> typename Tuple,
-            typename... Ts,
-            typename... Pack,
-            std::size_t... Inds>
-  [[nodiscard]] constexpr auto push_front_impl(
-    const Tuple<Pack...>& tup,
-    std::index_sequence<Inds...>,
-    Ts&&... data) noexcept(tl::all_of_v<Tuple<Pack...>,
-                                        std::is_nothrow_copy_constructible>
-                           && (std::is_nothrow_copy_constructible_v<Ts>
-                               && ...))
-    -> tl::push_front_t<Tuple<Pack...>, remove_cvref_t<Ts>...>
-  {
-    return {std::forward<Ts>(data)..., ::supl::get<Inds>(tup)...};
-  }
+namespace impl
+{
+    template <
+      template <typename...> typename Tuple, typename... Ts,
+      typename... Pack, std::size_t... Inds>
+    [[nodiscard]] constexpr auto push_front_impl(
+      const Tuple<Pack...>& tup, std::index_sequence<Inds...>, Ts&&... data
+    )
+      noexcept(
+        tl::all_of_v<Tuple<Pack...>, std::is_nothrow_copy_constructible>
+        && (std::is_nothrow_copy_constructible_v<Ts> && ...)
+      ) -> tl::push_front_t<Tuple<Pack...>, remove_cvref_t<Ts>...>
+    {
+        return {std::forward<Ts>(data)..., ::supl::get<Inds>(tup)...};
+    }
 
 }  // namespace impl
 
@@ -766,32 +761,28 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple, typename... Ts>
-[[nodiscard]] constexpr auto
-push_front(const Tuple& tup, Ts&&... data) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
-  && (std::is_nothrow_copy_constructible_v<Ts> && ...))
-  -> tl::push_front_t<Tuple, remove_cvref_t<Ts>...>
+[[nodiscard]] constexpr auto push_front(const Tuple& tup, Ts&&... data)
+  noexcept(
+    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+    && (std::is_nothrow_copy_constructible_v<Ts> && ...)
+  ) -> tl::push_front_t<Tuple, remove_cvref_t<Ts>...>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::push_front_impl(tup, seq, std::forward<Ts>(data)...);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::push_front_impl(tup, seq, std::forward<Ts>(data)...);
 }
 
-namespace impl {
+namespace impl
+{
 
-  template <typename As,
-            typename Param,
-            typename Tuple,
-            std::size_t... Idxs>
-  [[nodiscard]] constexpr auto push_front_as_impl(
-    const Tuple& tup,
-    std::index_sequence<Idxs...>,
-    Param&& data) noexcept(tl::all_of_v<Tuple,
-                                        std::is_nothrow_copy_constructible>
-                           && std::is_nothrow_constructible_v<As, Param>)
-    -> tl::push_front_t<Tuple, As>
-  {
-    return {std::forward<Param>(data), ::supl::get<Idxs>(tup)...};
-  }
+    template <
+      typename As, typename Param, typename Tuple, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto push_front_as_impl(
+      const Tuple& tup, std::index_sequence<Idxs...>, Param&& data
+    ) noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible> && std::is_nothrow_constructible_v<As, Param>)
+      -> tl::push_front_t<Tuple, As>
+    {
+        return {std::forward<Param>(data), ::supl::get<Idxs>(tup)...};
+    }
 
 }  // namespace impl
 
@@ -818,26 +809,27 @@ namespace impl {
  */
 /* }}} */
 template <typename As, typename Param, typename Tuple>
-[[nodiscard]] constexpr auto
-push_front_as(const Tuple& tup, Param&& data) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
-  && std::is_nothrow_constructible_v<As, Param>)
-  -> tl::push_front_t<Tuple, As>
+[[nodiscard]] constexpr auto push_front_as(const Tuple& tup, Param&& data)
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible> && std::is_nothrow_constructible_v<As, Param>)
+    -> tl::push_front_t<Tuple, As>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::push_front_as_impl<As>(tup, seq, std::forward<Param>(data));
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::push_front_as_impl<As>(
+      tup, seq, std::forward<Param>(data)
+    );
 }
 
-namespace impl {
-  template <typename Tuple, std::size_t... Inds>
-  [[nodiscard]] constexpr auto
-  pop_front_impl(const Tuple& tup, std::index_sequence<Inds...>) noexcept(
-    tl::all_of_v<tl::pop_front_t<Tuple>,
-                 std::is_nothrow_copy_constructible>)
-    -> tl::pop_front_t<Tuple>
-  {
-    return {::supl::get<Inds + 1>(tup)...};
-  }
+namespace impl
+{
+    template <typename Tuple, std::size_t... Inds>
+    [[nodiscard]] constexpr auto
+    pop_front_impl(const Tuple& tup, std::index_sequence<Inds...>)
+      noexcept(tl::all_of_v<
+               tl::pop_front_t<Tuple>, std::is_nothrow_copy_constructible>)
+        -> tl::pop_front_t<Tuple>
+    {
+        return {::supl::get<Inds + 1>(tup)...};
+    }
 
 }  // namespace impl
 
@@ -854,82 +846,86 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple>
-[[nodiscard]] constexpr auto pop_front(const Tuple& tup) noexcept(
-  tl::all_of_v<tl::pop_front_t<Tuple>, std::is_nothrow_copy_constructible>)
-  -> tl::pop_front_t<Tuple>
+[[nodiscard]] constexpr auto pop_front(const Tuple& tup)
+  noexcept(tl::all_of_v<
+           tl::pop_front_t<Tuple>, std::is_nothrow_copy_constructible>)
+    -> tl::pop_front_t<Tuple>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}};
-  return impl::pop_front_impl(tup, seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}
+    };
+    return impl::pop_front_impl(tup, seq);
 }
 
-namespace impl {
-  template <typename Tuple, std::size_t... Idxs>
-  [[nodiscard]] constexpr auto rotate_left_impl(
-    const Tuple& tup,
-    std::index_sequence<
-      Idxs...>) noexcept(tl::all_of_v<Tuple,
-                                      std::is_nothrow_copy_constructible>)
+namespace impl
+{
+    template <typename Tuple, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto
+    rotate_left_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+      noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+        -> tl::rotate_left_t<Tuple>
+    {
+        return {::supl::get<Idxs + 1>(tup)..., ::supl::get<0>(tup)};
+    }
+
+}  // namespace impl
+
+template <typename Tuple>
+[[nodiscard]] constexpr auto rotate_left(const Tuple& tup)
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
     -> tl::rotate_left_t<Tuple>
-  {
-    return {::supl::get<Idxs + 1>(tup)..., ::supl::get<0>(tup)};
-  }
+{
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}
+    };
+    return impl::rotate_left_impl(tup, seq);
+}
+
+namespace impl
+{
+    template <typename Tuple, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto
+    rotate_right_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+      noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+        -> tl::rotate_right_t<Tuple>
+    {
+        return {
+          ::supl::get<tl::size_v<Tuple> - 1>(tup),
+          ::supl::get<Idxs>(tup)...
+        };
+    }
 
 }  // namespace impl
 
 template <typename Tuple>
-[[nodiscard]] constexpr auto rotate_left(const Tuple& tup) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-  -> tl::rotate_left_t<Tuple>
-{
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}};
-  return impl::rotate_left_impl(tup, seq);
-}
-
-namespace impl {
-  template <typename Tuple, std::size_t... Idxs>
-  [[nodiscard]] constexpr auto rotate_right_impl(
-    const Tuple& tup,
-    std::index_sequence<
-      Idxs...>) noexcept(tl::all_of_v<Tuple,
-                                      std::is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto rotate_right(const Tuple& tup)
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
     -> tl::rotate_right_t<Tuple>
-  {
-    return {::supl::get<tl::size_v<Tuple> - 1>(tup),
-            ::supl::get<Idxs>(tup)...};
-  }
-
-}  // namespace impl
-
-template <typename Tuple>
-[[nodiscard]] constexpr auto rotate_right(const Tuple& tup) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-  -> tl::rotate_right_t<Tuple>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}};
-  return impl::rotate_right_impl(tup, seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> - 1> {}
+    };
+    return impl::rotate_right_impl(tup, seq);
 }
 
-namespace impl {
-  template <typename Tuple,
-            typename... Ts,
-            std::size_t... pre_idxs,
-            std::size_t... post_idxs>
-  [[nodiscard]] constexpr auto insert_impl(
-    const Tuple& tup,
-    std::index_sequence<pre_idxs...>,
-    std::index_sequence<post_idxs...>,
-    Ts&&... data) noexcept(tl::all_of_v<Tuple,
-                                        std::is_nothrow_copy_constructible>
-                           && (std::is_nothrow_constructible_v<Ts, Ts>
-                               && ...))
-    -> tl::insert_t<Tuple, sizeof...(pre_idxs), remove_cvref_t<Ts>...>
-  {
-    constexpr std::size_t idx {sizeof...(pre_idxs)};
+namespace impl
+{
+    template <
+      typename Tuple, typename... Ts, std::size_t... pre_idxs,
+      std::size_t... post_idxs>
+    [[nodiscard]] constexpr auto insert_impl(
+      const Tuple& tup, std::index_sequence<pre_idxs...>,
+      std::index_sequence<post_idxs...>, Ts&&... data
+    )
+      noexcept(
+        tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+        && (std::is_nothrow_constructible_v<Ts, Ts> && ...)
+      ) -> tl::insert_t<Tuple, sizeof...(pre_idxs), remove_cvref_t<Ts>...>
+    {
+        constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-    return {::supl::get<pre_idxs>(tup)...,
-            std::forward<Ts>(data)...,
-            ::supl::get<post_idxs + idx>(tup)...};
-  }
+        return {
+          ::supl::get<pre_idxs>(tup)..., std::forward<Ts>(data)...,
+          ::supl::get<post_idxs + idx>(tup)...
+        };
+    }
 
 }  // namespace impl
 
@@ -953,41 +949,42 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Idx, typename Tuple, typename... Ts>
-[[nodiscard]] constexpr auto
-insert(const Tuple& tup, Ts&&... data) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
-  && (std::is_nothrow_constructible_v<Ts, Ts> && ...))
-  -> tl::insert_t<Tuple, Idx, remove_cvref_t<Ts>...>
+[[nodiscard]] constexpr auto insert(const Tuple& tup, Ts&&... data)
+  noexcept(
+    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>
+    && (std::is_nothrow_constructible_v<Ts, Ts> && ...)
+  ) -> tl::insert_t<Tuple, Idx, remove_cvref_t<Ts>...>
 {
-  static_assert(Idx <= tl::size_v<Tuple>, "Index out of bounds");
+    static_assert(Idx <= tl::size_v<Tuple>, "Index out of bounds");
 
-  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
-  constexpr auto post_seq {
-    std::make_index_sequence<tl::size_v<Tuple> - Idx> {}};
+    constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+    constexpr auto post_seq {
+      std::make_index_sequence<tl::size_v<Tuple> - Idx> {}
+    };
 
-  return impl::insert_impl(
-    tup, pre_seq, post_seq, std::forward<Ts>(data)...);
+    return impl::insert_impl(
+      tup, pre_seq, post_seq, std::forward<Ts>(data)...
+    );
 }
 
-namespace impl {
-  template <typename Tuple,
-            std::size_t... pre_idxs,
-            std::size_t... post_idxs>
-  [[nodiscard]] constexpr auto erase_impl(
-    const Tuple& tup,
-    std::index_sequence<pre_idxs...>,
-    std::index_sequence<
-      post_idxs...>) noexcept(tl::
-                                all_of_v<
-                                  tl::erase_t<Tuple, sizeof...(pre_idxs)>,
-                                  std::is_nothrow_copy_constructible>)
-    -> tl::erase_t<Tuple, sizeof...(pre_idxs)>
-  {
-    constexpr std::size_t idx {sizeof...(pre_idxs)};
+namespace impl
+{
+    template <
+      typename Tuple, std::size_t... pre_idxs, std::size_t... post_idxs>
+    [[nodiscard]] constexpr auto
+    erase_impl(const Tuple& tup, std::index_sequence<pre_idxs...>, std::index_sequence<post_idxs...>)
+      noexcept(tl::all_of_v<
+               tl::erase_t<Tuple, sizeof...(pre_idxs)>,
+               std::is_nothrow_copy_constructible>)
+        -> tl::erase_t<Tuple, sizeof...(pre_idxs)>
+    {
+        constexpr std::size_t idx {sizeof...(pre_idxs)};
 
-    return {::supl::get<pre_idxs>(tup)...,
-            ::supl::get<post_idxs + idx + 1>(tup)...};
-  }
+        return {
+          ::supl::get<pre_idxs>(tup)...,
+          ::supl::get<post_idxs + idx + 1>(tup)...
+        };
+    }
 
 }  // namespace impl
 
@@ -1005,42 +1002,38 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Idx, typename Tuple>
-[[nodiscard]] constexpr auto erase(const Tuple& tup) noexcept(
-  tl::all_of_v<tl::erase_t<Tuple, Idx>,
-               std::is_nothrow_copy_constructible>)
-  -> tl::erase_t<Tuple, Idx>
+[[nodiscard]] constexpr auto erase(const Tuple& tup)
+  noexcept(tl::all_of_v<
+           tl::erase_t<Tuple, Idx>, std::is_nothrow_copy_constructible>)
+    -> tl::erase_t<Tuple, Idx>
 {
-  static_assert(Idx < tl::size_v<Tuple>, "Index out of bounds");
+    static_assert(Idx < tl::size_v<Tuple>, "Index out of bounds");
 
-  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
-  constexpr auto post_seq {
-    std::make_index_sequence<tl::size_v<Tuple> - Idx - 1> {}};
+    constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+    constexpr auto post_seq {
+      std::make_index_sequence<tl::size_v<Tuple> - Idx - 1> {}
+    };
 
-  return impl::erase_impl(tup, pre_seq, post_seq);
+    return impl::erase_impl(tup, pre_seq, post_seq);
 }
 
-namespace impl {
-  template <typename Tuple,
-            typename T,
-            std::size_t... Pre_Idxs,
-            std::size_t... Post_Idxs,
-            std::size_t Idx>
-  [[nodiscard]] constexpr auto replace_impl(
-    const Tuple& tup,
-    T&& data,
-    std::index_sequence<Pre_Idxs...>,
-    std::index_sequence<Post_Idxs...>,
-    index_constant<
-      Idx>) noexcept(tl::
-                       all_of_v<
-                         tl::replace_t<Tuple, Idx, remove_cvref_t<T>>,
-                         std::is_nothrow_copy_constructible>)
-    -> tl::replace_t<Tuple, Idx, remove_cvref_t<T>>
-  {
-    return {::supl::get<Pre_Idxs>(tup)...,
-            std::forward<T>(data),
-            ::supl::get<Post_Idxs + Idx + 1>(tup)...};
-  }
+namespace impl
+{
+    template <
+      typename Tuple, typename T, std::size_t... Pre_Idxs,
+      std::size_t... Post_Idxs, std::size_t Idx>
+    [[nodiscard]] constexpr auto
+    replace_impl(const Tuple& tup, T&& data, std::index_sequence<Pre_Idxs...>, std::index_sequence<Post_Idxs...>, index_constant<Idx>)
+      noexcept(tl::all_of_v<
+               tl::replace_t<Tuple, Idx, remove_cvref_t<T>>,
+               std::is_nothrow_copy_constructible>)
+        -> tl::replace_t<Tuple, Idx, remove_cvref_t<T>>
+    {
+        return {
+          ::supl::get<Pre_Idxs>(tup)..., std::forward<T>(data),
+          ::supl::get<Post_Idxs + Idx + 1>(tup)...
+        };
+    }
 
 }  // namespace impl
 
@@ -1068,17 +1061,20 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Idx, typename T, typename Tuple>
-[[nodiscard]] constexpr auto replace(const Tuple& tup, T&& data) noexcept(
-  tl::all_of_v<tl::replace_t<Tuple, Idx, remove_cvref_t<T>>,
-               std::is_nothrow_copy_constructible>)
-  -> tl::replace_t<Tuple, Idx, remove_cvref_t<T>>
+[[nodiscard]] constexpr auto replace(const Tuple& tup, T&& data)
+  noexcept(tl::all_of_v<
+           tl::replace_t<Tuple, Idx, remove_cvref_t<T>>,
+           std::is_nothrow_copy_constructible>)
+    -> tl::replace_t<Tuple, Idx, remove_cvref_t<T>>
 {
-  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
-  constexpr auto post_seq {
-    std::make_index_sequence<tl::size_v<Tuple> - Idx - 1> {}};
+    constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+    constexpr auto post_seq {
+      std::make_index_sequence<tl::size_v<Tuple> - Idx - 1> {}
+    };
 
-  return impl::replace_impl(
-    tup, std::forward<T>(data), pre_seq, post_seq, index_constant<Idx> {});
+    return impl::replace_impl(
+      tup, std::forward<T>(data), pre_seq, post_seq, index_constant<Idx> {}
+    );
 }
 
 /* {{{ doc */
@@ -1100,22 +1096,24 @@ template <std::size_t Idx, typename T, typename Tuple>
 template <std::size_t... Idxs, typename Tuple>
 [[nodiscard]] constexpr auto reorder(const Tuple& tup) noexcept(
   (std::is_nothrow_copy_constructible_v<decltype(::supl::get<Idxs>(tup))>
-   && ...)) -> tl::reorder_t<Tuple, Idxs...>
+   && ...)
+) -> tl::reorder_t<Tuple, Idxs...>
 {
-  static_assert(((Idxs < tl::size_v<Tuple>) && ...));
+    static_assert(((Idxs < tl::size_v<Tuple>) && ...));
 
-  return {::supl::get<Idxs>(tup)...};
+    return {::supl::get<Idxs>(tup)...};
 }
 
-namespace impl {
-  template <typename Tuple, std::size_t... Idxs>
-  [[nodiscard]] constexpr auto
-  reverse_impl(const Tuple& tup, std::index_sequence<Idxs...>) noexcept(
-    tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-    -> tl::reverse_t<Tuple>
-  {
-    return {::supl::get<tl::size_v<Tuple> - Idxs - 1>(tup)...};
-  }
+namespace impl
+{
+    template <typename Tuple, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto
+    reverse_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+      noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+        -> tl::reverse_t<Tuple>
+    {
+        return {::supl::get<tl::size_v<Tuple> - Idxs - 1>(tup)...};
+    }
 }  // namespace impl
 
 /* {{{ doc */
@@ -1129,32 +1127,31 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple>
-[[nodiscard]] constexpr auto reverse(const Tuple& tup) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-  -> tl::reverse_t<Tuple>
+[[nodiscard]] constexpr auto reverse(const Tuple& tup)
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+    -> tl::reverse_t<Tuple>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
-  return impl::reverse_impl(tup, seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    return impl::reverse_impl(tup, seq);
 }
 
-namespace impl {
-  template <typename Tuple,
-            std::size_t... Pre_Idxs,
-            std::size_t... Post_Idxs,
-            std::size_t Idx>
-  [[nodiscard]] constexpr auto split_impl(
-    const Tuple& tup,
-    std::index_sequence<Pre_Idxs...>,
-    std::index_sequence<Post_Idxs...>,
-    index_constant<
-      Idx>) noexcept(tl::all_of_v<Tuple,
-                                  std::is_nothrow_copy_constructible>)
-    -> std::pair<typename tl::split_t<Tuple, Idx>::first,
-                 typename tl::split_t<Tuple, Idx>::second>
-  {
-    return {{::supl::get<Pre_Idxs>(tup)...},
-            {::supl::get<Post_Idxs + Idx>(tup)...}};
-  }
+namespace impl
+{
+    template <
+      typename Tuple, std::size_t... Pre_Idxs, std::size_t... Post_Idxs,
+      std::size_t Idx>
+    [[nodiscard]] constexpr auto
+    split_impl(const Tuple& tup, std::index_sequence<Pre_Idxs...>, std::index_sequence<Post_Idxs...>, index_constant<Idx>)
+      noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+        -> std::pair<
+          typename tl::split_t<Tuple, Idx>::first,
+          typename tl::split_t<Tuple, Idx>::second>
+    {
+        return {
+          {::supl::get<Pre_Idxs>(tup)...},
+          {::supl::get<Post_Idxs + Idx>(tup)...}
+        };
+    }
 
 }  // namespace impl
 
@@ -1177,37 +1174,39 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Idx, typename Tuple>
-[[nodiscard]] constexpr auto split(const Tuple& tup) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
-  -> std::pair<typename tl::split_t<Tuple, Idx>::first,
-               typename tl::split_t<Tuple, Idx>::second>
+[[nodiscard]] constexpr auto split(const Tuple& tup)
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+    -> std::pair<
+      typename tl::split_t<Tuple, Idx>::first,
+      typename tl::split_t<Tuple, Idx>::second>
 {
-  static_assert(Idx <= tl::size_v<Tuple>, "Index out of bounds");
+    static_assert(Idx <= tl::size_v<Tuple>, "Index out of bounds");
 
-  constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
-  constexpr auto post_seq {
-    std::make_index_sequence<tl::size_v<Tuple> - Idx> {}};
+    constexpr auto pre_seq {std::make_index_sequence<Idx> {}};
+    constexpr auto post_seq {
+      std::make_index_sequence<tl::size_v<Tuple> - Idx> {}
+    };
 
-  return impl::split_impl(tup, pre_seq, post_seq, index_constant<Idx> {});
+    return impl::split_impl(
+      tup, pre_seq, post_seq, index_constant<Idx> {}
+    );
 }
 
-namespace impl {
-  template <typename Tuple,
-            std::size_t... Inds,
-            std::size_t Begin,
-            std::size_t End>
-  [[nodiscard]] constexpr auto subtuple_impl(
-    const Tuple& tup,
-    std::index_sequence<Inds...>,
-    index_constant<Begin>,
-    index_constant<
-      End>) noexcept((std::
-                        is_nothrow_copy_constructible_v<
-                          decltype(::supl::get<Inds + Begin>(tup))>
-                      && ...)) -> tl::sublist_t<Tuple, Begin, End>
-  {
-    return {::supl::get<Inds + Begin>(tup)...};
-  }
+namespace impl
+{
+    template <
+      typename Tuple, std::size_t... Inds, std::size_t Begin,
+      std::size_t End>
+    [[nodiscard]] constexpr auto
+    subtuple_impl(const Tuple& tup, std::index_sequence<Inds...>, index_constant<Begin>, index_constant<End>)
+      noexcept(
+        (std::is_nothrow_copy_constructible_v<
+           decltype(::supl::get<Inds + Begin>(tup))>
+         && ...)
+      ) -> tl::sublist_t<Tuple, Begin, End>
+    {
+        return {::supl::get<Inds + Begin>(tup)...};
+    }
 }  // namespace impl
 
 /* {{{ doc */
@@ -1225,40 +1224,36 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Begin, std::size_t End, typename Tuple>
-[[nodiscard]] constexpr auto subtuple(const Tuple& tup) noexcept(
-  noexcept(impl::subtuple_impl(tup,
-                               std::make_index_sequence<End - Begin> {},
-                               index_constant<Begin> {},
-                               index_constant<End> {})))
-  -> tl::sublist_t<Tuple, Begin, End>
+[[nodiscard]] constexpr auto subtuple(const Tuple& tup)
+  noexcept(noexcept(impl::subtuple_impl(
+    tup, std::make_index_sequence<End - Begin> {},
+    index_constant<Begin> {}, index_constant<End> {}
+  ))) -> tl::sublist_t<Tuple, Begin, End>
 {
-  static_assert(Begin < tl::size_v<Tuple>, "Begin out of bounds");
-  static_assert(End <= tl::size_v<Tuple>, "Begin out of bounds");
+    static_assert(Begin < tl::size_v<Tuple>, "Begin out of bounds");
+    static_assert(End <= tl::size_v<Tuple>, "Begin out of bounds");
 
-  constexpr auto seq {std::make_index_sequence<End - Begin> {}};
+    constexpr auto seq {std::make_index_sequence<End - Begin> {}};
 
-  return impl::subtuple_impl(
-    tup, seq, index_constant<Begin> {}, index_constant<End> {});
+    return impl::subtuple_impl(
+      tup, seq, index_constant<Begin> {}, index_constant<End> {}
+    );
 }
 
-namespace impl {
-  template <typename Tuple1, typename Tuple2, std::size_t... Idxs>
-  constexpr auto interleave_impl(
-    const Tuple1& tup1,
-    const Tuple2& tup2,
-    std::index_sequence<
-      Idxs...>) noexcept(tl::all_of_v<Tuple1,
-                                      std::is_nothrow_copy_constructible>
-                         && tl::all_of_v<
-                           Tuple2,
-                           std::is_nothrow_copy_constructible>)
-    -> tl::interleave_t<Tuple1, Tuple2>
-  {
+namespace impl
+{
+    template <typename Tuple1, typename Tuple2, std::size_t... Idxs>
+    constexpr auto
+    interleave_impl(const Tuple1& tup1, const Tuple2& tup2, std::index_sequence<Idxs...>)
+      noexcept(tl::all_of_v<Tuple1, std::is_nothrow_copy_constructible> && tl::all_of_v<Tuple2, std::is_nothrow_copy_constructible>)
+        -> tl::interleave_t<Tuple1, Tuple2>
+    {
 
-    // GOAL: remove `tuple_cat`
-    return {std::tuple_cat(
-      std::tuple {::supl::get<Idxs>(tup1), ::supl::get<Idxs>(tup2)}...)};
-  }
+        // GOAL: remove `tuple_cat`
+        return {std::tuple_cat(
+          std::tuple {::supl::get<Idxs>(tup1), ::supl::get<Idxs>(tup2)}...
+        )};
+    }
 
 }  // namespace impl
 
@@ -1283,31 +1278,34 @@ namespace impl {
 /* }}} */
 template <typename Tuple1, typename Tuple2>
 [[nodiscard]] constexpr auto
-interleave(const Tuple1& tup1, const Tuple2& tup2) noexcept(
-  tl::all_of_v<Tuple1, std::is_nothrow_copy_constructible>
-  && tl::all_of_v<Tuple2, std::is_nothrow_copy_constructible>)
-  -> tl::interleave_t<Tuple1, Tuple2>
+interleave(const Tuple1& tup1, const Tuple2& tup2)
+  noexcept(tl::all_of_v<Tuple1, std::is_nothrow_copy_constructible> && tl::all_of_v<Tuple2, std::is_nothrow_copy_constructible>)
+    -> tl::interleave_t<Tuple1, Tuple2>
 {
-  static_assert(tl::size_v<Tuple1> == tl::size_v<Tuple2>,
-                "Tuples must be of the same length");
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple1>> {}};
+    static_assert(
+      tl::size_v<Tuple1> == tl::size_v<Tuple2>,
+      "Tuples must be of the same length"
+    );
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple1>> {}};
 
-  return impl::interleave_impl(tup1, tup2, seq);
+    return impl::interleave_impl(tup1, tup2, seq);
 }
 
-namespace impl {
-  template <typename Tuple, std::size_t... Idxs>
-  [[nodiscard]] constexpr auto alternating_split_impl(
-    const Tuple& tup,
-    std::index_sequence<
-      Idxs...>) noexcept(tl::all_of_v<Tuple,
-                                      std::is_nothrow_copy_constructible>)
-    -> std::pair<std::tuple<tl::at_index_t<Idxs * 2, Tuple>...>,
-                 std::tuple<tl::at_index_t<Idxs * 2 + 1, Tuple>...>>
-  {
-    return {{::supl::get<Idxs * 2>(tup)...},
-            {::supl::get<Idxs * 2 + 1>(tup)...}};
-  }
+namespace impl
+{
+    template <typename Tuple, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto
+    alternating_split_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+      noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+        -> std::pair<
+          std::tuple<tl::at_index_t<Idxs * 2, Tuple>...>,
+          std::tuple<tl::at_index_t<Idxs * 2 + 1, Tuple>...>>
+    {
+        return {
+          {::supl::get<Idxs * 2>(tup)...},
+          {::supl::get<Idxs * 2 + 1>(tup)...}
+        };
+    }
 }  // namespace impl
 
 /* {{{ doc */
@@ -1326,29 +1324,30 @@ namespace impl {
  */
 /* }}} */
 template <typename Tuple>
-[[nodiscard]] constexpr auto alternating_split(const Tuple& tup) noexcept(
-  tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
+[[nodiscard]] constexpr auto alternating_split(const Tuple& tup)
+  noexcept(tl::all_of_v<Tuple, std::is_nothrow_copy_constructible>)
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> / 2> {}};
-  return impl::alternating_split_impl(tup, seq);
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple> / 2> {}
+    };
+    return impl::alternating_split_impl(tup, seq);
 }
 
-namespace impl {
-  template <std::size_t Chunk_Size,
-            template <typename...> typename Tuple,
-            typename... Elems,
-            std::size_t... Chunk_Seq>
-  [[nodiscard]] constexpr auto chunk_impl(
-    const Tuple<Elems...>& tup,
-    std::index_sequence<
-      Chunk_Seq...>) noexcept(tl::
-                                all_of_v<
-                                  tl::type_list<Elems...>,
-                                  std::is_nothrow_copy_constructible>)
-  {
-    return Tuple {subtuple<Chunk_Size * Chunk_Seq,
-                           (Chunk_Size * Chunk_Seq) + Chunk_Size>(tup)...};
-  }
+namespace impl
+{
+    template <
+      std::size_t Chunk_Size, template <typename...> typename Tuple,
+      typename... Elems, std::size_t... Chunk_Seq>
+    [[nodiscard]] constexpr auto
+    chunk_impl(const Tuple<Elems...>& tup, std::index_sequence<Chunk_Seq...>)
+      noexcept(tl::all_of_v<
+               tl::type_list<Elems...>,
+               std::is_nothrow_copy_constructible>)
+    {
+        return Tuple {subtuple<
+          Chunk_Size * Chunk_Seq, (Chunk_Size * Chunk_Seq) + Chunk_Size>(
+          tup
+        )...};
+    }
 }  // namespace impl
 
 /* {{{ doc */
@@ -1368,36 +1367,44 @@ namespace impl {
  * @param tup Input tuple
  */
 /* }}} */
-template <std::size_t Chunk_Size,
-          template <typename...> typename Tuple,
-          typename... Elems>
-[[nodiscard]] constexpr auto chunk(const Tuple<Elems...>& tup) noexcept(
-  tl::all_of_v<tl::type_list<Elems...>,
-               std::is_nothrow_copy_constructible>)
+template <
+  std::size_t Chunk_Size, template <typename...> typename Tuple,
+  typename... Elems>
+[[nodiscard]] constexpr auto chunk(const Tuple<Elems...>& tup)
+  noexcept(tl::all_of_v<
+           tl::type_list<Elems...>, std::is_nothrow_copy_constructible>)
 {
-  static_assert(Chunk_Size != 0, "Chunk size cannot be 0");
-  static_assert(sizeof...(Elems) % Chunk_Size == 0,
-                "Size of tuple must be a multiple of chunk size");
+    static_assert(Chunk_Size != 0, "Chunk size cannot be 0");
+    static_assert(
+      sizeof...(Elems) % Chunk_Size == 0,
+      "Size of tuple must be a multiple of chunk size"
+    );
 
-  if constexpr ( sizeof...(Elems) == 0 ) {
-    // if empty tuple input, return empty tuple
-    return Tuple<> {};
-  } else {
-    return impl::chunk_impl<Chunk_Size>(
-      tup, std::make_index_sequence<sizeof...(Elems) / Chunk_Size> {});
-  }
+    if constexpr ( sizeof...(Elems) == 0 )
+    {
+        // if empty tuple input, return empty tuple
+        return Tuple<> {};
+    }
+    else
+    {
+        return impl::chunk_impl<Chunk_Size>(
+          tup, std::make_index_sequence<sizeof...(Elems) / Chunk_Size> {}
+        );
+    }
 }
 
-namespace impl {
-  template <typename Tuple, std::size_t... Idxs>
-  [[nodiscard]] constexpr auto
-  front_n_impl(const Tuple& tup, std::index_sequence<Idxs...>) noexcept(
-    tl::all_of_v<tl::front_n_t<Tuple, sizeof...(Idxs)>,
-                 std::is_nothrow_copy_constructible>)
-    -> tl::front_n_t<Tuple, sizeof...(Idxs)>
-  {
-    return {::supl::get<Idxs>(tup)...};
-  }
+namespace impl
+{
+    template <typename Tuple, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto
+    front_n_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+      noexcept(tl::all_of_v<
+               tl::front_n_t<Tuple, sizeof...(Idxs)>,
+               std::is_nothrow_copy_constructible>)
+        -> tl::front_n_t<Tuple, sizeof...(Idxs)>
+    {
+        return {::supl::get<Idxs>(tup)...};
+    }
 
 }  // namespace impl
 
@@ -1416,16 +1423,17 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Count, typename Tuple>
-[[nodiscard]] constexpr auto front_n(const Tuple& tup) noexcept(
-  tl::all_of_v<tl::front_n_t<Tuple, Count>,
-               std::is_nothrow_copy_constructible>)
-  -> tl::front_n_t<Tuple, Count>
+[[nodiscard]] constexpr auto front_n(const Tuple& tup)
+  noexcept(tl::all_of_v<
+           tl::front_n_t<Tuple, Count>,
+           std::is_nothrow_copy_constructible>)
+    -> tl::front_n_t<Tuple, Count>
 {
-  static_assert(Count <= tl::size_v<Tuple>);
+    static_assert(Count <= tl::size_v<Tuple>);
 
-  constexpr auto seq {std::make_index_sequence<Count> {}};
+    constexpr auto seq {std::make_index_sequence<Count> {}};
 
-  return impl::front_n_impl(tup, seq);
+    return impl::front_n_impl(tup, seq);
 }
 
 /* {{{ doc */
@@ -1439,21 +1447,21 @@ template <std::size_t Count, typename Tuple>
 template <typename Tuple>
 [[nodiscard]] constexpr auto front(Tuple&& tup) noexcept -> decltype(auto)
 {
-  return ::supl::get<0>(tup);
+    return ::supl::get<0>(tup);
 }
 
-namespace impl {
-  template <typename Tuple, std::size_t... Idxs, std::size_t Offset>
-  [[nodiscard]] constexpr auto back_n_impl(
-    const Tuple& tup,
-    std::index_sequence<Idxs...>,
-    index_constant<
-      Offset>) noexcept(tl::all_of_v<tl::back_n_t<Tuple, sizeof...(Idxs)>,
-                                     std::is_nothrow_copy_constructible>)
-    -> tl::back_n_t<Tuple, sizeof...(Idxs)>
-  {
-    return {::supl::get<Idxs + Offset>(tup)...};
-  }
+namespace impl
+{
+    template <typename Tuple, std::size_t... Idxs, std::size_t Offset>
+    [[nodiscard]] constexpr auto
+    back_n_impl(const Tuple& tup, std::index_sequence<Idxs...>, index_constant<Offset>)
+      noexcept(tl::all_of_v<
+               tl::back_n_t<Tuple, sizeof...(Idxs)>,
+               std::is_nothrow_copy_constructible>)
+        -> tl::back_n_t<Tuple, sizeof...(Idxs)>
+    {
+        return {::supl::get<Idxs + Offset>(tup)...};
+    }
 
 }  // namespace impl
 
@@ -1472,18 +1480,19 @@ namespace impl {
  */
 /* }}} */
 template <std::size_t Count, typename Tuple>
-[[nodiscard]] constexpr auto back_n(const Tuple& tup) noexcept(
-  tl::all_of_v<tl::back_n_t<Tuple, Count>,
-               std::is_nothrow_copy_constructible>)
-  -> tl::back_n_t<Tuple, Count>
+[[nodiscard]] constexpr auto back_n(const Tuple& tup)
+  noexcept(tl::all_of_v<
+           tl::back_n_t<Tuple, Count>, std::is_nothrow_copy_constructible>)
+    -> tl::back_n_t<Tuple, Count>
 {
-  static_assert(Count <= tl::size_v<Tuple>);
+    static_assert(Count <= tl::size_v<Tuple>);
 
-  constexpr auto seq {std::make_index_sequence<Count> {}};
-  constexpr auto offset {
-    supl::index_constant<tl::size_v<Tuple> - Count> {}};
+    constexpr auto seq {std::make_index_sequence<Count> {}};
+    constexpr auto offset {
+      supl::index_constant<tl::size_v<Tuple> - Count> {}
+    };
 
-  return impl::back_n_impl(tup, seq, offset);
+    return impl::back_n_impl(tup, seq, offset);
 }
 
 /* {{{ doc */
@@ -1494,25 +1503,25 @@ template <std::size_t Count, typename Tuple>
 template <typename Tuple>
 [[nodiscard]] constexpr auto back(Tuple&& tup) noexcept -> decltype(auto)
 {
-  return ::supl::get<tl::size_v<Tuple> - 1>(tup);
+    return ::supl::get<tl::size_v<Tuple> - 1>(tup);
 }
 
-namespace impl {
-  template <std::size_t Idx1,
-            std::size_t Idx2,
-            template <typename...> typename Tuple,
-            typename... List_Pack,
-            typename... Tuple_Pack,
-            std::size_t... Idxs>
-  [[nodiscard]] constexpr auto elem_swap_impl(
-    tl::type_list<tl::type_index_pair<List_Pack, Idxs>...>,
-    const Tuple<Tuple_Pack...>&
-      tup) noexcept(tl::all_of_v<Tuple<List_Pack...>,
-                                 std::is_nothrow_copy_constructible>)
-    -> Tuple<List_Pack...>
-  {
-    return {::supl::get<Idxs>(tup)...};
-  }
+namespace impl
+{
+    template <
+      std::size_t Idx1, std::size_t Idx2,
+      template <typename...> typename Tuple, typename... List_Pack,
+      typename... Tuple_Pack, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto elem_swap_impl(
+      tl::type_list<tl::type_index_pair<List_Pack, Idxs>...>,
+      const Tuple<Tuple_Pack...>& tup
+    )
+      noexcept(tl::all_of_v<
+               Tuple<List_Pack...>, std::is_nothrow_copy_constructible>)
+        -> Tuple<List_Pack...>
+    {
+        return {::supl::get<Idxs>(tup)...};
+    }
 }  // namespace impl
 
 /* {{{ doc */
@@ -1533,38 +1542,45 @@ namespace impl {
  * compared to input tuple
  */
 /* }}} */
-template <std::size_t Idx1,
-          std::size_t Idx2,
-          template <typename...> typename Tuple,
-          typename... Pack>
-[[nodiscard]] constexpr auto elem_swap(const Tuple<Pack...>& tup) noexcept(
-  tl::all_of_v<Tuple<Pack...>, std::is_nothrow_copy_constructible>)
-  -> tl::swap_t<Tuple<Pack...>, Idx1, Idx2>
+template <
+  std::size_t Idx1, std::size_t Idx2,
+  template <typename...> typename Tuple, typename... Pack>
+[[nodiscard]] constexpr auto elem_swap(const Tuple<Pack...>& tup)
+  noexcept(tl::all_of_v<
+           Tuple<Pack...>, std::is_nothrow_copy_constructible>)
+    -> tl::swap_t<Tuple<Pack...>, Idx1, Idx2>
 {
-  if constexpr ( Idx1 == Idx2 ) {
-    return tup;
-  } else {
-    return impl::elem_swap_impl<Idx1, Idx2>(
-      tl::swap_t<tl::enumerate_t<tl::type_list<Pack...>>, Idx1, Idx2> {},
-      tup);
-  }
+    if constexpr ( Idx1 == Idx2 )
+    {
+        return tup;
+    }
+    else
+    {
+        return impl::elem_swap_impl<Idx1, Idx2>(
+          tl::swap_t<tl::enumerate_t<tl::type_list<Pack...>>, Idx1, Idx2> {
+          },
+          tup
+        );
+    }
 }
 
-namespace impl {
-  template <template <typename> typename Transform,
-            typename Tuple,
-            std::size_t... Idxs>
-  [[nodiscard]] constexpr auto type_transform_impl(
-    const Tuple& tup,
-    std::index_sequence<
-      Idxs...>) noexcept(tl::all_of_v<tl::transform_t<Tuple, Transform>,
-                                      std::is_nothrow_copy_constructible>)
-    -> tl::transform_t<Tuple, Transform>
-  {
-    return {
-      static_cast<typename Transform<tl::at_index_t<Idxs, Tuple>>::type>(
-        ::supl::get<Idxs>(tup))...};
-  }
+namespace impl
+{
+    template <
+      template <typename> typename Transform, typename Tuple,
+      std::size_t... Idxs>
+    [[nodiscard]] constexpr auto
+    type_transform_impl(const Tuple& tup, std::index_sequence<Idxs...>)
+      noexcept(tl::all_of_v<
+               tl::transform_t<Tuple, Transform>,
+               std::is_nothrow_copy_constructible>)
+        -> tl::transform_t<Tuple, Transform>
+    {
+        return {static_cast<
+          typename Transform<tl::at_index_t<Idxs, Tuple>>::type>(
+          ::supl::get<Idxs>(tup)
+        )...};
+    }
 
 }  // namespace impl
 
@@ -1592,31 +1608,31 @@ namespace impl {
  */
 /* }}} */
 template <template <typename> typename Transform, typename Tuple>
-[[nodiscard]] constexpr auto type_transform(const Tuple& tup) noexcept(
-  tl::all_of_v<tl::transform_t<Tuple, Transform>,
-               std::is_nothrow_copy_constructible>)
-  -> tl::transform_t<Tuple, Transform>
+[[nodiscard]] constexpr auto type_transform(const Tuple& tup)
+  noexcept(tl::all_of_v<
+           tl::transform_t<Tuple, Transform>,
+           std::is_nothrow_copy_constructible>)
+    -> tl::transform_t<Tuple, Transform>
 {
-  constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
+    constexpr auto seq {std::make_index_sequence<tl::size_v<Tuple>> {}};
 
-  return impl::type_transform_impl<Transform>(tup, seq);
+    return impl::type_transform_impl<Transform>(tup, seq);
 }
 
-namespace impl {
+namespace impl
+{
 
-  template <typename... New_Types,
-            template <typename...> typename Tuple,
-            typename... Old_Types,
-            std::size_t... Idxs>
-  [[nodiscard]] constexpr auto convert_impl(
-    const Tuple<Old_Types...>& tup,
-    std::index_sequence<
-      Idxs...>) noexcept((std::is_nothrow_constructible_v<New_Types,
-                                                          Old_Types>
-                          && ...)) -> Tuple<New_Types...>
-  {
-    return {static_cast<Old_Types>(::supl::get<Idxs>(tup))...};
-  }
+    template <
+      typename... New_Types, template <typename...> typename Tuple,
+      typename... Old_Types, std::size_t... Idxs>
+    [[nodiscard]] constexpr auto
+    convert_impl(const Tuple<Old_Types...>& tup, std::index_sequence<Idxs...>)
+      noexcept(
+        (std::is_nothrow_constructible_v<New_Types, Old_Types> && ...)
+      ) -> Tuple<New_Types...>
+    {
+        return {static_cast<Old_Types>(::supl::get<Idxs>(tup))...};
+    }
 
 }  // namespace impl
 
@@ -1638,21 +1654,21 @@ namespace impl {
  * @return Tuple of `New_Types`
  */
 /* }}} */
-template <typename... New_Types,
-          template <typename...> typename Tuple,
-          typename... Old_Types>
-[[nodiscard]] constexpr auto
-convert(const Tuple<Old_Types...>& tup) noexcept(
-  (std::is_nothrow_constructible_v<New_Types, Old_Types> && ...))
-  -> Tuple<New_Types...>
+template <
+  typename... New_Types, template <typename...> typename Tuple,
+  typename... Old_Types>
+[[nodiscard]] constexpr auto convert(const Tuple<Old_Types...>& tup)
+  noexcept((std::is_nothrow_constructible_v<New_Types, Old_Types> && ...))
+    -> Tuple<New_Types...>
 {
-  static_assert(
-    sizeof...(New_Types) == sizeof...(Old_Types),
-    "Must provide exactly the same number of types as in input tuple");
+    static_assert(
+      sizeof...(New_Types) == sizeof...(Old_Types),
+      "Must provide exactly the same number of types as in input tuple"
+    );
 
-  constexpr auto seq {std::make_index_sequence<sizeof...(Old_Types)> {}};
+    constexpr auto seq {std::make_index_sequence<sizeof...(Old_Types)> {}};
 
-  return impl::convert_impl<New_Types...>(tup, seq);
+    return impl::convert_impl<New_Types...>(tup, seq);
 }
 
 /* {{{ doc */
@@ -1666,11 +1682,11 @@ convert(const Tuple<Old_Types...>& tup) noexcept(
  */
 /* }}} */
 template <typename Tuple>
-[[nodiscard]] constexpr auto resolve_refs(const Tuple& tup) noexcept(
-  noexcept(type_transform<remove_cvref>(tup)))
-  -> decltype(type_transform<remove_cvref>(tup))
+[[nodiscard]] constexpr auto resolve_refs(const Tuple& tup)
+  noexcept(noexcept(type_transform<remove_cvref>(tup)))
+    -> decltype(type_transform<remove_cvref>(tup))
 {
-  return type_transform<remove_cvref>(tup);
+    return type_transform<remove_cvref>(tup);
 }
 
 /* {{{ doc */
@@ -1682,7 +1698,7 @@ template <typename... Ts>
 [[nodiscard]] constexpr auto make_cref_tuple(const Ts&... values) noexcept
   -> std::tuple<const Ts&...>
 {
-  return {values...};
+    return {values...};
 }
 
 }  // namespace supl::tuple

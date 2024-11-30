@@ -2,15 +2,20 @@
 
 auto main() -> int
 {
-  supl::test_results results;
+    supl::test_results results;
 
-  const std::tuple test {7, 2, 42.53, 3.14F, 9344285UL, -83LL};
+    const std::tuple test {7, 2, 42.53, 3.14F, 9344285UL, -83LL};
 
-  results.enforce_equal(supl::tuple::count_if(test,
-                                              [](const auto& i) {
-                                                return i > 5;
-                                              }),
-                        3U);
+    results.enforce_equal(
+      supl::tuple::count_if(
+        test,
+        [](const auto& i)
+        {
+            return i > 5;
+        }
+      ),
+      3U
+    );
 
-  return results.print_and_return();
+    return results.print_and_return();
 }

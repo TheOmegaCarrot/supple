@@ -6,158 +6,198 @@
 
 auto test_throws_on_copy() -> supl::test_results
 {
-  supl::test_results results;
+    supl::test_results results;
 
-  const supl::throws_on_copy thrower {};
+    const supl::throws_on_copy thrower {};
 
-  try {
-    // NOLINTNEXTLINE
-    [[maybe_unused]] const supl::throws_on_copy a_copy {thrower};
-    results.fail("Did not throw after copy construction");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        // NOLINTNEXTLINE
+        [[maybe_unused]] const supl::throws_on_copy a_copy {thrower};
+        results.fail("Did not throw after copy construction");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  try {
-    supl::throws_on_copy to_be_copy_assigned {};
-    to_be_copy_assigned = thrower;
-    results.fail("Did not throw after copy assignment");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        supl::throws_on_copy to_be_copy_assigned {};
+        to_be_copy_assigned = thrower;
+        results.fail("Did not throw after copy assignment");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  try {
-    supl::throws_on_copy another_thrower {};
-    [[maybe_unused]] const supl::throws_on_copy move_constructed {
-      std::move(another_thrower)};
-  } catch ( const supl::guaranteed_exception& ) {
-    results.fail("Threw after move construction");
-  }
+    try
+    {
+        supl::throws_on_copy another_thrower {};
+        [[maybe_unused]] const supl::throws_on_copy move_constructed {
+          std::move(another_thrower)
+        };
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        results.fail("Threw after move construction");
+    }
 
-  try {
-    supl::throws_on_copy another_thrower {};
-    supl::throws_on_copy to_be_move_assigned {};
-    to_be_move_assigned = std::move(another_thrower);
-  } catch ( const supl::guaranteed_exception& ) {
-    results.fail("Threw after move assignment");
-  }
+    try
+    {
+        supl::throws_on_copy another_thrower {};
+        supl::throws_on_copy to_be_move_assigned {};
+        to_be_move_assigned = std::move(another_thrower);
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        results.fail("Threw after move assignment");
+    }
 
-  return results;
+    return results;
 }
 
-static_assert(
-  not std::is_nothrow_copy_constructible_v<supl::throws_on_copy>);
+static_assert(not std::is_nothrow_copy_constructible_v<
+              supl::throws_on_copy>);
 static_assert(not std::is_nothrow_copy_assignable_v<supl::throws_on_copy>);
 static_assert(std::is_nothrow_move_constructible_v<supl::throws_on_copy>);
 static_assert(std::is_nothrow_move_assignable_v<supl::throws_on_copy>);
 
 auto test_throws_on_move() -> supl::test_results
 {
-  supl::test_results results;
+    supl::test_results results;
 
-  const supl::throws_on_move thrower {};
+    const supl::throws_on_move thrower {};
 
-  try {
-    supl::throws_on_move another_thrower {};
-    [[maybe_unused]] const supl::throws_on_move move_constructed {
-      std::move(another_thrower)};
-    results.fail("Did not throw after move construction");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        supl::throws_on_move another_thrower {};
+        [[maybe_unused]] const supl::throws_on_move move_constructed {
+          std::move(another_thrower)
+        };
+        results.fail("Did not throw after move construction");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  try {
-    supl::throws_on_move another_thrower {};
-    supl::throws_on_move to_be_move_assigned {};
-    to_be_move_assigned = std::move(another_thrower);
-    results.fail("Did not throw after move assignment");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        supl::throws_on_move another_thrower {};
+        supl::throws_on_move to_be_move_assigned {};
+        to_be_move_assigned = std::move(another_thrower);
+        results.fail("Did not throw after move assignment");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  try {
-    // NOLINTNEXTLINE
-    [[maybe_unused]] const supl::throws_on_move a_copy {thrower};
-  } catch ( const supl::guaranteed_exception& ) {
-    results.fail("Threw after copy construction");
-  }
+    try
+    {
+        // NOLINTNEXTLINE
+        [[maybe_unused]] const supl::throws_on_move a_copy {thrower};
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        results.fail("Threw after copy construction");
+    }
 
-  try {
-    supl::throws_on_move to_be_copy_assigned {};
-    to_be_copy_assigned = thrower;
-  } catch ( const supl::guaranteed_exception& ) {
-    results.fail("Threw after copy assignment");
-  }
+    try
+    {
+        supl::throws_on_move to_be_copy_assigned {};
+        to_be_copy_assigned = thrower;
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        results.fail("Threw after copy assignment");
+    }
 
-  return results;
+    return results;
 }
 
 static_assert(std::is_nothrow_copy_constructible_v<supl::throws_on_move>);
 static_assert(std::is_nothrow_copy_assignable_v<supl::throws_on_move>);
-static_assert(
-  not std::is_nothrow_move_constructible_v<supl::throws_on_move>);
+static_assert(not std::is_nothrow_move_constructible_v<
+              supl::throws_on_move>);
 static_assert(not std::is_nothrow_move_assignable_v<supl::throws_on_move>);
 
 auto test_throws_on_copy_and_move() -> supl::test_results
 {
-  supl::test_results results;
+    supl::test_results results;
 
-  const supl::throws_on_copy_and_move thrower {};
+    const supl::throws_on_copy_and_move thrower {};
 
-  try {
-    // NOLINTNEXTLINE
-    supl::throws_on_copy_and_move another_thrower {};
-    [[maybe_unused]] const supl::throws_on_copy_and_move move_constructed {
-      std::move(another_thrower)};
-    results.fail("Did not throw after move construction");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        // NOLINTNEXTLINE
+        supl::throws_on_copy_and_move another_thrower {};
+        [[maybe_unused]] const supl::throws_on_copy_and_move
+          move_constructed {std::move(another_thrower)};
+        results.fail("Did not throw after move construction");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  try {
-    supl::throws_on_copy_and_move another_thrower {};
-    supl::throws_on_copy_and_move to_be_move_assigned {};
-    to_be_move_assigned = std::move(another_thrower);
-    results.fail("Did not throw after move assignment");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        supl::throws_on_copy_and_move another_thrower {};
+        supl::throws_on_copy_and_move to_be_move_assigned {};
+        to_be_move_assigned = std::move(another_thrower);
+        results.fail("Did not throw after move assignment");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  try {
-    // NOLINTNEXTLINE
-    [[maybe_unused]] const supl::throws_on_copy_and_move a_copy {thrower};
-    results.fail("Did not throw after copy construction");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        // NOLINTNEXTLINE
+        [[maybe_unused]] const supl::throws_on_copy_and_move a_copy {
+          thrower
+        };
+        results.fail("Did not throw after copy construction");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  try {
-    supl::throws_on_copy_and_move to_be_copy_assigned {};
-    to_be_copy_assigned = thrower;
-    results.fail("Did not throw after copy assignment");
-  } catch ( const supl::guaranteed_exception& ) {
-    // no-op to satisfy clang-tidy
-    []() { }();
-  }
+    try
+    {
+        supl::throws_on_copy_and_move to_be_copy_assigned {};
+        to_be_copy_assigned = thrower;
+        results.fail("Did not throw after copy assignment");
+    }
+    catch ( const supl::guaranteed_exception& )
+    {
+        // no-op to satisfy clang-tidy
+        []() { }();
+    }
 
-  return results;
+    return results;
 }
 
-static_assert(
-  not std::is_nothrow_copy_constructible_v<supl::throws_on_copy_and_move>);
-static_assert(
-  not std::is_nothrow_copy_assignable_v<supl::throws_on_copy_and_move>);
-static_assert(
-  not std::is_nothrow_move_constructible_v<supl::throws_on_copy_and_move>);
-static_assert(
-  not std::is_nothrow_move_assignable_v<supl::throws_on_copy_and_move>);
+static_assert(not std::is_nothrow_copy_constructible_v<
+              supl::throws_on_copy_and_move>);
+static_assert(not std::is_nothrow_copy_assignable_v<
+              supl::throws_on_copy_and_move>);
+static_assert(not std::is_nothrow_move_constructible_v<
+              supl::throws_on_copy_and_move>);
+static_assert(not std::is_nothrow_move_assignable_v<
+              supl::throws_on_copy_and_move>);
 
 // nothrow_function
 static_assert(noexcept(supl::nothrow_function(int {}, char {}, bool {})));
@@ -165,24 +205,25 @@ static_assert(noexcept(supl::nothrow_function()));
 
 // throwing_function
 static_assert(
-  not noexcept(supl::throwing_function(int {}, char {}, bool {})));
+  not noexcept(supl::throwing_function(int {}, char {}, bool {}))
+);
 static_assert(not noexcept(supl::throwing_function()));
 
 auto test_exception_safety() -> supl::test_section
 {
-  supl::test_section section;
+    supl::test_section section;
 
-  section.add_test("supl::throws_on_copy", &test_throws_on_copy);
-  section.add_test("supl::throws_on_move", &test_throws_on_move);
+    section.add_test("supl::throws_on_copy", &test_throws_on_copy);
+    section.add_test("supl::throws_on_move", &test_throws_on_move);
 
-  return section;
+    return section;
 }
 
 auto main() -> int
 {
-  supl::test_runner runner;
+    supl::test_runner runner;
 
-  runner.add_section(test_exception_safety());
+    runner.add_section(test_exception_safety());
 
-  return runner.run();
+    return runner.run();
 }

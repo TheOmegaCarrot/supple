@@ -4,11 +4,12 @@
 #include <algorithm>
 #include <utility>
 
-namespace supl {
+namespace supl
+{
 template <typename T>
 constexpr auto min(T&& head) noexcept
 {
-  return std::forward<T>(head);
+    return std::forward<T>(head);
 }
 
 /* {{{ doc */
@@ -21,14 +22,15 @@ constexpr auto min(T&& head) noexcept
 template <typename T, typename... Ts>
 constexpr auto min(T&& head, Ts&&... tail) noexcept
 {
-  return std::min(std::forward<T>(head),
-                  ::supl::min(std::forward<Ts>(tail)...));
+    return std::min(
+      std::forward<T>(head), ::supl::min(std::forward<Ts>(tail)...)
+    );
 }
 
 template <typename T>
 constexpr auto max(T&& head) noexcept
 {
-  return std::forward<T>(head);
+    return std::forward<T>(head);
 }
 
 /* {{{ doc */
@@ -41,8 +43,9 @@ constexpr auto max(T&& head) noexcept
 template <typename T, typename... Ts>
 constexpr auto max(T&& head, Ts&&... tail) noexcept
 {
-  return std::max(std::forward<T>(head),
-                  ::supl::max(std::forward<Ts>(tail)...));
+    return std::max(
+      std::forward<T>(head), ::supl::max(std::forward<Ts>(tail)...)
+    );
 }
 }  // namespace supl
 

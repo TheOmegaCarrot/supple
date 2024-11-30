@@ -34,7 +34,8 @@
 #include "metaprogramming.hpp"
 #include "tuple_algo.hpp"
 
-namespace supl {
+namespace supl
+{
 
 /* {{{ doc */
 /**
@@ -50,10 +51,10 @@ namespace supl {
  */
 /* }}} */
 template <typename T>
-[[nodiscard]] constexpr auto
-explicit_copy(const T& t) noexcept(std::is_nothrow_constructible_v<T>) -> T
+[[nodiscard]] constexpr auto explicit_copy(const T& t)
+  noexcept(std::is_nothrow_constructible_v<T>) -> T
 {
-  return t;
+    return t;
 }
 
 /* {{{ doc */
@@ -67,21 +68,19 @@ template <typename... Args>
 [[nodiscard]] constexpr auto ctie(const Args&... args) noexcept
   -> std::tuple<const Args&...>
 {
-  return {args...};
+    return {args...};
 }
 
-namespace impl {
-  template <typename T, typename Tuple, std::size_t... idxs>
-  [[nodiscard]] constexpr auto make_from_tuple_uniform_impl(
-    Tuple&& tuple,
-    std::index_sequence<
-      idxs...>) noexcept(std::
-                           is_nothrow_constructible_v<
-                             T,
-                             tl::at_index_t<idxs, Tuple>...>)
-  {
-    return T {std::get<idxs>(std::forward<Tuple>(tuple))...};
-  }
+namespace impl
+{
+    template <typename T, typename Tuple, std::size_t... idxs>
+    [[nodiscard]] constexpr auto
+    make_from_tuple_uniform_impl(Tuple&& tuple, std::index_sequence<idxs...>)
+      noexcept(std::is_nothrow_constructible_v<
+               T, tl::at_index_t<idxs, Tuple>...>)
+    {
+        return T {std::get<idxs>(std::forward<Tuple>(tuple))...};
+    }
 }  // namespace impl
 
 /* {{{ doc */
@@ -95,26 +94,27 @@ namespace impl {
  */
 /* }}} */
 template <typename T, typename Tuple>
-[[nodiscard]] constexpr auto
-make_from_tuple_uniform(Tuple&& tuple) noexcept(
-  noexcept(impl::make_from_tuple_uniform_impl<T>(
+[[nodiscard]] constexpr auto make_from_tuple_uniform(Tuple&& tuple)
+  noexcept(noexcept(impl::make_from_tuple_uniform_impl<T>(
     std::forward<Tuple>(tuple),
-    std::make_index_sequence<tl::size_v<Tuple>> {}))) -> T
+    std::make_index_sequence<tl::size_v<Tuple>> {}
+  ))) -> T
 {
-  return impl::make_from_tuple_uniform_impl<T>(
-    std::forward<Tuple>(tuple),
-    std::make_index_sequence<tl::size_v<Tuple>> {});
+    return impl::make_from_tuple_uniform_impl<T>(
+      std::forward<Tuple>(tuple),
+      std::make_index_sequence<tl::size_v<Tuple>> {}
+    );
 }
 
 template <typename Func, typename... Args>
-constexpr void
-repeat_n(std::intmax_t N, Func&& func, Args&&... args) noexcept(
-  noexcept(std::forward<Func>(func)(std::forward<Args>(args)...)))
+constexpr void repeat_n(std::intmax_t N, Func&& func, Args&&... args)
+  noexcept(noexcept(std::forward<Func>(func)(std::forward<Args>(args)...)))
 {
 
-  for ( std::intmax_t i {0}; i != N; ++i ) {
-    std::forward<Func>(func)(std::forward<Args>(args)...);
-  }
+    for ( std::intmax_t i {0}; i != N; ++i )
+    {
+        std::forward<Func>(func)(std::forward<Args>(args)...);
+    }
 }
 
 template <typename T>
@@ -122,135 +122,150 @@ class range_wrapper
 {
 private:
 
-  T m_begin;
-  T m_end;
+    T m_begin;
+    T m_end;
 
 public:
 
-  constexpr explicit range_wrapper(T begin, T end)
-      : m_begin {begin}
-      , m_end {end}
-  { }
+    constexpr explicit range_wrapper(T begin, T end)
+            : m_begin {begin}
+            , m_end {end}
+    {
+    }
 
-  constexpr explicit range_wrapper(std::pair<T, T> itr_pair)
-      : m_begin {std::move(itr_pair.first)}
-      , m_end {std::move(itr_pair.second)}
-  { }
+    constexpr explicit range_wrapper(std::pair<T, T> itr_pair)
+            : m_begin {std::move(itr_pair.first)}
+            , m_end {std::move(itr_pair.second)}
+    {
+    }
 
-  [[nodiscard]] constexpr auto begin() const -> T
-  {
-    return m_begin;
-  }
+    [[nodiscard]] constexpr auto begin() const -> T
+    {
+        return m_begin;
+    }
 
-  [[nodiscard]] constexpr auto cbegin() const -> T
-  {
-    return m_begin;
-  }
+    [[nodiscard]] constexpr auto cbegin() const -> T
+    {
+        return m_begin;
+    }
 
-  [[nodiscard]] constexpr auto end() const -> T
-  {
-    return m_end;
-  }
+    [[nodiscard]] constexpr auto end() const -> T
+    {
+        return m_end;
+    }
 
-  [[nodiscard]] constexpr auto cend() const -> T
-  {
-    return m_end;
-  }
+    [[nodiscard]] constexpr auto cend() const -> T
+    {
+        return m_end;
+    }
 };
 
-namespace impl {
-  template <typename... Ls>
-  struct overload : Ls... {
-    using Ls::operator()...;
-  };
+namespace impl
+{
+    template <typename... Ls>
+    struct overload : Ls...
+    {
+        using Ls::operator()...;
+    };
 
-  template <typename... Ls>
-  overload(Ls...) -> overload<Ls...>;
+    template <typename... Ls>
+    overload(Ls...) -> overload<Ls...>;
 }  // namespace impl
 
-template <typename Base,
-          std::size_t buffer_size,
-          template <typename> typename ALLOCATOR = std::allocator>
+template <
+  typename Base, std::size_t buffer_size,
+  template <typename> typename ALLOCATOR = std::allocator>
 class polymorphic_storage
 {
 private:
 
-  using buffer_t = std::array<std::byte, buffer_size>;
-  using variant_t = std::variant<std::monostate, buffer_t, Base*>;
-  alignas(std::max_align_t) variant_t m_variant;
-  constexpr static inline std::size_t monostate_index {
-    tl::find_v<variant_t, std::monostate>};
-  constexpr static inline std::size_t buffer_index {
-    tl::find_v<variant_t, buffer_t>};
-  constexpr static inline std::size_t ptr_index {
-    tl::find_v<variant_t, Base*>};
+    using buffer_t  = std::array<std::byte, buffer_size>;
+    using variant_t = std::variant<std::monostate, buffer_t, Base*>;
+    alignas(std::max_align_t) variant_t m_variant;
+    constexpr static inline std::size_t
+      monostate_index {tl::find_v<variant_t, std::monostate>};
+    constexpr static inline std::size_t
+      buffer_index {tl::find_v<variant_t, buffer_t>};
+    constexpr static inline std::size_t
+      ptr_index {tl::find_v<variant_t, Base*>};
 
 public:
 
-  using Allocator = ALLOCATOR<std::byte>;
+    using Allocator = ALLOCATOR<std::byte>;
 
 private:
 
-  Allocator m_allocator {};
+    Allocator m_allocator {};
 
 public:
 
-  polymorphic_storage() = default;
+    polymorphic_storage() = default;
 
-  polymorphic_storage(Allocator allocator)
-      : m_allocator {std::move(allocator)}
-  { }
-
-  polymorphic_storage(const polymorphic_storage&) = delete;
-  polymorphic_storage(polymorphic_storage&&) = delete;
-  polymorphic_storage& operator=(const polymorphic_storage&) = delete;
-  polymorphic_storage& operator=(polymorphic_storage&&) = delete;
-
-  ~polymorphic_storage()
-  {
-    this->destruct();
-  }
-
-  auto ptr() -> Base*
-  {
-    return std::visit(impl::overload {[](std::monostate) {
-                                        return nullptr;
-                                      },
-                                      [](buffer_t& buffer) -> Base* {
-                                        return buffer.data();
-                                      },
-                                      [](Base* ptr) {
-                                        return ptr;
-                                      }},
-                      m_variant);
-  }
-
-  template <typename Derived, typename... Args>
-  void construct(Args&&... args)
-  {
-    if constexpr ( sizeof(Derived) <= buffer_size ) {
-      m_variant = buffer_t {};
-      void* raw_buffer = std::get<buffer_index>(m_variant).data();
-      ::new (raw_buffer) Derived(std::forward<Args>(args)...);
-    }
-  }
-
-  void destruct()
-  {
-    Base* ptr = this->ptr();
-
-    if ( ! ptr ) {
-      return;
+    polymorphic_storage(Allocator allocator)
+            : m_allocator {std::move(allocator)}
+    {
     }
 
-    ptr->~Base();
+    polymorphic_storage(const polymorphic_storage&)            = delete;
+    polymorphic_storage(polymorphic_storage&&)                 = delete;
+    polymorphic_storage& operator=(const polymorphic_storage&) = delete;
+    polymorphic_storage& operator=(polymorphic_storage&&)      = delete;
 
-    if ( m_variant.index() == ptr_index ) {
-      m_allocator.deallocate(ptr);
+    ~polymorphic_storage()
+    {
+        this->destruct();
     }
 
-    m_variant = std::monostate {};
-  }
+    auto ptr() -> Base*
+    {
+        return std::visit(
+          impl::overload {
+            [](std::monostate)
+            {
+                return nullptr;
+            },
+            [](buffer_t& buffer) -> Base*
+            {
+                return buffer.data();
+            },
+            [](Base* ptr)
+            {
+                return ptr;
+            }
+          },
+          m_variant
+        );
+    }
+
+    template <typename Derived, typename... Args>
+    void construct(Args&&... args)
+    {
+        if constexpr ( sizeof(Derived) <= buffer_size )
+        {
+            m_variant        = buffer_t {};
+            void* raw_buffer = std::get<buffer_index>(m_variant).data();
+            ::new (raw_buffer) Derived(std::forward<Args>(args)...);
+        }
+    }
+
+    void destruct()
+    {
+        Base* ptr = this->ptr();
+
+        if ( ! ptr )
+        {
+            return;
+        }
+
+        ptr->~Base();
+
+        if ( m_variant.index() == ptr_index )
+        {
+            m_allocator.deallocate(ptr);
+        }
+
+        m_variant = std::monostate {};
+    }
 };
 
 ///////////////////////////////////////////// to_stream and related
@@ -267,28 +282,29 @@ class ostream_state_restorer
 {
 private:
 
-  // NOLINTNEXTLINE(*ref*)
-  std::ostream& m_stream;
-  std::ios_base::fmtflags m_flags;
+    // NOLINTNEXTLINE(*ref*)
+    std::ostream& m_stream;
+    std::ios_base::fmtflags m_flags;
 
 public:
 
-  explicit ostream_state_restorer(std::ostream& stream)
-      : m_stream {stream}
-      , m_flags {stream.flags()}
-  { }
+    explicit ostream_state_restorer(std::ostream& stream)
+            : m_stream {stream}
+            , m_flags {stream.flags()}
+    {
+    }
 
-  ostream_state_restorer(const ostream_state_restorer&) = delete;
-  ostream_state_restorer(ostream_state_restorer&&) = delete;
-  auto operator=(const ostream_state_restorer&)
-    -> ostream_state_restorer& = delete;
-  auto operator=(ostream_state_restorer&&)
-    -> ostream_state_restorer& = delete;
+    ostream_state_restorer(const ostream_state_restorer&) = delete;
+    ostream_state_restorer(ostream_state_restorer&&)      = delete;
+    auto operator=(const ostream_state_restorer&)
+      -> ostream_state_restorer& = delete;
+    auto operator=(ostream_state_restorer&&)
+      -> ostream_state_restorer& = delete;
 
-  ~ostream_state_restorer()
-  {
-    m_stream.flags(m_flags);
-  }
+    ~ostream_state_restorer()
+    {
+        m_stream.flags(m_flags);
+    }
 };
 
 /* {{{ doc */
@@ -297,69 +313,96 @@ public:
  */
 /* }}} */
 template <typename T, typename = void>
-struct has_to_stream : std::false_type { };
+struct has_to_stream : std::false_type
+{
+};
 
 template <typename T>
 struct has_to_stream<
-  T,
-  std::void_t<decltype(std::declval<const T&>().to_stream(
-    std::declval<std::ostream&>()))>> : std::true_type { };
+  T, std::void_t<decltype(std::declval<const T&>()
+                            .to_stream(std::declval<std::ostream&>()))>>
+        : std::true_type
+{
+};
 
 template <typename T>
 constexpr inline bool has_to_stream_v = has_to_stream<T>::value;
 
 template <typename T, typename = void>
-struct has_empty_member_function : std::false_type { };
+struct has_empty_member_function : std::false_type
+{
+};
 
 template <typename T>
 struct has_empty_member_function<
-  T,
-  std::void_t<decltype(std::declval<const T&>().empty())>>
-    : std::true_type { };
+  T, std::void_t<decltype(std::declval<const T&>().empty())>>
+        : std::true_type
+{
+};
 
 template <typename T>
 constexpr inline bool has_empty_member_function_v =
   has_empty_member_function<T>::value;
 
-namespace impl {
-  template <typename T>
-  struct is_std_monostate_impl : std::false_type { };
+namespace impl
+{
+    template <typename T>
+    struct is_std_monostate_impl : std::false_type
+    {
+    };
 
-  template <>
-  struct is_std_monostate_impl<std::monostate> : std::true_type { };
+    template <>
+    struct is_std_monostate_impl<std::monostate> : std::true_type
+    {
+    };
 }  // namespace impl
 
 template <typename T>
-struct is_std_monostate
-    : impl::is_std_monostate_impl<remove_cvref_t<T>> { };
+struct is_std_monostate : impl::is_std_monostate_impl<remove_cvref_t<T>>
+{
+};
 
 template <typename T>
 constexpr inline bool is_std_monostate_v = is_std_monostate<T>::value;
 
-namespace impl {
-  template <typename T>
-  struct is_variant_impl : std::false_type { };
+namespace impl
+{
+    template <typename T>
+    struct is_variant_impl : std::false_type
+    {
+    };
 
-  template <typename... Ts>
-  struct is_variant_impl<std::variant<Ts...>> : std::true_type { };
+    template <typename... Ts>
+    struct is_variant_impl<std::variant<Ts...>> : std::true_type
+    {
+    };
 }  // namespace impl
 
 template <typename T>
-struct is_variant : impl::is_variant_impl<remove_cvref_t<T>> { };
+struct is_variant : impl::is_variant_impl<remove_cvref_t<T>>
+{
+};
 
 template <typename T>
 constexpr inline bool is_variant_v = is_variant<T>::value;
 
-namespace impl {
-  template <typename T>
-  struct is_optional_impl : std::false_type { };
+namespace impl
+{
+    template <typename T>
+    struct is_optional_impl : std::false_type
+    {
+    };
 
-  template <typename T>
-  struct is_optional_impl<std::optional<T>> : std::true_type { };
+    template <typename T>
+    struct is_optional_impl<std::optional<T>> : std::true_type
+    {
+    };
 }  // namespace impl
 
 template <typename T>
-struct is_optional : impl::is_optional_impl<remove_cvref_t<T>> { };
+struct is_optional : impl::is_optional_impl<remove_cvref_t<T>>
+{
+};
 
 template <typename T>
 constexpr inline bool is_optional_v = is_optional<T>::value;
@@ -371,14 +414,14 @@ constexpr inline bool is_optional_v = is_optional<T>::value;
 /* }}} */
 template <typename T>
 struct is_to_stream_valid
-    : std::disjunction<has_to_stream<remove_cvref_t<T>>,
-                       is_printable<remove_cvref_t<T>>,
-                       is_tuple<remove_cvref_t<T>>,
-                       is_pair<remove_cvref_t<T>>,
-                       is_iterable<remove_cvref_t<T>>,
-                       is_std_monostate<remove_cvref_t<T>>,
-                       is_variant<remove_cvref_t<T>>,
-                       is_optional<remove_cvref_t<T>>> { };
+        : std::disjunction<
+            has_to_stream<remove_cvref_t<T>>,
+            is_printable<remove_cvref_t<T>>, is_tuple<remove_cvref_t<T>>,
+            is_pair<remove_cvref_t<T>>, is_iterable<remove_cvref_t<T>>,
+            is_std_monostate<remove_cvref_t<T>>,
+            is_variant<remove_cvref_t<T>>, is_optional<remove_cvref_t<T>>>
+{
+};
 
 template <typename T>
 constexpr inline bool is_to_stream_valid_v = is_to_stream_valid<T>::value;
@@ -388,91 +431,121 @@ constexpr inline bool is_to_stream_valid_v = is_to_stream_valid<T>::value;
 template <typename T>
 void to_stream(std::ostream& out, const T& value) noexcept;
 
-namespace impl {
+namespace impl
+{
 
-  template <typename T>
-  void to_stream_tuple_impl(std::ostream& out, const T& value) noexcept
-  {
-    if constexpr ( std::tuple_size_v<T> > 1 ) {
+    template <typename T>
+    void to_stream_tuple_impl(std::ostream& out, const T& value) noexcept
+    {
+        if constexpr ( std::tuple_size_v<T> > 1 )
+        {
 
-      out << "( ";
-      tuple::for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
-        value, [&out](const auto& i) {
-          to_stream(out, i);
-          out << ", ";
-        });
-      to_stream(out, std::get<std::tuple_size_v<T> - 1>(value));
-      out << " )";
-
-    } else if constexpr ( std::tuple_size_v<T> == 1 ) {
-      out << "( ";
-      to_stream(out, std::get<0>(value));
-      out << " )";
-    } else if constexpr ( std::tuple_size_v<T> == 0 ) {
-      out << "( )";
+            out << "( ";
+            tuple::for_each_in_subtuple<0, std::tuple_size_v<T> - 1>(
+              value,
+              [&out](const auto& i)
+              {
+                  to_stream(out, i);
+                  out << ", ";
+              }
+            );
+            to_stream(out, std::get<std::tuple_size_v<T> - 1>(value));
+            out << " )";
+        }
+        else if constexpr ( std::tuple_size_v<T> == 1 )
+        {
+            out << "( ";
+            to_stream(out, std::get<0>(value));
+            out << " )";
+        }
+        else if constexpr ( std::tuple_size_v<T> == 0 )
+        {
+            out << "( )";
+        }
     }
-  }
 
-  template <typename T>
-  void to_stream_pair_impl(std::ostream& out, const T& value) noexcept
-  {
-    out << "( ";
-    to_stream(out, value.first);
-    out << ", ";
-    to_stream(out, value.second);
-    out << " )";
-  }
-
-  template <typename T>
-  void to_stream_iterable_impl(std::ostream& out, const T& value) noexcept
-  {
-    const bool is_empty {[&]() {
-      if constexpr ( has_empty_member_function_v<T> ) {
-        return value.empty();
-      } else {
-        return std::begin(value) == std::end(value);
-      }
-    }()};  // IILE
-
-    if ( is_empty ) {
-      out << "[ ]";
-    } else {
-      out << "[ ";
-      std::for_each(
-        std::begin(value), supl::last(value), [&out](const auto& i) {
-          to_stream(out, i);
-          out << ", ";
-        });
-      to_stream(out, *supl::last(value));
-      out << " ]";
+    template <typename T>
+    void to_stream_pair_impl(std::ostream& out, const T& value) noexcept
+    {
+        out << "( ";
+        to_stream(out, value.first);
+        out << ", ";
+        to_stream(out, value.second);
+        out << " )";
     }
-  }
 
-  template <typename... Ts>
-  void to_stream_variant_impl(std::ostream& out,
-                              const std::variant<Ts...>& variant) noexcept
-  {
-    try {
-      std::visit(
-        [&out](const auto& alternative) {
-          to_stream(out, alternative);
-        },
-        variant);
-    } catch ( std::bad_variant_access& ) {
-      out << "<valueless_by_exception>";
-    }
-  }
+    template <typename T>
+    void
+    to_stream_iterable_impl(std::ostream& out, const T& value) noexcept
+    {
+        const bool is_empty {
+          [&]()
+          {
+              if constexpr ( has_empty_member_function_v<T> )
+              {
+                  return value.empty();
+              }
+              else
+              {
+                  return std::begin(value) == std::end(value);
+              }
+          }()
+        };  // IILE
 
-  template <typename T>
-  void to_stream_optional_impl(std::ostream& out,
-                               const T& optional) noexcept
-  {
-    if ( optional.has_value() ) {
-      to_stream(out, optional.value());
-    } else {
-      to_stream(out, "<empty optional>");
+        if ( is_empty )
+        {
+            out << "[ ]";
+        }
+        else
+        {
+            out << "[ ";
+            std::for_each(
+              std::begin(value), supl::last(value),
+              [&out](const auto& i)
+              {
+                  to_stream(out, i);
+                  out << ", ";
+              }
+            );
+            to_stream(out, *supl::last(value));
+            out << " ]";
+        }
     }
-  }
+
+    template <typename... Ts>
+    void to_stream_variant_impl(
+      std::ostream& out, const std::variant<Ts...>& variant
+    ) noexcept
+    {
+        try
+        {
+            std::visit(
+              [&out](const auto& alternative)
+              {
+                  to_stream(out, alternative);
+              },
+              variant
+            );
+        }
+        catch ( std::bad_variant_access& )
+        {
+            out << "<valueless_by_exception>";
+        }
+    }
+
+    template <typename T>
+    void
+    to_stream_optional_impl(std::ostream& out, const T& optional) noexcept
+    {
+        if ( optional.has_value() )
+        {
+            to_stream(out, optional.value());
+        }
+        else
+        {
+            to_stream(out, "<empty optional>");
+        }
+    }
 
 }  // namespace impl
 
@@ -538,47 +611,56 @@ namespace impl {
 template <typename T>
 void to_stream(std::ostream& out, const T& value) noexcept
 {
-  static_assert(
-    is_to_stream_valid_v<T>,
-    "Attempting to call supl::to_stream with an unsupported type");
+    static_assert(
+      is_to_stream_valid_v<T>,
+      "Attempting to call supl::to_stream with an unsupported type"
+    );
 
-  const ostream_state_restorer restorer(out);
+    const ostream_state_restorer restorer(out);
 
-  out << std::boolalpha;
+    out << std::boolalpha;
 
-  if constexpr ( has_to_stream_v<T> ) {
+    if constexpr ( has_to_stream_v<T> )
+    {
 
-    value.to_stream(out);
+        value.to_stream(out);
+    }
+    else if constexpr ( is_printable_v<T> )
+    {
 
-  } else if constexpr ( is_printable_v<T> ) {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+        out << value;
+    }
+    else if constexpr ( is_tuple_v<T> )
+    {
 
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    out << value;
+        impl::to_stream_tuple_impl(out, value);
+    }
+    else if constexpr ( is_pair_v<T> )
+    {
 
-  } else if constexpr ( is_tuple_v<T> ) {
+        impl::to_stream_pair_impl(out, value);
+    }
+    else if constexpr ( is_iterable_v<T> )
+    {
 
-    impl::to_stream_tuple_impl(out, value);
+        impl::to_stream_iterable_impl(out, value);
+    }
+    else if constexpr ( is_std_monostate_v<T> )
+    {
 
-  } else if constexpr ( is_pair_v<T> ) {
+        out << "<std::monostate>";
+    }
+    else if constexpr ( is_variant_v<T> )
+    {
 
-    impl::to_stream_pair_impl(out, value);
+        impl::to_stream_variant_impl(out, value);
+    }
+    else if constexpr ( is_optional_v<T> )
+    {
 
-  } else if constexpr ( is_iterable_v<T> ) {
-
-    impl::to_stream_iterable_impl(out, value);
-
-  } else if constexpr ( is_std_monostate_v<T> ) {
-
-    out << "<std::monostate>";
-
-  } else if constexpr ( is_variant_v<T> ) {
-
-    impl::to_stream_variant_impl(out, value);
-
-  } else if constexpr ( is_optional_v<T> ) {
-
-    impl::to_stream_optional_impl(out, value);
-  }
+        impl::to_stream_optional_impl(out, value);
+    }
 }
 
 /* {{{ doc */
@@ -598,22 +680,23 @@ class stream_adapter
 {
 private:
 
-  // NOLINTNEXTLINE(*ref*)
-  const T& m_value;
+    // NOLINTNEXTLINE(*ref*)
+    const T& m_value;
 
 public:
 
-  explicit stream_adapter(const T& t)
-      : m_value {t}
-  { }
+    explicit stream_adapter(const T& t)
+            : m_value {t}
+    {
+    }
 
-  friend inline auto operator<<(std::ostream& out,
-                                const stream_adapter<T>& rhs) noexcept
-    -> std::ostream&
-  {
-    to_stream(out, rhs.m_value);
-    return out;
-  }
+    friend inline auto
+    operator<<(std::ostream& out, const stream_adapter<T>& rhs) noexcept
+      -> std::ostream&
+    {
+        to_stream(out, rhs.m_value);
+        return out;
+    }
 };
 
 /* {{{ doc */
@@ -636,9 +719,9 @@ public:
 template <typename T>
 [[nodiscard]] auto to_string(const T& value) -> std::string
 {
-  std::ostringstream out;
-  to_stream(out, value);
-  return out.str();
+    std::ostringstream out;
+    to_stream(out, value);
+    return out.str();
 }
 
 /* {{{ doc */
@@ -652,78 +735,82 @@ class adapted_ostream
 {
 private:
 
-  std::ostream& m_underlying;
+    std::ostream& m_underlying;
 
 public:
 
-  adapted_ostream() = delete;
+    adapted_ostream() = delete;
 
-  explicit adapted_ostream(std::ostream& arg) noexcept
-      : m_underlying {arg}
-  { }
+    explicit adapted_ostream(std::ostream& arg) noexcept
+            : m_underlying {arg}
+    {
+    }
 
-  adapted_ostream(const adapted_ostream&) = delete;
-  adapted_ostream(adapted_ostream&&) = delete;
-  auto operator=(const adapted_ostream&) -> adapted_ostream& = delete;
-  auto operator=(adapted_ostream&&) -> adapted_ostream& = delete;
-  ~adapted_ostream() = default;
+    adapted_ostream(const adapted_ostream&)                    = delete;
+    adapted_ostream(adapted_ostream&&)                         = delete;
+    auto operator=(const adapted_ostream&) -> adapted_ostream& = delete;
+    auto operator=(adapted_ostream&&) -> adapted_ostream&      = delete;
+    ~adapted_ostream()                                         = default;
 
-  /* {{{ doc */
-  /**
+    /* {{{ doc */
+    /**
    * @brief Get the underlying ostream object
    */
-  /* }}} */
-  [[nodiscard]] auto underlying() const -> std::ostream&
-  {
-    return m_underlying;
-  }
+    /* }}} */
+    [[nodiscard]] auto underlying() const -> std::ostream&
+    {
+        return m_underlying;
+    }
 
-  template <typename T>
-  friend auto operator<<(adapted_ostream& lhs, const T& rhs)
-    -> adapted_ostream&
-  {
-    to_stream(lhs.m_underlying, rhs);
-    return lhs;
-  }
+    template <typename T>
+    friend auto operator<<(adapted_ostream& lhs, const T& rhs)
+      -> adapted_ostream&
+    {
+        to_stream(lhs.m_underlying, rhs);
+        return lhs;
+    }
 };
 
 ///////////////////////////////////////////// end to_stream and related
 
-inline namespace literals {
+inline namespace literals
+{
 
-  inline namespace size_t_literal {
+    inline namespace size_t_literal
+    {
 
-    /* {{{ doc */
-    /**
+        /* {{{ doc */
+        /**
  * @brief Makes it possible to declare a `std::size_t` literal.
  *
  * @param i Integer literal to be used as a `std::size_t`
  */
-    /* }}} */
-    [[nodiscard]] constexpr auto
-    operator""_z(unsigned long long i) noexcept -> std::size_t
+        /* }}} */
+        [[nodiscard]] constexpr auto operator""_z(unsigned long long i
+        ) noexcept -> std::size_t
+        {
+            return static_cast<std::size_t>(i);
+        }
+
+    }  // namespace size_t_literal
+
+    inline namespace ptrdiff_t_literal
     {
-      return static_cast<std::size_t>(i);
-    }
 
-  }  // namespace size_t_literal
-
-  inline namespace ptrdiff_t_literal {
-
-    /* {{{ doc */
-    /**
+        /* {{{ doc */
+        /**
  * @brief Makes it possible to declare a `std::ptrdiff_t` literal.
  *
  * @param i Integer literal to be used as a `std::ptrdiff_t`
  */
-    /* }}} */
-    [[nodiscard]] constexpr auto
-    operator""_pd(unsigned long long i) noexcept -> std::ptrdiff_t
-    {
-      return static_cast<std::ptrdiff_t>(i);
-    }
+        /* }}} */
+        [[nodiscard]] constexpr auto operator""_pd(unsigned long long i
+        ) noexcept -> std::ptrdiff_t
+        {
+            return static_cast<std::ptrdiff_t>(i);
+        }
 
-  }  // namespace ptrdiff_t_literal
+    }  // namespace ptrdiff_t_literal
 
 }  // namespace literals
 

@@ -347,9 +347,12 @@ static auto test_to_string() -> supl::test_results
     results.enforce_exactly_equal(
       supl::to_string(std::array<int, 0> {}), empty_container
     );
-    /* results.enforce_exactly_equal(supl::to_string(std::deque<int> {}), empty_container); */
-    /* results.enforce_exactly_equal(supl::to_string(std::forward_list<int> {}), */
-    /*                  empty_container); */
+    results.enforce_exactly_equal(
+      supl::to_string(std::deque<int> {}), empty_container
+    );
+    results.enforce_exactly_equal(
+      supl::to_string(std::forward_list<int> {}), empty_container
+    );
     results.enforce_exactly_equal(
       supl::to_string(std::map<int, char> {}), empty_container
     );
@@ -363,13 +366,15 @@ static auto test_to_string() -> supl::test_results
       supl::to_string(std::unordered_multimap<int, char> {}),
       empty_container
     );
-    /* results.enforce_exactly_equal(supl::to_string(std::unordered_set<int> {}), */
-    /*                  empty_container); */
+    results.enforce_exactly_equal(
+      supl::to_string(std::unordered_set<int> {}), empty_container
+    );
     results.enforce_exactly_equal(
       supl::to_string(std::set<int> {}), empty_container
     );
-    /* results.enforce_exactly_equal(supl::to_string(std::unordered_multiset<int> {}), */
-    /*                  empty_container); */
+    results.enforce_exactly_equal(
+      supl::to_string(std::unordered_multiset<int> {}), empty_container
+    );
     results.enforce_exactly_equal(
       supl::to_string(std::multiset<int> {}), empty_container
     );

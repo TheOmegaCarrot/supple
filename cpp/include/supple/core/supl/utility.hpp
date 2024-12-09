@@ -216,7 +216,7 @@ public:
         this->destruct();
     }
 
-    auto ptr() -> Base*
+    [[nodiscard]] auto ptr() -> Base*
     {
         return std::visit(
           impl::overload {
@@ -225,6 +225,27 @@ public:
                 return nullptr;
             },
             [](buffer_t& buffer) -> Base*
+            {
+                return buffer.data();
+            },
+            [](Base* ptr)
+            {
+                return ptr;
+            }
+          },
+          m_variant
+        );
+    }
+
+    [[nodiscard]] auto ptr() const -> const Base*
+    {
+        return std::visit(
+          impl::overload {
+            [](std::monostate)
+            {
+                return nullptr;
+            },
+            [](buffer_t& buffer) -> const Base*
             {
                 return buffer.data();
             },

@@ -662,121 +662,6 @@ static auto test_adapted_ostream() -> supl::test_results
     return results;
 }
 
-namespace detail
-{
-// Incomplete
-template <typename Allocator>
-class Logging_Allocator
-{
-private:
-
-    std::set<typename std::allocator_traits<Allocator>::pointer>
-      m_unfreed_allocations;
-    Allocator m_allocator;
-
-public:
-
-    Logging_Allocator(Allocator alloc)
-            : m_allocator(std::move(alloc))
-    {
-    }
-
-    Logging_Allocator(const Logging_Allocator&) = delete;
-};
-
-class Logging_Base
-{
-public:
-
-    Logging_Base()                               = default;
-    Logging_Base(const Logging_Base&)            = delete;
-    Logging_Base(Logging_Base&&)                 = delete;
-    Logging_Base& operator=(const Logging_Base&) = delete;
-    Logging_Base& operator=(Logging_Base&&)      = delete;
-    virtual ~Logging_Base()                      = default;
-
-    virtual const char* kind() const noexcept               = 0;
-    virtual std::size_t get_instance_count() const noexcept = 0;
-};
-
-class Small_Logger : public Logging_Base
-{
-public:
-
-    static inline std::size_t instance_count = 0;
-
-    Small_Logger()
-    {
-        ++instance_count;
-    }
-
-    Small_Logger(const Small_Logger&)            = delete;
-    Small_Logger(Small_Logger&&)                 = delete;
-    Small_Logger& operator=(const Small_Logger&) = delete;
-    Small_Logger& operator=(Small_Logger&&)      = delete;
-
-    virtual ~Small_Logger() override
-    {
-        --instance_count;
-    }
-
-    virtual const char* kind() const noexcept override
-    {
-        return "Small_Logger";
-    }
-
-    virtual std::size_t get_instance_count() const noexcept override
-    {
-        return instance_count;
-    }
-};
-
-class Large_Logger : public Logging_Base
-{
-private:
-
-    // filler so that it won't fit in small buffer
-    [[maybe_unused]] std::array<char, 256> filler {};
-
-public:
-
-    static inline std::size_t instance_count = 0;
-
-    Large_Logger()
-    {
-        ++instance_count;
-    }
-
-    Large_Logger(const Large_Logger&)            = delete;
-    Large_Logger(Large_Logger&&)                 = delete;
-    Large_Logger& operator=(const Large_Logger&) = delete;
-    Large_Logger& operator=(Large_Logger&&)      = delete;
-
-    virtual ~Large_Logger() override
-    {
-        --instance_count;
-    }
-
-    virtual const char* kind() const noexcept override
-    {
-        return "Large_Logger";
-    }
-
-    virtual std::size_t get_instance_count() const noexcept override
-    {
-        return instance_count;
-    }
-};
-
-}  // namespace detail
-
-auto test_polymorphic_storage() -> supl::test_results
-{
-    supl::test_results results;
-
-    return results;
-}
-
 auto test_utility() -> supl::test_section
 {
     supl::test_section section;
@@ -801,9 +686,6 @@ auto test_utility() -> supl::test_section
       &test_ptrdiff_t_literals
     );
     section.add_test("supl::adapted_ostream", &test_adapted_ostream);
-    section.add_test(
-      "supl::polymorphic_storage", &test_polymorphic_storage
-    );
 
     return section;
 }
